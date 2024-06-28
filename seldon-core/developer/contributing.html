@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../_static/javascripts/modernizr.js"></script>
+  
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-54780881-2"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-54780881-2');
+</script>
+  
+  
+    <title>为 Seldon Core 贡献 &#8212; seldon-core  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=83e35b93" />
+    <link rel="stylesheet" type="text/css" href="../_static/material.css?v=79c92029" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/rtd_sphinx_search.min.css?v=fb480935" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=15a8f09d" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/rtd_search_config.js"></script>
+    <script src="../_static/js/rtd_sphinx_search.min.js?v=60fbc683"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="端到端测试" href="e2e.html" />
+    <link rel="prev" title="开发者" href="readme.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=indigo data-md-color-accent=teal>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#developer/contributing" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../index.html" title="seldon-core  documentation"
+           class="md-header-nav__button md-logo">
+          
+            &nbsp;
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">Seldon Core Documentation</span>
+          <span class="md-header-nav__topic"> 为 Seldon Core 贡献 </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder=""Search""
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+            
+            <li class="md-tabs__item"><a href="/" class="md-tabs__link">🚀 Our Other Projects & Products:</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi/en/stable/" class="md-tabs__link">Alibi Explain</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi-detect/en/stable/" class="md-tabs__link">Alibi Detect</a></li>
+            
+            <li class="md-tabs__item"><a href="https://mlserver.readthedocs.io/en/latest/" class="md-tabs__link">MLServer</a></li>
+            
+            <li class="md-tabs__item"><a href="https://tempo.readthedocs.io/en/latest/" class="md-tabs__link">Tempo SDK</a></li>
+            
+            <li class="md-tabs__item"><a href="https://deploy.seldon.io" class="md-tabs__link">Seldon Enterprise Platform</a></li>
+            
+            <li class="md-tabs__item"><a href="https://github.com/SeldonIO/seldon-deploy-sdk#seldon-deploy-sdk" class="md-tabs__link">Seldon Enterprise Platform SDK</a></li>
+          <li class="md-tabs__item"><a href="../nav/contributing.html" class="md-tabs__link">贡献</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../index.html" title="seldon-core documentation" class="md-nav__button md-logo">
+      
+        <img src="../_static/" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../index.html"
+       title="seldon-core documentation">Seldon Core Documentation</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/getting-started.html" class="md-nav__link">开始</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/concepts.html" class="md-nav__link">概念</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/configuration.html" class="md-nav__link">配置</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/tutorials.html" class="md-nav__link">教程</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/reference.html" class="md-nav__link">参考</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/contributing.html" class="md-nav__link">贡献</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="readme.html" class="md-nav__link">概述</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> 贡献 Seldon Core </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">贡献 Seldon Core</a>
+      
+        
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#developer-contributing--page-root" class="md-nav__link">为 Seldon Core 贡献</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id1" class="md-nav__link">发布书名</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#pr" class="md-nav__link">为每个 PR 增加说明</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">约定</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id3" class="md-nav__link">发布前编译所有PR注释</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">编码约定</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#java" class="md-nav__link">Java</a>
+        </li>
+        <li class="md-nav__item"><a href="#python" class="md-nav__link">Python</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#tests" class="md-nav__link">Tests</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id5" class="md-nav__link">Python</a>
+        </li>
+        <li class="md-nav__item"><a href="#id6" class="md-nav__link">端到端测试</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/developer/contributing.rst.txt">Show Source</a> </li>
+
+  </ul>
+</nav>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="#id1" class="md-nav__link">发布书名</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id4" class="md-nav__link">编码约定</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#tests" class="md-nav__link">Tests</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="e2e.html" class="md-nav__link">端到端测试</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="roadmap.html" class="md-nav__link">路线图</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="build-using-private-repo.html" class="md-nav__link">使用私有仓库构建</a>
+      
+    
+    </li></ul>
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#developer-contributing--page-root" class="md-nav__link">为 Seldon Core 贡献</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id1" class="md-nav__link">发布书名</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#pr" class="md-nav__link">为每个 PR 增加说明</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">约定</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id3" class="md-nav__link">发布前编译所有PR注释</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">编码约定</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#java" class="md-nav__link">Java</a>
+        </li>
+        <li class="md-nav__item"><a href="#python" class="md-nav__link">Python</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#tests" class="md-nav__link">Tests</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id5" class="md-nav__link">Python</a>
+        </li>
+        <li class="md-nav__item"><a href="#id6" class="md-nav__link">端到端测试</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/developer/contributing.rst.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <section id="seldon-core">
+<h1 id="developer-contributing--page-root">为 Seldon Core 贡献<a class="headerlink" href="#developer-contributing--page-root" title="Permalink to this heading">¶</a></h1>
+<p><em>在打开 PR 前</em> 考虑：</p>
+<ul class="simple">
+<li><p>变更是否足够重要并准备完毕以让社区花费时间经理来进行 review？</p></li>
+<li><p>你有没有搜索已经存在或相关的讨论或者PR？</p></li>
+<li><p>提议的变更是否得到了明确的解释和目的？</p></li>
+</ul>
+<p>当您贡献代码时，您确认该贡献是您的原创作品，并且您
+根据项目的开源许可证将作品授权给该项目。不管你是否
+通过 PR 请求、电子邮件或
+其他表示您同意根据项目的开源许可证对材料进行许可，并且
+保证你有这样做的合法权限。</p>
+<section id="id1">
+<h2 id="id1">发布书名<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h2>
+<p>我们管理发行说明的过程是以 Kubernetes 项目如何处理它们为模型的。
+该过程可分为两个独立阶段：</p>
+<ul class="simple">
+<li><p>在 <strong>PR 创建时</strong> 为每个 PR 增加说明。</p></li>
+<li><p><strong>发布时</strong> 在发布之前编译所有PR注释。</p></li>
+</ul>
+<section id="pr">
+<h3 id="pr">为每个 PR 增加说明<a class="headerlink" href="#pr" title="Permalink to this heading">¶</a></h3>
+<p>当 PR 创建，一个 <a class="reference external" href="https://prow.k8s.io/command-help#release_note_none">Prow / Lighthouse
+插件</a> 会检查 PR 体中是否存在一个相应的 <code class="docutils literal notranslate"><span class="pre">release-note</span></code> 区块如：</p>
+<div class="highlight-md notranslate"><div class="highlight"><pre><span></span><span class="sb">```release-note</span>
+<span class="s">Some public-facing release note.</span>
+<span class="sb">```</span>
+</pre></div>
+</div>
+<p>如果没有，PR 会被打标为 <code class="docutils literal notranslate"><span class="pre">do-not-merge/release-note-label-needed</span></code>。
+请注意，为了加快速度，<a class="reference external" href="https://github.com/SeldonIO/seldon-core/blob/master/.github/PULL_REQUEST_TEMPLATE.md">默认的 PR 模板</a>
+会为你创建一个空的 <code class="docutils literal notranslate"><span class="pre">release-notes</span></code> 块。
+对于不需要面向公众的发布说明的 PR (e.g. 继承测试的修复程序)，你可以使用 <code class="docutils literal notranslate"><span class="pre">/release-note-none</span></code> Prow 命令。</p>
+<section id="id2">
+<h4 id="id2">约定<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h4>
+<p>我们可以使用许多约定，以便更改更具语义。
+这些主要基于关键字，这些关键字将影响发布说明的显示方式。</p>
+<ul>
+<li><p>使用 <code class="docutils literal notranslate"><span class="pre">Added</span></code>、<code class="docutils literal notranslate"><span class="pre">Changed</span></code>、<code class="docutils literal notranslate"><span class="pre">Fixed</span></code>、<code class="docutils literal notranslate"><span class="pre">Removed</span></code> 或者 <code class="docutils literal notranslate"><span class="pre">Deprecated</span></code> 单词来描述 PR 内容。
+例如：</p>
+<div class="highlight-md notranslate"><div class="highlight"><pre><span></span><span class="sb">```release-note</span>
+<span class="s">Added metadata support to Python wrapper</span>
+<span class="sb">```</span>
+</pre></div>
+</div>
+</li>
+<li><p>使用表达式 <code class="docutils literal notranslate"><span class="pre">Action</span> <span class="pre">required</span></code> 描述中断更改。
+For example:</p>
+<div class="highlight-md notranslate"><div class="highlight"><pre><span></span><span class="sb">```release-note</span>
+<span class="s">Action required: The helm value `createResources` has been renamed</span>
+<span class="s">`managerCreateResources`.</span>
+<span class="sb">```</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+</section>
+<section id="id3">
+<h3 id="id3">发布前编译所有PR注释<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h3>
+<p>发布时，有一个 <a class="reference external" href="https://github.com/kubernetes/release/blob/master/cmd/release-notes/README.md">release-notes命令</a>
+会在 2 个特定标签之间的所有 PR 上爬取行提取发行说明块（例如 <code class="docutils literal notranslate"><span class="pre">v1.1.0</span></code> 到 <code class="docutils literal notranslate"><span class="pre">v1.2.0</span></code>）。
+然后可以使用这些块来生成最终发行说明。</p>
+</section>
+</section>
+<section id="id4">
+<h2 id="id4">编码约定<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h2>
+<p>我们使用 <a class="reference external" href="https://pre-commit.com/">pre-commit</a> 处理一些 Git hooks，它能确保
+所有基线代码的修改能遵循 Seldon 代码约定。
+推荐在任何修改代码前进行设置。
+如果代码不符合存储库中每种语言的样式指南，那么接下来的额外检查将停止构建。</p>
+<p>参考 <a class="reference external" href="https://pre-commit.com/#install">官方说明</a> 进行安装。
+一旦安装完成，请运行：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>pre-commit<span class="w"> </span>install
+</pre></div>
+</div>
+<p>这将会读取 <code class="docutils literal notranslate"><span class="pre">.pre-commit-config.yaml</span></code> 的 hook 定义并照着安装到本地仓库。</p>
+<section id="java">
+<h3 id="java">Java<a class="headerlink" href="#java" title="Permalink to this heading">¶</a></h3>
+<p>Java 代码格式遵循 <a class="reference external" href="https://google.github.io/styleguide/javaguide.html">Google’s Java 风格指南</a>。
+为了确保代码库保持一致，我们使用
+<a class="reference external" href="https://github.com/checkstyle/checkstyle">checkstyle</a> 作为 <code class="docutils literal notranslate"><span class="pre">mvn</span> <span class="pre">validate</span></code> 生命周期的一部分。</p>
+<p>要在本地编辑器整合，你可以参考 <a class="reference external" href="https://checkstyle.org/beginning_development.html">本地配置 checkstyle</a> 的官方说明并
+<a class="reference external" href="https://github.com/google/google-java-format#using-the-formatter">设置 google-java-format</a>。</p>
+</section>
+<section id="python">
+<h3 id="python">Python<a class="headerlink" href="#python" title="Permalink to this heading">¶</a></h3>
+<p>Python 代码格式遵循 <a class="reference external" href="https://github.com/psf/black">black</a>，一个很重的格式化程序。</p>
+<p>要在本地编辑器整合，你可以参考 <a class="reference external" href="https://github.com/psf/black#editor-integration">设置 black</a> 的官方说明。</p>
+</section>
+</section>
+<section id="tests">
+<h2 id="tests">Tests<a class="headerlink" href="#tests" title="Permalink to this heading">¶</a></h2>
+<p>无论您正在处理哪个包，我们都将主要任务抽象为 <code class="docutils literal notranslate"><span class="pre">Makefile</span></code>。
+因为，为了执行测试，你需要这么做：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span><span class="nb">test</span>
+</pre></div>
+</div>
+<section id="id5">
+<h3 id="id5">Python<a class="headerlink" href="#id5" title="Permalink to this heading">¶</a></h3>
+<p>我们使用 <a class="reference external" href="https://docs.pytest.org/en/latest/">pytest</a> 作为主要的执行器。
+然而，为了确保测试能在最终用户通过 <code class="docutils literal notranslate"><span class="pre">pip</span></code> 及 pypi.org 下载的相同版本的包上运行，我们在其上使用 <a class="reference external" href="https://tox.readthedocs.io/en/latest/">tox</a>。
+安装两者（亦或者其他以来的插件），使用：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span>install_dev
+</pre></div>
+</div>
+<p>我们可以使用 <code class="docutils literal notranslate"><span class="pre">tox</span></code> 在不同的隔离环境中运行整个测试套件。
+您可以在文件中看到我们当前使用的不同
+<a class="reference external" href="https://github.com/SeldonIO/seldon-core/blob/master/python/setup.cfg">setup.cfg</a>
+文件。
+你可以在所有环境中使用 <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">test</span></code> <a class="reference internal" href="#tests"><span class="std std-ref">mentioned above</span></a> 运行测试。
+或者，如果您想传递任何额外的参数，你也可以直接运行 <code class="docutils literal notranslate"><span class="pre">tox</span></code>：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>tox
+</pre></div>
+</div>
+<p>一个 <code class="docutils literal notranslate"><span class="pre">tox</span></code> 警告是，随着环境数量的增长，完成测试所需的时间也在增加。
+作为解决方案，在本地环境推荐你直接运行 <code class="docutils literal notranslate"><span class="pre">pytest</span></code>：
+你可以直接执行：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pytest
+</pre></div>
+</div>
+</section>
+<section id="id6">
+<h3 id="id6">端到端测试<a class="headerlink" href="#id6" title="Permalink to this heading">¶</a></h3>
+<p>作为 Seldon Core 的测试套件，我们也支持端到端测试。
+这些使用 <a class="reference external" href="https://github.com/kubernetes-sigs/kind">Kind</a> 生成了一个实际的Kubernetes集群并
+部署不同的 <code class="docutils literal notranslate"><span class="pre">SeldonDeployment</span></code> 及资源。</p>
+<p>你可以通过 <a class="reference external" href="https://docs.seldon.io/projects/seldon-core/en/latest/developer/e2e.html">专门的文档</a> 学习如何运行并添加测试用例。</p>
+</section>
+</section>
+</section>
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="readme.html" title="开发者"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> "Previous" </span> 开发者 </span>
+              </div>
+            </a>
+          
+          
+            <a href="e2e.html" title="端到端测试"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> "Next" </span> 端到端测试 </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2024, Seldon Technologies Ltd.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

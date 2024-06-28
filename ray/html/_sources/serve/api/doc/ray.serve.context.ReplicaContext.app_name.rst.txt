@@ -1,0 +1,6 @@
+ray.serve.context.ReplicaContext.app\_name
+==========================================
+
+.. currentmodule:: ray.serve.context
+
+.. autoattribute:: ReplicaContext.app_name

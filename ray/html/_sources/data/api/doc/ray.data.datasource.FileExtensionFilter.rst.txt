@@ -1,0 +1,37 @@
+﻿
+
+ray.data.datasource.FileExtensionFilter
+=======================================
+
+.. currentmodule:: ray.data.datasource
+
+.. autoclass:: FileExtensionFilter
+   :show-inheritance:
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :toctree:
+
+   
+      
+      ~FileExtensionFilter.of
+
+   
+   
+
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :toctree:
+
+   
+      ~FileExtensionFilter.parser
+
+   
+   

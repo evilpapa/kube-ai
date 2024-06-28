@@ -1,0 +1,1201 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Advanced Ray Serve Autoscaling &#8212; Ray 2.7.2</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/termynal.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/versionwarning.js"></script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+    <script defer="defer" src="../../_static/js/docsearch.js"></script>
+    <script defer="defer" src="../../_static/js/csat.js"></script>
+    <script defer="defer" src="../../_static/js/termynal.js"></script>
+    <script defer="defer" src="../../_static/js/custom.js"></script>
+    <script defer="defer" src="../../_static/js/top-navigation.js"></script>
+    <script src="../../_static/js/tags.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <link rel="canonical" href="https://docs.ray.io/en/latest/serve/advanced-guides/advanced-autoscaling.html" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Performance Tuning" href="performance.html" />
+    <link rel="prev" title="Pass Arguments to Applications" href="app-builder-guide.html" />
+
+<!-- Fathom - beautiful, simple website analytics -->
+<script src="https://deer.ray.io/script.js" data-site="WYYANYOS" defer></script>
+<!-- / Fathom -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-110413294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-110413294-1');
+</script>
+
+<script
+  src="https://widget.kapa.ai/kapa-widget.bundle.js"
+  data-website-id="18a8c339-4ec5-43c8-8182-db3f2bc8c6b6"
+  data-project-name="Ray"
+  data-project-color="#2C2C2C"
+  data-project-logo="https://global.discourse-cdn.com/business7/uploads/ray/original/1X/8f4dcb72f7cd34e2a332d548bd65860994bc8ff1.png"
+  data-modal-disclaimer = "Results are automated and may be incorrect or contain inappropriate information. Do not include any personal data or confidential information."
+  data-modal-title = "Ray Docs AI - Ask a Question"
+  data-button-position-bottom = "60px"
+></script>
+
+<script>
+(function(apiKey){
+    (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
+    v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
+        o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
+        y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
+        z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
+
+        pendo.initialize({
+            visitor: {
+                id: 'VISITOR-UNIQUE-ID'
+            },
+            account: {
+                id: 'ACCOUNT-UNIQUE-ID'
+            }
+        });
+})('f89fa48a-6dd7-4d7c-67cf-a8051ed891f2');
+</script>
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"><div class='topnav'></div></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Ray 2.7.2</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main Navigation">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../index.html">
+                    欢迎来到 Ray ！
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Ray
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/index.html">
+   概述「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/getting-started.html">
+   入门「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/installation.html">
+   安装「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/use-cases.html">
+   用例「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/examples.html">
+   示例库「1%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/ray-libraries.html">
+   生态「3%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-core/walkthrough.html">
+   Ray 核心「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../data/data.html">
+   Ray 数据「85%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../train/train.html">
+   Ray 训练「95%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../tune/index.html">
+   Ray 调参「0%」
+  </a>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="../index.html">
+   Ray Serve「1%」
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="../getting_started.html">
+     入门
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../key-concepts.html">
+     关键概念
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../develop-and-deploy.html">
+     开发并部署 ML 应用
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../model_composition.html">
+     部署模型组合
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../multi-app.html">
+     部署多应用
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../model-multiplexing.html">
+     模型复用
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../configure-serve-deployment.html">
+     配置 Ray Serve 发布
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../http-guide.html">
+     设置 FastAPI 及 HTTP
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../production-guide/index.html">
+     生产指引
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../monitoring.html">
+     监控你的应用
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../resource-allocation.html">
+     资源分配
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../autoscaling-guide.html">
+     Ray Serve 自动扩缩
+    </a>
+   </li>
+   <li class="toctree-l2 current active has-children">
+    <a class="reference internal" href="index.html">
+     高级指南
+    </a>
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+    <label for="toctree-checkbox-2">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul class="current">
+     <li class="toctree-l3">
+      <a class="reference internal" href="app-builder-guide.html">
+       Pass Arguments to Applications
+      </a>
+     </li>
+     <li class="toctree-l3 current active">
+      <a class="current reference internal" href="#">
+       Advanced Ray Serve Autoscaling
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="performance.html">
+       Performance Tuning
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="dyn-req-batch.html">
+       Dynamic Request Batching
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="inplace-updates.html">
+       Updating Applications In-Place
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="dev-workflow.html">
+       Development Workflow
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="grpc-guide.html">
+       Set Up a gRPC Service
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="deployment-graphs.html">
+       Experimental Deployment Graphs
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="managing-java-deployments.html">
+       Experimental Java API
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="deploy-vm.html">
+       Deploy on VM
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../architecture.html">
+     架构
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorials/index.html">
+     示例
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/index.html">
+     Ray Serve API
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../rllib/index.html">
+   Ray RLlib「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-more-libs/index.html">
+   更多类库「40%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../cluster/getting-started.html">
+   Ray 集群「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-observability/index.html">
+   监控调试「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-references/api.html">
+   参考「20%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-contribute/index.html">
+   开发者指引「30%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-security/index.html">
+   安全「100%」
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/ray-project/ray"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/issues/new?title=Issue%20on%20page%20%2Fserve/advanced-guides/advanced-autoscaling.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/edit/master/doc/source/serve/advanced-guides/advanced-autoscaling.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../_sources/serve/advanced-guides/advanced-autoscaling.md.txt"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#autoscaling-config-parameters">
+   Autoscaling config parameters
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#required-define-the-steady-state-of-your-system">
+     [Required] Define the steady state of your system
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#target-num-ongoing-requests-per-replica-default-1">
+       <strong>
+        target_num_ongoing_requests_per_replica [default=1]
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#max-concurrent-queries-default-100">
+       <strong>
+        max_concurrent_queries [default=100]
+       </strong>
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#required-define-upper-and-lower-autoscaling-limits">
+     [Required] Define upper and lower autoscaling limits
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#optional-define-how-the-system-reacts-to-changing-traffic">
+     [Optional] Define how the system reacts to changing traffic
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#model-composition-example">
+   Model composition example
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#attempt-1-one-driver-replica">
+     Attempt 1: One
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       Driver
+      </span>
+     </code>
+     replica
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#attempt-2-autoscale-driver">
+     Attempt 2: Autoscale
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       Driver
+      </span>
+     </code>
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#troubleshooting-guide">
+   Troubleshooting guide
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#unstable-number-of-autoscaled-replicas">
+     Unstable number of autoscaled replicas
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#high-spikes-in-latency-during-bursts-of-traffic">
+     High spikes in latency during bursts of traffic
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#deployments-scaling-down-too-quickly">
+     Deployments scaling down too quickly
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Advanced Ray Serve Autoscaling</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#autoscaling-config-parameters">
+   Autoscaling config parameters
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#required-define-the-steady-state-of-your-system">
+     [Required] Define the steady state of your system
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#target-num-ongoing-requests-per-replica-default-1">
+       <strong>
+        target_num_ongoing_requests_per_replica [default=1]
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#max-concurrent-queries-default-100">
+       <strong>
+        max_concurrent_queries [default=100]
+       </strong>
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#required-define-upper-and-lower-autoscaling-limits">
+     [Required] Define upper and lower autoscaling limits
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#optional-define-how-the-system-reacts-to-changing-traffic">
+     [Optional] Define how the system reacts to changing traffic
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#model-composition-example">
+   Model composition example
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#attempt-1-one-driver-replica">
+     Attempt 1: One
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       Driver
+      </span>
+     </code>
+     replica
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#attempt-2-autoscale-driver">
+     Attempt 2: Autoscale
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       Driver
+      </span>
+     </code>
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#troubleshooting-guide">
+   Troubleshooting guide
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#unstable-number-of-autoscaled-replicas">
+     Unstable number of autoscaled replicas
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#high-spikes-in-latency-during-bursts-of-traffic">
+     High spikes in latency during bursts of traffic
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#deployments-scaling-down-too-quickly">
+     Deployments scaling down too quickly
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="advanced-ray-serve-autoscaling">
+<span id="serve-advanced-autoscaling"></span><h1>Advanced Ray Serve Autoscaling<a class="headerlink" href="#advanced-ray-serve-autoscaling" title="Permalink to this headline">#</a></h1>
+<p>This guide goes over more advanced autoscaling parameters in <a class="reference internal" href="../api/doc/ray.serve.config.AutoscalingConfig.html"><span class="doc std std-doc">autoscaling_config</span></a> and an advanced model composition example.</p>
+<section id="autoscaling-config-parameters">
+<span id="serve-autoscaling-config-parameters"></span><h2>Autoscaling config parameters<a class="headerlink" href="#autoscaling-config-parameters" title="Permalink to this headline">#</a></h2>
+<p>In this section, we go into more detail about Serve autoscaling concepts as well as how to set your autoscaling config.</p>
+<section id="required-define-the-steady-state-of-your-system">
+<h3>[Required] Define the steady state of your system<a class="headerlink" href="#required-define-the-steady-state-of-your-system" title="Permalink to this headline">#</a></h3>
+<p>To define what the steady state of your deployments should be, set values for <code class="docutils literal notranslate"><span class="pre">target_num_ongoing_requests_per_replica</span></code> and <code class="docutils literal notranslate"><span class="pre">max_concurrent_queries</span></code>.</p>
+<section id="target-num-ongoing-requests-per-replica-default-1">
+<h4><strong>target_num_ongoing_requests_per_replica [default=1]</strong><a class="headerlink" href="#target-num-ongoing-requests-per-replica-default-1" title="Permalink to this headline">#</a></h4>
+<p>Serve scales the number of replicas for a deployment up or down based on the average number of ongoing requests per replica. Specifically, Serve compares the <em>actual</em> number of ongoing requests per replica with the target value you set in the autoscaling config and makes upscale or downscale decisions from that. The target value is set by <code class="docutils literal notranslate"><span class="pre">target_num_ongoing_requests_per_replica</span></code>, and Serve tries to make sure that each replica has roughly that number
+of requests being processed and waiting in the queue.</p>
+<p>It is always recommended to load test your workloads. For example, if the use case is latency sensitive, you can lower the <code class="docutils literal notranslate"><span class="pre">target_num_ongoing_requests_per_replica</span></code> number to maintain high performance. We recommend you benchmark your application code and set this number based on an end-to-end latency objective.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>As an example, suppose you have two replicas of a synchronous deployment that has 100ms latency, serving a traffic load of 30 QPS. Then requests are assigned to replicas faster than the replicas can finish processing them; more and more requests are queued up at the replica (these are considered “ongoing requests”) as time goes on, and then the average number of ongoing requests at each replica steadily increases. Latency will also increase since new requests have to wait for old requests to finish processing. If you set <code class="docutils literal notranslate"><span class="pre">target_num_ongoing_requests_per_replica</span> <span class="pre">=</span> <span class="pre">1</span></code>, Serve detects a higher than desired number of ongoing requests per replica, and adds more replicas. At 3 replicas, your system would be able to process 30 QPS with 1 ongoing request per replica on average.</p>
+</div>
+</section>
+<section id="max-concurrent-queries-default-100">
+<h4><strong>max_concurrent_queries [default=100]</strong><a class="headerlink" href="#max-concurrent-queries-default-100" title="Permalink to this headline">#</a></h4>
+<p>There is also a maximum queue limit that is proxies respect when assigning requests to replicas. The limit is defined by <code class="docutils literal notranslate"><span class="pre">max_concurrent_queries</span></code>. We recommend setting <code class="docutils literal notranslate"><span class="pre">max_concurrent_queries</span></code> to ~20 to 50% higher than <code class="docutils literal notranslate"><span class="pre">target_num_ongoing_requests_per_replica</span></code>. Note that <code class="docutils literal notranslate"><span class="pre">target_num_ongoing_requests_per_replica</span></code> should always be strictly less than <code class="docutils literal notranslate"><span class="pre">max_concurrent_queries</span></code>, otherwise the deployment never scales up. Take into account the following when setting <code class="docutils literal notranslate"><span class="pre">max_concurrent_queries</span></code>:</p>
+<ul class="simple">
+<li><p>Setting it too low limits upscaling. For instance, if your target value is 50 and <code class="docutils literal notranslate"><span class="pre">max_concurrent_queries</span></code> is 51, then even if the traffic increases significantly, the requests will queue up at the proxy instead of at the replicas. As a result, the autoscaler only increases the number of replicas at most 2% at a time, which is very slow.</p></li>
+<li><p>Setting it too high can lead to imbalanced routing. Concretely, this can lead to very high tail latencies during upscale, because when the autoscaler is scaling a deployment up due to a traffic spike, most or all of the requests might be assigned to the existing replicas before the new replicas are started.</p></li>
+</ul>
+</section>
+</section>
+<section id="required-define-upper-and-lower-autoscaling-limits">
+<h3>[Required] Define upper and lower autoscaling limits<a class="headerlink" href="#required-define-upper-and-lower-autoscaling-limits" title="Permalink to this headline">#</a></h3>
+<p>To use autoscaling, you need to define the minimum and maximum number of resources allowed for your system.</p>
+<ul class="simple">
+<li><p><strong>min_replicas [default=1]</strong>: This is the minimum number of replicas for the deployment. If you want to ensure your system can deal with a certain level of traffic at all times, set <code class="docutils literal notranslate"><span class="pre">min_replicas</span></code> to a positive number. On the other hand, if you anticipate periods of no traffic and want to scale to zero to save cost, set <code class="docutils literal notranslate"><span class="pre">min_replicas</span> <span class="pre">=</span> <span class="pre">0</span></code>. Note that setting <code class="docutils literal notranslate"><span class="pre">min_replicas</span> <span class="pre">=</span> <span class="pre">0</span></code> causes higher tail latencies; when you start sending traffic, the deployment scales up, and there will be a cold start time as Serve waits for replicas to be started to serve the request.</p></li>
+<li><p><strong>max_replicas [default=1]</strong>: This is the maximum number of replicas for the deployment. This should be greater than <code class="docutils literal notranslate"><span class="pre">min_replicas</span></code>. Ray Serve Autoscaling relies on the Ray Autoscaler to scale up more nodes when the currently available cluster resources (CPUs, GPUs, etc.) are not enough to support more replicas.</p></li>
+<li><p><strong>initial_replicas</strong>: This is the number of replicas that are started initially for the deployment. This defaults to the value for <code class="docutils literal notranslate"><span class="pre">min_replicas</span></code>.</p></li>
+</ul>
+</section>
+<section id="optional-define-how-the-system-reacts-to-changing-traffic">
+<h3>[Optional] Define how the system reacts to changing traffic<a class="headerlink" href="#optional-define-how-the-system-reacts-to-changing-traffic" title="Permalink to this headline">#</a></h3>
+<p>Given a steady stream of traffic and appropriately configured <code class="docutils literal notranslate"><span class="pre">min_replicas</span></code> and <code class="docutils literal notranslate"><span class="pre">max_replicas</span></code>, the steady state of your system is essentially fixed for a chosen configuration value for <code class="docutils literal notranslate"><span class="pre">target_num_ongoing_requests_per_replica</span></code>. Before reaching steady state, however, your system is reacting to traffic shifts. How you want your system to react to changes in traffic determines how you want to set the remaining autoscaling configurations.</p>
+<ul class="simple">
+<li><p><strong>upscale_delay_s [default=30s]</strong>: This defines how long Serve waits before scaling up the number of replicas in your deployment. In other words, this parameter controls the frequency of upscale decisions. If the replicas are <em>consistently</em> serving more requests than desired for an <code class="docutils literal notranslate"><span class="pre">upscale_delay_s</span></code> number of seconds, then Serve scales up the number of replicas based on aggregated ongoing requests metrics. For example, if your service is likely to experience bursts of traffic, you can lower <code class="docutils literal notranslate"><span class="pre">upscale_delay_s</span></code> so that your application can react quickly to increases in traffic.</p></li>
+<li><p><strong>downscale_delay_s [default=600s]</strong>: This defines how long Serve waits before scaling down the number of replicas in your deployment. In other words, this parameter controls the frequency of downscale decisions. If the replicas are <em>consistently</em> serving less requests than desired for a <code class="docutils literal notranslate"><span class="pre">downscale_delay_s</span></code> number of seconds, then Serve scales down the number of replicas based on aggregated ongoing requests metrics. For example, if your application initializes slowly, you can increase <code class="docutils literal notranslate"><span class="pre">downscale_delay_s</span></code> to make the downscaling happen more infrequently and avoid reinitialization when the application needs to upscale again in the future.</p></li>
+<li><p><strong>upscale_smoothing_factor [default_value=1.0]</strong>: The multiplicative factor to amplify or moderate each upscaling decision. For example, when the application has high traffic volume in a short period of time, you can increase <code class="docutils literal notranslate"><span class="pre">upscale_smoothing_factor</span></code> to scale up the resource quickly. This parameter is like a “gain” factor to amplify the response of the autoscaling algorithm.</p></li>
+<li><p><strong>downscale_smoothing_factor [default_value=1.0]</strong>: The multiplicative factor to amplify or moderate each downscaling decision. For example, if you want your application to be less sensitive to drops in traffic and scale down more conservatively, you can decrease <code class="docutils literal notranslate"><span class="pre">downscale_smoothing_factor</span></code> to slow down the pace of downscaling.</p></li>
+<li><p><strong>metrics_interval_s [default_value=10]</strong>: This controls how often each replica sends reports on current ongoing requests to the autoscaler. Note that the autoscaler can’t make new decisions if it doesn’t receive updated metrics, so you most likely want to set <code class="docutils literal notranslate"><span class="pre">metrics_interval_s</span></code> to a value that is less than or equal to the upscale and downscale delay values. For instance, if you set <code class="docutils literal notranslate"><span class="pre">upscale_delay_s</span> <span class="pre">=</span> <span class="pre">3</span></code>, but keep <code class="docutils literal notranslate"><span class="pre">metrics_interval_s</span> <span class="pre">=</span> <span class="pre">10</span></code>, the autoscaler only upscales roughly every 10 seconds.</p></li>
+<li><p><strong>look_back_period_s [default_value=30]</strong>: This is the window over which the average number of ongoing requests per replica is calculated.</p></li>
+</ul>
+</section>
+</section>
+<section id="model-composition-example">
+<h2>Model composition example<a class="headerlink" href="#model-composition-example" title="Permalink to this headline">#</a></h2>
+<p>Determining the autoscaling configuration for a multi-model application requires understanding each deployment’s scaling requirements. Every deployment has a different latency and differing levels of concurrency. As a result, finding the right autoscaling config for a model-composition application requires experimentation.</p>
+<p>This example is a simple application with three deployments composed together to build some intuition about multi-model autoscaling. Assume these deployments:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">HeavyLoad</span></code>: A mock 200ms workload with high CPU usage.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LightLoad</span></code>: A mock 100ms workload with high CPU usage.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Driver</span></code>: A driver deployment that fans out to the <code class="docutils literal notranslate"><span class="pre">HeavyLoad</span></code> and <code class="docutils literal notranslate"><span class="pre">LightLoad</span></code> deployments and aggregates the two outputs.</p></li>
+</ul>
+<section id="attempt-1-one-driver-replica">
+<h3>Attempt 1: One <code class="docutils literal notranslate"><span class="pre">Driver</span></code> replica<a class="headerlink" href="#attempt-1-one-driver-replica" title="Permalink to this headline">#</a></h3>
+<p>First consider the following deployment configurations. Because the driver deployment has low CPU usage and is only asynchronously making calls to the downstream deployments, allocating one fixed <code class="docutils literal notranslate"><span class="pre">Driver</span></code> replica is reasonable.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-0">
+Driver</label><div class="sd-tab-content docutils">
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Driver</span><span class="w"></span>
+<span class="w">  </span><span class="nt">num_replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
+<span class="w">  </span><span class="nt">max_concurrent_queries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200</span><span class="w"></span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-1">
+HeavyLoad</label><div class="sd-tab-content docutils">
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HeavyLoad</span><span class="w"></span>
+<span class="w">  </span><span class="nt">max_concurrent_queries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w"></span>
+<span class="w">  </span><span class="nt">autoscaling_config</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">target_num_ongoing_requests_per_replica</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
+<span class="w">    </span><span class="nt">min_replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w"></span>
+<span class="w">    </span><span class="nt">initial_replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w"></span>
+<span class="w">    </span><span class="nt">max_replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200</span><span class="w"></span>
+<span class="w">    </span><span class="nt">upscale_delay_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w"></span>
+<span class="w">    </span><span class="nt">downscale_delay_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"></span>
+<span class="w">    </span><span class="nt">upscale_smoothing_factor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.3</span><span class="w"></span>
+<span class="w">    </span><span class="nt">downscale_smoothing_factor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.3</span><span class="w"></span>
+<span class="w">    </span><span class="nt">metrics_interval_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w"></span>
+<span class="w">    </span><span class="nt">look_pack_period_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w"></span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-2" name="sd-tab-set-0" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-2">
+LightLoad</label><div class="sd-tab-content docutils">
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LightLoad</span><span class="w"></span>
+<span class="w">  </span><span class="nt">max_concurrent_queries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w"></span>
+<span class="w">  </span><span class="nt">autoscaling_config</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">target_num_ongoing_requests_per_replica</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
+<span class="w">    </span><span class="nt">min_replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w"></span>
+<span class="w">    </span><span class="nt">initial_replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w"></span>
+<span class="w">    </span><span class="nt">max_replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200</span><span class="w"></span>
+<span class="w">    </span><span class="nt">upscale_delay_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w"></span>
+<span class="w">    </span><span class="nt">downscale_delay_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"></span>
+<span class="w">    </span><span class="nt">upscale_smoothing_factor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.3</span><span class="w"></span>
+<span class="w">    </span><span class="nt">downscale_smoothing_factor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.3</span><span class="w"></span>
+<span class="w">    </span><span class="nt">metrics_interval_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w"></span>
+<span class="w">    </span><span class="nt">look_pack_period_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w"></span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-3" name="sd-tab-set-0" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-3">
+Application Code</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">from</span> <span class="nn">ray</span> <span class="kn">import</span> <span class="n">serve</span>
+<span class="kn">from</span> <span class="nn">ray.serve.handle</span> <span class="kn">import</span> <span class="n">DeploymentHandle</span>
+
+
+<span class="nd">@serve</span><span class="o">.</span><span class="n">deployment</span>
+<span class="k">class</span> <span class="nc">LightLoad</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="k">while</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span> <span class="o">&lt;</span> <span class="mf">0.1</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="k">return</span> <span class="s2">&quot;light&quot;</span>
+
+
+<span class="nd">@serve</span><span class="o">.</span><span class="n">deployment</span>
+<span class="k">class</span> <span class="nc">HeavyLoad</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="k">while</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span> <span class="o">&lt;</span> <span class="mf">0.2</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="k">return</span> <span class="s2">&quot;heavy&quot;</span>
+
+
+<span class="nd">@serve</span><span class="o">.</span><span class="n">deployment</span>
+<span class="k">class</span> <span class="nc">Driver</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a_handle</span><span class="p">,</span> <span class="n">b_handle</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">a_handle</span><span class="p">:</span> <span class="n">DeploymentHandle</span> <span class="o">=</span> <span class="n">a_handle</span><span class="o">.</span><span class="n">options</span><span class="p">(</span><span class="n">use_new_handle_api</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_handle</span><span class="p">:</span> <span class="n">DeploymentHandle</span> <span class="o">=</span> <span class="n">b_handle</span><span class="o">.</span><span class="n">options</span><span class="p">(</span><span class="n">use_new_handle_api</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">a_future</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">a_handle</span><span class="o">.</span><span class="n">remote</span><span class="p">()</span>
+        <span class="n">b_future</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">b_handle</span><span class="o">.</span><span class="n">remote</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="k">await</span> <span class="n">a_future</span><span class="p">),</span> <span class="p">(</span><span class="k">await</span> <span class="n">b_future</span><span class="p">)</span>
+
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Driver</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">HeavyLoad</span><span class="o">.</span><span class="n">bind</span><span class="p">(),</span> <span class="n">LightLoad</span><span class="o">.</span><span class="n">bind</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Running the same Locust load test from the <a class="reference internal" href="../autoscaling-guide.html#resnet-autoscaling-example"><span class="std std-ref">Resnet workload</span></a> generates the following results:</p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>HeavyLoad and LightLoad Number Replicas</p></td>
+<td><p><a class="reference internal" href="https://raw.githubusercontent.com/ray-project/images/master/docs/serve/autoscaling-guide/model_composition_replicas.png"><img alt="comp" src="https://raw.githubusercontent.com/ray-project/images/master/docs/serve/autoscaling-guide/model_composition_replicas.png" style="width: 600px;" /></a></p></td>
+</tr>
+</tbody>
+</table>
+<p>As you might expect, the number of autoscaled <code class="docutils literal notranslate"><span class="pre">LightLoad</span></code> replicas is roughly half that of autoscaled <code class="docutils literal notranslate"><span class="pre">HeavyLoad</span></code> replicas. Although the same number of requests per second are sent to both deployments, <code class="docutils literal notranslate"><span class="pre">LightLoad</span></code> replicas can process twice as many requests per second as <code class="docutils literal notranslate"><span class="pre">HeavyLoad</span></code> replicas can, so the deployment should need half as many replicas to handle the same traffic load.</p>
+<p>Unfortunately, the service latency rises to from 230 to 400 ms when the number of Locust users increases to 100.</p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p>P50 Latency</p></th>
+<th class="head"><p>QPS</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><img alt="comp_latency" src="https://raw.githubusercontent.com/ray-project/images/master/docs/serve/autoscaling-guide/model_comp_latency.svg" /></p></td>
+<td><p><img alt="comp_rps" src="https://raw.githubusercontent.com/ray-project/images/master/docs/serve/autoscaling-guide/model_comp_rps.svg" /></p></td>
+</tr>
+</tbody>
+</table>
+<p>Note that the number of <code class="docutils literal notranslate"><span class="pre">HeavyLoad</span></code> replicas should roughly match the number of Locust users to adequately serve the Locust traffic. However, when the number of Locust users increased to 100, the <code class="docutils literal notranslate"><span class="pre">HeavyLoad</span></code> deployment struggled to reach 100 replicas, and instead only reached 65 replicas. The per-deployment latencies reveal the root cause. While <code class="docutils literal notranslate"><span class="pre">HeavyLoad</span></code> and <code class="docutils literal notranslate"><span class="pre">LightLoad</span></code> latencies stayed steady at 200ms and 100ms, <code class="docutils literal notranslate"><span class="pre">Driver</span></code> latencies rose from 230 to 400 ms. This suggests that the high Locust workload may be overwhelming the <code class="docutils literal notranslate"><span class="pre">Driver</span></code> replica and impacting its asynchronous event loop’s performance.</p>
+</section>
+<section id="attempt-2-autoscale-driver">
+<h3>Attempt 2: Autoscale <code class="docutils literal notranslate"><span class="pre">Driver</span></code><a class="headerlink" href="#attempt-2-autoscale-driver" title="Permalink to this headline">#</a></h3>
+<p>For this attempt, set an autoscaling configuration for <code class="docutils literal notranslate"><span class="pre">Driver</span></code> as well, with the setting <code class="docutils literal notranslate"><span class="pre">target_num_ongoing_requests_per_replica</span> <span class="pre">=</span> <span class="pre">20</span></code>. Now the deployment configurations are as follows.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-4" name="sd-tab-set-1" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-4">
+Driver</label><div class="sd-tab-content docutils">
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Driver</span><span class="w"></span>
+<span class="w">  </span><span class="nt">max_concurrent_queries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200</span><span class="w"></span>
+<span class="w">  </span><span class="nt">autoscaling_config</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">target_num_ongoing_requests_per_replica</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span><span class="w"></span>
+<span class="w">    </span><span class="nt">min_replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
+<span class="w">    </span><span class="nt">initial_replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
+<span class="w">    </span><span class="nt">max_replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w"></span>
+<span class="w">    </span><span class="nt">upscale_delay_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w"></span>
+<span class="w">    </span><span class="nt">downscale_delay_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"></span>
+<span class="w">    </span><span class="nt">upscale_smoothing_factor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.3</span><span class="w"></span>
+<span class="w">    </span><span class="nt">downscale_smoothing_factor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.3</span><span class="w"></span>
+<span class="w">    </span><span class="nt">metrics_interval_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w"></span>
+<span class="w">    </span><span class="nt">look_pack_period_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w"></span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-5" name="sd-tab-set-1" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-5">
+HeavyLoad</label><div class="sd-tab-content docutils">
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HeavyLoad</span><span class="w"></span>
+<span class="w">  </span><span class="nt">max_concurrent_queries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w"></span>
+<span class="w">  </span><span class="nt">autoscaling_config</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">target_num_ongoing_requests_per_replica</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
+<span class="w">    </span><span class="nt">min_replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w"></span>
+<span class="w">    </span><span class="nt">initial_replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w"></span>
+<span class="w">    </span><span class="nt">max_replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200</span><span class="w"></span>
+<span class="w">    </span><span class="nt">upscale_delay_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w"></span>
+<span class="w">    </span><span class="nt">downscale_delay_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"></span>
+<span class="w">    </span><span class="nt">upscale_smoothing_factor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.3</span><span class="w"></span>
+<span class="w">    </span><span class="nt">downscale_smoothing_factor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.3</span><span class="w"></span>
+<span class="w">    </span><span class="nt">metrics_interval_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w"></span>
+<span class="w">    </span><span class="nt">look_pack_period_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w"></span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-6" name="sd-tab-set-1" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-6">
+LightLoad</label><div class="sd-tab-content docutils">
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LightLoad</span><span class="w"></span>
+<span class="w">  </span><span class="nt">max_concurrent_queries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w"></span>
+<span class="w">  </span><span class="nt">autoscaling_config</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">target_num_ongoing_requests_per_replica</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
+<span class="w">    </span><span class="nt">min_replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w"></span>
+<span class="w">    </span><span class="nt">initial_replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w"></span>
+<span class="w">    </span><span class="nt">max_replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200</span><span class="w"></span>
+<span class="w">    </span><span class="nt">upscale_delay_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w"></span>
+<span class="w">    </span><span class="nt">downscale_delay_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w"></span>
+<span class="w">    </span><span class="nt">upscale_smoothing_factor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.3</span><span class="w"></span>
+<span class="w">    </span><span class="nt">downscale_smoothing_factor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.3</span><span class="w"></span>
+<span class="w">    </span><span class="nt">metrics_interval_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w"></span>
+<span class="w">    </span><span class="nt">look_pack_period_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w"></span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Running the same Locust load test again generates the following results:</p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>HeavyLoad and LightLoad Number Replicas</p></td>
+<td><p><a class="reference internal" href="https://raw.githubusercontent.com/ray-project/images/master/docs/serve/autoscaling-guide/model_composition_improved_replicas.png"><img alt="heavy" src="https://raw.githubusercontent.com/ray-project/images/master/docs/serve/autoscaling-guide/model_composition_improved_replicas.png" style="width: 600px;" /></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Driver Number Replicas</p></td>
+<td><p><a class="reference internal" href="https://raw.githubusercontent.com/ray-project/images/master/docs/serve/autoscaling-guide/model_composition_improved_driver_replicas.png"><img alt="driver" src="https://raw.githubusercontent.com/ray-project/images/master/docs/serve/autoscaling-guide/model_composition_improved_driver_replicas.png" style="width: 600px;" /></a></p></td>
+</tr>
+</tbody>
+</table>
+<p>With up to 6 <code class="docutils literal notranslate"><span class="pre">Driver</span></code> deployments to receive and distribute the incoming requests, the <code class="docutils literal notranslate"><span class="pre">HeavyLoad</span></code> deployment successfully scales up to 90+ replicas, and <code class="docutils literal notranslate"><span class="pre">LightLoad</span></code> up to 47 replicas. This configuration helps the application latency stay consistent as the traffic load increases.</p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Improved P50 Latency</p></th>
+<th class="head"><p>Improved RPS</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><img alt="comp_latency" src="https://raw.githubusercontent.com/ray-project/images/master/docs/serve/autoscaling-guide/model_composition_improved_latency.svg" /></p></td>
+<td><p><img alt="comp_latency" src="https://raw.githubusercontent.com/ray-project/images/master/docs/serve/autoscaling-guide/model_comp_improved_rps.svg" /></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="troubleshooting-guide">
+<h2>Troubleshooting guide<a class="headerlink" href="#troubleshooting-guide" title="Permalink to this headline">#</a></h2>
+<section id="unstable-number-of-autoscaled-replicas">
+<h3>Unstable number of autoscaled replicas<a class="headerlink" href="#unstable-number-of-autoscaled-replicas" title="Permalink to this headline">#</a></h3>
+<p>If the number of replicas in your deployment keeps oscillating even though the traffic is relatively stable, try the following:</p>
+<ul class="simple">
+<li><p>Set a smaller <code class="docutils literal notranslate"><span class="pre">upscale_smoothing_factor</span></code> and <code class="docutils literal notranslate"><span class="pre">downscale_smoothing_factor</span></code>. Setting both values smaller than one helps the autoscaler make more conservative upscale and downscale decisions. It effectively smooths out the replicas graph, and there will be less “sharp edges”.</p></li>
+<li><p>Set a <code class="docutils literal notranslate"><span class="pre">look_back_period_s</span></code> value that matches the rest of the autoscaling config. For longer upscale and downscale delay values, a longer look back period can likely help stabilize the replica graph, but for shorter upscale and downscale delay values, a shorter look back period may be more appropriate. For instance, the following replica graphs show how a deployment with <code class="docutils literal notranslate"><span class="pre">upscale_delay_s</span> <span class="pre">=</span> <span class="pre">3</span></code> works with a longer vs shorter look back period.</p></li>
+</ul>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p><code class="docutils literal notranslate"><span class="pre">look_back_period_s</span> <span class="pre">=</span> <span class="pre">30</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">look_back_period_s</span> <span class="pre">=</span> <span class="pre">3</span></code></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><img alt="look-back-before" src="https://raw.githubusercontent.com/ray-project/images/master/docs/serve/autoscaling-guide/look_back_period_before.png" /></p></td>
+<td><p><img alt="look-back-after" src="https://raw.githubusercontent.com/ray-project/images/master/docs/serve/autoscaling-guide/look_back_period_after.png" /></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="high-spikes-in-latency-during-bursts-of-traffic">
+<h3>High spikes in latency during bursts of traffic<a class="headerlink" href="#high-spikes-in-latency-during-bursts-of-traffic" title="Permalink to this headline">#</a></h3>
+<p>If you expect your application to receive bursty traffic, and at the same time want the deployments to scale down in periods of inactivity, you are likely concerned about how quickly the deployment can scale up and respond to bursts of traffic. While an increase in latency initially during a burst in traffic may be unavoidable, you can try the following to improve latency during bursts of traffic.</p>
+<ul class="simple">
+<li><p>Set a lower <code class="docutils literal notranslate"><span class="pre">upscale_delay_s</span></code>. The autoscaler always waits <code class="docutils literal notranslate"><span class="pre">upscale_delay_s</span></code> seconds before making a decision to upscale, so lowering this delay allows the autoscaler to react more quickly to changes, especially bursts, of traffic.</p></li>
+<li><p>Set a larger <code class="docutils literal notranslate"><span class="pre">upscale_smoothing_factor</span></code>. If <code class="docutils literal notranslate"><span class="pre">upscale_smoothing_factor</span> <span class="pre">&gt;</span> <span class="pre">1</span></code>, then the autoscaler scales up more aggressively than normal. This setting can allow your deployment to be more sensitive to bursts of traffic.</p></li>
+<li><p>Lower the <code class="docutils literal notranslate"><span class="pre">metric_interval_s</span></code>. Always set <code class="docutils literal notranslate"><span class="pre">metric_interval_s</span></code> to be less than or equal to <code class="docutils literal notranslate"><span class="pre">upscale_delay_s</span></code>, otherwise upscaling is delayed because the autoscaler doesn’t receive fresh information often enough.</p></li>
+<li><p>Set a lower <code class="docutils literal notranslate"><span class="pre">max_concurrent_queries</span></code>. If <code class="docutils literal notranslate"><span class="pre">max_concurrent_queries</span></code> is too high relative to <code class="docutils literal notranslate"><span class="pre">target_num_ongoing_requests_per_replica</span></code>, then when traffic increases, most or all of the requests might be assigned to the existing replicas before the new replicas are started. This setting can lead to very high latencies during upscale.</p></li>
+</ul>
+</section>
+<section id="deployments-scaling-down-too-quickly">
+<h3>Deployments scaling down too quickly<a class="headerlink" href="#deployments-scaling-down-too-quickly" title="Permalink to this headline">#</a></h3>
+<p>You may observe that deployments are scaling down too quickly. Instead, you may want the downscaling to be much more conservative to maximize the availability of your service.</p>
+<ul class="simple">
+<li><p>Set a longer <code class="docutils literal notranslate"><span class="pre">downscale_delay_s</span></code>. The autoscaler always waits <code class="docutils literal notranslate"><span class="pre">downscale_delay_s</span></code> seconds before making a decision to downscale, so by increasing this number, your system has a longer “grace period” after traffic drops before the autoscaler starts to remove replicas.</p></li>
+<li><p>Set a smaller <code class="docutils literal notranslate"><span class="pre">downscale_smoothing_factor</span></code>. If <code class="docutils literal notranslate"><span class="pre">downscale_smoothing_factor</span> <span class="pre">&lt;</span> <span class="pre">1</span></code>, then the autoscaler removes <em>less replicas</em> than what it thinks it should remove to achieve the target number of ongoing requests. In other words, the autoscaler makes more conservative downscaling decisions.</p></li>
+</ul>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p><code class="docutils literal notranslate"><span class="pre">downscale_smoothing_factor</span> <span class="pre">=</span> <span class="pre">1</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">downscale_smoothing_factor</span> <span class="pre">=</span> <span class="pre">0.5</span></code></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><img alt="downscale-smooth-before" src="https://raw.githubusercontent.com/ray-project/images/master/docs/serve/autoscaling-guide/downscale_smoothing_factor_before.png" /></p></td>
+<td><p><img alt="downscale-smooth-after" src="https://raw.githubusercontent.com/ray-project/images/master/docs/serve/autoscaling-guide/downscale_smoothing_factor_after.png" /></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="app-builder-guide.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Pass Arguments to Applications</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="performance.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Performance Tuning</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><!-- Override the footer area for the sphinx-book-theme to include the CSAT widget -->
+<div id="csat">
+  <div id="csat-feedback-received" class="csat-hidden">
+    <span>谢谢你的反馈！</span>
+  </div>
+  <div id="csat-inputs">
+    <span>是否能帮助到你？</span>
+    <div id="csat-yes" class="csat-button">
+      <svg id="csat-yes-icon" class="csat-hidden csat-icon" width="18" height="13" viewBox="0 0 18 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 10.172L16.1922 0.979004L17.6072 2.393L7.00023 13L0.63623 6.636L2.05023 5.222L7.00023 10.172Z" fill="black"/>
+      </svg>
+      <span>是<span>
+    </div>
+    <div id="csat-no" class="csat-button">
+      <svg id="csat-no-icon" class="csat-hidden csat-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 5.58599L11.9502 0.635986L13.3642 2.04999L8.41423 6.99999L13.3642 11.95L11.9502 13.364L7.00023 8.41399L2.05023 13.364L0.63623 11.95L5.58623 6.99999L0.63623 2.04999L2.05023 0.635986L7.00023 5.58599Z" fill="black"/>
+      </svg>
+      <span>否<span>
+    </div>
+  </div>
+  <div id="csat-textarea-group" class="csat-hidden">
+    <span id="csat-feedback-label">反馈</span>
+    <textarea id="csat-textarea"></textarea>
+    <div id="csat-submit">提交</div>
+  </div>
+</div><p>
+  
+    By The Ray Team<br/>
+  
+      &copy; Copyright 2024, The Ray Team.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

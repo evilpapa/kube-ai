@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../_static/javascripts/modernizr.js"></script>
+  
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-54780881-2"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-54780881-2');
+</script>
+  
+  
+    <title>故障排查指南 &#8212; seldon-core  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=83e35b93" />
+    <link rel="stylesheet" type="text/css" href="../_static/material.css?v=79c92029" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/rtd_sphinx_search.min.css?v=fb480935" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=15a8f09d" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/rtd_search_config.js"></script>
+    <script src="../_static/js/rtd_sphinx_search.min.js?v=60fbc683"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="服务端" href="../nav/config/servers.html" />
+    <link rel="prev" title="AB 测试和渐进式发布" href="../rollouts/abtests.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=indigo data-md-color-accent=teal>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#workflow/troubleshooting" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../index.html" title="seldon-core  documentation"
+           class="md-header-nav__button md-logo">
+          
+            &nbsp;
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">Seldon Core Documentation</span>
+          <span class="md-header-nav__topic"> 故障排查指南 </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder=""Search""
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+            
+            <li class="md-tabs__item"><a href="/" class="md-tabs__link">🚀 Our Other Projects & Products:</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi/en/stable/" class="md-tabs__link">Alibi Explain</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi-detect/en/stable/" class="md-tabs__link">Alibi Detect</a></li>
+            
+            <li class="md-tabs__item"><a href="https://mlserver.readthedocs.io/en/latest/" class="md-tabs__link">MLServer</a></li>
+            
+            <li class="md-tabs__item"><a href="https://tempo.readthedocs.io/en/latest/" class="md-tabs__link">Tempo SDK</a></li>
+            
+            <li class="md-tabs__item"><a href="https://deploy.seldon.io" class="md-tabs__link">Seldon Enterprise Platform</a></li>
+            
+            <li class="md-tabs__item"><a href="https://github.com/SeldonIO/seldon-deploy-sdk#seldon-deploy-sdk" class="md-tabs__link">Seldon Enterprise Platform SDK</a></li>
+          <li class="md-tabs__item"><a href="../nav/configuration.html" class="md-tabs__link">配置</a></li>
+          <li class="md-tabs__item"><a href="../nav/config/deployments.html" class="md-tabs__link">部署</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../index.html" title="seldon-core documentation" class="md-nav__button md-logo">
+      
+        <img src="../_static/" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../index.html"
+       title="seldon-core documentation">Seldon Core Documentation</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/getting-started.html" class="md-nav__link">开始</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/concepts.html" class="md-nav__link">概念</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/configuration.html" class="md-nav__link">配置</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/installation.html" class="md-nav__link">安装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/deployments.html" class="md-nav__link">发布</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="deploying.html" class="md-nav__link">部署技术</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../graph/protocols.html" class="md-nav__link">支持的 API 协议</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="serving.html" class="md-nav__link">测试模型节点</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../graph/scaling.html" class="md-nav__link">扩缩容</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../reference/apis/metadata.html" class="md-nav__link">模型元数据</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../graph/disruption-budgets.html" class="md-nav__link">熔断</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../graph/graph-modes.html" class="md-nav__link">图部署选项</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../rollouts/abtests.html" class="md-nav__link">AB 测试和渐进式部署</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> 部署故障排除 </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">部署故障排除</a>
+      
+        
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#workflow-troubleshooting--page-root" class="md-nav__link">故障排查指南</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">我的模型似乎没有运行</a>
+        </li>
+        <li class="md-nav__item"><a href="#seldondeployment" class="md-nav__link">检查所有 SeldonDeployment 事件</a>
+        </li>
+        <li class="md-nav__item"><a href="#seldon-deployment-creating" class="md-nav__link">Seldon Deployment 一直停留在「creating」状态</a>
+        </li>
+        <li class="md-nav__item"><a href="#ambassador-404" class="md-nav__link">访问 Ambassador 节点返回404</a>
+        </li>
+        <li class="md-nav__item"><a href="#api-500" class="md-nav__link">通过 API 请求模型返回 500 错误</a>
+        </li>
+        <li class="md-nav__item"><a href="#seldon-deployment" class="md-nav__link">Seldon Deployment 未列出</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id3" class="md-nav__link">错误内存地址</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">已经进行了上述尝试，但仍有问题</a>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/workflow/troubleshooting.md.txt">Show Source</a> </li>
+
+  </ul>
+</nav>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/servers.html" class="md-nav__link">服务器</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/routing.html" class="md-nav__link">路由</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/wrappers.html" class="md-nav__link">语言封装和 SDK</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/integrations.html" class="md-nav__link">集成</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/tutorials.html" class="md-nav__link">教程</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/reference.html" class="md-nav__link">参考</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/contributing.html" class="md-nav__link">贡献</a>
+      
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#workflow-troubleshooting--page-root" class="md-nav__link">故障排查指南</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">我的模型似乎没有运行</a>
+        </li>
+        <li class="md-nav__item"><a href="#seldondeployment" class="md-nav__link">检查所有 SeldonDeployment 事件</a>
+        </li>
+        <li class="md-nav__item"><a href="#seldon-deployment-creating" class="md-nav__link">Seldon Deployment 一直停留在「creating」状态</a>
+        </li>
+        <li class="md-nav__item"><a href="#ambassador-404" class="md-nav__link">访问 Ambassador 节点返回404</a>
+        </li>
+        <li class="md-nav__item"><a href="#api-500" class="md-nav__link">通过 API 请求模型返回 500 错误</a>
+        </li>
+        <li class="md-nav__item"><a href="#seldon-deployment" class="md-nav__link">Seldon Deployment 未列出</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id3" class="md-nav__link">错误内存地址</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">已经进行了上述尝试，但仍有问题</a>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/workflow/troubleshooting.md.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <section id="id1">
+<h1 id="workflow-troubleshooting--page-root">故障排查指南<a class="headerlink" href="#workflow-troubleshooting--page-root" title="Permalink to this heading">¶</a></h1>
+<p>如果 Seldon Deployment 未在此处运行，
+则有一些提示来诊断问题。</p>
+<section id="id2">
+<h2 id="id2">我的模型似乎没有运行<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h2>
+<p>检查 Seldon Deployment 是否运行：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>get<span class="w"> </span>sdep
+</pre></div>
+</div>
+<p>如果它存在，检查名为 <code class="docutils literal notranslate"><span class="pre">&lt;name&gt;</span></code> 的 Seldon deployment 的状态：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>get<span class="w"> </span>sdep<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.status}'</span>
+</pre></div>
+</div>
+<p>看起来像：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt;kubectl<span class="w"> </span>get<span class="w"> </span>sdep
+
+NAME<span class="w">      </span>AGE
+mymodel<span class="w">   </span>1m
+
+&gt;kubectl<span class="w"> </span>get<span class="w"> </span>sdep<span class="w"> </span>mymodel<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.status}'</span>
+map<span class="o">[</span>predictorStatus:<span class="o">[</span>map<span class="o">[</span>name:mymodel-mymodel-7cd068f<span class="w"> </span>replicas:1<span class="w"> </span>replicasAvailable:1<span class="o">]]</span><span class="w"> </span>state:Available<span class="o">]</span>
+</pre></div>
+</div>
+<p>如果安装了 <code class="docutils literal notranslate"><span class="pre">jq</span></code> 可获得更好的输出：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt;kubectl<span class="w"> </span>get<span class="w"> </span>sdep<span class="w"> </span>mymodel<span class="w"> </span>-o<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.status
+<span class="o">{</span>
+<span class="w">  </span><span class="s2">"predictorStatus"</span>:<span class="w"> </span><span class="o">[</span>
+<span class="w">    </span><span class="o">{</span>
+<span class="w">      </span><span class="s2">"name"</span>:<span class="w"> </span><span class="s2">"mymodel-mymodel-7cd068f"</span>,
+<span class="w">      </span><span class="s2">"replicas"</span>:<span class="w"> </span><span class="m">1</span>,
+<span class="w">      </span><span class="s2">"replicasAvailable"</span>:<span class="w"> </span><span class="m">1</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="w">  </span><span class="o">]</span>,
+<span class="w">  </span><span class="s2">"state"</span>:<span class="w"> </span><span class="s2">"Available"</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>无效的 json/yaml 的模型示例：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt;kubectl<span class="w"> </span>get<span class="w"> </span>sdep<span class="w"> </span>seldon-model<span class="w"> </span>-o<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.status
+<span class="o">{</span>
+<span class="w">  </span><span class="s2">"description"</span>:<span class="w"> </span><span class="s2">"Cannot find field: imagename in message k8s.io.api.core.v1.Container"</span>,
+<span class="w">  </span><span class="s2">"state"</span>:<span class="w"> </span><span class="s2">"Failed"</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</section>
+<section id="seldondeployment">
+<h2 id="seldondeployment">检查所有 SeldonDeployment 事件<a class="headerlink" href="#seldondeployment" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>describe<span class="w"> </span>sdep<span class="w"> </span>mysdep
+</pre></div>
+</div>
+<p>这将显示 operator 所有的创建、更新、删除和错误时间的时间信息。</p>
+</section>
+<section id="seldon-deployment-creating">
+<h2 id="seldon-deployment-creating">Seldon Deployment 一直停留在「creating」状态<a class="headerlink" href="#seldon-deployment-creating" title="Permalink to this heading">¶</a></h2>
+<p>检查 pods 是否运行成功。</p>
+</section>
+<section id="ambassador-404">
+<h2 id="ambassador-404">访问 Ambassador 节点返回404<a class="headerlink" href="#ambassador-404" title="Permalink to this heading">¶</a></h2>
+<p>模型运行中，
+并使用 Ambassador 作为 ingress 有问题时，
+请参阅 <a class="reference external" href="https://www.getambassador.io/docs/edge-stack/latest/topics/running/debugging/">Ambassador 文档</a>。
+你可以找到模型
+执行的正确 URL 路径。</p>
+<p>如果 ambassador 未运行，查看 pod 日志： <code class="docutils literal notranslate"><span class="pre">kubectl</span> <span class="pre">logs</span> <span class="pre">&lt;pod_name&gt;</span></code>。
+注意 ambassador 是否以集群范围机型安装，
+其 rbac 设置不被限定在特定命名空间，否则会出现权限错误。</p>
+</section>
+<section id="api-500">
+<h2 id="api-500">通过 API 请求模型返回 500 错误<a class="headerlink" href="#api-500" title="Permalink to this heading">¶</a></h2>
+<p>查看运行模型的 pod 日志</p>
+</section>
+<section id="seldon-deployment">
+<h2 id="seldon-deployment">Seldon Deployment 未列出<a class="headerlink" href="#seldon-deployment" title="Permalink to this heading">¶</a></h2>
+<p>查看 Seldon Operator 日志。
+他是处理 Seldon Deployment graphs 发送到 Kubernetes 集群的 pod。
+默认安装下
+你可以在 <code class="docutils literal notranslate"><span class="pre">seldon-system</span></code> 中找到 operator pod。
+他被打成 <code class="docutils literal notranslate"><span class="pre">control-plane=seldon-controller-manager</span></code> 标签，
+通过如下命令查看日志：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>seldon-system<span class="w"> </span>-l<span class="w"> </span>control-plane<span class="o">=</span>seldon-controller-manager
+</pre></div>
+</div>
+<section id="id3">
+<h3 id="id3">错误内存地址<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h3>
+<p>有时候会看到 operator
+出现如下日志错误：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">panic</span><span class="p">:</span> <span class="n">runtime</span> <span class="n">error</span><span class="p">:</span> <span class="n">invalid</span> <span class="n">memory</span> <span class="n">address</span> <span class="ow">or</span> <span class="n">nil</span> <span class="n">pointer</span> <span class="n">dereference</span>
+</pre></div>
+</div>
+<p>这种错误通常是有空或者
+异常 <code class="docutils literal notranslate"><span class="pre">SeldonDeployment</span></code> spec 值导致。
+通常主要为错误的 webhook 配置导致。
+可尝试通过 <a class="reference internal" href="install.html"><span class="doc">重新安装 Seldon Core</span></a>
+来修复他。</p>
+</section>
+</section>
+<section id="id4">
+<h2 id="id4">已经进行了上述尝试，但仍有问题<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>联系 <a class="reference external" href="https://join.slack.com/t/seldondev/shared_invite/enQtMzA2Mzk1Mzg0NjczLTJlNjQ1NTE5Y2MzMWIwMGUzYjNmZGFjZjUxODU5Y2EyMDY0M2U3ZmRiYTBkOTRjMzZhZjA4NjJkNDkxZTA2YmU">Slack 社区</a></p></li>
+<li><p>创建一个 [Seldon Core’s Github repo] 讨论(<a class="reference external" href="https://github.com/SeldonIO/seldon-core/issues">https://github.com/SeldonIO/seldon-core/issues</a>)。
+请务必添加上述建议的任何诊断，
+以帮助我们诊断您的问题。</p></li>
+</ul>
+</section>
+</section>
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="../rollouts/abtests.html" title="AB 测试和渐进式发布"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> "Previous" </span> AB 测试和渐进式发布 </span>
+              </div>
+            </a>
+          
+          
+            <a href="../nav/config/servers.html" title="服务端"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> "Next" </span> 服务端 </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2024, Seldon Technologies Ltd.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

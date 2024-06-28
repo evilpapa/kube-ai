@@ -1,0 +1,37 @@
+# __function_api_start__
+from ray import train
+
+
+def objective(x, a, b):  # Define an objective function.
+    return a * (x ** 0.5) + b
+
+
+def trainable(config):  # Pass a "config" dictionary into your trainable.
+
+    for x in range(20):  # "Train" for 20 iterations and compute intermediate scores.
+        score = objective(x, config["a"], config["b"])
+
+        train.report({"score": score})  # Send the score to Tune.
+
+
+# __function_api_end__
+
+import ray
+import ray.rllib.agents.ppo as ppo
+from ray import serve
+
+def train_ppo_model():
+    trainer = ppo.PPOTrainer(
+        config={"framework": "torch", "num_workers": 0},
+        env="CartPole-v0",
+    )
+    # Train for one iteration
+    trainer.train()
+    trainer.save("/tmp/rllib_checkpoint")
+    return "/tmp/rllib_checkpoint/checkpoint_000001/checkpoint-1"
+
+
+checkpoint_path = train_ppo_model()
+
+num_workers = 8
+num_gpus = 2

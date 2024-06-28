@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../_static/javascripts/modernizr.js"></script>
+  
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-54780881-2"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-54780881-2');
+</script>
+  
+  
+    <title>安装 Seldon-Core &#8212; seldon-core  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=83e35b93" />
+    <link rel="stylesheet" type="text/css" href="../_static/material.css?v=79c92029" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/rtd_sphinx_search.min.css?v=fb480935" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=15a8f09d" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/rtd_search_config.js"></script>
+    <script src="../_static/js/rtd_sphinx_search.min.js?v=60fbc683"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="本地安装" href="../install/kind.html" />
+    <link rel="prev" title="安装" href="../nav/installation.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=indigo data-md-color-accent=teal>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#workflow/install" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../index.html" title="seldon-core  documentation"
+           class="md-header-nav__button md-logo">
+          
+            &nbsp;
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">Seldon Core Documentation</span>
+          <span class="md-header-nav__topic"> 安装 Seldon-Core </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder=""Search""
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+            
+            <li class="md-tabs__item"><a href="/" class="md-tabs__link">🚀 Our Other Projects & Products:</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi/en/stable/" class="md-tabs__link">Alibi Explain</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi-detect/en/stable/" class="md-tabs__link">Alibi Detect</a></li>
+            
+            <li class="md-tabs__item"><a href="https://mlserver.readthedocs.io/en/latest/" class="md-tabs__link">MLServer</a></li>
+            
+            <li class="md-tabs__item"><a href="https://tempo.readthedocs.io/en/latest/" class="md-tabs__link">Tempo SDK</a></li>
+            
+            <li class="md-tabs__item"><a href="https://deploy.seldon.io" class="md-tabs__link">Seldon Enterprise Platform</a></li>
+            
+            <li class="md-tabs__item"><a href="https://github.com/SeldonIO/seldon-deploy-sdk#seldon-deploy-sdk" class="md-tabs__link">Seldon Enterprise Platform SDK</a></li>
+          <li class="md-tabs__item"><a href="../nav/getting-started.html" class="md-tabs__link">开始</a></li>
+          <li class="md-tabs__item"><a href="../nav/installation.html" class="md-tabs__link">安装</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../index.html" title="seldon-core documentation" class="md-nav__button md-logo">
+      
+        <img src="../_static/" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../index.html"
+       title="seldon-core documentation">Seldon Core Documentation</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/getting-started.html" class="md-nav__link">开始</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="github-readme.html" class="md-nav__link">快速指引</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/installation.html" class="md-nav__link">安装</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> Kubernetes 安装 </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">Kubernetes 安装</a>
+      
+        
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#workflow-install--page-root" class="md-nav__link">安装 Seldon-Core</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id1" class="md-nav__link">准备：</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">正在运行旧版的 Seldon Core ？</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#helm-seldon-core" class="md-nav__link">以 Helm 方式安装Seldon Core</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id3" class="md-nav__link">安装特殊版本</a>
+        </li>
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">安装一个快照版本</a>
+        </li>
+        <li class="md-nav__item"><a href="#cert-manager" class="md-nav__link">通过 cert-manager 安装</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#kustomize-seldon-core" class="md-nav__link">通过 Kustomize 安装 Seldon Core</a>
+        </li>
+        <li class="md-nav__item"><a href="#id5" class="md-nav__link">其他选项</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id6" class="md-nav__link">生产集成安装</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#kubeflow" class="md-nav__link">集成 Kubeflow 安装</a>
+        </li>
+        <li class="md-nav__item"><a href="#gcp" class="md-nav__link">GCP 应用市场</a>
+        </li>
+        <li class="md-nav__item"><a href="#openshift" class="md-nav__link">OpenShift</a>
+        </li>
+        <li class="md-nav__item"><a href="#operatorhub" class="md-nav__link">OperatorHub</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id7" class="md-nav__link">从上一版本进行升级</a>
+        </li>
+        <li class="md-nav__item"><a href="#id8" class="md-nav__link">高级用法</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#seldon-core-1-0" class="md-nav__link">在单独的命名空间中安装 Seldon Core (版本 >=1.0)</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#helm" class="md-nav__link">Helm</a>
+        </li>
+        <li class="md-nav__item"><a href="#kustomize" class="md-nav__link">Kustomize</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#seldon-core-operator-version-1-0" class="md-nav__link">指定标签的 Seldon Core Operator (version >=1.0)</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id9" class="md-nav__link">Helm</a>
+        </li>
+        <li class="md-nav__item"><a href="#id10" class="md-nav__link">Kustomize</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id11" class="md-nav__link">通过代理安装</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/workflow/install.rst.txt">Show Source</a> </li>
+
+  </ul>
+</nav>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../install/kind.html" class="md-nav__link">本地安装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../install/gcp.html" class="md-nav__link">Google Cloud 安装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../install/azure.html" class="md-nav__link">Azure 安装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../install/aws.html" class="md-nav__link">AWS 安装</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../developer/community.html" class="md-nav__link">社区</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/concepts.html" class="md-nav__link">概念</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/configuration.html" class="md-nav__link">配置</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/tutorials.html" class="md-nav__link">教程</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/reference.html" class="md-nav__link">参考</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/contributing.html" class="md-nav__link">贡献</a>
+      
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#workflow-install--page-root" class="md-nav__link">安装 Seldon-Core</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id1" class="md-nav__link">准备：</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">正在运行旧版的 Seldon Core ？</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#helm-seldon-core" class="md-nav__link">以 Helm 方式安装Seldon Core</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id3" class="md-nav__link">安装特殊版本</a>
+        </li>
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">安装一个快照版本</a>
+        </li>
+        <li class="md-nav__item"><a href="#cert-manager" class="md-nav__link">通过 cert-manager 安装</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#kustomize-seldon-core" class="md-nav__link">通过 Kustomize 安装 Seldon Core</a>
+        </li>
+        <li class="md-nav__item"><a href="#id5" class="md-nav__link">其他选项</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id6" class="md-nav__link">生产集成安装</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#kubeflow" class="md-nav__link">集成 Kubeflow 安装</a>
+        </li>
+        <li class="md-nav__item"><a href="#gcp" class="md-nav__link">GCP 应用市场</a>
+        </li>
+        <li class="md-nav__item"><a href="#openshift" class="md-nav__link">OpenShift</a>
+        </li>
+        <li class="md-nav__item"><a href="#operatorhub" class="md-nav__link">OperatorHub</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id7" class="md-nav__link">从上一版本进行升级</a>
+        </li>
+        <li class="md-nav__item"><a href="#id8" class="md-nav__link">高级用法</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#seldon-core-1-0" class="md-nav__link">在单独的命名空间中安装 Seldon Core (版本 >=1.0)</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#helm" class="md-nav__link">Helm</a>
+        </li>
+        <li class="md-nav__item"><a href="#kustomize" class="md-nav__link">Kustomize</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#seldon-core-operator-version-1-0" class="md-nav__link">指定标签的 Seldon Core Operator (version >=1.0)</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id9" class="md-nav__link">Helm</a>
+        </li>
+        <li class="md-nav__item"><a href="#id10" class="md-nav__link">Kustomize</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id11" class="md-nav__link">通过代理安装</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/workflow/install.rst.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <section id="seldon-core">
+<h1 id="workflow-install--page-root">安装 Seldon-Core<a class="headerlink" href="#workflow-install--page-root" title="Permalink to this heading">¶</a></h1>
+<section id="id1">
+<h2 id="id1">准备：<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Kubernetes 集群版本不小于 1.12</p>
+<ul>
+<li><p>Openshift 需要 4.2 或更高版本</p></li>
+</ul>
+</li>
+<li><p>安装方法</p>
+<ul>
+<li><p>Helm 不小于 3.0 版本</p></li>
+<li><p>Kustomize 不小于 0.1.0 版本</p></li>
+</ul>
+</li>
+<li><p>Ingress</p>
+<ul>
+<li><p>Istio（可在这里找到 Istio 1.5 版本的安装示例
+<a class="reference external" href="https://github.com/SeldonIO/seldon-core/tree/master/examples/auth">https://github.com/SeldonIO/seldon-core/tree/master/examples/auth</a>
+）</p></li>
+<li><p>Ambassador v1 （v2 当前不支持）</p></li>
+</ul>
+</li>
+</ul>
+<section id="id2">
+<h3 id="id2">正在运行旧版的 Seldon Core ？<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
+<p>请确保您已阅读 <a class="reference internal" href="../reference/upgrading.html"><span class="doc">「Seldon Core 升级指引」</span></a></p>
+<ul class="simple">
+<li><p><strong>Seldon Core 已停止为 1.0 之前版本提供支持，请确保您已升级到最新版本。</strong></p></li>
+<li><p>如果你在运行旧版本 Seldon Core，并想对它升级，请阅读 <a class="reference internal" href="../reference/upgrading.html"><span class="doc">「Seldon Core 升级指引」</span></a> 来了解升级的改动和最佳实践。</p></li>
+<li><p>请查看 <a class="reference external" href="https://helm.sh/docs/topics/v2_v3_migration/">从 Helm v2 迁移到 Helm v3</a> 如若你已经使用 Helm v2 安装运行了 Seldon Core 并想进行升级。</p></li>
+</ul>
+</section>
+</section>
+<section id="helm-seldon-core">
+<h2 id="helm-seldon-core">以 Helm 方式安装Seldon Core<a class="headerlink" href="#helm-seldon-core" title="Permalink to this heading">¶</a></h2>
+<p>首先 <a class="reference external" href="https://docs.helm.sh/docs/intro/install/">安装 Helm 3.x</a>。
+安装完 helm 之后，你就能通过发布 seldon 控制器来管理 Seldon Deployment 图。</p>
+<p>如果想在安装时设置高级参数，请查看完整的 <a class="reference external" href="../reference/helm.html">Seldon Core Helm Chart 参考</a>。</p>
+<p>首选命名空间 <code class="docutils literal notranslate"><span class="pre">seldon-system</span></code>，如下创建：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>create<span class="w"> </span>namespace<span class="w"> </span>seldon-system
+</pre></div>
+</div>
+<p>现在我们可以在命名空间 <code class="docutils literal notranslate"><span class="pre">seldon-system</span></code> 中安装 Seldon Core。</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio"/>
+<label class="sd-tab-label" for="sd-tab-item-0">
+Istio</label><div class="sd-tab-content docutils">
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>helm<span class="w"> </span>install<span class="w"> </span>seldon-core<span class="w"> </span>seldon-core-operator<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--repo<span class="w"> </span>https://storage.googleapis.com/seldon-charts<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--set<span class="w"> </span>usageMetrics.enabled<span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--set<span class="w"> </span>istio.enabled<span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--namespace<span class="w"> </span>seldon-system
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio"/>
+<label class="sd-tab-label" for="sd-tab-item-1">
+Ambassador</label><div class="sd-tab-content docutils">
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>helm<span class="w"> </span>install<span class="w"> </span>seldon-core<span class="w"> </span>seldon-core-operator<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--repo<span class="w"> </span>https://storage.googleapis.com/seldon-charts<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--set<span class="w"> </span>usageMetrics.enabled<span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--set<span class="w"> </span>ambassador.enabled<span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--namespace<span class="w"> </span>seldon-system
+</pre></div>
+</div>
+</div>
+</div>
+<p>完整的 Istio 和 Ambassador 安装说明
+请查看以下页面：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../ingress/istio.html"><span class="doc">Ingress with Istio</span></a></p></li>
+<li><p><a class="reference internal" href="../ingress/ambassador.html"><span class="doc">Ingress with Ambassador</span></a></p></li>
+</ul>
+<section id="id3">
+<h3 id="id3">安装特殊版本<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h3>
+<p>按照上面的命令使用 <code class="docutils literal notranslate"><span class="pre">--version</span></code> 参数来安装你想运行的特定版本。</p>
+</section>
+<section id="id4">
+<h3 id="id4">安装一个快照版本<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h3>
+<p>每当一个新的 PR 合并合并到主干，我们设置 CI 来构建一个「快照」版本，这将包含该特定开发/主分支代码的 Docker 镜像。
+当镜像以快照被推送，会创建一个 <code class="docutils literal notranslate"><span class="pre">"&lt;next-version&gt;-SNAPSHOT_&lt;timestamp&gt;"</span></code> 标签并包含 helm charts 的镜像来指定特殊版本（如 <code class="docutils literal notranslate"><span class="pre">version.txt</span></code> 中描述）来指定安装。</p>
+<p>这意味着，如果您想在开发版本发布之前尝试特定功能，则可以尝试主的开发版本。</p>
+<p>为此，您将能够克隆存储库，然后签出相关的快照分支。</p>
+<p>完成后，您可以使用以下
+命令安装：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>helm<span class="w"> </span>install<span class="w"> </span>helm-charts/seldon-core-operator<span class="w"> </span>seldon-core-operator
+</pre></div>
+</div>
+<p>下为包含 <code class="docutils literal notranslate"><span class="pre">helm-charts/seldon-core-operator</span></code> charts 的版本文件夹。</p>
+</section>
+<section id="cert-manager">
+<h3 id="cert-manager">通过 cert-manager 安装<a class="headerlink" href="#cert-manager" title="Permalink to this heading">¶</a></h3>
+<p>按照 <a class="reference external" href="https://cert-manager.io/docs/installation/kubernetes/">cert manager 文
+档</a> 来进行安装。</p>
+<p>通过如下命令安装 seldon-core ：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>helm<span class="w"> </span>install<span class="w"> </span>seldon-core<span class="w"> </span>seldon-core-operator<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--repo<span class="w"> </span>https://storage.googleapis.com/seldon-charts<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--set<span class="w"> </span>usageMetrics.enabled<span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--namespace<span class="w"> </span>seldon-system<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--set<span class="w"> </span>certManager.enabled<span class="o">=</span><span class="nb">true</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="kustomize-seldon-core">
+<h2 id="kustomize-seldon-core">通过 Kustomize 安装 Seldon Core<a class="headerlink" href="#kustomize-seldon-core" title="Permalink to this heading">¶</a></h2>
+<p><a class="reference external" href="https://github.com/kubernetes-sigs/kustomize">Kustomize</a> 安装在仓库 <code class="docutils literal notranslate"><span class="pre">/operator/config</span></code> 文件夹你可将模板拷贝到自己的 kustomize 路径进行编辑。</p>
+<p>要直接使用模板，这有一个 Makefile，它包含一组有用的命令：</p>
+<p>对于高于 1.15 的版本群集，确保
+<a class="reference external" href="https://github.com/SeldonIO/seldon-core/blob/master/operator/config/webhook/kustomization.yaml#L8">注释掉 patch_object_selector
+这块</a>。</p>
+<p>安装 cert-manager</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>install-cert-manager
+</pre></div>
+</div>
+<p>安装 Seldon 使用 cert-manager 来提供证书。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>deploy
+</pre></div>
+</div>
+<p>通过在 <code class="docutils literal notranslate"><span class="pre">config/cert/</span></code> 提供的证书安装 Seldon</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>deploy-cert
+</pre></div>
+</div>
+</section>
+<section id="id5">
+<h2 id="id5">其他选项<a class="headerlink" href="#id5" title="Permalink to this heading">¶</a></h2>
+<section id="id6">
+<h3 id="id6">生产集成安装<a class="headerlink" href="#id6" title="Permalink to this heading">¶</a></h3>
+<p>Seldon Core 安装好，你可以进行如下设置：</p>
+<section id="kubeflow">
+<h4 id="kubeflow">集成 Kubeflow 安装<a class="headerlink" href="#kubeflow" title="Permalink to this heading">¶</a></h4>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.kubeflow.org/docs/guides/components/seldon/#seldon-serving">将 Seldon 作为 Kubeflow 的一部分</a> 。</p></li>
+</ul>
+</section>
+<section id="gcp">
+<h4 id="gcp">GCP 应用市场<a class="headerlink" href="#gcp" title="Permalink to this heading">¶</a></h4>
+<p>如果有 Google Cloud Platform 账户，可通过 <a class="reference external" href="https://console.cloud.google.com/marketplace/details/seldon-portal/seldon-core">GCP
+Marketplace</a> 安装。</p>
+</section>
+<section id="openshift">
+<h4 id="openshift">OpenShift<a class="headerlink" href="#openshift" title="Permalink to this heading">¶</a></h4>
+<p>可在 OpenShift console UI 通过 OperatorHub 安装 Seldon Core。</p>
+</section>
+<section id="operatorhub">
+<h4 id="operatorhub">OperatorHub<a class="headerlink" href="#operatorhub" title="Permalink to this heading">¶</a></h4>
+<p>你页可以通过 <a class="reference external" href="https://operatorhub.io/operator/seldon-operator">Operator Hub</a> 安装 Seldon Core。</p>
+</section>
+</section>
+</section>
+<section id="id7">
+<h2 id="id7">从上一版本进行升级<a class="headerlink" href="#id7" title="Permalink to this heading">¶</a></h2>
+<p>查看 <a class="reference internal" href="../reference/upgrading.html"><span class="doc">升级日志</span></a></p>
+</section>
+<section id="id8">
+<h2 id="id8">高级用法<a class="headerlink" href="#id8" title="Permalink to this heading">¶</a></h2>
+<section id="seldon-core-1-0">
+<h3 id="seldon-core-1-0">在单独的命名空间中安装 Seldon Core (版本 &gt;=1.0)<a class="headerlink" href="#seldon-core-1-0" title="Permalink to this heading">¶</a></h3>
+<p><strong>你需要一个版本 &gt;= 1.15 的 k8s 集群</strong></p>
+<section id="helm">
+<h4 id="helm">Helm<a class="headerlink" href="#helm" title="Permalink to this heading">¶</a></h4>
+<p>可将 Seldon Core Operator 安装到指定的命名空间管理相关资源。
+一个安装在 <code class="docutils literal notranslate"><span class="pre">seldon-ns1</span></code> 命名空间的示例：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>create<span class="w"> </span>namespace<span class="w"> </span>seldon-ns1
+kubectl<span class="w"> </span>label<span class="w"> </span>namespace<span class="w"> </span>seldon-ns1<span class="w"> </span>seldon.io/controller-id<span class="o">=</span>seldon-ns1
+</pre></div>
+</div>
+<p>使用 <cite>seldon.io/controller-id=&lt;namespace&gt;</cite> 贴上标签，来确保全局全局性，Seldon Core Operator 将会忽略此命名空间。</p>
+<p>安装 Operator 到命名空间：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>helm<span class="w"> </span>install<span class="w"> </span>seldon-namespaced<span class="w"> </span>seldon-core-operator<span class="w">  </span>--repo<span class="w"> </span>https://storage.googleapis.com/seldon-charts<span class="w">  </span><span class="se">\</span>
+<span class="w">    </span>--set<span class="w"> </span><span class="nv">singleNamespace</span><span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--set<span class="w"> </span>image.pullPolicy<span class="o">=</span>IfNotPresent<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--set<span class="w"> </span>usageMetrics.enabled<span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--set<span class="w"> </span>crd.create<span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--namespace<span class="w"> </span>seldon-ns1
+</pre></div>
+</div>
+<p>可设置 <code class="docutils literal notranslate"><span class="pre">crd.create=true</span></code> 来创建 CRD。
+同意集群中如果在前一版本之后安装 Seldon Core Operator 需要设置 <code class="docutils literal notranslate"><span class="pre">crd.create=false</span></code>。</p>
+</section>
+<section id="kustomize">
+<h4 id="kustomize">Kustomize<a class="headerlink" href="#kustomize" title="Permalink to this heading">¶</a></h4>
+<p>Operator 文件加下的 Makefile 提供了一个安装示例：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>deploy-namespaced1
+</pre></div>
+</div>
+<p>查看 <a class="reference external" href="../examples/multiple_operators.html">多服务器示例笔记</a>。</p>
+</section>
+</section>
+<section id="seldon-core-operator-version-1-0">
+<h3 id="seldon-core-operator-version-1-0">指定标签的 Seldon Core Operator (version &gt;=1.0)<a class="headerlink" href="#seldon-core-operator-version-1-0" title="Permalink to this heading">¶</a></h3>
+<p><strong>需要 k8s 集群 &gt;= 1.15</strong></p>
+<p>您可以安装 Seldon Core Operator，来管理带有标签的 SeldonDeployments，其中标签 <code class="docutils literal notranslate"><span class="pre">seldon.io/controller-id</span></code> 的值与正在运行的 operator 的 controller-id 匹配。
+示例 <code class="docutils literal notranslate"><span class="pre">seldon-id1</span></code> 命名空间如下所示：</p>
+<section id="id9">
+<h4 id="id9">Helm<a class="headerlink" href="#id9" title="Permalink to this heading">¶</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>create<span class="w"> </span>namespace<span class="w"> </span>seldon-id1
+</pre></div>
+</div>
+<p>运行命令安装 Operator:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>helm<span class="w"> </span>install<span class="w"> </span>seldon-controllerid<span class="w"> </span>seldon-core-operator<span class="w">  </span>--repo<span class="w"> </span>https://storage.googleapis.com/seldon-charts<span class="w">  </span><span class="se">\</span>
+<span class="w">    </span>--set<span class="w"> </span><span class="nv">singleNamespace</span><span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--set<span class="w"> </span>image.pullPolicy<span class="o">=</span>IfNotPresent<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--set<span class="w"> </span>usageMetrics.enabled<span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--set<span class="w"> </span>crd.create<span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--set<span class="w"> </span><span class="nv">controllerId</span><span class="o">=</span>seldon-id1<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--namespace<span class="w"> </span>seldon-id1
+</pre></div>
+</div>
+<p>设置 <code class="docutils literal notranslate"><span class="pre">crd.create=true</span></code> 来创建 CRD。
+如果您在同一集群上在以前的 Seldon Core Operator 之上安装 Seldon Core Operator，则需要设置 <code class="docutils literal notranslate"><span class="pre">crd.create=false</span></code>。</p>
+<p>针对 kustomize 你需要在此处 <a class="reference external" href="https://github.com/SeldonIO/seldon-core/blob/master/operator/config/webhook/kustomization.yaml">去掉 patch_object_selector</a> 注释。</p>
+</section>
+<section id="id10">
+<h4 id="id10">Kustomize<a class="headerlink" href="#id10" title="Permalink to this heading">¶</a></h4>
+<p>Operator 文件夹中的 Makefile 中提供了一个示例安装：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>deploy-controllerid
+</pre></div>
+</div>
+<p>查看 <a class="reference external" href="../examples/multiple_operators.html">多服务器示例笔记</a>。</p>
+</section>
+</section>
+<section id="id11">
+<h3 id="id11">通过代理安装<a class="headerlink" href="#id11" title="Permalink to this heading">¶</a></h3>
+<p>当您的 kubernetes 集群位于代理后面时， <code class="docutils literal notranslate"><span class="pre">kube-apiserver``通常会继承系统代理变量。</span>
+<span class="pre">这可以阻止</span> <span class="pre">``kube-apiserver</span></code> 访问创建 Seldon 所需的 webhook 资源。</p>
+<p>你可能会看到如下错误：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Internal<span class="w"> </span>error<span class="w"> </span>occurred:<span class="w"> </span>failed<span class="w"> </span>calling<span class="w"> </span>webhook<span class="w"> </span><span class="s2">"v1.vseldondeployment.kb.io"</span>:<span class="w"> </span>Post<span class="w"> </span>https://seldon-webhook-service.seldon-system.svc:443/validate-machinelearning-seldon-io-v1-seldondeployment?timeout<span class="o">=</span>30s:<span class="w"> </span>Service<span class="w"> </span>Unavailable
+</pre></div>
+</div>
+<p>要解决此问题，请确保 <code class="docutils literal notranslate"><span class="pre">kube-apiserver</span></code> 的环境变量 <code class="docutils literal notranslate"><span class="pre">no_proxy``包含</span> <span class="pre">``.svc,.svc.cluster.local</span></code>。
+查看 <cite>这个 Github Issue 回复 &lt;https://github.com/jetstack/cert-manager/issues/2640#issuecomment-601872165&gt;`__来参考。
+如那里所述，错误也可能发生在 ``cert-manager-webhook`</cite>。</p>
+</section>
+</section>
+</section>
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="../nav/installation.html" title="安装"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> "Previous" </span> 安装 </span>
+              </div>
+            </a>
+          
+          
+            <a href="../install/kind.html" title="本地安装"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> "Next" </span> 本地安装 </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2024, Seldon Technologies Ltd.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

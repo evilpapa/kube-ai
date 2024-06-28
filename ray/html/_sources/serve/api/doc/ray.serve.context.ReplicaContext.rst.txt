@@ -1,0 +1,39 @@
+﻿
+
+ray.serve.context.ReplicaContext
+================================
+
+.. currentmodule:: ray.serve.context
+
+.. autoclass:: ReplicaContext
+   :show-inheritance:
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :toctree:
+
+   
+      
+
+   
+   
+
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :toctree:
+
+   
+      ~ReplicaContext.app_name
+      ~ReplicaContext.deployment
+      ~ReplicaContext.replica_tag
+      ~ReplicaContext.servable_object
+
+   
+   

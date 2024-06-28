@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../_static/javascripts/modernizr.js"></script>
+  
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-54780881-2"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-54780881-2');
+</script>
+  
+  
+    <title>使用 Docker 为 Seldon Core 打包 Python 模型 &#8212; seldon-core  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=83e35b93" />
+    <link rel="stylesheet" type="text/css" href="../_static/material.css?v=79c92029" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/rtd_sphinx_search.min.css?v=fb480935" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=15a8f09d" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/rtd_search_config.js"></script>
+    <script src="../_static/js/rtd_sphinx_search.min.js?v=60fbc683"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Seldon Python 服务配置" href="python_server.html" />
+    <link rel="prev" title="使用 s2i 为 Seldon Core 打包 Python 模型" href="python_wrapping_s2i.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=indigo data-md-color-accent=teal>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#python/python_wrapping_docker" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../index.html" title="seldon-core  documentation"
+           class="md-header-nav__button md-logo">
+          
+            &nbsp;
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">Seldon Core Documentation</span>
+          <span class="md-header-nav__topic"> 使用 Docker 为 Seldon Core 打包 Python 模型 </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder=""Search""
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+            
+            <li class="md-tabs__item"><a href="/" class="md-tabs__link">🚀 Our Other Projects & Products:</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi/en/stable/" class="md-tabs__link">Alibi Explain</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi-detect/en/stable/" class="md-tabs__link">Alibi Detect</a></li>
+            
+            <li class="md-tabs__item"><a href="https://mlserver.readthedocs.io/en/latest/" class="md-tabs__link">MLServer</a></li>
+            
+            <li class="md-tabs__item"><a href="https://tempo.readthedocs.io/en/latest/" class="md-tabs__link">Tempo SDK</a></li>
+            
+            <li class="md-tabs__item"><a href="https://deploy.seldon.io" class="md-tabs__link">Seldon Enterprise Platform</a></li>
+            
+            <li class="md-tabs__item"><a href="https://github.com/SeldonIO/seldon-deploy-sdk#seldon-deploy-sdk" class="md-tabs__link">Seldon Enterprise Platform SDK</a></li>
+          <li class="md-tabs__item"><a href="../nav/configuration.html" class="md-tabs__link">配置</a></li>
+          <li class="md-tabs__item"><a href="../nav/config/wrappers.html" class="md-tabs__link">语言封装和 SDK</a></li>
+          <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">Seldon Core Python 模块</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../index.html" title="seldon-core documentation" class="md-nav__button md-logo">
+      
+        <img src="../_static/" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../index.html"
+       title="seldon-core documentation">Seldon Core Documentation</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/getting-started.html" class="md-nav__link">开始</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/concepts.html" class="md-nav__link">概念</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/configuration.html" class="md-nav__link">配置</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/installation.html" class="md-nav__link">安装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/deployments.html" class="md-nav__link">发布</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/servers.html" class="md-nav__link">服务器</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/routing.html" class="md-nav__link">路由</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/wrappers.html" class="md-nav__link">语言封装和 SDK</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="index.html" class="md-nav__link">Python 语言封装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../go/go_wrapper_link.html" class="md-nav__link">Go 语言封装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../java/README.html" class="md-nav__link">Java 语言封装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nodejs/README.html" class="md-nav__link">Nodejs 语言封装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../cpp/README.html" class="md-nav__link">C++ 语言封装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../R/README.html" class="md-nav__link">R 语言封装</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/integrations.html" class="md-nav__link">集成</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/tutorials.html" class="md-nav__link">教程</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/reference.html" class="md-nav__link">参考</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/contributing.html" class="md-nav__link">贡献</a>
+      
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#python-python-wrapping-docker--page-root" class="md-nav__link">使用 Docker 为 Seldon Core 打包 Python 模型</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id1" class="md-nav__link">第 1 步 - 创建源代码</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#python" class="md-nav__link">Python 文件</a>
+        </li>
+        <li class="md-nav__item"><a href="#requirements-txt" class="md-nav__link">requirements.txt</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#dockerfile" class="md-nav__link">第 2 步 - 定义 Dockerfile</a>
+        </li>
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">第 3 步 - 构建您的镜像</a>
+        </li>
+        <li class="md-nav__item"><a href="#keras-tensorflow" class="md-nav__link">与 Keras/Tensorflow 模型一起使用</a>
+        </li>
+        <li class="md-nav__item"><a href="#id3" class="md-nav__link">环境变量</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#model-name" class="md-nav__link">MODEL_NAME</a>
+        </li>
+        <li class="md-nav__item"><a href="#service-type" class="md-nav__link">SERVICE_TYPE</a>
+        </li>
+        <li class="md-nav__item"><a href="#flask" class="md-nav__link">Flask 设置</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">创建不同的服务类型</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#model" class="md-nav__link">MODEL</a>
+        </li>
+        <li class="md-nav__item"><a href="#router" class="md-nav__link">ROUTER</a>
+        </li>
+        <li class="md-nav__item"><a href="#transformer" class="md-nav__link">TRANSFORMER</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id5" class="md-nav__link">高级用法</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id6" class="md-nav__link">模型类参数</a>
+        </li>
+        <li class="md-nav__item"><a href="#id7" class="md-nav__link">自定义指标</a>
+        </li>
+        <li class="md-nav__item"><a href="#custom-request-tags" class="md-nav__link">Custom Request Tags</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/python/python_wrapping_docker.md.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <section id="docker-seldon-core-python">
+<h1 id="python-python-wrapping-docker--page-root">使用 Docker 为 Seldon Core 打包 Python 模型<a class="headerlink" href="#python-python-wrapping-docker--page-root" title="Permalink to this heading">¶</a></h1>
+<p>在本指南中，我们说明了将您自己的 Python 模型封装在一个 docker 镜像中所需的步骤，该镜像准备使用 Docker 与 Seldon Core 一起部署。</p>
+<section id="id1">
+<h2 id="id1">第 1 步 - 创建源代码<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h2>
+<p>你需要</p>
+<ul class="simple">
+<li><p>一个运行模型的 python 类文件按</p></li>
+<li><p>带有 seldon-core 选项的 requirements.txt</p></li>
+</ul>
+<p>我们将深入详细步骤：</p>
+<section id="python">
+<h3 id="python">Python 文件<a class="headerlink" href="#python" title="Permalink to this heading">¶</a></h3>
+<p>你的源代码应该包含一个类型与文件名相同的 python 文件。例如，我们的 python 模型脚手架 <code class="docutils literal notranslate"><span class="pre">wrappers/s2i/python/test/model-template-app/MyModel.py</span></code>：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyModel</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Model template. You can load your model parameters in __init__ from a location accessible at runtime</span>
+<span class="sd">    """</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Add any initialization parameters. These will be passed at runtime from the graph definition parameters defined in your seldondeployment kubernetes resource manifest.</span>
+<span class="sd">        """</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"Initializing"</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">X</span><span class="p">,</span><span class="n">features_names</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Return a prediction.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : array-like</span>
+<span class="sd">        feature_names : array of feature names (optional)</span>
+<span class="sd">        """</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"Predict called - will run identity function"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">X</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>该文件名为 MyModel.py，它定义了一个类 MyModel</p></li>
+<li><p>该类包含一个 predict 方法，该方法采用数组 (numpy) X 和 feature_names 并返回一个预测数组。</p></li>
+<li><p>您可以在类 init 方法中添加任何必需的初始化。</p></li>
+<li><p>您的返回数组应该至少是二维的。</p></li>
+</ul>
+</section>
+<section id="requirements-txt">
+<h3 id="requirements-txt">requirements.txt<a class="headerlink" href="#requirements-txt" title="Permalink to this heading">¶</a></h3>
+<p>填充您的代码所需的任何软件依赖项到 requirements.txt。该文件至少应包含：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>seldon-core
+</pre></div>
+</div>
+</section>
+</section>
+<section id="dockerfile">
+<h2 id="dockerfile">第 2 步 - 定义 Dockerfile<a class="headerlink" href="#dockerfile" title="Permalink to this heading">¶</a></h2>
+<p>在与源代码和 requirements.txt 相同的目录中定义一个 Dockerfile。它将定义我们的 python 构建镜像所需的核心参数，以将您的模型封装为 env vars。一个例子是：</p>
+<div class="highlight-dockerfile notranslate"><div class="highlight"><pre><span></span><span class="k">FROM</span><span class="w"> </span><span class="s">python:3.7-slim</span>
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
+
+<span class="c"># Install python packages</span>
+<span class="k">COPY</span><span class="w"> </span>requirements.txt<span class="w"> </span>requirements.txt
+<span class="k">RUN</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+
+<span class="c"># Copy source code</span>
+<span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
+
+<span class="c"># Port for GRPC</span>
+<span class="k">EXPOSE</span><span class="w"> </span><span class="s">5000</span>
+<span class="c"># Port for REST</span>
+<span class="k">EXPOSE</span><span class="w"> </span><span class="s">9000</span>
+
+<span class="c"># Define environment variables</span>
+<span class="k">ENV</span><span class="w"> </span>MODEL_NAME<span class="w"> </span>MyModel
+<span class="k">ENV</span><span class="w"> </span>SERVICE_TYPE<span class="w"> </span>MODEL
+
+<span class="c"># Changing folder to default user</span>
+<span class="k">RUN</span><span class="w"> </span>chown<span class="w"> </span>-R<span class="w"> </span><span class="m">8888</span><span class="w"> </span>/app
+
+<span class="k">CMD</span><span class="w"> </span><span class="nb">exec</span><span class="w"> </span>seldon-core-microservice<span class="w"> </span><span class="nv">$MODEL_NAME</span><span class="w"> </span>--service-type<span class="w"> </span><span class="nv">$SERVICE_TYPE</span>
+</pre></div>
+</div>
+</section>
+<section id="id2">
+<h2 id="id2">第 3 步 - 构建您的镜像<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h2>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">build</span> <span class="pre">.</span> <span class="pre">-t</span> <span class="pre">$ORG/$MODEL_NAME:$TAG</span></code> 创建 Docker 镜像。可以使用一个简单的名称，但约定是使用 ORG/IMAGE:TAG 格式。</p>
+</section>
+<section id="keras-tensorflow">
+<h2 id="keras-tensorflow">与 Keras/Tensorflow 模型一起使用<a class="headerlink" href="#keras-tensorflow" title="Permalink to this heading">¶</a></h2>
+<p>为了确保带有 Tensorflow 后端的 Keras 模型正常工作，您可能需要在加载模型后调用 <code class="docutils literal notranslate"><span class="pre">_make_predict_function()</span></code>。这是因为 Flask 可能会在与初始化模型的进程不同的线程中调用预测请求。请参阅 <a class="reference external" href="https://github.com/keras-team/keras/issues/6462">keras 问题</a>以进行进一步讨论。</p>
+</section>
+<section id="id3">
+<h2 id="id3">环境变量<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h2>
+<p>下面解释了构建器映像所需的环境变量。可在 Dockerfile 或  <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">run</span></code> 用 <code class="docutils literal notranslate"><span class="pre">-e</span></code> 指定参数。</p>
+<section id="model-name">
+<h3 id="model-name">MODEL_NAME<a class="headerlink" href="#model-name" title="Permalink to this heading">¶</a></h3>
+<p>包含模型的类的名称。还有将被导入的 python 文件的名称。</p>
+</section>
+<section id="service-type">
+<h3 id="service-type">SERVICE_TYPE<a class="headerlink" href="#service-type" title="Permalink to this heading">¶</a></h3>
+<p>正在创建的服务类型。可用选项有：</p>
+<ul class="simple">
+<li><p>MODEL</p></li>
+<li><p>ROUTER</p></li>
+<li><p>TRANSFORMER</p></li>
+<li><p>COMBINER</p></li>
+<li><p>OUTLIER_DETECTOR</p></li>
+</ul>
+</section>
+<section id="flask">
+<h3 id="flask">Flask 设置<a class="headerlink" href="#flask" title="Permalink to this heading">¶</a></h3>
+<p>查看 <a class="reference external" href="https://flask.palletsprojects.com/config/#builtin-configuration-values">Flask - Builtin Configuration Values</a> 获取可能的配置；以下参数添加  <code class="docutils literal notranslate"><span class="pre">FLASK_</span></code> 字符串前缀时可设置（例如 <code class="docutils literal notranslate"><span class="pre">FLASK_JSON_SORT_KEYS</span></code> 在 Flask 会转换成 <code class="docutils literal notranslate"><span class="pre">JSON_SORT_KEYS</span></code> in Flask）：</p>
+<ul class="simple">
+<li><p>DEBUG</p></li>
+<li><p>EXPLAIN_TEMPLATE_LOADING</p></li>
+<li><p>JSONIFY_PRETTYPRINT_REGULAR</p></li>
+<li><p>JSON_SORT_KEYS</p></li>
+<li><p>PROPAGATE_EXCEPTIONS</p></li>
+<li><p>PRESERVE_CONTEXT_ON_EXCEPTION</p></li>
+<li><p>SESSION_COOKIE_HTTPONLY</p></li>
+<li><p>SESSION_COOKIE_SECURE</p></li>
+<li><p>SESSION_REFRESH_EACH_REQUEST</p></li>
+<li><p>TEMPLATES_AUTO_RELOAD</p></li>
+<li><p>TESTING</p></li>
+<li><p>TRAP_HTTP_EXCEPTIONS</p></li>
+<li><p>TRAP_BAD_REQUEST_ERRORS</p></li>
+</ul>
+</section>
+</section>
+<section id="id4">
+<h2 id="id4">创建不同的服务类型<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h2>
+<section id="model">
+<h3 id="model">MODEL<a class="headerlink" href="#model" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/SeldonIO/seldon-core/tree/master/wrappers/s2i/python/test/model-template-app">最小化的模型源码脚手架</a></p></li>
+<li><p><a class="reference external" href="../examples/notebooks.html">模型 notebooks 示例</a></p></li>
+</ul>
+</section>
+<section id="router">
+<h3 id="router">ROUTER<a class="headerlink" href="#router" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="../analytics/routers.html">Seldon Core 中路由定义</a></p></li>
+<li><p><a class="reference external" href="https://github.com/SeldonIO/seldon-core/tree/master/wrappers/s2i/python/test/router-template-app">最小化的模型路由源码脚手架</a></p></li>
+</ul>
+</section>
+<section id="transformer">
+<h3 id="transformer">TRANSFORMER<a class="headerlink" href="#transformer" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/SeldonIO/seldon-core/tree/master/wrappers/s2i/python/test/transformer-template-app">小化的模型转换源码脚手架</a></p></li>
+<li><p><a class="reference external" href="https://github.com/SeldonIO/seldon-core/tree/master/examples/transformers">转换器示例</a></p></li>
+</ul>
+</section>
+</section>
+<section id="id5">
+<h2 id="id5">高级用法<a class="headerlink" href="#id5" title="Permalink to this heading">¶</a></h2>
+<section id="id6">
+<h3 id="id6">模型类参数<a class="headerlink" href="#id6" title="Permalink to this heading">¶</a></h3>
+<p>当发布镜像到 Kubernetes 时根据 SeldonDeloyment 中定义的内容进行填充 <code class="docutils literal notranslate"><span class="pre">parameters</span></code>。例如，我们的 <a class="reference external" href="https://github.com/SeldonIO/seldon-core/tree/master/servers/tfserving_proxy">Python TFServing proxy</a> 具有如下定义的类 init 签名方法：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">TfServingProxy</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">rest_endpoint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">grpc_endpoint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">model_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">signature_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">model_input</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">model_output</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</pre></div>
+</div>
+<p>当部署 Seldon Deployment 以下参数可设置。可查看示例 <a class="reference external" href="https://github.com/SeldonIO/seldon-core/blob/master/examples/models/tfserving-mnist/tfserving-mnist.ipynb">MNIST TFServing example</a> 中在 <a class="reference external" href="https://github.com/SeldonIO/seldon-core/blob/master/examples/models/tfserving-mnist/mnist_tfserving_deployment.json.template">SeldonDeployment</a> 定义的部分参数示例：</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">"graph"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tfserving-proxy"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MODEL"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"children"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+<span class="w">    </span><span class="nt">"parameters"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"grpc_endpoint"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"STRING"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"localhost:8000"</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"model_name"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"STRING"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mnist-model"</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"model_output"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"STRING"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"scores"</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"model_input"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"STRING"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"images"</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"signature_name"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"STRING"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"predict_images"</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">type</span></code> 参数允许值在 <a class="reference external" href="https://github.com/SeldonIO/seldon-core/blob/44f7048efd0f6be80a857875058d23efc4221205/proto/seldon_deployment.proto#L117-L131">proto buffer 定义</a>查看。</p>
+</section>
+<section id="id7">
+<h3 id="id7">自定义指标<a class="headerlink" href="#id7" title="Permalink to this heading">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">version</span> <span class="pre">0.3</span></code></p>
+<p>要将自定义指标添加到您的响应中，您可以 类中定义一个可选方法 <code class="docutils literal notranslate"><span class="pre">metrics</span></code>，该方法返回一个指标字典列表。例如下所示：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyModel</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">features_names</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">X</span>
+
+    <span class="k">def</span> <span class="nf">metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"COUNTER"</span><span class="p">,</span> <span class="s2">"key"</span><span class="p">:</span> <span class="s2">"mycounter"</span><span class="p">,</span> <span class="s2">"value"</span><span class="p">:</span> <span class="mi">1</span><span class="p">}]</span>
+</pre></div>
+</div>
+<p>有关自定义指标和指标 <code class="docutils literal notranslate"><span class="pre">dict</span></code> 格式的更多详细信息，请参见<a class="reference external" href="../analytics/analytics.html#custom-metrics">此处</a>。</p>
+<p>这是一个 <a class="reference external" href="../examples/custom_metrics.html">带有自定义指标 python 模型的 notebook 说明示例</a>。</p>
+</section>
+<section id="custom-request-tags">
+<h3 id="custom-request-tags">Custom Request Tags<a class="headerlink" href="#custom-request-tags" title="Permalink to this heading">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">version</span> <span class="pre">0.3</span></code></p>
+<p>要添加自定义请求标记数据，您可以添加一个可选方法 <code class="docutils literal notranslate"><span class="pre">tags</span></code>，该方法可以返回自定义元数据的字典，如下例所示：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyModel</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">features_names</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">X</span>
+
+    <span class="k">def</span> <span class="nf">tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">"mytag"</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="python_wrapping_s2i.html" title="使用 s2i 为 Seldon Core 打包 Python 模型"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> "Previous" </span> 使用 s2i 为 Seldon Core 打包 Python 模型 </span>
+              </div>
+            </a>
+          
+          
+            <a href="python_server.html" title="Seldon Python 服务配置"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> "Next" </span> Seldon Python 服务配置 </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2024, Seldon Technologies Ltd.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

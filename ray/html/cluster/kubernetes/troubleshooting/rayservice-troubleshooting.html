@@ -1,0 +1,1260 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>RayService 故障排除 &#8212; Ray 2.7.2</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/termynal.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/js/versionwarning.js"></script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+    <script defer="defer" src="../../../_static/js/docsearch.js"></script>
+    <script defer="defer" src="../../../_static/js/csat.js"></script>
+    <script defer="defer" src="../../../_static/js/termynal.js"></script>
+    <script defer="defer" src="../../../_static/js/custom.js"></script>
+    <script defer="defer" src="../../../_static/js/top-navigation.js"></script>
+    <script src="../../../_static/js/tags.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <link rel="canonical" href="https://docs.ray.io/en/latest/cluster/kubernetes/troubleshooting/rayservice-troubleshooting.html" />
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="API 参考" href="../references.html" />
+    <link rel="prev" title="故障排除指南" href="troubleshooting.html" />
+
+<!-- Fathom - beautiful, simple website analytics -->
+<script src="https://deer.ray.io/script.js" data-site="WYYANYOS" defer></script>
+<!-- / Fathom -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-110413294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-110413294-1');
+</script>
+
+<script
+  src="https://widget.kapa.ai/kapa-widget.bundle.js"
+  data-website-id="18a8c339-4ec5-43c8-8182-db3f2bc8c6b6"
+  data-project-name="Ray"
+  data-project-color="#2C2C2C"
+  data-project-logo="https://global.discourse-cdn.com/business7/uploads/ray/original/1X/8f4dcb72f7cd34e2a332d548bd65860994bc8ff1.png"
+  data-modal-disclaimer = "Results are automated and may be incorrect or contain inappropriate information. Do not include any personal data or confidential information."
+  data-modal-title = "Ray Docs AI - Ask a Question"
+  data-button-position-bottom = "60px"
+></script>
+
+<script>
+(function(apiKey){
+    (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
+    v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
+        o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
+        y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
+        z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
+
+        pendo.initialize({
+            visitor: {
+                id: 'VISITOR-UNIQUE-ID'
+            },
+            account: {
+                id: 'ACCOUNT-UNIQUE-ID'
+            }
+        });
+})('f89fa48a-6dd7-4d7c-67cf-a8051ed891f2');
+</script>
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"><div class='topnav'></div></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Ray 2.7.2</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main Navigation">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../index.html">
+                    欢迎来到 Ray ！
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Ray
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/index.html">
+   概述「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/getting-started.html">
+   入门「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/installation.html">
+   安装「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/use-cases.html">
+   用例「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/examples.html">
+   示例库「1%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/ray-libraries.html">
+   生态「3%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-core/walkthrough.html">
+   Ray 核心「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../data/data.html">
+   Ray 数据「85%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../train/train.html">
+   Ray 训练「95%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../tune/index.html">
+   Ray 调参「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../serve/index.html">
+   Ray Serve「1%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../rllib/index.html">
+   Ray RLlib「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-more-libs/index.html">
+   更多类库「40%」
+  </a>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="../../getting-started.html">
+   Ray 集群「100%」
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../key-concepts.html">
+     关键概念
+    </a>
+   </li>
+   <li class="toctree-l2 current active has-children">
+    <a class="reference internal" href="../index.html">
+     在 Kubernetes 部署
+    </a>
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+    <label for="toctree-checkbox-2">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul class="current">
+     <li class="toctree-l3">
+      <a class="reference internal" href="../getting-started.html">
+       KubeRay 入门
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../user-guides.html">
+       用户指引
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples.html">
+       示例
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../k8s-ecosystem.html">
+       KubeRay 生态系统
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../benchmarks.html">
+       KubeRay 基准测试
+      </a>
+     </li>
+     <li class="toctree-l3 current active has-children">
+      <a class="reference internal" href="../troubleshooting.html">
+       KubeRay 故障排除
+      </a>
+      <input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+      <label for="toctree-checkbox-3">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul class="current">
+       <li class="toctree-l4">
+        <a class="reference internal" href="troubleshooting.html">
+         故障排除指南
+        </a>
+       </li>
+       <li class="toctree-l4 current active">
+        <a class="current reference internal" href="#">
+         RayService 故障排除
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../references.html">
+       API 参考
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../vms/index.html">
+     在虚拟机部署
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../metrics.html">
+     指标收集和监控
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../configure-manage-dashboard.html">
+     配置管理 Ray 仪表盘
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../running-applications/index.html">
+     应用指引
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../faq.html">
+     Ray 集群是否支持多租户？
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../package-overview.html">
+     Ray Cluster 管理 API
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-observability/index.html">
+   监控调试「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-references/api.html">
+   参考「20%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-contribute/index.html">
+   开发者指引「30%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-security/index.html">
+   安全「100%」
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/ray-project/ray"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/issues/new?title=Issue%20on%20page%20%2Fcluster/kubernetes/troubleshooting/rayservice-troubleshooting.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/edit/master/doc/source/cluster/kubernetes/troubleshooting/rayservice-troubleshooting.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../../_sources/cluster/kubernetes/troubleshooting/rayservice-troubleshooting.md.txt"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   可观察性
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#kuberay-operator">
+     方法 1: 检查 KubeRay operator 的日志是否有错误
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#rayservice-cr">
+     方法 2: 检查 RayService CR 状态
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ray-pod">
+     方法 3: 检查 Ray Pod 日志
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dashboard">
+     方法 4: 检查 Dashboard
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ray-state-cli">
+     方法 5: Ray State CLI
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id2">
+   常见问题
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ray-serve">
+     问题 1: Ray Serve 脚本不正确。
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#serveconfigv2">
+     问题 2:
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       serveConfigV2
+      </span>
+     </code>
+     不正确
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ray">
+     问题 3-1: Ray 镜像不包含所需的依赖项。
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#kuberay-raysvc-issue3-2">
+     问题 3-2: 解决依赖性问题的示例。
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#import-path">
+     问题 4: 不正确的
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       import_path
+      </span>
+     </code>
+     .
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#kuberay-raysvc-issue5">
+     问题 5: 无法创建/更新服务应用程序。
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#connect-connection-refused">
+       错误消息 1:
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         connect:
+        </span>
+        <span class="pre">
+         connection
+        </span>
+        <span class="pre">
+         refused
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#i-o-timeout">
+       错误消息 2:
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         i/o
+        </span>
+        <span class="pre">
+         timeout
+        </span>
+       </code>
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#runtime-env">
+     问题 6:
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       runtime_env
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#kuberay-raysvc-issue7">
+     问题 7: 无法获取服务应用程序状态。
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#kubernetes-raycluster-kuberay-v0-6-1">
+     问题 8: Kubernetes 集群资源耗尽时，循环重启 RayCluster。（KubeRay v0.6.1 及以下版本）
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#issue-9-ray-serve-api-api">
+     Issue 9: 无需停机即可从 Ray Serve 的单应用程序 API 升级到其多应用程序 API
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>RayService 故障排除</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   可观察性
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#kuberay-operator">
+     方法 1: 检查 KubeRay operator 的日志是否有错误
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#rayservice-cr">
+     方法 2: 检查 RayService CR 状态
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ray-pod">
+     方法 3: 检查 Ray Pod 日志
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dashboard">
+     方法 4: 检查 Dashboard
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ray-state-cli">
+     方法 5: Ray State CLI
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id2">
+   常见问题
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ray-serve">
+     问题 1: Ray Serve 脚本不正确。
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#serveconfigv2">
+     问题 2:
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       serveConfigV2
+      </span>
+     </code>
+     不正确
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ray">
+     问题 3-1: Ray 镜像不包含所需的依赖项。
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#kuberay-raysvc-issue3-2">
+     问题 3-2: 解决依赖性问题的示例。
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#import-path">
+     问题 4: 不正确的
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       import_path
+      </span>
+     </code>
+     .
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#kuberay-raysvc-issue5">
+     问题 5: 无法创建/更新服务应用程序。
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#connect-connection-refused">
+       错误消息 1:
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         connect:
+        </span>
+        <span class="pre">
+         connection
+        </span>
+        <span class="pre">
+         refused
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#i-o-timeout">
+       错误消息 2:
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         i/o
+        </span>
+        <span class="pre">
+         timeout
+        </span>
+       </code>
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#runtime-env">
+     问题 6:
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       runtime_env
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#kuberay-raysvc-issue7">
+     问题 7: 无法获取服务应用程序状态。
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#kubernetes-raycluster-kuberay-v0-6-1">
+     问题 8: Kubernetes 集群资源耗尽时，循环重启 RayCluster。（KubeRay v0.6.1 及以下版本）
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#issue-9-ray-serve-api-api">
+     Issue 9: 无需停机即可从 Ray Serve 的单应用程序 API 升级到其多应用程序 API
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="rayservice">
+<span id="kuberay-raysvc-troubleshoot"></span><h1>RayService 故障排除<a class="headerlink" href="#rayservice" title="Permalink to this headline">#</a></h1>
+<p>RayService 是专为 Ray Serve 设计的自定义资源定义 (CRD)。在 KubeRay 中，创建 RayService 将首先创建 RayCluster，然后在 RayCluster 准备就绪后创建 Ray Serve 应用程序。如果问题与数据平面有关，特别是 Ray Serve 脚本或 Ray Serve 配置 (<code class="docutils literal notranslate"><span class="pre">serveConfigV2</span></code>)，则故障排除可能会很困难。本节提供一些提示来帮助您调试这些问题。</p>
+<section id="id1">
+<h2>可观察性<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h2>
+<section id="kuberay-operator">
+<h3>方法 1: 检查 KubeRay operator 的日志是否有错误<a class="headerlink" href="#kuberay-operator" title="Permalink to this headline">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl logs <span class="nv">$KUBERAY_OPERATOR_POD</span> -n <span class="nv">$YOUR_NAMESPACE</span> <span class="p">|</span> tee operator-log
+</pre></div>
+</div>
+<p>上面的命令会将 operator 的日志重定向到名为 <code class="docutils literal notranslate"><span class="pre">operator-log</span></code> 的文件。然后您可以搜索文件中的错误。</p>
+</section>
+<section id="rayservice-cr">
+<h3>方法 2: 检查 RayService CR 状态<a class="headerlink" href="#rayservice-cr" title="Permalink to this headline">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl describe rayservice <span class="nv">$RAYSERVICE_NAME</span> -n <span class="nv">$YOUR_NAMESPACE</span>
+</pre></div>
+</div>
+<p>您可以检查RayService CR的状态和事件，看看是否有错误。</p>
+</section>
+<section id="ray-pod">
+<h3>方法 3: 检查 Ray Pod 日志<a class="headerlink" href="#ray-pod" title="Permalink to this headline">#</a></h3>
+<p>您还可以通过访问 Pod 上的日志文件来直接检查 Ray Serve 日志。这些日志文件包含来自 Serve controller 和 HTTP 代理的系统级日志以及访问日志和用户级日志。有关更多详细信息，请参阅 <a class="reference internal" href="../../../serve/monitoring.html#serve-logging"><span class="std std-ref">Ray Serve Logging</span></a> 和 <a class="reference internal" href="../../../ray-observability/user-guides/configure-logging.html#configure-logging"><span class="std std-ref">Ray Logging</span></a>。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl <span class="nb">exec</span> -it <span class="nv">$RAY_POD</span> -n <span class="nv">$YOUR_NAMESPACE</span> -- bash
+<span class="c1"># Check the logs under /tmp/ray/session_latest/logs/serve/</span>
+</pre></div>
+</div>
+</section>
+<section id="dashboard">
+<h3>方法 4: 检查 Dashboard<a class="headerlink" href="#dashboard" title="Permalink to this headline">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl port-forward <span class="nv">$RAY_POD</span> -n <span class="nv">$YOUR_NAMESPACE</span> --address <span class="m">0</span>.0.0.0 <span class="m">8265</span>:8265
+<span class="c1"># Check $YOUR_IP:8265 in your browser</span>
+</pre></div>
+</div>
+<p>有关仪表板上 Ray Serve 可观测性的更多详细信息，您可以参考 <a class="reference internal" href="../../../ray-observability/getting-started.html#dash-serve-view"><span class="std std-ref">文档</span></a> 和 <a class="reference external" href="https://youtu.be/eqXfwM641a4">YouTube 视频</a>。</p>
+</section>
+<section id="ray-state-cli">
+<h3>方法 5: Ray State CLI<a class="headerlink" href="#ray-state-cli" title="Permalink to this headline">#</a></h3>
+<p>您可以使用 Head Pod 上的 <a class="reference internal" href="../../../ray-observability/reference/cli.html#state-api-cli-ref"><span class="std std-ref">Ray State CLI</span></a> 检查 Ray Serve 应用程序的状态。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Log into the head Pod</span>
+<span class="nb">export</span> <span class="nv">HEAD_POD</span><span class="o">=</span><span class="k">$(</span>kubectl get pods --selector<span class="o">=</span>ray.io/node-type<span class="o">=</span>head -o custom-columns<span class="o">=</span>POD:metadata.name --no-headers<span class="k">)</span>
+kubectl <span class="nb">exec</span> -it <span class="nv">$HEAD_POD</span> -- ray summary actors
+
+<span class="c1"># [Example output]:</span>
+<span class="c1"># ======== Actors Summary: 2023-07-11 17:58:24.625032 ========</span>
+<span class="c1"># Stats:</span>
+<span class="c1"># ------------------------------------</span>
+<span class="c1"># total_actors: 14</span>
+
+
+<span class="c1"># Table (group by class):</span>
+<span class="c1"># ------------------------------------</span>
+<span class="c1">#     CLASS_NAME                          STATE_COUNTS</span>
+<span class="c1"># 0   ServeController                     ALIVE: 1</span>
+<span class="c1"># 1   ServeReplica:fruit_app_OrangeStand  ALIVE: 1</span>
+<span class="c1"># 2   HTTPProxyActor                      ALIVE: 3</span>
+<span class="c1"># 3   ServeReplica:math_app_DAGDriver     ALIVE: 1</span>
+<span class="c1"># 4   ServeReplica:math_app_Multiplier    ALIVE: 1</span>
+<span class="c1"># 5   ServeReplica:math_app_create_order  ALIVE: 1</span>
+<span class="c1"># 6   ServeReplica:fruit_app_DAGDriver    ALIVE: 1</span>
+<span class="c1"># 7   ServeReplica:fruit_app_FruitMarket  ALIVE: 1</span>
+<span class="c1"># 8   ServeReplica:math_app_Adder         ALIVE: 1</span>
+<span class="c1"># 9   ServeReplica:math_app_Router        ALIVE: 1</span>
+<span class="c1"># 10  ServeReplica:fruit_app_MangoStand   ALIVE: 1</span>
+<span class="c1"># 11  ServeReplica:fruit_app_PearStand    ALIVE: 1</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="id2">
+<h2>常见问题<a class="headerlink" href="#id2" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="#kuberay-raysvc-issue1"><span class="std std-ref">问题 1: Ray Serve 脚本不正确。</span></a></p></li>
+<li><p><a class="reference internal" href="#kuberay-raysvc-issue2"><span class="std std-ref">问题 2: serveConfigV2 不正确</span></a></p></li>
+<li><p><a class="reference internal" href="#kuberay-raysvc-issue3-1"><span class="std std-ref">问题 3-1: Ray 镜像不包含所需的依赖项。</span></a></p></li>
+<li><p><a class="reference internal" href="#kuberay-raysvc-issue3-2"><span class="std std-ref">问题 3-2: 解决依赖性问题的示例。</span></a></p></li>
+<li><p><a class="reference internal" href="#kuberay-raysvc-issue4"><span class="std std-ref">问题 4: 不正确的 import_path.</span></a></p></li>
+<li><p><a class="reference internal" href="#kuberay-raysvc-issue5"><span class="std std-ref">问题 5: 无法创建/更新服务应用程序。</span></a></p></li>
+<li><p><a class="reference internal" href="#kuberay-raysvc-issue6"><span class="std std-ref">问题 6: runtime_env</span></a></p></li>
+<li><p><a class="reference internal" href="#kuberay-raysvc-issue7"><span class="std std-ref">问题 7: 无法获取服务应用程序状态。</span></a></p></li>
+<li><p><a class="reference internal" href="#kuberay-raysvc-issue8"><span class="std std-ref">问题 8: Kubernetes 集群资源耗尽时，循环重启 RayCluster。（KubeRay v0.6.1 及以下版本）</span></a></p></li>
+<li><p><a class="reference internal" href="#kuberay-raysvc-issue9"><span class="std std-ref">Issue 9: 无需停机即可从 Ray Serve 的单应用程序 API 升级到其多应用程序 API</span></a></p></li>
+</ul>
+<section id="ray-serve">
+<span id="kuberay-raysvc-issue1"></span><h3>问题 1: Ray Serve 脚本不正确。<a class="headerlink" href="#ray-serve" title="Permalink to this headline">#</a></h3>
+<p>我们强烈建议您先在本地或 RayCluster 中测试 Ray Serve 脚本，然后再将其部署到 RayService。请参阅 <a class="reference internal" href="../user-guides/rayserve-dev-doc.html#kuberay-dev-serve"><span class="std std-ref">rayserve-dev-doc.md</span></a> 。</p>
+</section>
+<section id="serveconfigv2">
+<span id="kuberay-raysvc-issue2"></span><h3>问题 2: <code class="docutils literal notranslate"><span class="pre">serveConfigV2</span></code> 不正确<a class="headerlink" href="#serveconfigv2" title="Permalink to this headline">#</a></h3>
+<p>为了灵活性，我们在 RayService CR 中设置 <code class="docutils literal notranslate"><span class="pre">serveConfigV2</span></code> 为多行 YAML 字符串。
+这意味着 Ray Serve 中的 <code class="docutils literal notranslate"><span class="pre">serveConfigV2</span></code> 字段配置没有严格的类型检查。
+以下是一些帮助您调试 <code class="docutils literal notranslate"><span class="pre">serveConfigV2</span></code> 字段的提示：</p>
+<ul class="simple">
+<li><p>检查有关 Ray Serve 多应用程序 API 的架构 <a class="reference internal" href="../../../serve/api/index.html#serve-api"><span class="std std-ref">文档</span></a> 中的 <code class="docutils literal notranslate"><span class="pre">PUT</span> <span class="pre">&quot;/api/serve/applications/&quot;</span></code> 。</p></li>
+<li><p>与 <code class="docutils literal notranslate"><span class="pre">serveConfig</span></code> 不同，<code class="docutils literal notranslate"><span class="pre">serveConfigV2</span></code> 遵循蛇形命名约定。例如， <code class="docutils literal notranslate"><span class="pre">numReplicas</span></code> 用于 <code class="docutils literal notranslate"><span class="pre">serveConfig</span></code>，而 <code class="docutils literal notranslate"><span class="pre">num_replicas</span></code> 用于 <code class="docutils literal notranslate"><span class="pre">serveConfigV2</span></code>。</p></li>
+</ul>
+</section>
+<section id="ray">
+<span id="kuberay-raysvc-issue3-1"></span><h3>问题 3-1: Ray 镜像不包含所需的依赖项。<a class="headerlink" href="#ray" title="Permalink to this headline">#</a></h3>
+<p>您可以通过两种方式解决此问题：</p>
+<ul class="simple">
+<li><p>使用所需的依赖项构建您自己的 Ray 镜像。</p></li>
+<li><p>通过在 <code class="docutils literal notranslate"><span class="pre">runtime_env</span></code> 的 <code class="docutils literal notranslate"><span class="pre">serveConfigV2</span></code> 字段指定所需的依赖。</p>
+<ul>
+<li><p>例如，MobileNet 示例需要 <code class="docutils literal notranslate"><span class="pre">python-multipart</span></code>，而他没有包含在 <code class="docutils literal notranslate"><span class="pre">rayproject/ray-ml:2.5.0</span></code> 镜像中。
+因此，运行时环境 YAML 文件包含 <code class="docutils literal notranslate"><span class="pre">python-multipart</span></code> 。更多详情，参考 <a class="reference internal" href="../examples/mobilenet-rayservice.html#kuberay-mobilenet-rayservice-example"><span class="std std-ref">MobileNet 示例</span></a>。</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="kuberay-raysvc-issue3-2">
+<span id="id3"></span><h3>问题 3-2: 解决依赖性问题的示例。<a class="headerlink" href="#kuberay-raysvc-issue3-2" title="Permalink to this headline">#</a></h3>
+<blockquote>
+<div><p>注意: 我们强烈建议您在本地或 RayCluster 中测试您的 Ray Serve 脚本，然后再将其部署到 RayService。这有助于在早期阶段识别任何依赖关系问题。有关更多详细信息，请参阅 <a class="reference internal" href="../user-guides/rayserve-dev-doc.html#kuberay-dev-serve"><span class="std std-ref">rayserve-dev-doc.md</span></a> 。</p>
+</div></blockquote>
+<p>在 <a class="reference internal" href="../examples/mobilenet-rayservice.html#kuberay-mobilenet-rayservice-example"><span class="std std-ref">MobileNet 示例</span></a>， <a class="reference external" href="https://github.com/ray-project/serve_config_examples/blob/master/mobilenet/mobilenet.py">mobilenet.py</a> 由两个函数组成： <code class="docutils literal notranslate"><span class="pre">__init__()</span></code> 和 <code class="docutils literal notranslate"><span class="pre">__call__()</span></code>。
+<code class="docutils literal notranslate"><span class="pre">__call__()</span></code> 函数仅在 Serve 应用程序收到请求时被调用。</p>
+<ul>
+<li><p>示例 1: 在运行时环境 <a class="reference external" href="https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-service.mobilenet.yaml">MobileNet YAML</a> 文件移除 <code class="docutils literal notranslate"><span class="pre">python-multipart</span></code></p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">python-multipart</span></code> 库只被 <code class="docutils literal notranslate"><span class="pre">__call__</span></code> 方法需要。因此，我们只能在向应用程序发送请求时才能观察到依赖关系问题。</p></li>
+<li><p>错误消息示例：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Unexpected error, traceback: ray::ServeReplica:mobilenet_ImageClassifier.handle_request<span class="o">()</span> <span class="o">(</span><span class="nv">pid</span><span class="o">=</span><span class="m">226</span>, <span class="nv">ip</span><span class="o">=</span><span class="m">10</span>.244.0.9<span class="o">)</span>
+  .
+  .
+  .
+  File <span class="s2">&quot;...&quot;</span>, line <span class="m">24</span>, <span class="k">in</span> __call__
+    <span class="nv">request</span> <span class="o">=</span> await http_request.form<span class="o">()</span>
+  File <span class="s2">&quot;/home/ray/anaconda3/lib/python3.7/site-packages/starlette/requests.py&quot;</span>, line <span class="m">256</span>, <span class="k">in</span> _get_form
+    <span class="o">)</span>, <span class="s2">&quot;The `python-multipart` library must be installed to use form parsing.&quot;</span>
+AssertionError: The <span class="sb">`</span>python-multipart<span class="sb">`</span> library must be installed to use form parsing..
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p>示例 2: 在 <a class="reference external" href="https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-service.mobilenet.yaml">the MobileNet YAML</a> 更新 <code class="docutils literal notranslate"><span class="pre">rayproject/ray-ml:2.5.0</span></code> 为 <code class="docutils literal notranslate"><span class="pre">rayproject/ray:2.5.0</span></code>。 后者不包含 <code class="docutils literal notranslate"><span class="pre">tensorflow</span></code>。</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">tensorflow</span></code> 类库在 <a class="reference external" href="https://github.com/ray-project/serve_config_examples/blob/master/mobilenet/mobilenet.py">mobilenet.py</a> 中引入。</p></li>
+<li><p>错误消息示例：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl describe rayservices.ray.io rayservice-mobilenet
+
+<span class="c1"># Example error message:</span>
+Pending Service Status:
+  Application Statuses:
+    Mobilenet:
+      ...
+      Message:                  Deploying app <span class="s1">&#39;mobilenet&#39;</span> failed:
+        ray::deploy_serve_application<span class="o">()</span> <span class="o">(</span><span class="nv">pid</span><span class="o">=</span><span class="m">279</span>, <span class="nv">ip</span><span class="o">=</span><span class="m">10</span>.244.0.12<span class="o">)</span>
+            ...
+          File <span class="s2">&quot;.../mobilenet/mobilenet.py&quot;</span>, line <span class="m">4</span>, <span class="k">in</span> &lt;module&gt;
+            from tensorflow.keras.preprocessing import image
+        ModuleNotFoundError: No module named <span class="s1">&#39;tensorflow&#39;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="import-path">
+<span id="kuberay-raysvc-issue4"></span><h3>问题 4: 不正确的 <code class="docutils literal notranslate"><span class="pre">import_path</span></code>.<a class="headerlink" href="#import-path" title="Permalink to this headline">#</a></h3>
+<p>有关 <code class="docutils literal notranslate"><span class="pre">import_path</span></code> 格式的详细信息，参考 <a class="reference external" href="https://docs.ray.io/en/latest/serve/api/doc/ray.serve.schema.ServeApplicationSchema.html#ray.serve.schema.ServeApplicationSchema.import_path">本文档</a>。
+拿 <a class="reference external" href="https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-service.mobilenet.yaml">MobileNet YAML 文件</a> 作为示例，
+<code class="docutils literal notranslate"><span class="pre">import_path</span></code> 为 <code class="docutils literal notranslate"><span class="pre">mobilenet.mobilenet:app</span></code>。第一个 <code class="docutils literal notranslate"><span class="pre">mobilenet</span></code> 是 <code class="docutils literal notranslate"><span class="pre">working_dir</span></code> 目录的名字，
+第二个 <code class="docutils literal notranslate"><span class="pre">mobilenet</span></code> 是目录 <code class="docutils literal notranslate"><span class="pre">mobilenet/</span></code> 中 Python 文件的名称，
+<code class="docutils literal notranslate"><span class="pre">app</span></code> 是 Python 文件内代表 Ray Serve 应用程序的变量名称。</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="nt">serveConfigV2</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span><span class="w"></span>
+<span class="w">    </span><span class="no">applications:</span><span class="w"></span>
+<span class="w">      </span><span class="no">- name: mobilenet</span><span class="w"></span>
+<span class="w">        </span><span class="no">import_path: mobilenet.mobilenet:app</span><span class="w"></span>
+<span class="w">        </span><span class="no">runtime_env:</span><span class="w"></span>
+<span class="w">          </span><span class="no">working_dir: &quot;https://github.com/ray-project/serve_config_examples/archive/b393e77bbd6aba0881e3d94c05f968f05a387b96.zip&quot;</span><span class="w"></span>
+<span class="w">          </span><span class="no">pip: [&quot;python-multipart==0.0.6&quot;]</span><span class="w"></span>
+</pre></div>
+</div>
+</section>
+<section id="kuberay-raysvc-issue5">
+<span id="id4"></span><h3>问题 5: 无法创建/更新服务应用程序。<a class="headerlink" href="#kuberay-raysvc-issue5" title="Permalink to this headline">#</a></h3>
+<p>当 KubeRay 尝试创建/更新 Serve 应用程序时，您可能会遇到以下错误消息：</p>
+<section id="connect-connection-refused">
+<h4>错误消息 1: <code class="docutils literal notranslate"><span class="pre">connect:</span> <span class="pre">connection</span> <span class="pre">refused</span></code><a class="headerlink" href="#connect-connection-refused" title="Permalink to this headline">#</a></h4>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Put &quot;http://${HEAD_SVC_FQDN}:52365/api/serve/applications/&quot;: dial tcp $HEAD_IP:52365: connect: connection refused
+</pre></div>
+</div>
+<p>对于 RayService，一旦头部 Pod 准备就绪，KubeRay 控制器就会向 RayCluster 提交创建 Serve 应用程序的请求。
+需要注意的是，在头部 Pod 准备就绪后，Dashboard、Dashboard Agent 和 GCS 可能需要几秒钟才能启动。
+因此，在必要组件完全运行之前，请求可能会最初失败几次。</p>
+<p>如果等待 1 分钟后仍遇到此问题，则可能是仪表板或仪表板代理启动失败。
+有关更多信息，您可以检查位于头部 Pod 上的位于 <code class="docutils literal notranslate"><span class="pre">/tmp/ray/session_latest/logs/</span></code> 路径的 <code class="docutils literal notranslate"><span class="pre">dashboard.log</span></code> 和 <code class="docutils literal notranslate"><span class="pre">dashboard_agent.log</span></code> 文件。</p>
+</section>
+<section id="i-o-timeout">
+<h4>错误消息 2: <code class="docutils literal notranslate"><span class="pre">i/o</span> <span class="pre">timeout</span></code><a class="headerlink" href="#i-o-timeout" title="Permalink to this headline">#</a></h4>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Put &quot;http://${HEAD_SVC_FQDN}:52365/api/serve/applications/&quot;: dial tcp $HEAD_IP:52365: i/o timeout&quot;
+</pre></div>
+</div>
+<p>导致此问题的一个可能原因可能是 Kubernetes NetworkPolicy 阻止了 Ray Pods 和仪表板代理端口（即 52365）之间的流量。</p>
+</section>
+</section>
+<section id="runtime-env">
+<span id="kuberay-raysvc-issue6"></span><h3>问题 6: <code class="docutils literal notranslate"><span class="pre">runtime_env</span></code><a class="headerlink" href="#runtime-env" title="Permalink to this headline">#</a></h3>
+<p>在 <code class="docutils literal notranslate"><span class="pre">serveConfigV2</span></code>，您可以通过 <code class="docutils literal notranslate"><span class="pre">runtime_env</span></code> 指定 Ray Serve 应用程序的运行时环境。
+以下内容与 <code class="docutils literal notranslate"><span class="pre">runtime_env</span></code> 相关的一些常见问题 :</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">working_dir</span></code> 指向私有 AWS S3 存储桶，但 Ray Pods 没有访问该存储桶所需的权限。</p></li>
+<li><p>NetworkPolicy 阻止 Ray Pods 与 <code class="docutils literal notranslate"><span class="pre">runtime_env</span></code> 中指定的外部 URL 之间的流量。</p></li>
+</ul>
+</section>
+<section id="kuberay-raysvc-issue7">
+<span id="id5"></span><h3>问题 7: 无法获取服务应用程序状态。<a class="headerlink" href="#kuberay-raysvc-issue7" title="Permalink to this headline">#</a></h3>
+<p>当 KubeRay 尝试获取 Serve 应用程序状态时，您可能会遇到以下错误消息：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Get &quot;http://${HEAD_SVC_FQDN}:52365/api/serve/applications/&quot;: dial tcp $HEAD_IP:52365: connect: connection refused&quot;
+</pre></div>
+</div>
+<p>如 <a class="reference external" href="#issue-5-fail-to-create--update-serve-applications">Issue 5</a> 提到，KubeRay 控制器当 head Pod 就绪时，提交一个 <code class="docutils literal notranslate"><span class="pre">Put</span></code> 请求到 RayCluster。
+在 <code class="docutils literal notranslate"><span class="pre">Put</span></code> 请求 dashboard agent 成功后，会向仪表盘代理端口（即 52365）发送请求。
+提交成功表明包括仪表盘代理在内的所有必要组件都已完全正常运行。
+因此，与问题 5 不同，<code class="docutils literal notranslate"><span class="pre">Get</span></code> 请求失败是意料之中的。</p>
+<p>如果您持续遇到此问题，则可能存在以下几种原因：</p>
+<ul>
+<li><p>头 Pod 上的仪表板代理进程未运行。您可以检查头 Pod 上位于 <code class="docutils literal notranslate"><span class="pre">/tmp/ray/session_latest/logs/</span></code> 目录的 <code class="docutils literal notranslate"><span class="pre">dashboard_agent.log</span></code> 获取更多信息。 此外，您还可以通过手动终止头 Pod 上的仪表板代理进程来执行实验以重现此原因。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Step 1: Log in to the head Pod</span>
+kubectl <span class="nb">exec</span> -it <span class="nv">$HEAD_POD</span> -n <span class="nv">$YOUR_NAMESPACE</span> -- bash
+
+<span class="c1"># Step 2: Check the PID of the dashboard agent process</span>
+ps aux
+<span class="c1"># [Example output]</span>
+<span class="c1"># ray          156 ... 0:03 /.../python -u /.../ray/dashboard/agent.py --</span>
+
+<span class="c1"># Step 3: Kill the dashboard agent process</span>
+<span class="nb">kill</span> <span class="m">156</span>
+
+<span class="c1"># Step 4: Check the logs</span>
+cat /tmp/ray/session_latest/logs/dashboard_agent.log
+
+<span class="c1"># [Example output]</span>
+<span class="c1"># 2023-07-10 11:24:31,962 INFO web_log.py:206 -- 10.244.0.5 [10/Jul/2023:18:24:31 +0000] &quot;GET /api/serve/applications/ HTTP/1.1&quot; 200 13940 &quot;-&quot; &quot;Go-http-client/1.1&quot;</span>
+<span class="c1"># 2023-07-10 11:24:34,001 INFO web_log.py:206 -- 10.244.0.5 [10/Jul/2023:18:24:33 +0000] &quot;GET /api/serve/applications/ HTTP/1.1&quot; 200 13940 &quot;-&quot; &quot;Go-http-client/1.1&quot;</span>
+<span class="c1"># 2023-07-10 11:24:36,043 INFO web_log.py:206 -- 10.244.0.5 [10/Jul/2023:18:24:36 +0000] &quot;GET /api/serve/applications/ HTTP/1.1&quot; 200 13940 &quot;-&quot; &quot;Go-http-client/1.1&quot;</span>
+<span class="c1"># 2023-07-10 11:24:38,082 INFO web_log.py:206 -- 10.244.0.5 [10/Jul/2023:18:24:38 +0000] &quot;GET /api/serve/applications/ HTTP/1.1&quot; 200 13940 &quot;-&quot; &quot;Go-http-client/1.1&quot;</span>
+<span class="c1"># 2023-07-10 11:24:38,590 WARNING agent.py:531 -- Exiting with SIGTERM immediately...</span>
+
+<span class="c1"># Step 5: Open a new terminal and check the logs of the KubeRay operator</span>
+kubectl logs <span class="nv">$KUBERAY_OPERATOR_POD</span> -n <span class="nv">$YOUR_NAMESPACE</span> <span class="p">|</span> tee operator-log
+
+<span class="c1"># [Example output]</span>
+<span class="c1"># Get \&quot;http://rayservice-sample-raycluster-rqlsl-head-svc.default.svc.cluster.local:52365/api/serve/applications/\&quot;: dial tcp 10.96.7.154:52365: connect: connection refused</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="kubernetes-raycluster-kuberay-v0-6-1">
+<span id="kuberay-raysvc-issue8"></span><h3>问题 8: Kubernetes 集群资源耗尽时，循环重启 RayCluster。（KubeRay v0.6.1 及以下版本）<a class="headerlink" href="#kubernetes-raycluster-kuberay-v0-6-1" title="Permalink to this headline">#</a></h3>
+<blockquote>
+<div><p>注意：目前 KubeRay 运营团队还没有明确的方案来应对 Kubernetes 集群资源耗尽的情况，
+因此，我们建议确保 Kubernetes 集群有足够的资源来承载服务应用。</p>
+</div></blockquote>
+<p>如果服务应用程序的状态持续非 <code class="docutils literal notranslate"><span class="pre">RUNNING</span></code> 状态超过 <code class="docutils literal notranslate"><span class="pre">serviceUnhealthySecondThreshold</span></code> 秒，
+KubeRay operator 将认为 RayCluster 不健康并启动新的 RayCluster 的准备。
+此问题的一个常见原因是 Kubernetes 集群没有足够的资源来容纳服务应用程序。
+在这种情况下，KubeRay operator 可能会继续重启 RayCluster，从而导致重启循环。</p>
+<p>我们也可以做一个实验来重现这种情况：</p>
+<ul class="simple">
+<li><p>具有 8 个 CPU 节点的 Kubernetes 集群</p></li>
+<li><p><a class="reference external" href="https://gist.github.com/kevin85421/6a7779308aa45b197db8015aca0c1faf">ray-service.insufficient-resources.yaml</a></p>
+<ul>
+<li><p>RayCluster:</p>
+<ul>
+<li><p>该集群有 1 个带有 4 个物理 CPU 的头部 Pod，但 <code class="docutils literal notranslate"><span class="pre">rayStartParams</span></code> 中 <code class="docutils literal notranslate"><span class="pre">num-cpus</span></code> 设置为 0 以防止在头部 Pod 上安排任何服务副本。</p></li>
+<li><p>该集群还默认有 1 个工作 Pod，具有 1 个 CPU。</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">serveConfigV2</span></code> 指定 5 个服务部署，每个部署有 1 个副本并需要 1 个 CPU。</p></li>
+</ul>
+</li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Step 1: Get the number of CPUs available on the node</span>
+kubectl get nodes -o custom-columns<span class="o">=</span>NODE:.metadata.name,ALLOCATABLE_CPU:.status.allocatable.cpu
+
+<span class="c1"># [Example output]</span>
+<span class="c1"># NODE                 ALLOCATABLE_CPU</span>
+<span class="c1"># kind-control-plane   8</span>
+
+<span class="c1"># Step 2: Install a KubeRay operator.</span>
+
+<span class="c1"># Step 3: Create a RayService with autoscaling enabled.</span>
+kubectl apply -f ray-service.insufficient-resources.yaml
+
+<span class="c1"># Step 4: The Kubernetes cluster will not have enough resources to accommodate the serve application.</span>
+kubectl describe rayservices.ray.io rayservice-sample -n <span class="nv">$YOUR_NAMESPACE</span>
+
+<span class="c1"># [Example output]</span>
+<span class="c1"># fruit_app_DAGDriver:</span>
+<span class="c1">#   Health Last Update Time:  2023-07-11T02:10:02Z</span>
+<span class="c1">#   Last Update Time:         2023-07-11T02:10:35Z</span>
+<span class="c1">#   Message:                  Deployment &quot;fruit_app_DAGDriver&quot; has 1 replicas that have taken more than 30s to be scheduled. This may be caused by waiting for the cluster to auto-scale, or waiting for a runtime environment to install. Resources required for each replica: {&quot;CPU&quot;: 1.0}, resources available: {}.</span>
+<span class="c1">#   Status:                   UPDATING</span>
+
+<span class="c1"># Step 5: A new RayCluster will be created after `serviceUnhealthySecondThreshold` (300s here) seconds.</span>
+<span class="c1"># Check the logs of the KubeRay operator to find the reason for restarting the RayCluster.</span>
+kubectl logs <span class="nv">$KUBERAY_OPERATOR_POD</span> -n <span class="nv">$YOUR_NAMESPACE</span> <span class="p">|</span> tee operator-log
+
+<span class="c1"># [Example output]</span>
+<span class="c1"># 2023-07-11T02:14:58.109Z	INFO	controllers.RayService	Restart RayCluster	{&quot;appName&quot;: &quot;fruit_app&quot;, &quot;restart reason&quot;: &quot;The status of the serve application fruit_app has not been RUNNING for more than 300.000000 seconds. Hence, KubeRay operator labels the RayCluster unhealthy and will prepare a new RayCluster.&quot;}</span>
+<span class="c1"># 2023-07-11T02:14:58.109Z	INFO	controllers.RayService	Restart RayCluster	{&quot;deploymentName&quot;: &quot;fruit_app_FruitMarket&quot;, &quot;appName&quot;: &quot;fruit_app&quot;, &quot;restart reason&quot;: &quot;The status of the serve deployment fruit_app_FruitMarket or the serve application fruit_app has not been HEALTHY/RUNNING for more than 300.000000 seconds. Hence, KubeRay operator labels the RayCluster unhealthy and will prepare a new RayCluster. The message of the serve deployment is: Deployment \&quot;fruit_app_FruitMarket\&quot; has 1 replicas that have taken more than 30s to be scheduled. This may be caused by waiting for the cluster to auto-scale, or waiting for a runtime environment to install. Resources required for each replica: {\&quot;CPU\&quot;: 1.0}, resources available: {}.&quot;}</span>
+<span class="c1"># .</span>
+<span class="c1"># .</span>
+<span class="c1"># .</span>
+<span class="c1"># 2023-07-11T02:14:58.122Z	INFO	controllers.RayService	Restart RayCluster	{&quot;ServiceName&quot;: &quot;default/rayservice-sample&quot;, &quot;AvailableWorkerReplicas&quot;: 1, &quot;DesiredWorkerReplicas&quot;: 5, &quot;restart reason&quot;: &quot;The serve application is unhealthy, restarting the cluster. If the AvailableWorkerReplicas is not equal to DesiredWorkerReplicas, this may imply that the Autoscaler does not have enough resources to scale up the cluster. Hence, the serve application does not have enough resources to run. Please check https://github.com/ray-project/kuberay/blob/master/docs/guidance/rayservice-troubleshooting.md for more details.&quot;, &quot;RayCluster&quot;: {&quot;apiVersion&quot;: &quot;ray.io/v1alpha1&quot;, &quot;kind&quot;: &quot;RayCluster&quot;, &quot;namespace&quot;: &quot;default&quot;, &quot;name&quot;: &quot;rayservice-sample-raycluster-hvd9f&quot;}}</span>
+</pre></div>
+</div>
+</section>
+<section id="issue-9-ray-serve-api-api">
+<span id="kuberay-raysvc-issue9"></span><h3>Issue 9: 无需停机即可从 Ray Serve 的单应用程序 API 升级到其多应用程序 API<a class="headerlink" href="#issue-9-ray-serve-api-api" title="Permalink to this headline">#</a></h3>
+<p>KubeRay v0.6.0 已开始通过在 RayService CRD 中  <code class="docutils literal notranslate"><span class="pre">serveConfigV2</span></code> 暴露的方式支持 Ray Serve API V2（多应用） 。
+但 Ray Serve 不支持在集群中同时部署 API V1 和 API V2。
+因此，如果用户想要通过替换 <code class="docutils literal notranslate"><span class="pre">serveConfig</span></code> 为 <code class="docutils literal notranslate"><span class="pre">serveConfigV2</span></code> 进行就地升级，可能会遇到以下错误信息：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>ray.serve.exceptions.RayServeException: You are trying to deploy a multi-application config, however a single-application 
+config has been deployed to the current Serve instance already. Mixing single-app and multi-app is not allowed. Please either
+redeploy using the single-application config format `ServeApplicationSchema`, or shutdown and restart Serve to submit a
+multi-app config of format `ServeDeploySchema`. If you are using the REST API, you can submit a multi-app config to the
+the multi-app API endpoint `/api/serve/applications/`.
+</pre></div>
+</div>
+<p>要解决此问题，您可以将 <code class="docutils literal notranslate"><span class="pre">serveConfig</span></code> 替换为 <code class="docutils literal notranslate"><span class="pre">serveConfigV2</span></code> 并修改 <code class="docutils literal notranslate"><span class="pre">rayVersion</span></code> ，当 Ray 版本为 2.0.0 或更高版本到 2.100.0 时，此修改无效。
+这将触发新的 RayCluster 准备，而不是就地更新。</p>
+<p>如果按照上述步骤操作后，仍然出现错误提示，且 GCS 容错功能已开启，则可能是由于新旧 RayClusters 的注解 <code class="docutils literal notranslate"><span class="pre">ray.io/external-storage-namespace</span></code> 相同导致的。
+您可以移除注解，KubeRay 会自动为每个 RayCluster 自定义资源生成一个唯一的 key。
+更多详情可参考 <a class="reference external" href="https://github.com/ray-project/kuberay/issues/1297">kuberay#1297</a> 。</p>
+</section>
+</section>
+</section>
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="troubleshooting.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">故障排除指南</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="../references.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">API 参考</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><!-- Override the footer area for the sphinx-book-theme to include the CSAT widget -->
+<div id="csat">
+  <div id="csat-feedback-received" class="csat-hidden">
+    <span>谢谢你的反馈！</span>
+  </div>
+  <div id="csat-inputs">
+    <span>是否能帮助到你？</span>
+    <div id="csat-yes" class="csat-button">
+      <svg id="csat-yes-icon" class="csat-hidden csat-icon" width="18" height="13" viewBox="0 0 18 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 10.172L16.1922 0.979004L17.6072 2.393L7.00023 13L0.63623 6.636L2.05023 5.222L7.00023 10.172Z" fill="black"/>
+      </svg>
+      <span>是<span>
+    </div>
+    <div id="csat-no" class="csat-button">
+      <svg id="csat-no-icon" class="csat-hidden csat-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 5.58599L11.9502 0.635986L13.3642 2.04999L8.41423 6.99999L13.3642 11.95L11.9502 13.364L7.00023 8.41399L2.05023 13.364L0.63623 11.95L5.58623 6.99999L0.63623 2.04999L2.05023 0.635986L7.00023 5.58599Z" fill="black"/>
+      </svg>
+      <span>否<span>
+    </div>
+  </div>
+  <div id="csat-textarea-group" class="csat-hidden">
+    <span id="csat-feedback-label">反馈</span>
+    <textarea id="csat-textarea"></textarea>
+    <div id="csat-submit">提交</div>
+  </div>
+</div><p>
+  
+    By The Ray Team<br/>
+  
+      &copy; Copyright 2024, The Ray Team.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

@@ -1,0 +1,1159 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>使用 Prometheus 和 Grafana &#8212; Ray 2.7.2</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/termynal.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/js/versionwarning.js"></script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+    <script defer="defer" src="../../../_static/js/docsearch.js"></script>
+    <script defer="defer" src="../../../_static/js/csat.js"></script>
+    <script defer="defer" src="../../../_static/js/termynal.js"></script>
+    <script defer="defer" src="../../../_static/js/custom.js"></script>
+    <script defer="defer" src="../../../_static/js/top-navigation.js"></script>
+    <script src="../../../_static/js/tags.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <link rel="canonical" href="https://docs.ray.io/en/latest/cluster/kubernetes/k8s-ecosystem/prometheus-grafana.html" />
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="使用 py-spy 进行 分析" href="pyspy.html" />
+    <link rel="prev" title="Ingress" href="ingress.html" />
+
+<!-- Fathom - beautiful, simple website analytics -->
+<script src="https://deer.ray.io/script.js" data-site="WYYANYOS" defer></script>
+<!-- / Fathom -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-110413294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-110413294-1');
+</script>
+
+<script
+  src="https://widget.kapa.ai/kapa-widget.bundle.js"
+  data-website-id="18a8c339-4ec5-43c8-8182-db3f2bc8c6b6"
+  data-project-name="Ray"
+  data-project-color="#2C2C2C"
+  data-project-logo="https://global.discourse-cdn.com/business7/uploads/ray/original/1X/8f4dcb72f7cd34e2a332d548bd65860994bc8ff1.png"
+  data-modal-disclaimer = "Results are automated and may be incorrect or contain inappropriate information. Do not include any personal data or confidential information."
+  data-modal-title = "Ray Docs AI - Ask a Question"
+  data-button-position-bottom = "60px"
+></script>
+
+<script>
+(function(apiKey){
+    (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
+    v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
+        o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
+        y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
+        z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
+
+        pendo.initialize({
+            visitor: {
+                id: 'VISITOR-UNIQUE-ID'
+            },
+            account: {
+                id: 'ACCOUNT-UNIQUE-ID'
+            }
+        });
+})('f89fa48a-6dd7-4d7c-67cf-a8051ed891f2');
+</script>
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"><div class='topnav'></div></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Ray 2.7.2</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main Navigation">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../index.html">
+                    欢迎来到 Ray ！
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Ray
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/index.html">
+   概述「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/getting-started.html">
+   入门「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/installation.html">
+   安装「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/use-cases.html">
+   用例「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/examples.html">
+   示例库「1%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/ray-libraries.html">
+   生态「3%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-core/walkthrough.html">
+   Ray 核心「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../data/data.html">
+   Ray 数据「85%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../train/train.html">
+   Ray 训练「95%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../tune/index.html">
+   Ray 调参「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../serve/index.html">
+   Ray Serve「1%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../rllib/index.html">
+   Ray RLlib「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-more-libs/index.html">
+   更多类库「40%」
+  </a>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="../../getting-started.html">
+   Ray 集群「100%」
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../key-concepts.html">
+     关键概念
+    </a>
+   </li>
+   <li class="toctree-l2 current active has-children">
+    <a class="reference internal" href="../index.html">
+     在 Kubernetes 部署
+    </a>
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+    <label for="toctree-checkbox-2">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul class="current">
+     <li class="toctree-l3">
+      <a class="reference internal" href="../getting-started.html">
+       KubeRay 入门
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../user-guides.html">
+       用户指引
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples.html">
+       示例
+      </a>
+     </li>
+     <li class="toctree-l3 current active has-children">
+      <a class="reference internal" href="../k8s-ecosystem.html">
+       KubeRay 生态系统
+      </a>
+      <input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+      <label for="toctree-checkbox-3">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul class="current">
+       <li class="toctree-l4">
+        <a class="reference internal" href="ingress.html">
+         Ingress
+        </a>
+       </li>
+       <li class="toctree-l4 current active">
+        <a class="current reference internal" href="#">
+         使用 Prometheus 和 Grafana
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="pyspy.html">
+         使用 py-spy 进行 分析
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="volcano.html">
+         KubeRay 与 Volcano 集成
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="kubeflow.html">
+         Kubeflow: 交互式开发解决方案
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../benchmarks.html">
+       KubeRay 基准测试
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../troubleshooting.html">
+       KubeRay 故障排除
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../references.html">
+       API 参考
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../vms/index.html">
+     在虚拟机部署
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../metrics.html">
+     指标收集和监控
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../configure-manage-dashboard.html">
+     配置管理 Ray 仪表盘
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../running-applications/index.html">
+     应用指引
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../faq.html">
+     Ray 集群是否支持多租户？
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../package-overview.html">
+     Ray Cluster 管理 API
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-observability/index.html">
+   监控调试「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-references/api.html">
+   参考「20%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-contribute/index.html">
+   开发者指引「30%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-security/index.html">
+   安全「100%」
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/ray-project/ray"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/issues/new?title=Issue%20on%20page%20%2Fcluster/kubernetes/k8s-ecosystem/prometheus-grafana.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/edit/master/doc/source/cluster/kubernetes/k8s-ecosystem/prometheus-grafana.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../../_sources/cluster/kubernetes/k8s-ecosystem/prometheus-grafana.md.txt"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   准备
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#kind-kubernetes">
+   步骤 1: 使用 Kind 创建 Kubernetes 集群
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#helm-chart-kubernetes-prometheus-stack">
+   步骤 2: 通过 Helm Chart 安装 Kubernetes Prometheus Stack
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#kuberay-operator">
+   步骤 3: 安装 KubeRay operator
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#raycluster">
+   步骤 4: 安装 RayCluster
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#servicemonitor">
+   步骤 5: 使用 ServiceMonitor 收集头节点指标
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#podmonitors-worker">
+   步骤 6: 使用 PodMonitors 收集 worker 节点指标
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id2">
+   步骤 7: 使用记录规则收集自定义指标
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id3">
+   步骤 8: 使用警报规则定义警报条件
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#prometheus-web-ui">
+   步骤 9: 访问 Prometheus Web UI
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#grafana">
+   步骤 10: 访问 Grafana
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#grafana-ray-dashboard">
+   步骤 11: 将 Grafana 面板嵌入 Ray Dashboard
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>使用 Prometheus 和 Grafana</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   准备
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#kind-kubernetes">
+   步骤 1: 使用 Kind 创建 Kubernetes 集群
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#helm-chart-kubernetes-prometheus-stack">
+   步骤 2: 通过 Helm Chart 安装 Kubernetes Prometheus Stack
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#kuberay-operator">
+   步骤 3: 安装 KubeRay operator
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#raycluster">
+   步骤 4: 安装 RayCluster
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#servicemonitor">
+   步骤 5: 使用 ServiceMonitor 收集头节点指标
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#podmonitors-worker">
+   步骤 6: 使用 PodMonitors 收集 worker 节点指标
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id2">
+   步骤 7: 使用记录规则收集自定义指标
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id3">
+   步骤 8: 使用警报规则定义警报条件
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#prometheus-web-ui">
+   步骤 9: 访问 Prometheus Web UI
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#grafana">
+   步骤 10: 访问 Grafana
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#grafana-ray-dashboard">
+   步骤 11: 将 Grafana 面板嵌入 Ray Dashboard
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="prometheus-grafana">
+<span id="kuberay-prometheus-grafana"></span><h1>使用 Prometheus 和 Grafana<a class="headerlink" href="#prometheus-grafana" title="Permalink to this headline">#</a></h1>
+<p>本节将介绍如何使用 Prometheus 和 Grafana 监控 Kubernetes 中的 Ray 集群。</p>
+<p>如果您没有 Kubernetes 上的 Prometheus 和 Grafana 的任何经验，请观看此 <a class="reference external" href="https://youtube.com/playlist?list=PLy7NrYWoggjxCF3av5JKwyG7FFF9eLeL4">YouTube 播放列表</a>。</p>
+<section id="id1">
+<h2>准备<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h2>
+<p>克隆 <a class="reference external" href="https://github.com/ray-project/kuberay">KubeRay 仓库</a>签出 <code class="docutils literal notranslate"><span class="pre">master</span></code> 分支。
+本教程需要存储库中的多个文件。</p>
+</section>
+<section id="kind-kubernetes">
+<h2>步骤 1: 使用 Kind 创建 Kubernetes 集群<a class="headerlink" href="#kind-kubernetes" title="Permalink to this headline">#</a></h2>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>kind create cluster
+</pre></div>
+</div>
+</section>
+<section id="helm-chart-kubernetes-prometheus-stack">
+<h2>步骤 2: 通过 Helm Chart 安装 Kubernetes Prometheus Stack<a class="headerlink" href="#helm-chart-kubernetes-prometheus-stack" title="Permalink to this headline">#</a></h2>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Path: kuberay/</span>
+./install/prometheus/install.sh
+
+<span class="c1"># Check the installation</span>
+kubectl get all -n prometheus-system
+
+<span class="c1"># (part of the output)</span>
+<span class="c1"># NAME                                                  READY   UP-TO-DATE   AVAILABLE   AGE</span>
+<span class="c1"># deployment.apps/prometheus-grafana                    1/1     1            1           46s</span>
+<span class="c1"># deployment.apps/prometheus-kube-prometheus-operator   1/1     1            1           46s</span>
+<span class="c1"># deployment.apps/prometheus-kube-state-metrics         1/1     1            1           46s</span>
+</pre></div>
+</div>
+<ul>
+<li><p>KubeRay 提供了 <a class="reference external" href="https://github.com/ray-project/kuberay/blob/master/install/prometheus/install.sh">install.sh 脚本</a> 来自动在命名空间 <code class="docutils literal notranslate"><span class="pre">prometheus-system</span></code> 中安装 <a class="reference external" href="https://github.com/prometheus-community/helm-charts/tree/kube-prometheus-stack-48.2.1/charts/kube-prometheus-stack">kube-prometheus-stack v48.2.1</a> chart 和相关的自定义资源，包括 <strong>ServiceMonitor</strong>、 <strong>PodMonitor</strong> 和 <strong>PrometheusRule</strong>。</p></li>
+<li><p>我们对 kube-prometheus-stack 图表中的原始图表  <code class="docutils literal notranslate"><span class="pre">values.yaml</span></code> 进行了一些修改，以允许在 Ray Dashboard 中嵌入 Grafana 面板。有关更多详细信息，请参阅 <a class="reference external" href="https://github.com/ray-project/kuberay/tree/master/install/prometheus/overrides.yaml">overrides.yaml</a>。</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">grafana</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">grafana.ini</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">security</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">allow_embedding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">    </span><span class="nt">auth.anonymous</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">      </span><span class="nt">org_role</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Viewer</span><span class="w"></span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="kuberay-operator">
+<h2>步骤 3: 安装 KubeRay operator<a class="headerlink" href="#kuberay-operator" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>按照 <a class="reference internal" href="../getting-started/raycluster-quick-start.html#kuberay-operator-deploy"><span class="std std-ref">文档</span></a> 通过 Helm 存储库安装最新的稳定 KubeRay Operator。</p></li>
+</ul>
+</section>
+<section id="raycluster">
+<h2>步骤 4: 安装 RayCluster<a class="headerlink" href="#raycluster" title="Permalink to this headline">#</a></h2>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># path: ray-operator/config/samples/</span>
+kubectl apply -f ray-cluster.embed-grafana.yaml
+
+<span class="c1"># Check ${RAYCLUSTER_HEAD_POD}</span>
+kubectl get pod -l ray.io/node-type<span class="o">=</span>head
+
+<span class="c1"># Example output:</span>
+<span class="c1"># NAME                            READY   STATUS    RESTARTS   AGE</span>
+<span class="c1"># raycluster-kuberay-head-btwc2   1/1     Running   0          63s</span>
+
+<span class="c1"># Wait until all Ray Pods are running and forward the port of the Prometheus metrics endpoint in a new terminal.</span>
+kubectl port-forward --address <span class="m">0</span>.0.0.0 <span class="si">${</span><span class="nv">RAYCLUSTER_HEAD_POD</span><span class="si">}</span> <span class="m">8080</span>:8080
+curl localhost:8080
+
+<span class="c1"># Example output (Prometheus metrics format):</span>
+<span class="c1"># # HELP ray_spill_manager_request_total Number of {spill, restore} requests.</span>
+<span class="c1"># # TYPE ray_spill_manager_request_total gauge</span>
+<span class="c1"># ray_spill_manager_request_total{Component=&quot;raylet&quot;,NodeAddress=&quot;10.244.0.13&quot;,Type=&quot;Restored&quot;,Version=&quot;2.0.0&quot;} 0.0</span>
+
+<span class="c1"># Ensure that the port (8080) for the metrics endpoint is also defined in the head&#39;s Kubernetes service.</span>
+kubectl get service
+
+<span class="c1"># NAME                          TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                                         AGE</span>
+<span class="c1"># raycluster-kuberay-head-svc   ClusterIP   10.96.201.142   &lt;none&gt;        6379/TCP,8265/TCP,8080/TCP,8000/TCP,10001/TCP   106m</span>
+</pre></div>
+</div>
+<ul>
+<li><p>默认情况下，KubeRay 通过内置导出器在端口 <strong>8080</strong> 中公开 Prometheus 指标端点。因此，我们不需要安装任何外部导出器。</p></li>
+<li><p>如果要将指标端点配置到不同的端口，请参阅 <a class="reference external" href="https://github.com/ray-project/kuberay/pull/954">kuberay/#954</a> 。</p></li>
+<li><p>Prometheus 指标格式：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">HELP</span></code>: 描述这个指标的含义。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">TYPE</span></code>: 参考 <a class="reference external" href="https://prometheus.io/docs/concepts/metric_types/">文档</a> 了解更多详细信息。</p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-cluster.embed-grafana.yaml">ray-cluster.embed-grafana.yaml</a>中定义了三个必需的环境变量。有关这些环境变量的更多详细信息，请参阅 <a class="reference external" href="https://docs.ray.io/en/latest/cluster/configure-manage-dashboard.html">配置和管理 Ray Dashboard</a> 。</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">env</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RAY_GRAFANA_IFRAME_HOST</span><span class="w"></span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://127.0.0.1:3000</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RAY_GRAFANA_HOST</span><span class="w"></span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://prometheus-grafana.prometheus-system.svc:80</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RAY_PROMETHEUS_HOST</span><span class="w"></span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://prometheus-kube-prometheus-prometheus.prometheus-system.svc:9090</span><span class="w"></span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>请注意，我们没有在 head Pod 中部署 Grafana，因此我们需要同时设置 <code class="docutils literal notranslate"><span class="pre">RAY_GRAFANA_IFRAME_HOST</span></code> 和 <code class="docutils literal notranslate"><span class="pre">RAY_GRAFANA_HOST</span></code>。
+<code class="docutils literal notranslate"><span class="pre">RAY_GRAFANA_HOST</span></code> 由 head Pod 用于向后端的 Grafana 发送健康检查请求。
+<code class="docutils literal notranslate"><span class="pre">RAY_GRAFANA_IFRAME_HOST</span></code> 您的浏览器使用它从 Grafana 服务器而不是从 head Pod 获取 Grafana 面板。
+在本例中我们将 Grafana 的端口转发到 <code class="docutils literal notranslate"><span class="pre">127.0.0.1:3000</span></code> 所以我们设置 <code class="docutils literal notranslate"><span class="pre">RAY_GRAFANA_IFRAME_HOST</span></code> 为 <code class="docutils literal notranslate"><span class="pre">http://127.0.0.1:3000</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">http://</span></code> 是必须的。</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="servicemonitor">
+<h2>步骤 5: 使用 ServiceMonitor 收集头节点指标<a class="headerlink" href="#servicemonitor" title="Permalink to this headline">#</a></h2>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">monitoring.coreos.com/v1</span><span class="w"></span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ServiceMonitor</span><span class="w"></span>
+<span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ray-head-monitor</span><span class="w"></span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prometheus-system</span><span class="w"></span>
+<span class="w">  </span><span class="nt">labels</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="c1"># `release: $HELM_RELEASE`: Prometheus can only detect ServiceMonitor with this label.</span><span class="w"></span>
+<span class="w">    </span><span class="nt">release</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prometheus</span><span class="w"></span>
+<span class="nt">spec</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">jobLabel</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ray-head</span><span class="w"></span>
+<span class="w">  </span><span class="c1"># Only select Kubernetes Services in the &quot;default&quot; namespace.</span><span class="w"></span>
+<span class="w">  </span><span class="nt">namespaceSelector</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">matchNames</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span><span class="w"></span>
+<span class="w">  </span><span class="c1"># Only select Kubernetes Services with &quot;matchLabels&quot;.</span><span class="w"></span>
+<span class="w">  </span><span class="nt">selector</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">ray.io/node-type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">head</span><span class="w"></span>
+<span class="w">  </span><span class="c1"># A list of endpoints allowed as part of this ServiceMonitor.</span><span class="w"></span>
+<span class="w">  </span><span class="nt">endpoints</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">metrics</span><span class="w"></span>
+<span class="w">  </span><span class="nt">targetLabels</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ray.io/cluster</span><span class="w"></span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>以上 YAML 示例是 <a class="reference external" href="https://github.com/ray-project/kuberay/blob/master/config/prometheus/serviceMonitor.yaml">serviceMonitor.yaml</a>，它是由 <strong>install.sh</strong> 创建。因此，不需要在这里创建任何东西。</p></li>
+<li><p>更多配置信息请参见 <a class="reference external" href="https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#servicemonitor">ServiceMonitor 官方文档</a>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">release:</span> <span class="pre">$HELM_RELEASE</span></code>: Prometheus 只检测带有 ServiceMonitor 标签的。</p></li>
+</ul>
+<div id="prometheus-can-only-detect-this-label" ></div>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>helm ls -n prometheus-system
+<span class="c1"># ($HELM_RELEASE is &quot;prometheus&quot;.)</span>
+<span class="c1"># NAME            NAMESPACE               REVISION        UPDATED                                 STATUS          CHART                           APP VERSION</span>
+<span class="c1"># prometheus      prometheus-system       1               2023-02-06 06:27:05.530950815 +0000 UTC deployed        kube-prometheus-stack-44.3.1    v0.62.0</span>
+
+kubectl get prometheuses.monitoring.coreos.com -n prometheus-system -oyaml
+<span class="c1"># serviceMonitorSelector:</span>
+<span class="c1">#   matchLabels:</span>
+<span class="c1">#     release: prometheus</span>
+<span class="c1"># podMonitorSelector:</span>
+<span class="c1">#   matchLabels:</span>
+<span class="c1">#     release: prometheus</span>
+<span class="c1"># ruleSelector:</span>
+<span class="c1">#   matchLabels:</span>
+<span class="c1">#     release: prometheus</span>
+</pre></div>
+</div>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">namespaceSelector</span></code> 和 <code class="docutils literal notranslate"><span class="pre">seletor</span></code> 用于选择导出器的 Kubernetes 服务。 。由于 Ray 使用内置导出器，因此 <strong>ServiceMonitor</strong> 选择 Ray 的头服务来公开指标端点（即此处的端口 8080）。</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>kubectl get service -n default -l ray.io/node-type<span class="o">=</span>head
+<span class="c1"># NAME                          TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                                         AGE</span>
+<span class="c1"># raycluster-kuberay-head-svc   ClusterIP   10.96.201.142   &lt;none&gt;        6379/TCP,8265/TCP,8080/TCP,8000/TCP,10001/TCP   153m</span>
+</pre></div>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">targetLabels</span></code>: 我们添加了 <code class="docutils literal notranslate"><span class="pre">spec.targetLabels[0].ray.io/cluster</span></code> 因为我们希望在此 ServiceMonitor 生成的指标中包含 RayCluster 的名称。<code class="docutils literal notranslate"><span class="pre">ray.io/cluster</span></code> 标签是Ray头节点服务的一部分，它将被转换为 <code class="docutils literal notranslate"><span class="pre">ray_io_cluster</span></code> 指标标签。 也就是说，将导入的任何指标也将包含以下标签 <code class="docutils literal notranslate"><span class="pre">ray_io_cluster=&lt;ray-cluster-name&gt;</span></code>。这可能看起来是可选的，但如果您部署多个 RayCluster，则它变得强制。</p></li>
+</ul>
+</section>
+<section id="podmonitors-worker">
+<h2>步骤 6: 使用 PodMonitors 收集 worker 节点指标<a class="headerlink" href="#podmonitors-worker" title="Permalink to this headline">#</a></h2>
+<p>KubeRay Operator 不会为 Ray Worker Pod 创建 Kubernetes 服务，因此我们无法使用 Prometheus ServiceMonitor 从 Worker Pod 中获取指标。要收集 worker 指标，我们可以使用 <code class="docutils literal notranslate"><span class="pre">Prometheus</span> <span class="pre">PodMonitors</span> <span class="pre">CRD</span></code> 。</p>
+<p><strong>Note</strong>: 我们可以创建一个 Kubernetes Service，其中选择器是我们的 worker pod 中的公共标签子集，但是，这并不理想，因为我们的 worker 彼此独立，也就是说，它们不是由副本集控制器生成的副本的集合。因此，我们应该避免使用 Kubernetes service 将它们分组在一起。</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">monitoring.coreos.com/v1</span><span class="w"></span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PodMonitor</span><span class="w"></span>
+<span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ray-workers-monitor</span><span class="w"></span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prometheus-system</span><span class="w"></span>
+<span class="w">  </span><span class="nt">labels</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="c1"># `release: $HELM_RELEASE`: Prometheus can only detect PodMonitor with this label.</span><span class="w"></span>
+<span class="w">    </span><span class="nt">release</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prometheus</span><span class="w"></span>
+<span class="w">    </span><span class="nt">ray.io/cluster</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">raycluster-kuberay</span><span class="w"> </span><span class="c1"># $RAY_CLUSTER_NAME: &quot;kubectl get rayclusters.ray.io&quot;</span><span class="w"></span>
+<span class="nt">spec</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">jobLabel</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ray-workers</span><span class="w"></span>
+<span class="w">  </span><span class="c1"># Only select Kubernetes Pods in the &quot;default&quot; namespace.</span><span class="w"></span>
+<span class="w">  </span><span class="nt">namespaceSelector</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">matchNames</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span><span class="w"></span>
+<span class="w">  </span><span class="c1"># Only select Kubernetes Pods with &quot;matchLabels&quot;.</span><span class="w"></span>
+<span class="w">  </span><span class="nt">selector</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">ray.io/node-type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">worker</span><span class="w"></span>
+<span class="w">  </span><span class="c1"># A list of endpoints allowed as part of this PodMonitor.</span><span class="w"></span>
+<span class="w">  </span><span class="nt">podMetricsEndpoints</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">metrics</span><span class="w"></span>
+</pre></div>
+</div>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">release:</span> <span class="pre">$HELM_RELEASE</span></code>: Prometheus 只能检测带有此标签的 PodMonitor。请参阅 <a class="reference external" href="#prometheus-can-only-detect-this-label">此处</a> 了解更多详细信息。</p></li>
+<li><p>在 <code class="docutils literal notranslate"><span class="pre">namespaceSelector</span></code> 和 <code class="docutils literal notranslate"><span class="pre">selector</span></code> 中的 <strong>PodMonitor</strong> 用于选择 Kubernetes Pod。</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>kubectl get pod -n default -l ray.io/node-type<span class="o">=</span>worker
+<span class="c1"># NAME                                          READY   STATUS    RESTARTS   AGE</span>
+<span class="c1"># raycluster-kuberay-worker-workergroup-5stpm   1/1     Running   0          3h16m</span>
+</pre></div>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ray.io/cluster:</span> <span class="pre">$RAY_CLUSTER_NAME</span></code>: 我们还通过手动添加 <code class="docutils literal notranslate"><span class="pre">ray.io/cluster:</span> <span class="pre">&lt;ray-cluster-name&gt;</span></code> 定义了 <code class="docutils literal notranslate"><span class="pre">metadata.labels</span></code>，然后指示 PodMonitors 资源通过 <code class="docutils literal notranslate"><span class="pre">spec.podTargetLabels[0].ray.io/cluster</span></code> 标签添加到抓取的指标中。</p></li>
+</ul>
+</section>
+<section id="id2">
+<h2>步骤 7: 使用记录规则收集自定义指标<a class="headerlink" href="#id2" title="Permalink to this headline">#</a></h2>
+<p><a class="reference external" href="https://prometheus.io/docs/prometheus/latest/configuration/recording_rules/">记录规则</a> 允许我们预先计算经常需要的或计算成本较高的 <a class="reference external" href="https://prometheus.io/docs/prometheus/latest/querying/basics/">PromQL</a> 表达式，并将其结果保存为自定义指标。请注意，这与 <a class="reference internal" href="../../../ray-observability/user-guides/add-app-metrics.html#application-level-metrics"><span class="std std-ref">自定义应用级别指标</span></a> 不同，他是用于 ray 应用的可见性的。</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">monitoring.coreos.com/v1</span><span class="w"></span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PrometheusRule</span><span class="w"></span>
+<span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ray-cluster-gcs-rules</span><span class="w"></span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prometheus-system</span><span class="w"></span>
+<span class="w">  </span><span class="nt">labels</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="c1"># `release: $HELM_RELEASE`: Prometheus can only detect Recording Rules with this label.</span><span class="w"></span>
+<span class="w">    </span><span class="nt">release</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prometheus</span><span class="w"></span>
+<span class="nt">spec</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">groups</span><span class="p">:</span><span class="w"></span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="c1">#  Rules within a group are run periodically with the same evaluation interval(30s in this example).</span><span class="w"></span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ray-cluster-main-staging-gcs.rules</span><span class="w"></span>
+<span class="w">    </span><span class="c1"># How often rules in the group are evaluated.</span><span class="w"></span>
+<span class="w">    </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30s</span><span class="w"></span>
+<span class="w">    </span><span class="nt">rules</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="c1"># The name of the custom metric.</span><span class="w"></span>
+<span class="w">      </span><span class="c1"># Also see best practices for naming metrics created by recording rules:</span><span class="w"></span>
+<span class="w">      </span><span class="c1"># https://prometheus.io/docs/practices/rules/#recording-rules</span><span class="w"></span>
+<span class="w">      </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ray_gcs_availability_30d</span><span class="w"></span>
+<span class="w">      </span><span class="c1"># PromQL expression.</span><span class="w"></span>
+<span class="w">      </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span><span class="w"></span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">(</span><span class="w"></span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">100 * (</span><span class="w"></span>
+<span class="w">          </span><span class="l l-Scalar l-Scalar-Plain">sum(rate(ray_gcs_update_resource_usage_time_bucket{container=&quot;ray-head&quot;, le=&quot;20.0&quot;}[30d]))</span><span class="w"></span>
+<span class="w">          </span><span class="l l-Scalar l-Scalar-Plain">/</span><span class="w"></span>
+<span class="w">          </span><span class="l l-Scalar l-Scalar-Plain">sum(rate(ray_gcs_update_resource_usage_time_count{container=&quot;ray-head&quot;}[30d]))</span><span class="w"></span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">)</span><span class="w"></span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">)</span><span class="w"></span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>上面的 PromQL 表达式为：
+$<span class="math notranslate nohighlight">\(\frac{ number\ of\ update\ resource\ usage\ RPCs\ that\ have\ RTT\ smaller\ then\ 20ms\ in\ last\ 30\ days\ }{total\ number\ of\ update\ resource\ usage\ RPCs\ in\ last\ 30\ days\ }   \times 100 \)</span>$</p></li>
+<li><p>上面的记录规则是 <a class="reference external" href="https://github.com/ray-project/kuberay/blob/master/config/prometheus/rules/prometheusRules.yaml">prometheusRules.yaml</a>中定义的规则之一，它是由 <strong>install.sh</strong>创建的。因此，不需要在这里创建任何东西。</p></li>
+<li><p>有关配置的更多详细信息，请参阅 <a class="reference external" href="https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#prometheusrule">PrometheusRule 官方文档</a>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">release:</span> <span class="pre">$HELM_RELEASE</span></code>: Prometheus 只能检测带有此标签的 PrometheusRule。请参阅 <a class="reference external" href="#prometheus-can-only-detect-this-label">这里</a> 了解更多信息。</p></li>
+<li><p>可以在运行时重新加载。如果需要，使用 <code class="docutils literal notranslate"><span class="pre">kubectl</span> <span class="pre">apply</span> <span class="pre">{modified</span> <span class="pre">prometheusRules.yaml}</span></code> 重新配置规则。</p></li>
+</ul>
+</section>
+<section id="id3">
+<h2>步骤 8: 使用警报规则定义警报条件<a class="headerlink" href="#id3" title="Permalink to this headline">#</a></h2>
+<p><a class="reference external" href="https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/">警报规则</a> 允许我们基于 <a class="reference external" href="https://prometheus.io/docs/prometheus/latest/querying/basics/">PromQL</a> 表达式定义警报条件，并向 <a class="reference external" href="https://prometheus.io/docs/alerting/latest/alertmanager">Alertmanager</a> 发送有关触发警报的通知，Alertmanager 在简单的警报定义之上添加了摘要、通知速率限制、静音和警报依赖项。</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">monitoring.coreos.com/v1</span><span class="w"></span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PrometheusRule</span><span class="w"></span>
+<span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ray-cluster-gcs-rules</span><span class="w"></span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prometheus-system</span><span class="w"></span>
+<span class="w">  </span><span class="nt">labels</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="c1"># `release: $HELM_RELEASE`: Prometheus can only detect Alerting Rules with this label.</span><span class="w"></span>
+<span class="w">    </span><span class="nt">release</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prometheus</span><span class="w"></span>
+<span class="nt">spec</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">groups</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ray-cluster-main-staging-gcs.rules</span><span class="w"></span>
+<span class="w">    </span><span class="c1"># How often rules in the group are evaluated.</span><span class="w"></span>
+<span class="w">    </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30s</span><span class="w"></span>
+<span class="w">    </span><span class="nt">rules</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MissingMetricRayGlobalControlStore</span><span class="w"></span>
+<span class="w">      </span><span class="c1"># A set of informational labels. Annotations can be used to store longer additional information compared to rules.0.labels.</span><span class="w"></span>
+<span class="w">      </span><span class="nt">annotations</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ray GCS is not emitting any metrics for Resource Update requests</span><span class="w"></span>
+<span class="w">        </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ray GCS is not emitting metrics anymore</span><span class="w"></span>
+<span class="w">      </span><span class="c1"># PromQL expression.</span><span class="w"></span>
+<span class="w">      </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span><span class="w"></span>
+<span class="w">                      </span><span class="no">(</span><span class="w"></span>
+<span class="w">                       </span><span class="no">absent(ray_gcs_update_resource_usage_time_bucket) == 1</span><span class="w"></span>
+<span class="w">                      </span><span class="no">)</span><span class="w"></span>
+<span class="w">      </span><span class="c1"># Time that Prometheus will wait and check if the alert continues to be active during each evaluation before firing the alert.</span><span class="w"></span>
+<span class="w">      </span><span class="c1"># firing alerts may be due to false positives or noise if the setting value is too small.</span><span class="w"></span>
+<span class="w">      </span><span class="c1"># On the other hand, if the value is too big, the alerts may not be handled in time.</span><span class="w"></span>
+<span class="w">      </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m</span><span class="w"></span>
+<span class="w">      </span><span class="c1"># A set of additional labels to be attached to the alert.</span><span class="w"></span>
+<span class="w">      </span><span class="c1"># It is possible to overwrite the labels in metadata.labels, so make sure one of the labels match the label in ruleSelector.matchLabels.</span><span class="w"></span>
+<span class="w">      </span><span class="nt">labels</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">critical</span><span class="w"></span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>上面的 PromQL 表达式检查指标是否不存在时间序列 <code class="docutils literal notranslate"><span class="pre">ray_gcs_update_resource_usage_time_bucket</span></code> 指标。参考 <a class="reference external" href="https://prometheus.io/docs/prometheus/latest/querying/functions/#absent">absent()</a> 获取更多详细信息。</p></li>
+<li><p>上面的警报规则是 <a class="reference external" href="https://github.com/ray-project/kuberay/blob/master/config/prometheus/rules/prometheusRules.yaml">prometheusRules.yaml</a>中定义的规则之一，它是由 <strong>install.sh</strong> 创建的。因此，不需要在这里创建任何东西。</p></li>
+<li><p>报警规则的配置方式与记录规则相同。</p></li>
+</ul>
+</section>
+<section id="prometheus-web-ui">
+<h2>步骤 9: 访问 Prometheus Web UI<a class="headerlink" href="#prometheus-web-ui" title="Permalink to this headline">#</a></h2>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Forward the port of Prometheus Web UI in the Prometheus server Pod.</span>
+kubectl port-forward --address <span class="m">0</span>.0.0.0 prometheus-prometheus-kube-prometheus-prometheus-0 -n prometheus-system <span class="m">9090</span>:9090
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>转到 <code class="docutils literal notranslate"><span class="pre">${YOUR_IP}:9090/targets</span></code> (例如 <code class="docutils literal notranslate"><span class="pre">127.0.0.1:9090/targets</span></code>)。您应该能够看到：</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">podMonitor/prometheus-system/ray-workers-monitor/0</span> <span class="pre">(1/1</span> <span class="pre">up)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">serviceMonitor/prometheus-system/ray-head-monitor/0</span> <span class="pre">(1/1</span> <span class="pre">up)</span></code></p></li>
+</ul>
+</li>
+</ul>
+<p><img alt="Prometheus Web UI" src="../../../_images/prometheus_web_ui.png" /></p>
+<ul class="simple">
+<li><p>转到 <code class="docutils literal notranslate"><span class="pre">${YOUR_IP}:9090/graph</span></code>。您应该能够查询：</p>
+<ul>
+<li><p><a class="reference external" href="https://docs.ray.io/en/latest/ray-observability/ray-metrics.html#system-metrics">系统指标</a></p></li>
+<li><p><a class="reference external" href="https://docs.ray.io/en/latest/ray-observability/ray-metrics.html#application-level-metrics">应用级别指标</a></p></li>
+<li><p>记录规则中定义的自定义指标 (如， <code class="docutils literal notranslate"><span class="pre">ray_gcs_availability_30d</span></code>)</p></li>
+</ul>
+</li>
+<li><p>转到 <code class="docutils literal notranslate"><span class="pre">${YOUR_IP}:9090/alerts</span></code>。您应该能够看到：</p>
+<ul>
+<li><p>警报规则 (如， <code class="docutils literal notranslate"><span class="pre">MissingMetricRayGlobalControlStore</span></code>).</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="grafana">
+<h2>步骤 10: 访问 Grafana<a class="headerlink" href="#grafana" title="Permalink to this headline">#</a></h2>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Forward the port of Grafana</span>
+kubectl port-forward --address <span class="m">0</span>.0.0.0 deployment/prometheus-grafana -n prometheus-system <span class="m">3000</span>:3000
+<span class="c1"># Note: You need to update `RAY_GRAFANA_IFRAME_HOST` if you expose Grafana to a different port.</span>
+
+<span class="c1"># Check ${YOUR_IP}:3000/login for the Grafana login page (e.g. 127.0.0.1:3000/login).</span>
+<span class="c1"># The default username is &quot;admin&quot; and the password is &quot;prom-operator&quot;.</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p>Note: <code class="docutils literal notranslate"><span class="pre">kubectl</span> <span class="pre">port-forward</span></code> 不建议用于生产用途。
+请参阅 <a class="reference external" href="https://grafana.com/tutorials/run-grafana-behind-a-proxy/">this Grafana document</a> ，了解在反向代理后面公开 Grafana。</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>默认密码由kube-prometheus-stack 图表的 <a class="reference external" href="https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml">values.yaml</a> 的  <code class="docutils literal notranslate"><span class="pre">grafana.adminPassword</span></code>  指定。</p></li>
+<li><p>成功登录Grafana后，我们可以通过 <strong>dashboard_default.json</strong> 将Ray Dashboard导入Grafana 。</p>
+<ul>
+<li><p>点击左侧面板中的“仪表板”图标。</p></li>
+<li><p>点击 “New”。</p></li>
+<li><p>点击 “Import”。</p></li>
+<li><p>点击 “Upload JSON file”.</p></li>
+<li><p>创建 JSON 文件。</p>
+<ul>
+<li><p>情况 1: 如果您使用的是 Ray 2.5.0，则可以使用 <a class="reference external" href="https://github.com/ray-project/kuberay/blob/master/config/grafana/default_grafana_dashboard.json">config/grafana/default_grafana_dashboard.json</a>。</p></li>
+<li><p>情况 2: 否则，您应该从 Head Pod 的 <code class="docutils literal notranslate"><span class="pre">/tmp/ray/session_latest/metrics/grafana/dashboards/</span></code> 路径导入 <code class="docutils literal notranslate"><span class="pre">default_grafana_dashboard.json</span></code> 文件。你可以使用 <code class="docutils literal notranslate"><span class="pre">kubectl</span> <span class="pre">cp</span></code> 拷贝 Head Pod 的文件到本地机器。</p></li>
+</ul>
+</li>
+<li><p>点击 “Import”.</p></li>
+</ul>
+</li>
+<li><p>TODO: 请注意，手动导入仪表板并不理想。我们应该找到一种自动导入仪表板的方法。</p></li>
+</ul>
+<p><img alt="Grafana Ray Dashboard" src="../../../_images/grafana_ray_dashboard.png" /></p>
+</section>
+<section id="grafana-ray-dashboard">
+<h2>步骤 11: 将 Grafana 面板嵌入 Ray Dashboard<a class="headerlink" href="#grafana-ray-dashboard" title="Permalink to this headline">#</a></h2>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>kubectl port-forward --address <span class="m">0</span>.0.0.0 svc/raycluster-embed-grafana-head-svc <span class="m">8265</span>:8265
+<span class="c1"># Visit http://127.0.0.1:8265/#/metrics in your browser.</span>
+</pre></div>
+</div>
+<p><img alt="带有 Grafana 面板的 Ray 仪表盘" src="../../../_images/ray_dashboard_embed_grafana.png" /></p>
+</section>
+</section>
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="ingress.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Ingress</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="pyspy.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">使用 py-spy 进行 分析</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><!-- Override the footer area for the sphinx-book-theme to include the CSAT widget -->
+<div id="csat">
+  <div id="csat-feedback-received" class="csat-hidden">
+    <span>谢谢你的反馈！</span>
+  </div>
+  <div id="csat-inputs">
+    <span>是否能帮助到你？</span>
+    <div id="csat-yes" class="csat-button">
+      <svg id="csat-yes-icon" class="csat-hidden csat-icon" width="18" height="13" viewBox="0 0 18 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 10.172L16.1922 0.979004L17.6072 2.393L7.00023 13L0.63623 6.636L2.05023 5.222L7.00023 10.172Z" fill="black"/>
+      </svg>
+      <span>是<span>
+    </div>
+    <div id="csat-no" class="csat-button">
+      <svg id="csat-no-icon" class="csat-hidden csat-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 5.58599L11.9502 0.635986L13.3642 2.04999L8.41423 6.99999L13.3642 11.95L11.9502 13.364L7.00023 8.41399L2.05023 13.364L0.63623 11.95L5.58623 6.99999L0.63623 2.04999L2.05023 0.635986L7.00023 5.58599Z" fill="black"/>
+      </svg>
+      <span>否<span>
+    </div>
+  </div>
+  <div id="csat-textarea-group" class="csat-hidden">
+    <span id="csat-feedback-label">反馈</span>
+    <textarea id="csat-textarea"></textarea>
+    <div id="csat-submit">提交</div>
+  </div>
+</div><p>
+  
+    By The Ray Team<br/>
+  
+      &copy; Copyright 2024, The Ray Team.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

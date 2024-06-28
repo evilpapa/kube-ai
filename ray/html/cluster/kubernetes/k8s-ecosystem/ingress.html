@@ -1,0 +1,947 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Ingress &#8212; Ray 2.7.2</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/termynal.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/js/versionwarning.js"></script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+    <script defer="defer" src="../../../_static/js/docsearch.js"></script>
+    <script defer="defer" src="../../../_static/js/csat.js"></script>
+    <script defer="defer" src="../../../_static/js/termynal.js"></script>
+    <script defer="defer" src="../../../_static/js/custom.js"></script>
+    <script defer="defer" src="../../../_static/js/top-navigation.js"></script>
+    <script src="../../../_static/js/tags.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <link rel="canonical" href="https://docs.ray.io/en/latest/cluster/kubernetes/k8s-ecosystem/ingress.html" />
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="使用 Prometheus 和 Grafana" href="prometheus-grafana.html" />
+    <link rel="prev" title="KubeRay 生态系统" href="../k8s-ecosystem.html" />
+
+<!-- Fathom - beautiful, simple website analytics -->
+<script src="https://deer.ray.io/script.js" data-site="WYYANYOS" defer></script>
+<!-- / Fathom -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-110413294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-110413294-1');
+</script>
+
+<script
+  src="https://widget.kapa.ai/kapa-widget.bundle.js"
+  data-website-id="18a8c339-4ec5-43c8-8182-db3f2bc8c6b6"
+  data-project-name="Ray"
+  data-project-color="#2C2C2C"
+  data-project-logo="https://global.discourse-cdn.com/business7/uploads/ray/original/1X/8f4dcb72f7cd34e2a332d548bd65860994bc8ff1.png"
+  data-modal-disclaimer = "Results are automated and may be incorrect or contain inappropriate information. Do not include any personal data or confidential information."
+  data-modal-title = "Ray Docs AI - Ask a Question"
+  data-button-position-bottom = "60px"
+></script>
+
+<script>
+(function(apiKey){
+    (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
+    v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
+        o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
+        y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
+        z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
+
+        pendo.initialize({
+            visitor: {
+                id: 'VISITOR-UNIQUE-ID'
+            },
+            account: {
+                id: 'ACCOUNT-UNIQUE-ID'
+            }
+        });
+})('f89fa48a-6dd7-4d7c-67cf-a8051ed891f2');
+</script>
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"><div class='topnav'></div></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Ray 2.7.2</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main Navigation">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../index.html">
+                    欢迎来到 Ray ！
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Ray
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/index.html">
+   概述「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/getting-started.html">
+   入门「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/installation.html">
+   安装「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/use-cases.html">
+   用例「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/examples.html">
+   示例库「1%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/ray-libraries.html">
+   生态「3%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-core/walkthrough.html">
+   Ray 核心「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../data/data.html">
+   Ray 数据「85%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../train/train.html">
+   Ray 训练「95%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../tune/index.html">
+   Ray 调参「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../serve/index.html">
+   Ray Serve「1%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../rllib/index.html">
+   Ray RLlib「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-more-libs/index.html">
+   更多类库「40%」
+  </a>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="../../getting-started.html">
+   Ray 集群「100%」
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../key-concepts.html">
+     关键概念
+    </a>
+   </li>
+   <li class="toctree-l2 current active has-children">
+    <a class="reference internal" href="../index.html">
+     在 Kubernetes 部署
+    </a>
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+    <label for="toctree-checkbox-2">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul class="current">
+     <li class="toctree-l3">
+      <a class="reference internal" href="../getting-started.html">
+       KubeRay 入门
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../user-guides.html">
+       用户指引
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples.html">
+       示例
+      </a>
+     </li>
+     <li class="toctree-l3 current active has-children">
+      <a class="reference internal" href="../k8s-ecosystem.html">
+       KubeRay 生态系统
+      </a>
+      <input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+      <label for="toctree-checkbox-3">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul class="current">
+       <li class="toctree-l4 current active">
+        <a class="current reference internal" href="#">
+         Ingress
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="prometheus-grafana.html">
+         使用 Prometheus 和 Grafana
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="pyspy.html">
+         使用 py-spy 进行 分析
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="volcano.html">
+         KubeRay 与 Volcano 集成
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="kubeflow.html">
+         Kubeflow: 交互式开发解决方案
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../benchmarks.html">
+       KubeRay 基准测试
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../troubleshooting.html">
+       KubeRay 故障排除
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../references.html">
+       API 参考
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../vms/index.html">
+     在虚拟机部署
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../metrics.html">
+     指标收集和监控
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../configure-manage-dashboard.html">
+     配置管理 Ray 仪表盘
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../running-applications/index.html">
+     应用指引
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../faq.html">
+     Ray 集群是否支持多租户？
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../package-overview.html">
+     Ray Cluster 管理 API
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-observability/index.html">
+   监控调试「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-references/api.html">
+   参考「20%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-contribute/index.html">
+   开发者指引「30%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-security/index.html">
+   安全「100%」
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/ray-project/ray"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/issues/new?title=Issue%20on%20page%20%2Fcluster/kubernetes/k8s-ecosystem/ingress.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/edit/master/doc/source/cluster/kubernetes/k8s-ecosystem/ingress.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../../_sources/cluster/kubernetes/k8s-ecosystem/ingress.md.txt"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#aws-eks-aws-alb">
+   AWS EKS 上的 AWS 应用程序负载均衡器 (ALB) 入口支持
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id1">
+     先决条件
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id2">
+     指示
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#gke-ingress">
+   GKE Ingress 支持
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id3">
+     先决条件
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id4">
+     指示
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#kind-nginx-ingress">
+   在 Kind 上手动设置 NGINX Ingress
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Ingress</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#aws-eks-aws-alb">
+   AWS EKS 上的 AWS 应用程序负载均衡器 (ALB) 入口支持
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id1">
+     先决条件
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id2">
+     指示
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#gke-ingress">
+   GKE Ingress 支持
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id3">
+     先决条件
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id4">
+     指示
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#kind-nginx-ingress">
+   在 Kind 上手动设置 NGINX Ingress
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="ingress">
+<span id="kuberay-ingress"></span><h1>Ingress<a class="headerlink" href="#ingress" title="Permalink to this headline">#</a></h1>
+<p>三个示例展示了如何使用 ingress 访问 Ray 集群：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#kuberay-aws-alb"><span class="std std-ref">AWS EKS 上的 AWS Application Load Balancer (ALB) 入口支持</span></a></p></li>
+<li><p><a class="reference internal" href="#kuberay-gke-ingress"><span class="std std-ref">GKE Ingress 支持</span></a></p></li>
+<li><p><a class="reference internal" href="#kuberay-nginx"><span class="std std-ref">在 Kind 上手动设置 NGINX Ingress</span></a></p></li>
+</ul>
+<section id="aws-eks-aws-alb">
+<span id="kuberay-aws-alb"></span><h2>AWS EKS 上的 AWS 应用程序负载均衡器 (ALB) 入口支持<a class="headerlink" href="#aws-eks-aws-alb" title="Permalink to this headline">#</a></h2>
+<section id="id1">
+<h3>先决条件<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>创建 EKS 集群。请参阅 <a class="reference external" href="https://docs.aws.amazon.com/eks/latest/userguide/getting-started-console.html#eks-configure-kubectl">Amazon EKS 入门 – AWS 管理控制台和 AWS CLI</a>。</p></li>
+<li><p>设置 <a class="reference external" href="https://github.com/kubernetes-sigs/aws-load-balancer-controller">AWS AWS 负载均衡器控制器</a>，参阅 <a class="reference external" href="https://kubernetes-sigs.github.io/aws-load-balancer-controller/latest/deploy/installation/">安装说明</a>。请注意，存储库为每个版本维护一个网页。确认您使用的是最新的安装说明。</p></li>
+<li><p>(可选) 尝试 <a class="reference external" href="https://github.com/kubernetes-sigs/aws-load-balancer-controller">aws-load-balancer-controller</a> 仓库的 <a class="reference external" href="https://github.com/kubernetes-sigs/aws-load-balancer-controller/blob/main/docs/examples/echo_server.md">echo server 示例</a> 。</p></li>
+<li><p>(可选) 阅读 <a class="reference external" href="https://github.com/kubernetes-sigs/aws-load-balancer-controller/blob/main/docs/how-it-works.md">how-it-works.md</a> 理解 <a class="reference external" href="https://github.com/kubernetes-sigs/aws-load-balancer-controller">aws-load-balancer-controller</a> 机制。</p></li>
+</ul>
+</section>
+<section id="id2">
+<h3>指示<a class="headerlink" href="#id2" title="Permalink to this headline">#</a></h3>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># 步骤 1: Install KubeRay operator and CRD</span>
+helm repo add kuberay https://ray-project.github.io/kuberay-helm/
+helm repo update
+helm install kuberay-operator kuberay/kuberay-operator --version <span class="m">1</span>.0.0-rc.0
+
+<span class="c1"># 步骤 2: Install a RayCluster</span>
+helm install raycluster kuberay/ray-cluster --version <span class="m">1</span>.0.0-rc.0
+
+<span class="c1"># 步骤 3: Edit the `ray-operator/config/samples/ray-cluster-alb-ingress.yaml`</span>
+<span class="c1">#</span>
+<span class="c1"># (1) Annotation `alb.ingress.kubernetes.io/subnets`</span>
+<span class="c1">#   1. Please include at least two subnets.</span>
+<span class="c1">#   2. One Availability Zone (ex: us-west-2a) can only have at most 1 subnet.</span>
+<span class="c1">#   3. In this example, you need to select public subnets (subnets that &quot;Auto-assign public IPv4 address&quot; is Yes on AWS dashboard)</span>
+<span class="c1">#</span>
+<span class="c1"># (2) Set the name of head pod service to `spec...backend.service.name`</span>
+eksctl get cluster <span class="si">${</span><span class="nv">YOUR_EKS_CLUSTER</span><span class="si">}</span> <span class="c1"># Check subnets on the EKS cluster</span>
+
+<span class="c1"># 步骤 4: Check ingress created by 步骤 4.</span>
+kubectl describe ingress ray-cluster-ingress
+
+<span class="c1"># [Example]</span>
+<span class="c1"># Name:             ray-cluster-ingress</span>
+<span class="c1"># Labels:           &lt;none&gt;</span>
+<span class="c1"># Namespace:        default</span>
+<span class="c1"># Address:          k8s-default-rayclust-....${REGION_CODE}.elb.amazonaws.com</span>
+<span class="c1"># Default backend:  default-http-backend:80 (&lt;error: endpoints &quot;default-http-backend&quot; not found&gt;)</span>
+<span class="c1"># Rules:</span>
+<span class="c1">#  Host        Path  Backends</span>
+<span class="c1">#  ----        ----  --------</span>
+<span class="c1">#  *</span>
+<span class="c1">#              /   ray-cluster-kuberay-head-svc:8265 (192.168.185.157:8265)</span>
+<span class="c1"># Annotations: alb.ingress.kubernetes.io/scheme: internet-facing</span>
+<span class="c1">#              alb.ingress.kubernetes.io/subnets: ${SUBNET_1},${SUBNET_2}</span>
+<span class="c1">#              alb.ingress.kubernetes.io/tags: Environment=dev,Team=test</span>
+<span class="c1">#              alb.ingress.kubernetes.io/target-type: ip</span>
+<span class="c1"># Events:</span>
+<span class="c1">#   Type    Reason                  Age   From     Message</span>
+<span class="c1">#   ----    ------                  ----  ----     -------</span>
+<span class="c1">#   Normal  SuccessfullyReconciled  39m   ingress  Successfully reconciled</span>
+
+<span class="c1"># 步骤 6: Check ALB on AWS (EC2 -&gt; Load Balancing -&gt; Load Balancers)</span>
+<span class="c1">#        The name of the ALB should be like &quot;k8s-default-rayclust-......&quot;.</span>
+
+<span class="c1"># 步骤 7: Check Ray Dashboard by ALB DNS Name. The name of the DNS Name should be like</span>
+<span class="c1">#        &quot;k8s-default-rayclust-.....us-west-2.elb.amazonaws.com&quot;</span>
+
+<span class="c1"># 步骤 8: Delete the ingress, and AWS Load Balancer controller will remove ALB.</span>
+<span class="c1">#        Check ALB on AWS to make sure it is removed.</span>
+kubectl delete ingress ray-cluster-ingress
+</pre></div>
+</div>
+</section>
+</section>
+<section id="gke-ingress">
+<span id="kuberay-gke-ingress"></span><h2>GKE Ingress 支持<a class="headerlink" href="#gke-ingress" title="Permalink to this headline">#</a></h2>
+<section id="id3">
+<h3>先决条件<a class="headerlink" href="#id3" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>创建 GKE 集群并确保您已安装 kubectl 工具并经过身份验证以与 GKE 集群进行通信。请参阅 <a class="reference internal" href="../user-guides/gcp-gke-gpu-cluster.html#kuberay-gke-gpu-cluster-setup"><span class="std std-ref">教程</span></a> ，了解如何使用 GPU 创建 GKE 集群的示例。 （本部分不需要 GPU。）</p></li>
+<li><p>了解 <a class="reference external" href="https://cloud.google.com/kubernetes-engine/docs/concepts/ingress">https://cloud.google.com/kubernetes-engine/docs/concepts/ingress</a> 中的概念可能会有所帮助。</p></li>
+</ul>
+</section>
+<section id="id4">
+<h3>指示<a class="headerlink" href="#id4" title="Permalink to this headline">#</a></h3>
+<p>将以下文件另存为 <code class="docutils literal notranslate"><span class="pre">ray-cluster-gclb-ingress.yaml</span></code>:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.k8s.io/v1</span><span class="w"></span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ingress</span><span class="w"></span>
+<span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ray-cluster-ingress</span><span class="w"></span>
+<span class="w">  </span><span class="nt">annotations</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">kubernetes.io/ingress.class</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;gce&quot;</span><span class="w"></span>
+<span class="nt">spec</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">rules</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">http</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">paths</span><span class="p">:</span><span class="w"></span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/</span><span class="w"></span>
+<span class="w">            </span><span class="nt">pathType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Prefix</span><span class="w"></span>
+<span class="w">            </span><span class="nt">backend</span><span class="p">:</span><span class="w"></span>
+<span class="w">              </span><span class="nt">service</span><span class="p">:</span><span class="w"></span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">raycluster-kuberay-head-svc</span><span class="w"> </span><span class="c1"># Update this line with your head service in 步骤 3 below.</span><span class="w"></span>
+<span class="w">                </span><span class="nt">port</span><span class="p">:</span><span class="w"></span>
+<span class="w">                  </span><span class="nt">number</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8265</span><span class="w"></span>
+</pre></div>
+</div>
+<p>现在运行以下命令：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># 步骤 1: Install KubeRay operator and CRD</span>
+helm repo add kuberay https://ray-project.github.io/kuberay-helm/
+helm repo update
+helm install kuberay-operator kuberay/kuberay-operator --version <span class="m">1</span>.0.0-rc.0
+
+<span class="c1"># 步骤 2: Install a RayCluster</span>
+helm install raycluster kuberay/ray-cluster --version <span class="m">1</span>.0.0-rc.0
+
+<span class="c1"># 步骤 3: Edit ray-cluster-gclb-ingress.yaml to replace the service name with the name of the head service from the RayCluster. (Output of `kubectl get svc`)</span>
+
+<span class="c1"># 步骤 4: Apply the Ingress configuration</span>
+kubectl apply -f ray-cluster-gclb-ingress.yaml
+
+<span class="c1"># 步骤 5: Check ingress created by 步骤 4.</span>
+kubectl describe ingress ray-cluster-ingress
+
+<span class="c1"># 步骤 6: After a few minutes, GKE allocates an external IP for the ingress. Check it using:</span>
+kubectl get ingress ray-cluster-ingress
+
+<span class="c1"># Example output:</span>
+<span class="c1"># NAME                  CLASS    HOSTS   ADDRESS         PORTS   AGE</span>
+<span class="c1"># ray-cluster-ingress   &lt;none&gt;   *       34.160.82.156   80      54m</span>
+
+<span class="c1"># 步骤 7: Check Ray Dashboard by visiting the allocated external IP in your browser. (In this example, it is 34.160.82.156)</span>
+
+<span class="c1"># 步骤 8: Delete the ingress.</span>
+kubectl delete ingress ray-cluster-ingress
+</pre></div>
+</div>
+</section>
+</section>
+<section id="kind-nginx-ingress">
+<span id="kuberay-nginx"></span><h2>在 Kind 上手动设置 NGINX Ingress<a class="headerlink" href="#kind-nginx-ingress" title="Permalink to this headline">#</a></h2>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># 步骤 1: Create a Kind cluster with `extraPortMappings` and `node-labels`</span>
+<span class="c1"># Reference for the setting up of Kind cluster: https://kind.sigs.k8s.io/docs/user/ingress/</span>
+cat <span class="s">&lt;&lt;EOF | kind create cluster --config=-</span>
+<span class="s">kind: Cluster</span>
+<span class="s">apiVersion: kind.x-k8s.io/v1alpha4</span>
+<span class="s">nodes:</span>
+<span class="s">- role: control-plane</span>
+<span class="s">  kubeadmConfigPatches:</span>
+<span class="s">  - |</span>
+<span class="s">    kind: InitConfiguration</span>
+<span class="s">    nodeRegistration:</span>
+<span class="s">      kubeletExtraArgs:</span>
+<span class="s">        node-labels: &quot;ingress-ready=true&quot;</span>
+<span class="s">  extraPortMappings:</span>
+<span class="s">  - containerPort: 80</span>
+<span class="s">    hostPort: 80</span>
+<span class="s">    protocol: TCP</span>
+<span class="s">  - containerPort: 443</span>
+<span class="s">    hostPort: 443</span>
+<span class="s">    protocol: TCP</span>
+<span class="s">EOF</span>
+
+<span class="c1"># 步骤 2: Install NGINX ingress controller</span>
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+sleep <span class="m">10</span> <span class="c1"># Wait for the Kubernetes API Server to create the related resources</span>
+kubectl <span class="nb">wait</span> --namespace ingress-nginx <span class="se">\</span>
+  --for<span class="o">=</span><span class="nv">condition</span><span class="o">=</span>ready pod <span class="se">\</span>
+  --selector<span class="o">=</span>app.kubernetes.io/component<span class="o">=</span>controller <span class="se">\</span>
+  --timeout<span class="o">=</span>90s
+
+<span class="c1"># 步骤 3: Install KubeRay operator and CRD</span>
+helm repo add kuberay https://ray-project.github.io/kuberay-helm/
+helm repo update
+helm install kuberay-operator kuberay/kuberay-operator --version <span class="m">1</span>.0.0-rc.0
+
+<span class="c1"># 步骤 4: Install RayCluster and create an ingress separately.</span>
+<span class="c1"># More information about change of setting was documented in https://github.com/ray-project/kuberay/pull/699 </span>
+<span class="c1"># and `ray-operator/config/samples/ray-cluster.separate-ingress.yaml`</span>
+curl -LO https://raw.githubusercontent.com/ray-project/kuberay/v1.0.0-rc.0/ray-operator/config/samples/ray-cluster.separate-ingress.yaml
+kubectl apply -f ray-operator/config/samples/ray-cluster.separate-ingress.yaml
+
+<span class="c1"># 步骤 5: Check the ingress created in 步骤 4.</span>
+kubectl describe ingress raycluster-ingress-head-ingress
+
+<span class="c1"># [Example]</span>
+<span class="c1"># ...</span>
+<span class="c1"># Rules:</span>
+<span class="c1"># Host        Path  Backends</span>
+<span class="c1"># ----        ----  --------</span>
+<span class="c1"># *</span>
+<span class="c1">#             /raycluster-ingress/(.*)   raycluster-ingress-head-svc:8265 (10.244.0.11:8265)</span>
+<span class="c1"># Annotations:  nginx.ingress.kubernetes.io/rewrite-target: /$1</span>
+
+<span class="c1"># 步骤 6: Check `&lt;ip&gt;/raycluster-ingress/` on your browser. You will see the Ray Dashboard.</span>
+<span class="c1">#        [Note] The forward slash at the end of the address is necessary. `&lt;ip&gt;/raycluster-ingress`</span>
+<span class="c1">#               will report &quot;404 Not Found&quot;.</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="../k8s-ecosystem.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">KubeRay 生态系统</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="prometheus-grafana.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">使用 Prometheus 和 Grafana</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><!-- Override the footer area for the sphinx-book-theme to include the CSAT widget -->
+<div id="csat">
+  <div id="csat-feedback-received" class="csat-hidden">
+    <span>谢谢你的反馈！</span>
+  </div>
+  <div id="csat-inputs">
+    <span>是否能帮助到你？</span>
+    <div id="csat-yes" class="csat-button">
+      <svg id="csat-yes-icon" class="csat-hidden csat-icon" width="18" height="13" viewBox="0 0 18 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 10.172L16.1922 0.979004L17.6072 2.393L7.00023 13L0.63623 6.636L2.05023 5.222L7.00023 10.172Z" fill="black"/>
+      </svg>
+      <span>是<span>
+    </div>
+    <div id="csat-no" class="csat-button">
+      <svg id="csat-no-icon" class="csat-hidden csat-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 5.58599L11.9502 0.635986L13.3642 2.04999L8.41423 6.99999L13.3642 11.95L11.9502 13.364L7.00023 8.41399L2.05023 13.364L0.63623 11.95L5.58623 6.99999L0.63623 2.04999L2.05023 0.635986L7.00023 5.58599Z" fill="black"/>
+      </svg>
+      <span>否<span>
+    </div>
+  </div>
+  <div id="csat-textarea-group" class="csat-hidden">
+    <span id="csat-feedback-label">反馈</span>
+    <textarea id="csat-textarea"></textarea>
+    <div id="csat-submit">提交</div>
+  </div>
+</div><p>
+  
+    By The Ray Team<br/>
+  
+      &copy; Copyright 2024, The Ray Team.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

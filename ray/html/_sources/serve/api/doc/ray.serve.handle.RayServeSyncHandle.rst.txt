@@ -1,0 +1,7 @@
+﻿ray.serve.handle.RayServeSyncHandle
+===================================
+
+.. currentmodule:: ray.serve.handle
+
+.. autoclass:: RayServeSyncHandle()
+    :members:

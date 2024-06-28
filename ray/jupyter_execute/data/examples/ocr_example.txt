@@ -1,0 +1,53 @@
+# flake8: noqa
+import warnings
+import os
+
+# Suppress noisy requests warnings.
+warnings.filterwarnings("ignore")
+os.environ["PYTHONWARNINGS"] = "ignore"
+
+results.take(10)
+
+results = ray.data.read_parquet(os.path.expanduser("~/LightShot13k_results"))
+
+!pip install "spacy>=3"
+!python -m spacy download en_core_web_sm
+!pip install spacy_langdetect
+
+import spacy
+from spacy.language import Language
+from spacy_langdetect import LanguageDetector
+
+nlp = spacy.load('en_core_web_sm')
+
+@Language.factory("language_detector")
+def get_lang_detector(nlp, name):
+    return LanguageDetector()
+
+nlp.add_pipe('language_detector', last=True)
+nlp("This is an English sentence. Ray rocks!")._.language
+
+import spacy
+from spacy.language import Language
+from spacy_langdetect import LanguageDetector
+
+class SpacyBatchInference:
+    def __init__(self):
+        self.nlp = spacy.load('en_core_web_sm')
+
+        @Language.factory("language_detector")
+        def get_lang_detector(nlp, name):
+           return LanguageDetector()
+
+        self.nlp.add_pipe('language_detector', last=True)
+
+    def __call__(self, df):
+        docs = list(self.nlp.pipe(list(df["text"])))
+        df["language"] = [doc._.language["language"] for doc in docs]
+        df["score"] = [doc._.language["score"] for doc in docs]
+        return df
+
+results.limit(10).map_batches(SpacyBatchInference, compute=ray.data.ActorPoolStrategy())
+
+languages = results.map_batches(SpacyBatchInference, compute=ray.data.ActorPoolStrategy())
+languages.groupby("language").count().show()

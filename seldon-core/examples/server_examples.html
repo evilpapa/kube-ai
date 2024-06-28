@@ -1,0 +1,3132 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../_static/javascripts/modernizr.js"></script>
+  
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-54780881-2"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-54780881-2');
+</script>
+  
+  
+    <title>Example Model Servers with Seldon &#8212; seldon-core  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=83e35b93" />
+    <link rel="stylesheet" type="text/css" href="../_static/material.css?v=79c92029" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/rtd_sphinx_search.min.css?v=e72958e9" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+    <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=15a8f09d" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/rtd_search_config.js?v=b0596c34"></script>
+    <script src="../_static/js/rtd_sphinx_search.min.js?v=43f26ba4"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Tensorflow MNIST model and Triton (e2e example)" href="triton_mnist_e2e.html" />
+    <link rel="prev" title="Advanced Usage Exampes for Seldon Client" href="seldon_client.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=indigo data-md-color-accent=teal>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#examples/server_examples" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../index.html" title="seldon-core  documentation"
+           class="md-header-nav__button md-logo">
+          
+            &nbsp;
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">Seldon Core Documentation</span>
+          <span class="md-header-nav__topic"> Example Model Servers with Seldon </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder=""Search""
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+            
+            <li class="md-tabs__item"><a href="/" class="md-tabs__link">🚀 Our Other Projects & Products:</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi/en/stable/" class="md-tabs__link">Alibi Explain</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi-detect/en/stable/" class="md-tabs__link">Alibi Detect</a></li>
+            
+            <li class="md-tabs__item"><a href="https://mlserver.readthedocs.io/en/latest/" class="md-tabs__link">MLServer</a></li>
+            
+            <li class="md-tabs__item"><a href="https://tempo.readthedocs.io/en/latest/" class="md-tabs__link">Tempo SDK</a></li>
+            
+            <li class="md-tabs__item"><a href="https://deploy.seldon.io" class="md-tabs__link">Seldon Enterprise Platform</a></li>
+            
+            <li class="md-tabs__item"><a href="https://github.com/SeldonIO/seldon-deploy-sdk#seldon-deploy-sdk" class="md-tabs__link">Seldon Enterprise Platform SDK</a></li>
+          <li class="md-tabs__item"><a href="../nav/reference.html" class="md-tabs__link">参考</a></li>
+          <li class="md-tabs__item"><a href="../nav/archive.html" class="md-tabs__link">供审核的存档文档</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../index.html" title="seldon-core documentation" class="md-nav__button md-logo">
+      
+        <img src="../_static/" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../index.html"
+       title="seldon-core documentation">Seldon Core Documentation</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/getting-started.html" class="md-nav__link">开始</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/concepts.html" class="md-nav__link">概念</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/configuration.html" class="md-nav__link">配置</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/tutorials.html" class="md-nav__link">教程</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/reference.html" class="md-nav__link">参考</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="../graph/annotations.html" class="md-nav__link">基于注解的配置</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../reference/benchmarking.html" class="md-nav__link">基准测试</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../reference/ga.html" class="md-nav__link">一般可用性（GA）</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../graph/helm_charts.html" class="md-nav__link">Helm Charts</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../reference/images.html" class="md-nav__link">镜像</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../analytics/log_level.html" class="md-nav__link">日志及等级</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../graph/private_registries.html" class="md-nav__link">私有 Docker 注册中心</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../reference/apis/index.html" class="md-nav__link">预估 APIs</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../python/api/modules.html" class="md-nav__link">Python API 参考</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../reference/release-highlights.html" class="md-nav__link">发布亮点</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../reference/seldon-deployment.html" class="md-nav__link">Seldon Deployment CRD</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../graph/svcorch.html" class="md-nav__link">服务编排器</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../analytics/kubeflow.html" class="md-nav__link">Kubeflow</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/archive.html" class="md-nav__link">归档文档</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="../R/r_wrapping_docker.html" class="md-nav__link">R 语言封装 Docker</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../charts/seldon-openvino.html" class="md-nav__link">Seldon OpenVino</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="ambassador_circuit_breakers.html" class="md-nav__link">Ambassador 熔断</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="custom_init_container.html" class="md-nav__link">Custom Init Containers with rclone and MinIO</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="custom_init_container.html#Cleanup" class="md-nav__link">Cleanup</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="drift_cifar10.html" class="md-nav__link">Drift CIFAR10</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="dvc.html" class="md-nav__link">DVC</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="graph-metadata.html" class="md-nav__link">图元数据</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="iris_anchor_tabular_explainer_v2.html" class="md-nav__link">Anchor Tabular Explainer</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="iris_explainer_poetry.html" class="md-nav__link">Explainer for Iris model with Poetry-defined Environment</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="iris_explainer_poetry.html#Deploy-Iris-Model" class="md-nav__link">Deploy Iris Model</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="iris_explainer_poetry.html#Train-Explainer" class="md-nav__link">Train Explainer</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="iris_explainer_poetry.html#Save-and-deploy-Explainer" class="md-nav__link">Save and deploy Explainer</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="iris_explainer_poetry.html#Test-Deployed-explainer" class="md-nav__link">Test Deployed explainer</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="istio.html" class="md-nav__link">Istio 示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="metadata.html" class="md-nav__link">元数据示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="metadata_grpc.html" class="md-nav__link">Metadata GRPC API example</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="metadata_grpc.html#Example-description" class="md-nav__link">Example description</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="metadata_schema.html" class="md-nav__link">元数据架构</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="pachyderm-simple.html" class="md-nav__link">Pachyderm 示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="pvc-tfjob.html" class="md-nav__link">PVC TFJob</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="seldon_client.html" class="md-nav__link">Seldon 客户端</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> Server 示例 </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">Server 示例</a>
+      
+        
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#examples-server-examples--page-root" class="md-nav__link">Example Model Servers with Seldon</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#Serve-SKLearn-Iris-Model" class="md-nav__link">Serve SKLearn Iris Model</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#Default-Seldon-protocol" class="md-nav__link">Default Seldon protocol</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#REST-Requests" class="md-nav__link">REST Requests</a>
+        </li>
+        <li class="md-nav__item"><a href="#gRPC-Requests" class="md-nav__link">gRPC Requests</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#V2-protocol" class="md-nav__link">V2 protocol</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#Serve-XGBoost-Iris-Model" class="md-nav__link">Serve XGBoost Iris Model</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">Default Seldon protocol</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#Rest-Requests" class="md-nav__link">Rest Requests</a>
+        </li>
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">gRPC Requests</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id5" class="md-nav__link">V2 protocol</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#Serve-Tensorflow-MNIST-Model" class="md-nav__link">Serve Tensorflow MNIST Model</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#Serve-Tensorflow-MNIST-Model-with-Seldon-Protocol" class="md-nav__link">Serve Tensorflow MNIST Model with Seldon Protocol</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#REST-Request" class="md-nav__link">REST Request</a>
+        </li>
+        <li class="md-nav__item"><a href="#gRPC-Request" class="md-nav__link">gRPC Request</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#Serve-Tensorflow-Model-with-Tensorflow-protocol" class="md-nav__link">Serve Tensorflow Model with Tensorflow protocol</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#Serve-MLFlow-Elasticnet-Wines-Model" class="md-nav__link">Serve MLFlow Elasticnet Wines Model</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#REST-requests" class="md-nav__link">REST requests</a>
+        </li>
+        <li class="md-nav__item"><a href="#id7" class="md-nav__link">gRPC Requests</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#MLFlow-V2-protocol" class="md-nav__link">MLFlow V2 protocol</a>
+        </li>
+        <li class="md-nav__item"><a href="#id8" class="md-nav__link">REST requests</a>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/examples/server_examples.nblink.txt">Show Source</a> </li>
+
+  </ul>
+</nav>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="triton_mnist_e2e.html" class="md-nav__link">Triton E2E</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../graph/custom_svc_name.html" class="md-nav__link">自定义 Service 名称示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../graph/grpc_load_balancing_ambassador.html" class="md-nav__link">gRPC 负载均衡</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../graph/model_rest_grpc_settings.html" class="md-nav__link">Rest gRPC 设置</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../graph/model_svcorch_sep.html" class="md-nav__link">模型服务编排</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../java-jni/README.html" class="md-nav__link">Java JNI</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../reference/apis/readme.html" class="md-nav__link">APIs 读我</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../reference/concepts.html" class="md-nav__link">概念</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../reference/integration_nvidia_link.html" class="md-nav__link">Nvidia 实现</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../reference/integration_sagemaker_link.html" class="md-nav__link">Sagemaker 实现</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../tutorials/blogs.html" class="md-nav__link">博客</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../tutorials/podcasts.html" class="md-nav__link">播客</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../tutorials/videos.html" class="md-nav__link">视频</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../workflow/quickstart.html" class="md-nav__link">快速开始</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../wrappers/language_wrappers.html" class="md-nav__link">语言封装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../wrappers/s2i.html" class="md-nav__link">S2I</a>
+      
+    
+    </li></ul>
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/contributing.html" class="md-nav__link">贡献</a>
+      
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#examples-server-examples--page-root" class="md-nav__link">Example Model Servers with Seldon</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#Serve-SKLearn-Iris-Model" class="md-nav__link">Serve SKLearn Iris Model</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#Default-Seldon-protocol" class="md-nav__link">Default Seldon protocol</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#REST-Requests" class="md-nav__link">REST Requests</a>
+        </li>
+        <li class="md-nav__item"><a href="#gRPC-Requests" class="md-nav__link">gRPC Requests</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#V2-protocol" class="md-nav__link">V2 protocol</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#Serve-XGBoost-Iris-Model" class="md-nav__link">Serve XGBoost Iris Model</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">Default Seldon protocol</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#Rest-Requests" class="md-nav__link">Rest Requests</a>
+        </li>
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">gRPC Requests</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id5" class="md-nav__link">V2 protocol</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#Serve-Tensorflow-MNIST-Model" class="md-nav__link">Serve Tensorflow MNIST Model</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#Serve-Tensorflow-MNIST-Model-with-Seldon-Protocol" class="md-nav__link">Serve Tensorflow MNIST Model with Seldon Protocol</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#REST-Request" class="md-nav__link">REST Request</a>
+        </li>
+        <li class="md-nav__item"><a href="#gRPC-Request" class="md-nav__link">gRPC Request</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#Serve-Tensorflow-Model-with-Tensorflow-protocol" class="md-nav__link">Serve Tensorflow Model with Tensorflow protocol</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#Serve-MLFlow-Elasticnet-Wines-Model" class="md-nav__link">Serve MLFlow Elasticnet Wines Model</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#REST-requests" class="md-nav__link">REST requests</a>
+        </li>
+        <li class="md-nav__item"><a href="#id7" class="md-nav__link">gRPC Requests</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#MLFlow-V2-protocol" class="md-nav__link">MLFlow V2 protocol</a>
+        </li>
+        <li class="md-nav__item"><a href="#id8" class="md-nav__link">REST requests</a>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/examples/server_examples.nblink.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <div class="admonition note">
+<p>This page was generated from <a class="reference external" href="https://github.com/SeldonIO/seldon-core/blob/e665e4994eabf83fb43c68a5f85e96d5c45e91b5/notebooks/server_examples.ipynb">notebooks/server_examples.ipynb</a>.</p>
+</div>
+<section id="Example-Model-Servers-with-Seldon">
+<h1 id="examples-server-examples--page-root">Example Model Servers with Seldon<a class="headerlink" href="#examples-server-examples--page-root" title="Permalink to this heading">¶</a></h1>
+<p>Follow <a class="reference external" href="https://docs.seldon.io/projects/seldon-core/en/latest/">docs</a> to install Seldon Core.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>create<span class="w"> </span>namespace<span class="w"> </span>seldon
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Error from server (AlreadyExists): namespaces "seldon" already exists
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>config<span class="w"> </span>set-context<span class="w"> </span><span class="k">$(</span>kubectl<span class="w"> </span>config<span class="w"> </span>current-context<span class="k">)</span><span class="w"> </span>--namespace<span class="o">=</span>seldon
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Context "kind-ansible" modified.
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
+</pre></div>
+</div>
+</div>
+<section id="Serve-SKLearn-Iris-Model">
+<h2 id="Serve-SKLearn-Iris-Model">Serve SKLearn Iris Model<a class="headerlink" href="#Serve-SKLearn-Iris-Model" title="Permalink to this heading">¶</a></h2>
+<p>In order to deploy SKLearn artifacts, we can leverage the <a class="reference external" href="https://docs.seldon.io/projects/seldon-core/en/latest/servers/sklearn.html">pre-packaged SKLearn inference server</a>. The exposed API can follow either:</p>
+<ul class="simple">
+<li><p>The default Seldon protocol.</p></li>
+<li><p>The V2 protocol.</p></li>
+</ul>
+<section id="Default-Seldon-protocol">
+<h3 id="Default-Seldon-protocol">Default Seldon protocol<a class="headerlink" href="#Default-Seldon-protocol" title="Permalink to this heading">¶</a></h3>
+<p>To deploy and start serving an SKLearn artifact using Seldon’s default protocol, we can use a config like the one below:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%writefile</span> ../servers/sklearnserver/samples/iris.yaml
+<span class="n">apiVersion</span><span class="p">:</span> <span class="n">machinelearning</span><span class="o">.</span><span class="n">seldon</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">v1alpha2</span>
+<span class="n">kind</span><span class="p">:</span> <span class="n">SeldonDeployment</span>
+<span class="n">metadata</span><span class="p">:</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">sklearn</span>
+<span class="n">spec</span><span class="p">:</span>
+  <span class="n">predictors</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">graph</span><span class="p">:</span>
+      <span class="n">name</span><span class="p">:</span> <span class="n">classifier</span>
+      <span class="n">implementation</span><span class="p">:</span> <span class="n">SKLEARN_SERVER</span>
+      <span class="n">modelUri</span><span class="p">:</span> <span class="n">gs</span><span class="p">:</span><span class="o">//</span><span class="n">seldon</span><span class="o">-</span><span class="n">models</span><span class="o">/</span><span class="n">v1</span><span class="mf">.14.0</span><span class="o">/</span><span class="n">sklearn</span><span class="o">/</span><span class="n">iris</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">default</span>
+    <span class="n">replicas</span><span class="p">:</span> <span class="mi">1</span>
+    <span class="n">svcOrchSpec</span><span class="p">:</span>
+      <span class="n">env</span><span class="p">:</span>
+      <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">SELDON_LOG_LEVEL</span>
+        <span class="n">value</span><span class="p">:</span> <span class="n">DEBUG</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Overwriting ../servers/sklearnserver/samples/iris.yaml
+</pre></div></div>
+</div>
+<p>We can then apply it to deploy it to our Kubernetes cluster.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>../servers/sklearnserver/samples/iris.yaml
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+seldondeployment.machinelearning.seldon.io/sklearn created
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deploy/<span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>deploy<span class="w"> </span>-l<span class="w"> </span>seldon-deployment-id<span class="o">=</span>sklearn<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.items[0].metadata.name}'</span><span class="k">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Waiting for deployment "sklearn-default-0-classifier" rollout to finish: 0 of 1 updated replicas are available...
+deployment "sklearn-default-0-classifier" successfully rolled out
+</pre></div></div>
+</div>
+<p>Once it’s deployed we can send our sklearn model requests</p>
+<section id="REST-Requests">
+<h4 id="REST-Requests">REST Requests<a class="headerlink" href="#REST-Requests" title="Permalink to this heading">¶</a></h4>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="o">=!</span>curl<span class="w"> </span>-s<span class="w"> </span>-d<span class="w"> </span><span class="s1">'{"data": {"ndarray":[[1.0, 2.0, 5.0, 6.0]]}}'</span><span class="w"> </span><span class="err">\</span>
+   <span class="o">-</span><span class="n">X</span> <span class="n">POST</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">8003</span><span class="o">/</span><span class="n">seldon</span><span class="o">/</span><span class="n">seldon</span><span class="o">/</span><span class="n">sklearn</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">v1</span><span class="mf">.0</span><span class="o">/</span><span class="n">predictions</span> \
+   <span class="o">-</span><span class="n">H</span> <span class="s2">"Content-Type: application/json"</span>
+<span class="n">d</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{'data': {'names': ['t:0', 't:1', 't:2'], 'ndarray': [[9.912315378486697e-07, 0.0007015931307746079, 0.9992974156376876]]}, 'meta': {'requestPath': {'classifier': 'seldonio/sklearnserver:1.14.0-dev'}}}
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">seldon_core.seldon_client</span> <span class="kn">import</span> <span class="n">SeldonClient</span>
+
+<span class="n">sc</span> <span class="o">=</span> <span class="n">SeldonClient</span><span class="p">(</span><span class="n">deployment_name</span><span class="o">=</span><span class="s2">"sklearn"</span><span class="p">,</span> <span class="n">namespace</span><span class="o">=</span><span class="s2">"seldon"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">gateway</span><span class="o">=</span><span class="s2">"istio"</span><span class="p">,</span> <span class="n">transport</span><span class="o">=</span><span class="s2">"rest"</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">r</span><span class="o">.</span><span class="n">success</span> <span class="o">==</span> <span class="kc">True</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Success:True message:
+Request:
+meta {
+}
+data {
+  tensor {
+    shape: 1
+    shape: 4
+    values: 0.37891679364854836
+    values: 0.22868990114609455
+    values: 0.3004190168585973
+    values: 0.6602110824050652
+  }
+}
+
+Response:
+{'data': {'names': ['t:0', 't:1', 't:2'], 'tensor': {'shape': [1, 3], 'values': [0.24603039294723353, 0.3696742607386095, 0.38429534631415685]}}, 'meta': {'requestPath': {'classifier': 'seldonio/sklearnserver:1.14.0-dev'}}}
+</pre></div></div>
+</div>
+</section>
+<section id="gRPC-Requests">
+<h4 id="gRPC-Requests">gRPC Requests<a class="headerlink" href="#gRPC-Requests" title="Permalink to this heading">¶</a></h4>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">gateway</span><span class="o">=</span><span class="s2">"istio"</span><span class="p">,</span> <span class="n">transport</span><span class="o">=</span><span class="s2">"grpc"</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">r</span><span class="o">.</span><span class="n">success</span> <span class="o">==</span> <span class="kc">True</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Success:True message:
+Request:
+{'meta': {}, 'data': {'tensor': {'shape': [1, 4], 'values': [0.9242703973092982, 0.006790971082842101, 0.979816057987879, 0.713459653156441]}}}
+Response:
+{'meta': {'requestPath': {'classifier': 'seldonio/sklearnserver:1.14.0-dev'}}, 'data': {'names': ['t:0', 't:1', 't:2'], 'tensor': {'shape': [1, 3], 'values': [0.056117226965810216, 0.4506122144980913, 0.49327055853609847]}}}
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="o">=!</span><span class="nb">cd</span><span class="w"> </span>../executor/proto<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>grpcurl<span class="w"> </span>-d<span class="w"> </span><span class="s1">'{"data":{"ndarray":[[1.0,2.0,5.0,6.0]]}}'</span><span class="w"> </span><span class="err">\</span>
+         <span class="o">-</span><span class="n">rpc</span><span class="o">-</span><span class="n">header</span> <span class="n">seldon</span><span class="p">:</span><span class="n">sklearn</span> <span class="o">-</span><span class="n">rpc</span><span class="o">-</span><span class="n">header</span> <span class="n">namespace</span><span class="p">:</span><span class="n">seldon</span> \
+         <span class="o">-</span><span class="n">plaintext</span> \
+         <span class="o">-</span><span class="n">proto</span> <span class="o">./</span><span class="n">prediction</span><span class="o">.</span><span class="n">proto</span>  <span class="mf">0.0.0.0</span><span class="p">:</span><span class="mi">8003</span> <span class="n">seldon</span><span class="o">.</span><span class="n">protos</span><span class="o">.</span><span class="n">Seldon</span><span class="o">/</span><span class="n">Predict</span>
+<span class="n">d</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{'meta': {'requestPath': {'classifier': 'seldonio/sklearnserver:1.14.0-dev'}}, 'data': {'names': ['t:0', 't:1', 't:2'], 'ndarray': [[9.912315378486697e-07, 0.0007015931307746079, 0.9992974156376876]]}}
+</pre></div></div>
+</div>
+<p>And delete the model we deployed</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>delete<span class="w"> </span>-f<span class="w"> </span>../servers/sklearnserver/samples/iris.yaml
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+seldondeployment.machinelearning.seldon.io "sklearn" deleted
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="V2-protocol">
+<h3 id="V2-protocol">V2 protocol<a class="headerlink" href="#V2-protocol" title="Permalink to this heading">¶</a></h3>
+<p>For example, we can consider the config below:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%writefile</span> ./resources/iris-sklearn-v2.yaml
+<span class="n">apiVersion</span><span class="p">:</span> <span class="n">machinelearning</span><span class="o">.</span><span class="n">seldon</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">v1</span>
+<span class="n">kind</span><span class="p">:</span> <span class="n">SeldonDeployment</span>
+<span class="n">metadata</span><span class="p">:</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">sklearn</span>
+<span class="n">spec</span><span class="p">:</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">iris</span>
+  <span class="n">protocol</span><span class="p">:</span> <span class="n">v2</span>
+  <span class="n">predictors</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">graph</span><span class="p">:</span>
+      <span class="n">children</span><span class="p">:</span> <span class="p">[]</span>
+      <span class="n">implementation</span><span class="p">:</span> <span class="n">SKLEARN_SERVER</span>
+      <span class="n">modelUri</span><span class="p">:</span> <span class="n">gs</span><span class="p">:</span><span class="o">//</span><span class="n">seldon</span><span class="o">-</span><span class="n">models</span><span class="o">/</span><span class="n">sklearn</span><span class="o">/</span><span class="n">iris</span><span class="o">-</span><span class="mf">0.23.2</span><span class="o">/</span><span class="n">lr_model</span>
+      <span class="n">name</span><span class="p">:</span> <span class="n">classifier</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">default</span>
+    <span class="n">replicas</span><span class="p">:</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Overwriting ./resources/iris-sklearn-v2.yaml
+</pre></div></div>
+</div>
+<p>We can then apply it to deploy our model to our Kubernetes cluster.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>resources/iris-sklearn-v2.yaml
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+seldondeployment.machinelearning.seldon.io/sklearn created
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deploy/<span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>deploy<span class="w"> </span>-l<span class="w"> </span>seldon-deployment-id<span class="o">=</span>sklearn<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.items[0].metadata.name}'</span><span class="k">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Waiting for deployment "sklearn-default-0-classifier" rollout to finish: 0 of 1 updated replicas are available...
+deployment "sklearn-default-0-classifier" successfully rolled out
+</pre></div></div>
+</div>
+<p>Once it’s deployed, we can send inference requests to our model. Note that, since it’s using the V2 Protocol, these requests will be different to the ones using the default Seldon Protocol.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
+
+<span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="n">inference_request</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"inputs"</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"predict"</span><span class="p">,</span> <span class="s2">"shape"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="s2">"datatype"</span><span class="p">:</span> <span class="s2">"FP32"</span><span class="p">,</span> <span class="s2">"data"</span><span class="p">:</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]]}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+
+<span class="n">endpoint</span> <span class="o">=</span> <span class="s2">"http://localhost:8003/seldon/seldon/sklearn/v2/models/infer"</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">inference_request</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">(),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+<span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">ok</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{
+  "model_name": "classifier",
+  "model_version": "v1",
+  "id": "40ec7f1b-437f-443c-a9eb-f07433c41027",
+  "parameters": null,
+  "outputs": [
+    {
+      "name": "predict",
+      "shape": [
+        1
+      ],
+      "datatype": "INT64",
+      "parameters": null,
+      "data": [
+        2
+      ]
+    }
+  ]
+}
+</pre></div></div>
+</div>
+<p>Finally, we can delete the model we deployed.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>delete<span class="w"> </span>-f<span class="w"> </span>resources/iris-sklearn-v2.yaml
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+seldondeployment.machinelearning.seldon.io "sklearn" deleted
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="Serve-XGBoost-Iris-Model">
+<h2 id="Serve-XGBoost-Iris-Model">Serve XGBoost Iris Model<a class="headerlink" href="#Serve-XGBoost-Iris-Model" title="Permalink to this heading">¶</a></h2>
+<p>In order to deploy XGBoost models, we can leverage the <a class="reference external" href="https://docs.seldon.io/projects/seldon-core/en/latest/servers/xgboost.html">pre-packaged XGBoost inference server</a>. The exposed API can follow either:</p>
+<ul class="simple">
+<li><p>The default Seldon protocol.</p></li>
+<li><p>The V2 protocol</p></li>
+</ul>
+<section id="id2">
+<h3 id="id2">Default Seldon protocol<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
+<p>We can deploy a XGBoost model uploaded to an object store by using the XGBoost model server implementation as shown in the config below:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%writefile</span> resources/iris.yaml
+<span class="n">apiVersion</span><span class="p">:</span> <span class="n">machinelearning</span><span class="o">.</span><span class="n">seldon</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">v1</span>
+<span class="n">kind</span><span class="p">:</span> <span class="n">SeldonDeployment</span>
+<span class="n">metadata</span><span class="p">:</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">xgboost</span>
+<span class="n">spec</span><span class="p">:</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">iris</span>
+  <span class="n">predictors</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">graph</span><span class="p">:</span>
+      <span class="n">children</span><span class="p">:</span> <span class="p">[]</span>
+      <span class="n">implementation</span><span class="p">:</span> <span class="n">XGBOOST_SERVER</span>
+      <span class="n">modelUri</span><span class="p">:</span> <span class="n">gs</span><span class="p">:</span><span class="o">//</span><span class="n">seldon</span><span class="o">-</span><span class="n">models</span><span class="o">/</span><span class="n">xgboost</span><span class="o">/</span><span class="n">iris</span>
+      <span class="n">name</span><span class="p">:</span> <span class="n">classifier</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">default</span>
+    <span class="n">replicas</span><span class="p">:</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Writing resources/iris.yaml
+</pre></div></div>
+</div>
+<p>And then we apply it to deploy it to our kubernetes cluster</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>resources/iris.yaml
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+seldondeployment.machinelearning.seldon.io/xgboost created
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deploy/<span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>deploy<span class="w"> </span>-l<span class="w"> </span>seldon-deployment-id<span class="o">=</span>xgboost<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.items[0].metadata.name}'</span><span class="k">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Waiting for deployment "xgboost-default-0-classifier" rollout to finish: 0 of 1 updated replicas are available...
+deployment "xgboost-default-0-classifier" successfully rolled out
+</pre></div></div>
+</div>
+<section id="Rest-Requests">
+<h4 id="Rest-Requests">Rest Requests<a class="headerlink" href="#Rest-Requests" title="Permalink to this heading">¶</a></h4>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="o">=!</span>curl<span class="w"> </span>-s<span class="w"> </span>-d<span class="w"> </span><span class="s1">'{"data": {"ndarray":[[1.0, 2.0, 5.0, 6.0]]}}'</span><span class="w"> </span><span class="err">\</span>
+   <span class="o">-</span><span class="n">X</span> <span class="n">POST</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">8003</span><span class="o">/</span><span class="n">seldon</span><span class="o">/</span><span class="n">seldon</span><span class="o">/</span><span class="n">xgboost</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">v1</span><span class="mf">.0</span><span class="o">/</span><span class="n">predictions</span> \
+   <span class="o">-</span><span class="n">H</span> <span class="s2">"Content-Type: application/json"</span>
+<span class="n">d</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{'data': {'names': [], 'ndarray': [2.0]}, 'meta': {'requestPath': {'classifier': 'seldonio/xgboostserver:1.14.0-dev'}}}
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">seldon_core.seldon_client</span> <span class="kn">import</span> <span class="n">SeldonClient</span>
+
+<span class="n">sc</span> <span class="o">=</span> <span class="n">SeldonClient</span><span class="p">(</span><span class="n">deployment_name</span><span class="o">=</span><span class="s2">"xgboost"</span><span class="p">,</span> <span class="n">namespace</span><span class="o">=</span><span class="s2">"seldon"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">gateway</span><span class="o">=</span><span class="s2">"istio"</span><span class="p">,</span> <span class="n">transport</span><span class="o">=</span><span class="s2">"rest"</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">r</span><span class="o">.</span><span class="n">success</span> <span class="o">==</span> <span class="kc">True</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Success:True message:
+Request:
+meta {
+}
+data {
+  tensor {
+    shape: 1
+    shape: 4
+    values: 0.11505797695897957
+    values: 0.6653444811321626
+    values: 0.9965715379444539
+    values: 0.8384169363970597
+  }
+}
+
+Response:
+{'data': {'names': [], 'tensor': {'shape': [1], 'values': [0.0]}}, 'meta': {'requestPath': {'classifier': 'seldonio/xgboostserver:1.14.0-dev'}}}
+</pre></div></div>
+</div>
+</section>
+<section id="id4">
+<h4 id="id4">gRPC Requests<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h4>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">gateway</span><span class="o">=</span><span class="s2">"istio"</span><span class="p">,</span> <span class="n">transport</span><span class="o">=</span><span class="s2">"grpc"</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">r</span><span class="o">.</span><span class="n">success</span> <span class="o">==</span> <span class="kc">True</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Success:True message:
+Request:
+{'meta': {}, 'data': {'tensor': {'shape': [1, 4], 'values': [0.327861849576622, 0.35057181020933914, 0.28573556648775744, 0.06259376197077815]}}}
+Response:
+{'meta': {'requestPath': {'classifier': 'seldonio/xgboostserver:1.14.0-dev'}}, 'data': {'tensor': {'shape': [1], 'values': [0.0]}}}
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="o">=!</span><span class="nb">cd</span><span class="w"> </span>../executor/proto<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>grpcurl<span class="w"> </span>-d<span class="w"> </span><span class="s1">'{"data":{"ndarray":[[1.0,2.0,5.0,6.0]]}}'</span><span class="w"> </span><span class="err">\</span>
+         <span class="o">-</span><span class="n">rpc</span><span class="o">-</span><span class="n">header</span> <span class="n">seldon</span><span class="p">:</span><span class="n">xgboost</span> <span class="o">-</span><span class="n">rpc</span><span class="o">-</span><span class="n">header</span> <span class="n">namespace</span><span class="p">:</span><span class="n">seldon</span> \
+         <span class="o">-</span><span class="n">plaintext</span> \
+         <span class="o">-</span><span class="n">proto</span> <span class="o">./</span><span class="n">prediction</span><span class="o">.</span><span class="n">proto</span>  <span class="mf">0.0.0.0</span><span class="p">:</span><span class="mi">8003</span> <span class="n">seldon</span><span class="o">.</span><span class="n">protos</span><span class="o">.</span><span class="n">Seldon</span><span class="o">/</span><span class="n">Predict</span>
+<span class="n">d</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{'meta': {'requestPath': {'classifier': 'seldonio/xgboostserver:1.14.0-dev'}}, 'data': {'ndarray': [2]}}
+</pre></div></div>
+</div>
+<p>And delete the model we deployed</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>delete<span class="w"> </span>-f<span class="w"> </span>resources/iris.yaml
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+seldondeployment.machinelearning.seldon.io "xgboost" deleted
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="id5">
+<h3 id="id5">V2 protocol<a class="headerlink" href="#id5" title="Permalink to this heading">¶</a></h3>
+<p>We can deploy a XGBoost model, exposing an API compatible with v2 protocol by specifying the <code class="docutils literal notranslate"><span class="pre">protocol</span></code> of our <code class="docutils literal notranslate"><span class="pre">SeldonDeployment</span></code> as <code class="docutils literal notranslate"><span class="pre">v2</span></code>. For example, we can consider the config below:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%writefile</span> ./resources/iris-xgboost-v2.yaml
+<span class="n">apiVersion</span><span class="p">:</span> <span class="n">machinelearning</span><span class="o">.</span><span class="n">seldon</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">v1</span>
+<span class="n">kind</span><span class="p">:</span> <span class="n">SeldonDeployment</span>
+<span class="n">metadata</span><span class="p">:</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">xgboost</span>
+<span class="n">spec</span><span class="p">:</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">iris</span>
+  <span class="n">protocol</span><span class="p">:</span> <span class="n">v2</span>
+  <span class="n">predictors</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">graph</span><span class="p">:</span>
+      <span class="n">children</span><span class="p">:</span> <span class="p">[]</span>
+      <span class="n">implementation</span><span class="p">:</span> <span class="n">XGBOOST_SERVER</span>
+      <span class="n">modelUri</span><span class="p">:</span> <span class="n">gs</span><span class="p">:</span><span class="o">//</span><span class="n">seldon</span><span class="o">-</span><span class="n">models</span><span class="o">/</span><span class="n">xgboost</span><span class="o">/</span><span class="n">iris</span>
+      <span class="n">name</span><span class="p">:</span> <span class="n">classifier</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">default</span>
+    <span class="n">replicas</span><span class="p">:</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Overwriting ./resources/iris-xgboost-v2.yaml
+</pre></div></div>
+</div>
+<p>We can then apply it to deploy our model to our Kubernetes cluster.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>./resources/iris-xgboost-v2.yaml
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+seldondeployment.machinelearning.seldon.io/xgboost created
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deploy/<span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>deploy<span class="w"> </span>-l<span class="w"> </span>seldon-deployment-id<span class="o">=</span>xgboost<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.items[0].metadata.name}'</span><span class="k">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Waiting for deployment "xgboost-default-0-classifier" rollout to finish: 0 of 1 updated replicas are available...
+deployment "xgboost-default-0-classifier" successfully rolled out
+</pre></div></div>
+</div>
+<p>Once it’s deployed, we can send inference requests to our model. Note that, since it’s using the V2 Protocol, these requests will be different to the ones using the default Seldon Protocol.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
+
+<span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="n">inference_request</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"inputs"</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"predict"</span><span class="p">,</span> <span class="s2">"shape"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="s2">"datatype"</span><span class="p">:</span> <span class="s2">"FP32"</span><span class="p">,</span> <span class="s2">"data"</span><span class="p">:</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]]}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+
+<span class="n">endpoint</span> <span class="o">=</span> <span class="s2">"http://localhost:8003/seldon/seldon/xgboost/v2/models/infer"</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">inference_request</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">(),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+<span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">ok</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{
+  "model_name": "classifier",
+  "model_version": "v1",
+  "id": "0d31434a-edce-4bd4-b01a-57045d846a8f",
+  "parameters": null,
+  "outputs": [
+    {
+      "name": "predict",
+      "shape": [
+        1
+      ],
+      "datatype": "FP32",
+      "parameters": null,
+      "data": [
+        2.0
+      ]
+    }
+  ]
+}
+</pre></div></div>
+</div>
+<p>Finally, we can delete the model we deployed.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>delete<span class="w"> </span>-f<span class="w"> </span>./resources/iris-xgboost-v2.yaml
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+seldondeployment.machinelearning.seldon.io "xgboost" deleted
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="Serve-Tensorflow-MNIST-Model">
+<h2 id="Serve-Tensorflow-MNIST-Model">Serve Tensorflow MNIST Model<a class="headerlink" href="#Serve-Tensorflow-MNIST-Model" title="Permalink to this heading">¶</a></h2>
+<p>We can deploy a tensorflow model uploaded to an object store by using the tensorflow model server implementation as the config below.</p>
+<p>This notebook contains two examples, one which shows how you can use the TFServing prepackaged serve with the Seldon Protocol, and a second one which shows how you can deploy it using the tensorlfow protocol (so you can send requests of the exact format as you would to a tfserving server).</p>
+<section id="Serve-Tensorflow-MNIST-Model-with-Seldon-Protocol">
+<h3 id="Serve-Tensorflow-MNIST-Model-with-Seldon-Protocol">Serve Tensorflow MNIST Model with Seldon Protocol<a class="headerlink" href="#Serve-Tensorflow-MNIST-Model-with-Seldon-Protocol" title="Permalink to this heading">¶</a></h3>
+<p>The config file below shows how you can deploy your Tensorflow model which exposes the Seldon protocol.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%writefile</span> ./resources/mnist_rest.yaml
+<span class="n">apiVersion</span><span class="p">:</span> <span class="n">machinelearning</span><span class="o">.</span><span class="n">seldon</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">v1alpha2</span>
+<span class="n">kind</span><span class="p">:</span> <span class="n">SeldonDeployment</span>
+<span class="n">metadata</span><span class="p">:</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">tfserving</span>
+<span class="n">spec</span><span class="p">:</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">mnist</span>
+  <span class="n">predictors</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">graph</span><span class="p">:</span>
+      <span class="n">children</span><span class="p">:</span> <span class="p">[]</span>
+      <span class="n">implementation</span><span class="p">:</span> <span class="n">TENSORFLOW_SERVER</span>
+      <span class="n">modelUri</span><span class="p">:</span> <span class="n">gs</span><span class="p">:</span><span class="o">//</span><span class="n">seldon</span><span class="o">-</span><span class="n">models</span><span class="o">/</span><span class="n">tfserving</span><span class="o">/</span><span class="n">mnist</span><span class="o">-</span><span class="n">model</span>
+      <span class="n">name</span><span class="p">:</span> <span class="n">mnist</span><span class="o">-</span><span class="n">model</span>
+      <span class="n">parameters</span><span class="p">:</span>
+        <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">signature_name</span>
+          <span class="nb">type</span><span class="p">:</span> <span class="n">STRING</span>
+          <span class="n">value</span><span class="p">:</span> <span class="n">predict_images</span>
+        <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">model_name</span>
+          <span class="nb">type</span><span class="p">:</span> <span class="n">STRING</span>
+          <span class="n">value</span><span class="p">:</span> <span class="n">mnist</span><span class="o">-</span><span class="n">model</span>
+        <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">model_input</span>
+          <span class="nb">type</span><span class="p">:</span> <span class="n">STRING</span>
+          <span class="n">value</span><span class="p">:</span> <span class="n">images</span>
+        <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">model_output</span>
+          <span class="nb">type</span><span class="p">:</span> <span class="n">STRING</span>
+          <span class="n">value</span><span class="p">:</span> <span class="n">scores</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">default</span>
+    <span class="n">replicas</span><span class="p">:</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Writing ./resources/mnist_rest.yaml
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>./resources/mnist_rest.yaml
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+seldondeployment.machinelearning.seldon.io/tfserving created
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deploy/<span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>deploy<span class="w"> </span>-l<span class="w"> </span>seldon-deployment-id<span class="o">=</span>tfserving<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.items[0].metadata.name}'</span><span class="k">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Waiting for deployment "tfserving-default-0-mnist-model" rollout to finish: 0 of 1 updated replicas are available...
+deployment "tfserving-default-0-mnist-model" successfully rolled out
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">seldon_core.seldon_client</span> <span class="kn">import</span> <span class="n">SeldonClient</span>
+
+<span class="n">sc</span> <span class="o">=</span> <span class="n">SeldonClient</span><span class="p">(</span><span class="n">deployment_name</span><span class="o">=</span><span class="s2">"tfserving"</span><span class="p">,</span> <span class="n">namespace</span><span class="o">=</span><span class="s2">"seldon"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<section id="REST-Request">
+<h4 id="REST-Request">REST Request<a class="headerlink" href="#REST-Request" title="Permalink to this heading">¶</a></h4>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">gateway</span><span class="o">=</span><span class="s2">"istio"</span><span class="p">,</span> <span class="n">transport</span><span class="o">=</span><span class="s2">"rest"</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">784</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">r</span><span class="o">.</span><span class="n">success</span> <span class="o">==</span> <span class="kc">True</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Success:True message:
+Request:
+meta {
+}
+data {
+  tensor {
+    shape: 1
+    shape: 784
+    values: 0.4689572966007861
+    values: 0.9660213976358323
+    values: 0.2439077409486442
+    values: 0.8575884865204007
+    values: 0.27970466773693103
+    values: 0.6353320891612885
+    values: 0.0971403754673349
+    values: 0.7164836350133393
+    values: 0.542073728393848
+    values: 0.11666104614030115
+    values: 0.4782253951392831
+    values: 0.7634452287588545
+    values: 0.3912767509737113
+    values: 0.2663996274182098
+    values: 0.6490030540413255
+    values: 0.19177236373841555
+    values: 0.7778343694560058
+    values: 0.012348665103772305
+    values: 0.6457729473685598
+    values: 0.360291654824512
+    values: 0.47249733414191286
+    values: 0.48503650958931044
+    values: 0.6901668112987778
+    values: 0.11909318221150922
+    values: 0.2110322062384462
+    values: 0.8754846146707363
+    values: 0.2406771324805147
+    values: 0.9638406936053503
+    values: 0.44412651138523596
+    values: 0.881529648323643
+    values: 0.6618790267488508
+    values: 0.8397443295516367
+    values: 0.3485875378767914
+    values: 0.06787703135983891
+    values: 0.6626849978621995
+    values: 0.8812856448637397
+    values: 0.16883922841917964
+    values: 0.8252057533978429
+    values: 0.7063852663334077
+    values: 0.755491275537365
+    values: 0.06189195461923569
+    values: 0.4974847199622653
+    values: 0.7126909547880684
+    values: 0.652842043062244
+    values: 0.8004882055837098
+    values: 0.4513876509393846
+    values: 0.03309579109301086
+    values: 0.00657342598264854
+    values: 0.07583134187796692
+    values: 0.5413680581099638
+    values: 0.5221281994737917
+    values: 0.12559187387102266
+    values: 0.6129595425026247
+    values: 0.6791503388302546
+    values: 0.45315490337643094
+    values: 0.43301498881702893
+    values: 0.9620258569120063
+    values: 0.4113222760303864
+    values: 0.662329966082312
+    values: 0.5052398862242359
+    values: 0.29098549391732864
+    values: 0.9776701121320753
+    values: 0.028477769091102
+    values: 0.35490682919640437
+    values: 0.7671959445872129
+    values: 0.5032956867244794
+    values: 0.8353945311082279
+    values: 0.02290912426050129
+    values: 0.1003999689225985
+    values: 0.214539428616232
+    values: 0.061551256159072754
+    values: 0.48262955720776135
+    values: 0.7372304511018402
+    values: 0.5344277607686541
+    values: 0.20091080490066726
+    values: 0.42068554421978144
+    values: 0.8266444994340592
+    values: 0.6517342839771983
+    values: 0.17680855666211215
+    values: 0.8722014078384503
+    values: 0.4077793865384568
+    values: 0.6252533986148548
+    values: 0.559603864452411
+    values: 0.24795741856587272
+    values: 0.7574444141977343
+    values: 0.5593664939479072
+    values: 0.3808921199407135
+    values: 0.6564733531039216
+    values: 0.9763953622035737
+    values: 0.5005143027457326
+    values: 0.7784046669043834
+    values: 0.0290215618799069
+    values: 0.48155543798934675
+    values: 0.20338522092177513
+    values: 0.5180937017600729
+    values: 0.007284218430685718
+    values: 0.12707899616322715
+    values: 0.882450551564275
+    values: 0.0016327184543928341
+    values: 0.9420675768867449
+    values: 0.5667828725493479
+    values: 0.20542091329662326
+    values: 0.7130984987481607
+    values: 0.5282963783368142
+    values: 0.9169456607694242
+    values: 0.47949176572498997
+    values: 0.1253143095083863
+    values: 0.47004577556093385
+    values: 0.0549514639638371
+    values: 0.24355883429707847
+    values: 0.9586101420616553
+    values: 0.9783037217179998
+    values: 0.576869248607957
+    values: 0.49676236888884373
+    values: 0.6663366822917971
+    values: 0.6394575824009932
+    values: 0.35460279721851895
+    values: 0.9153761644427794
+    values: 0.28039831357731726
+    values: 0.7171434496113136
+    values: 0.5078958025425561
+    values: 0.4969518205135266
+    values: 0.6130388810766317
+    values: 0.028565070862728525
+    values: 0.5539164872499862
+    values: 0.240060732702025
+    values: 0.5889812268587027
+    values: 0.199352065911806
+    values: 0.0597109833693783
+    values: 0.8824041919948532
+    values: 0.8805034495914273
+    values: 0.9921738517227549
+    values: 0.5357508981752857
+    values: 0.7677131619102785
+    values: 0.6554839516654969
+    values: 0.715467740561536
+    values: 0.9272387339048027
+    values: 0.8809228988588731
+    values: 0.3209759245024396
+    values: 0.7489873378593056
+    values: 0.4607960345528488
+    values: 0.6670646724993519
+    values: 0.12732327525854537
+    values: 0.2784630683186776
+    values: 0.2650300674199002
+    values: 0.9316565151603778
+    values: 0.7776604203405351
+    values: 0.6417155717399466
+    values: 0.8507369941708919
+    values: 0.642351335215158
+    values: 0.7474179245633135
+    values: 0.21804129569925934
+    values: 0.8728494471023033
+    values: 0.7622332174240901
+    values: 0.20074749368728573
+    values: 0.44151558244462397
+    values: 0.8425154869015485
+    values: 0.04741449995483615
+    values: 0.9440997983101715
+    values: 0.42411023515214175
+    values: 0.9425874100746151
+    values: 0.6609957150870998
+    values: 0.2224180745125267
+    values: 0.7491503887372211
+    values: 0.6698190347246741
+    values: 0.2658451164886243
+    values: 0.7371933052461332
+    values: 0.7521279131436975
+    values: 0.8023319183818733
+    values: 0.16903036776620772
+    values: 0.392255802986201
+    values: 0.6073635848658655
+    values: 0.9141628341684109
+    values: 0.0736069754501647
+    values: 0.09487816327712595
+    values: 0.8125345860584032
+    values: 0.41187848321379905
+    values: 0.804141683659572
+    values: 0.41162917221608486
+    values: 0.3802617751936269
+    values: 0.13495988261916525
+    values: 0.7327747677612214
+    values: 0.8216492706687886
+    values: 0.8925241634244648
+    values: 0.35974622794828015
+    values: 0.7374549734965586
+    values: 0.957184763684864
+    values: 0.5025483933122916
+    values: 0.4168941052762597
+    values: 0.8671548452471981
+    values: 0.5497357837775748
+    values: 0.9707837018118113
+    values: 0.20389618021218125
+    values: 0.18267465664805194
+    values: 0.6972493132301242
+    values: 0.3412328376963669
+    values: 0.7868062860405705
+    values: 0.08583808392294467
+    values: 0.8869677945525772
+    values: 0.8017836514251736
+    values: 0.6722662464576948
+    values: 0.8027907640349397
+    values: 0.14698363038584916
+    values: 0.20144664170260296
+    values: 0.44093119712362017
+    values: 0.07688415486930134
+    values: 0.3381736828524292
+    values: 0.46056831693531086
+    values: 0.08377123641100592
+    values: 0.1793226922489375
+    values: 0.5565266871134699
+    values: 0.169719790312172
+    values: 0.3637372451113221
+    values: 0.1713791963139838
+    values: 0.9004228125576195
+    values: 0.1764863049541222
+    values: 0.13739904155364524
+    values: 0.42235494018969544
+    values: 0.6399024573514367
+    values: 0.2898130150304964
+    values: 0.42714582228374365
+    values: 0.5168483558141002
+    values: 0.5001493340996458
+    values: 0.6318618395259056
+    values: 0.8265520476218083
+    values: 0.06561618673531144
+    values: 0.7104739935480615
+    values: 0.07347067061575019
+    values: 0.4912802558595146
+    values: 0.9248949708720032
+    values: 0.8504480033584457
+    values: 0.5411803439299754
+    values: 0.018632800284874018
+    values: 0.03933673312901642
+    values: 0.29302364566465167
+    values: 0.5996594822918598
+    values: 0.5345540817887916
+    values: 0.6249000782987766
+    values: 0.5352173322222971
+    values: 0.17135195819406646
+    values: 0.5615449233098269
+    values: 0.7705676479994685
+    values: 0.33911541430413006
+    values: 0.1105653586812112
+    values: 0.29896904779015254
+    values: 0.7417343051961591
+    values: 0.3285158724224191
+    values: 0.9655574031731488
+    values: 0.27502018326408806
+    values: 0.26430225088006176
+    values: 0.8392120803544353
+    values: 0.7221415123509165
+    values: 0.4331463601841652
+    values: 0.037257146215731285
+    values: 0.9919427451343519
+    values: 0.08522517507238958
+    values: 0.35715656244380034
+    values: 0.031254515932164106
+    values: 0.16219251523389222
+    values: 0.13700721277188987
+    values: 0.9723513533755028
+    values: 0.43754528184711605
+    values: 0.30796797096853346
+    values: 0.6836694638079737
+    values: 0.33824648736075613
+    values: 0.5545249604720329
+    values: 0.27832739111007954
+    values: 0.854928752974259
+    values: 0.4895133422280753
+    values: 0.6239893440542622
+    values: 0.8395599571965727
+    values: 0.6192761265064569
+    values: 0.805652305901602
+    values: 0.2585848720368159
+    values: 0.6553465280018973
+    values: 0.7557470955621153
+    values: 0.4310621702752131
+    values: 0.001796984804001367
+    values: 0.5929764185322879
+    values: 0.7335813973955654
+    values: 0.15568408380245569
+    values: 0.8858022795972084
+    values: 0.4578939539513034
+    values: 0.6354048565906055
+    values: 0.4298657332177055
+    values: 0.733177048083205
+    values: 0.8204744790373025
+    values: 0.14273507244910777
+    values: 0.8710725145822141
+    values: 0.5744191356158549
+    values: 0.7050745234490209
+    values: 0.8313123358381252
+    values: 0.5175944924859623
+    values: 0.47593568241038176
+    values: 0.9425045042025043
+    values: 0.8175184938414422
+    values: 0.8529928429012026
+    values: 0.21144288266472178
+    values: 0.48369060173026057
+    values: 0.9047078098433198
+    values: 0.034964507070033624
+    values: 0.06384928302687687
+    values: 0.35956652926301125
+    values: 0.5658614333124411
+    values: 0.17974187891556115
+    values: 0.5370210711968414
+    values: 0.8735438816941556
+    values: 0.3329178067875761
+    values: 0.5883810420097814
+    values: 0.387677244173279
+    values: 0.9895241163096693
+    values: 0.8614526026884918
+    values: 0.4193677200661229
+    values: 0.35016451015217476
+    values: 0.11745633765596242
+    values: 0.10388458884304208
+    values: 0.16619430256185508
+    values: 0.2815345602029653
+    values: 0.665518722631449
+    values: 0.03750859155262465
+    values: 0.3017559858259018
+    values: 0.8625535530204922
+    values: 0.5394994872636965
+    values: 0.8942073991475429
+    values: 0.42159577452808406
+    values: 0.2768596633242356
+    values: 0.728542630986381
+    values: 0.20589994935129086
+    values: 0.17247530561377933
+    values: 0.12995704160349808
+    values: 0.10055919741429908
+    values: 0.8136731197270176
+    values: 0.44528710882704925
+    values: 0.1730869587492455
+    values: 0.44578160380216514
+    values: 0.10520003737013539
+    values: 0.08605320003511752
+    values: 0.7756023510388784
+    values: 0.6118780824357198
+    values: 0.9275683583322913
+    values: 0.8010245500228894
+    values: 0.3016655002156452
+    values: 0.8565944678054914
+    values: 0.43741154899823054
+    values: 0.30767716252325095
+    values: 0.22932883013530592
+    values: 0.29601142236076694
+    values: 0.8086639829191657
+    values: 0.6641245045299766
+    values: 0.4360749750792461
+    values: 0.571004813744974
+    values: 0.23672638295825443
+    values: 0.4085487249436095
+    values: 0.01099898583077663
+    values: 0.0039279708840513905
+    values: 0.13064345109116626
+    values: 0.38382428546821623
+    values: 0.1811008929385186
+    values: 0.7806177055384026
+    values: 0.6991736182189345
+    values: 0.2403558830989776
+    values: 0.7187015164764012
+    values: 0.9833389835593405
+    values: 0.10229155931956857
+    values: 0.027545150026656917
+    values: 0.7106511285864645
+    values: 0.20305647245307257
+    values: 0.2816931684017724
+    values: 0.5059268285216719
+    values: 0.24056777765675152
+    values: 0.8043576967983141
+    values: 0.1292577683862557
+    values: 0.6503101066661767
+    values: 0.9622450994878421
+    values: 0.1807894798529902
+    values: 0.05977478779994572
+    values: 0.6257905334168709
+    values: 0.7837008061153413
+    values: 0.9621374573617909
+    values: 0.544643872143762
+    values: 0.059379518507757245
+    values: 0.18576539190280938
+    values: 0.5717012830702727
+    values: 0.5578725597387859
+    values: 0.8199060415576522
+    values: 0.36991706125921875
+    values: 0.3710921860625145
+    values: 0.10434450648724858
+    values: 0.9514397316323804
+    values: 0.7763267327939336
+    values: 0.9807699517422676
+    values: 0.8103811972265189
+    values: 0.11977620955951962
+    values: 0.17285019767254073
+    values: 0.695780348159029
+    values: 0.9840211678975557
+    values: 0.09885139066918547
+    values: 0.9073713296040896
+    values: 0.34786543093711075
+    values: 0.002887695948131208
+    values: 0.5066615550636354
+    values: 0.7858537119694285
+    values: 0.9292471259310581
+    values: 0.019674312550819084
+    values: 0.42776561099068
+    values: 0.01069690651139732
+    values: 0.9469625660520463
+    values: 0.527292624768451
+    values: 0.541988621103728
+    values: 0.4730299804855522
+    values: 0.3513435182017153
+    values: 0.45219155833940317
+    values: 0.39532689116729325
+    values: 0.9845599543207586
+    values: 0.3567656870706176
+    values: 0.24616532040426375
+    values: 0.8983462547968689
+    values: 0.2675972086837587
+    values: 0.20983702831642415
+    values: 0.8398808421024443
+    values: 0.484268379226129
+    values: 0.04284803333162612
+    values: 0.7302394002064223
+    values: 0.5738767266853044
+    values: 0.2666142396979124
+    values: 0.5915904814531608
+    values: 0.574735231708747
+    values: 0.8815006207070645
+    values: 0.04035859433375655
+    values: 0.4520177174201474
+    values: 0.5098781176757613
+    values: 0.3816255021681172
+    values: 0.15734553878209057
+    values: 0.7956101724023728
+    values: 0.9727887792853369
+    values: 0.46050860697235785
+    values: 0.8867925787142024
+    values: 0.9643621166678711
+    values: 0.2257532859375636
+    values: 0.874036754642226
+    values: 0.8558009364920456
+    values: 0.7516369683736298
+    values: 0.07531594142737508
+    values: 0.23636529347797297
+    values: 0.8046054632886251
+    values: 0.017480925925793867
+    values: 0.3031903022485112
+    values: 0.3543152704943371
+    values: 0.6930579831620294
+    values: 0.9602092707641767
+    values: 0.585064758787818
+    values: 0.5240480842845692
+    values: 0.4366598865308784
+    values: 0.18005714913376258
+    values: 0.9953868561243212
+    values: 0.6546077160952924
+    values: 0.26167298259678784
+    values: 0.24376922423041192
+    values: 0.296591608471621
+    values: 0.13964592592839586
+    values: 0.17492939931140172
+    values: 0.7128539455899825
+    values: 0.8386086458398756
+    values: 0.18175205823594087
+    values: 0.5499987931701247
+    values: 0.038239443958483554
+    values: 0.656652820808902
+    values: 0.8012364276999445
+    values: 0.6558980179075362
+    values: 0.7181995110708936
+    values: 0.3641305677019203
+    values: 0.7840834698032608
+    values: 0.9058391273676959
+    values: 0.4516001908093663
+    values: 0.5304158448862025
+    values: 0.20830121945193392
+    values: 0.9601768023873427
+    values: 0.06799421139787454
+    values: 0.11622663744394257
+    values: 0.9045586055596698
+    values: 0.10852056034001101
+    values: 0.8694195845472978
+    values: 0.9776416495667736
+    values: 0.8558229502725364
+    values: 0.5341681238390731
+    values: 0.09874696251551529
+    values: 0.6343782148705341
+    values: 0.335114755873694
+    values: 0.1305430885554436
+    values: 0.8492040652789808
+    values: 0.1701503896567088
+    values: 0.15680389176856535
+    values: 0.1991950989828961
+    values: 0.3747047187234781
+    values: 0.9816925569399363
+    values: 0.6096191756234463
+    values: 0.11380443111132399
+    values: 0.15176821682694364
+    values: 0.05644263909258129
+    values: 0.4765321217920664
+    values: 0.9133306281146076
+    values: 0.5632762255375104
+    values: 0.5800418175453365
+    values: 0.6049378275327681
+    values: 0.22825835509291437
+    values: 0.046531011273127754
+    values: 0.1736963573484428
+    values: 0.5897932884097313
+    values: 0.004467496088400247
+    values: 0.12584151771154506
+    values: 0.8147475329153084
+    values: 0.26967047106782416
+    values: 0.26643060370653393
+    values: 0.16037783352677115
+    values: 0.027294973200703287
+    values: 0.7828263814181949
+    values: 0.5041939958470232
+    values: 0.8703505242074319
+    values: 0.7314176757977626
+    values: 0.16862976179565936
+    values: 0.8584652256072811
+    values: 0.11059267581785792
+    values: 0.8289975840920387
+    values: 0.45418756679306505
+    values: 0.6132425511692112
+    values: 0.41485645864515
+    values: 0.38401907558516424
+    values: 0.5648781730726499
+    values: 0.7915849067954073
+    values: 0.5513714666149135
+    values: 0.047056010365690626
+    values: 0.39048702214423003
+    values: 0.6355526853008111
+    values: 0.4359561573387918
+    values: 0.7615873007039502
+    values: 0.7248711987328281
+    values: 0.783055822326521
+    values: 0.9957303712121968
+    values: 0.09281938962620495
+    values: 0.08805449529879206
+    values: 0.4557852959479257
+    values: 0.7247322312573724
+    values: 0.9532804137593837
+    values: 0.7692170560263132
+    values: 0.18941321440286318
+    values: 0.6940220423480187
+    values: 0.9781679976963153
+    values: 0.5870985758893236
+    values: 0.731642328655836
+    values: 0.5894719453835865
+    values: 0.08699917412636005
+    values: 0.581857817482733
+    values: 0.9147171429342716
+    values: 0.4797746031530664
+    values: 0.8689022071616811
+    values: 0.46825416333328773
+    values: 0.8289819019365491
+    values: 0.28968040852984533
+    values: 0.218568373387935
+    values: 0.6911493493949187
+    values: 0.9728376365495333
+    values: 0.22817043972553686
+    values: 0.3863885634895884
+    values: 0.7122114780842361
+    values: 0.611740796968631
+    values: 0.237275411844596
+    values: 0.9240485007898428
+    values: 0.6267171519370067
+    values: 0.635372272219464
+    values: 0.24803040450542257
+    values: 0.4353346387364768
+    values: 0.42188587958587764
+    values: 0.8351069592809962
+    values: 0.6049868292097409
+    values: 0.1470628754669573
+    values: 0.6702619133536928
+    values: 0.2096750058825414
+    values: 0.9576210434286268
+    values: 0.7481959284392122
+    values: 0.20900028010520932
+    values: 0.6503829908421809
+    values: 0.5462991701153971
+    values: 0.5761247763891115
+    values: 0.14434007240190783
+    values: 0.44075100643293197
+    values: 0.966138515199629
+    values: 0.3346745112894808
+    values: 0.6511868943710382
+    values: 0.05181583028048753
+    values: 0.10772455225645694
+    values: 0.27829391416625215
+    values: 0.0905815702218924
+    values: 0.8211860748671165
+    values: 0.9105095617738221
+    values: 0.21009885435870213
+    values: 0.856609307136091
+    values: 0.19507751048149247
+    values: 0.773615156926888
+    values: 0.4711651233628015
+    values: 0.9519461386503482
+    values: 0.5894471743539621
+    values: 0.022188787459025416
+    values: 0.40663918498607887
+    values: 0.004064045152280205
+    values: 0.22597789480785213
+    values: 0.8771582379802286
+    values: 0.9104715450781604
+    values: 0.013623226003872224
+    values: 0.14235022919479834
+    values: 0.8456081014755331
+    values: 0.8885153994941029
+    values: 0.5776509874660916
+    values: 0.2736613126050156
+    values: 0.3655433564536531
+    values: 0.4015398229543867
+    values: 0.2761572170028368
+    values: 0.7913861902884219
+    values: 0.5944774623051068
+    values: 0.03151391674427362
+    values: 0.005829068473039767
+    values: 0.8709565397527862
+    values: 0.7290744042604294
+    values: 0.6680957536200761
+    values: 0.5690784119075634
+    values: 0.2647762004237889
+    values: 0.7784223876553263
+    values: 0.08187248541622916
+    values: 0.797571575321594
+    values: 0.7536030478238546
+    values: 0.14529212998820362
+    values: 0.7931261988687779
+    values: 0.6178048664397441
+    values: 0.7833125181168248
+    values: 0.792690328425518
+    values: 0.5927000164194645
+    values: 0.24273062838067527
+    values: 0.1844499683680597
+    values: 0.03674306473100197
+    values: 0.03478164793206828
+    values: 0.7602237058764901
+    values: 0.9608047781837186
+    values: 0.30196256613724237
+    values: 0.28616163262023064
+    values: 0.29736033276015295
+    values: 0.6651712560297097
+    values: 0.25255609265084433
+    values: 0.20128561736538308
+    values: 0.9761488016358197
+    values: 0.6187401822398542
+    values: 0.46804866414650914
+    values: 0.8669243746307722
+    values: 0.7897931109651862
+    values: 0.6325538898644762
+    values: 0.677947075877616
+    values: 0.537883791457655
+    values: 0.5175986481625033
+    values: 0.8634039141044878
+    values: 0.38900830444895484
+    values: 0.8858396052150391
+    values: 0.716476265233863
+    values: 0.7276365206371389
+    values: 0.17069585163641776
+    values: 0.7739478359437112
+    values: 0.9207805513709922
+    values: 0.40771601128995294
+    values: 0.6777070241626794
+    values: 0.24149436465197816
+    values: 0.4228491139683288
+    values: 0.8540574771850953
+    values: 0.5045763490622074
+    values: 0.48168348517413473
+    values: 0.4340711724937265
+    values: 0.3129331018987971
+    values: 0.05709794161101733
+    values: 0.3576215391817783
+    values: 0.22150391682720172
+    values: 0.011434074497420177
+    values: 0.5450134275069075
+    values: 0.21994362224860442
+    values: 0.477362619863818
+    values: 0.83520653441227
+    values: 0.5358069580526581
+    values: 0.14233668291112955
+    values: 0.697630034974003
+    values: 0.6333265735603678
+    values: 0.736519338005322
+    values: 0.6846333575536285
+    values: 0.8323514235213699
+    values: 0.7737730800103659
+    values: 0.05203578123849295
+    values: 0.04306448732527868
+    values: 0.6662453970919266
+    values: 0.47830003093062545
+    values: 0.8006723623996856
+    values: 0.6464139547160375
+    values: 0.015011240865117514
+    values: 0.5533747462094801
+    values: 0.01361143103017326
+    values: 0.9135879691584722
+    values: 0.2854778600755622
+    values: 0.4179546126258271
+    values: 0.6430369708264954
+    values: 0.7877141301378312
+    values: 0.3112732703413481
+    values: 0.47999939022196825
+    values: 0.23703944869892002
+    values: 0.9335512291734372
+    values: 0.06730240262953258
+    values: 0.4478074241711638
+    values: 0.6112309913259187
+    values: 0.18416960642337765
+    values: 0.20400663493444193
+    values: 0.8919598232097541
+    values: 0.7372928758177953
+    values: 0.3789863247496752
+    values: 0.14973191963079335
+    values: 0.020161182784826925
+    values: 0.6011334046541121
+    values: 0.6478686999291475
+    values: 0.7850773420527063
+    values: 0.15299838530129184
+    values: 0.46343733442267865
+    values: 0.43216194459850543
+    values: 0.650827354949895
+    values: 0.010471925901262447
+    values: 0.00829619467866205
+    values: 0.9015497801997425
+    values: 0.15835237878370656
+    values: 0.282654386709041
+    values: 0.9797611350338223
+    values: 0.7256249629651907
+    values: 0.180205718483601
+    values: 0.21601950140370318
+    values: 0.47579336856298504
+    values: 0.22488191732237262
+    values: 0.16886400640607646
+    values: 0.7086179335501667
+    values: 0.6440967682166335
+    values: 0.3056690060411009
+    values: 0.7680391048044203
+    values: 0.5330680373195846
+    values: 0.8614866669820314
+    values: 0.035413114135230184
+    values: 0.545156014305518
+    values: 0.005900927947358414
+    values: 0.062481471741751005
+    values: 0.024373349802955135
+    values: 0.610037250185934
+    values: 0.5798040218238029
+    values: 0.3792770541186674
+    values: 0.9098386802396983
+    values: 0.9591664448440516
+    values: 0.03372366661064785
+    values: 0.04058385026918421
+    values: 0.04432878178973432
+    values: 0.45347304390447896
+    values: 0.5853319846309261
+    values: 0.17413605830954682
+    values: 0.5646085079395161
+    values: 0.6243237228009376
+    values: 0.2542843955334789
+    values: 0.49813588567004186
+    values: 0.9471977616272863
+    values: 0.2621008363384292
+    values: 0.45907144387925014
+    values: 0.2988413195292512
+    values: 0.77560430938308
+    values: 0.10330624997689619
+    values: 0.09949487582512861
+    values: 0.5119108093059547
+    values: 0.4712916480321412
+    values: 0.19522103483848263
+    values: 0.6956090233255406
+    values: 0.6889996537698064
+    values: 0.31977118993788745
+    values: 0.8988748145214507
+    values: 0.7036342050658023
+    values: 0.38176050829928865
+    values: 0.5491319770274395
+    values: 0.9282932317219543
+    values: 0.09611650010246109
+    values: 0.3768268175851639
+    values: 0.26775896058715853
+    values: 0.9280805716106704
+  }
+}
+
+Response:
+{'data': {'names': ['t:0', 't:1', 't:2', 't:3', 't:4', 't:5', 't:6', 't:7', 't:8', 't:9'], 'tensor': {'shape': [1, 10], 'values': [5.58847308e-25, 5.20967247e-30, 0.977413237, 0.00434717909, 4.43884675e-31, 0.018239649, 1.88422183e-15, 3.35216821e-21, 4.55872851e-09, 2.19507326e-26]}}, 'meta': {'requestPath': {'mnist-model': 'seldonio/tfserving-proxy:1.14.0-dev'}}}
+</pre></div></div>
+</div>
+</section>
+<section id="gRPC-Request">
+<h4 id="gRPC-Request">gRPC Request<a class="headerlink" href="#gRPC-Request" title="Permalink to this heading">¶</a></h4>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">gateway</span><span class="o">=</span><span class="s2">"istio"</span><span class="p">,</span> <span class="n">transport</span><span class="o">=</span><span class="s2">"grpc"</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">784</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">r</span><span class="o">.</span><span class="n">success</span> <span class="o">==</span> <span class="kc">True</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Success:True message:
+Request:
+{'meta': {}, 'data': {'tensor': {'shape': [1, 784], 'values': [0.9998375676089037, 0.6392211092205818, 0.7251277357504603, 0.7808896762945906, 0.9471029273755714, 0.43660688687977034, 0.17739519588149044, 0.2685829334433132, 0.5628708378672913, 0.8612175076530088, 0.2708916996211985, 0.0406158034626205, 0.09456029072837158, 0.2666814341367846, 0.7194599080791999, 0.9452695941148388, 0.5563611274094761, 0.3768816657869556, 0.20350304379689876, 0.8736840386635644, 0.17739603777375101, 0.5882026251989727, 0.1232152208633025, 0.7771061539607746, 0.34367025360840164, 0.2362496171749492, 0.3482959505637404, 0.47976274163712895, 0.6246524750977825, 0.9140435253156701, 0.7937910929365936, 0.38934636623427854, 0.26806514316035146, 0.3893990993199904, 0.49757057620468503, 0.012091057798297222, 0.4044151699262156, 0.7251585100654504, 0.4694628238213354, 0.8651811034421732, 0.5053952381547168, 0.85361227673482, 0.7366099133244872, 0.5180127600188984, 0.2179237298515888, 0.5433329794411055, 0.36930041031018446, 0.7788858414998587, 0.753340821805769, 0.17967511068886155, 0.6145448596582288, 0.16559553195077004, 0.2138529536286481, 0.8427983198788503, 0.8740981689914816, 0.3856242143771802, 0.18371104079163436, 0.4297583987445547, 0.10108105456864513, 0.8431707724572862, 0.6897498937252297, 0.660057146734252, 0.15669945259739615, 0.1285372377408216, 0.30683402720336717, 0.8645433035446762, 0.3695200366707969, 0.9278766778163701, 0.6990669274840023, 0.7738199643415615, 0.3726689316988163, 0.23131303425074046, 0.29464273540103847, 0.44851033406137186, 0.24958522328243227, 0.959718055349001, 0.6957063714598016, 0.47525806718409525, 0.12857671945875881, 0.3012517503948541, 0.07071461194365503, 0.05003219029386197, 0.6661959702260833, 0.8453636967639719, 0.8603493030476621, 0.6154781618016356, 0.17384973466974363, 0.3330026479577167, 0.5580056440950443, 0.6814454446446438, 0.8384207232138043, 0.5550674384177283, 0.1306261038178782, 0.014680840775067261, 0.9181509901035543, 0.7033332205450622, 0.6783174721908556, 0.8806353690204538, 0.46029385882380913, 0.07483606883369387, 0.5738492535113954, 0.09191873181615284, 0.1710354687450769, 0.6074442385836999, 0.6571894909573045, 0.6854921272320373, 0.6471512128723828, 0.6762134519420487, 0.5845542018630464, 0.3960811995818979, 0.7411669850023669, 0.14150103034111605, 0.32866166930243335, 0.2780107810210197, 0.7725567434416791, 0.07129138136851854, 0.45608604142725095, 0.31055509203263054, 0.7940703045116781, 0.8517122049017283, 0.342493184165072, 0.48289569137863053, 0.21321618799616993, 0.8858219313623279, 0.7550908808488739, 0.6943050355825677, 0.16483431391636327, 0.5005854167904734, 0.17238549464611208, 0.2086867478375054, 0.032389489319256004, 0.4347725717199533, 0.8579552070201638, 0.9138605227755245, 0.9758296202010837, 0.6949019761407101, 0.4191053853879734, 0.6659145992525622, 0.7677118645909855, 0.24958121704129033, 0.6508205846666189, 0.4588842664875551, 0.48570748901216254, 0.5937441698499041, 0.37694161792558833, 0.15365476652232424, 0.19167117069921025, 0.3299556262282495, 0.34042673478380925, 0.6577336000051281, 0.5096298336030443, 0.46270681873487773, 0.8632809483728608, 0.9738102075628994, 0.7131382043255359, 0.004079977617932995, 0.2592848651100146, 0.3856602560297604, 0.44087021298398654, 0.5029461657856321, 0.6932019040318891, 0.9675994276804958, 0.7713457068366164, 0.8435094958410188, 0.5289839384467337, 0.735685589615721, 0.7313252352223532, 0.03375290270087983, 0.13840557426864697, 0.4048120155605476, 0.5237633180807841, 0.4355969450907252, 0.14038250002033237, 0.7506403840369514, 0.1450190092792456, 0.4586781275651982, 0.3144058117495878, 0.9673728733287045, 0.22517307893487848, 0.4954757261933921, 0.6244490177357518, 0.2123639772826914, 0.13691828069809142, 0.05650911157497307, 0.2604179633596353, 0.9630038857348265, 0.6812390943133333, 0.34768997997096884, 0.45001420622795685, 0.35174595039916123, 0.9674828830932802, 0.6618377544206178, 0.8477760964345799, 0.9617900873523807, 0.32510636309116403, 0.7416648307261213, 0.9363631285339015, 0.17183020291607165, 0.8475589844039726, 0.224568557892719, 0.2457437399491681, 0.8664006256247765, 0.030028773891941474, 0.4186173023951326, 0.8287920058419038, 0.35973534988896105, 0.6511869173482786, 0.5294770563321308, 0.946412094954597, 0.812482519607099, 0.3672463596036494, 0.7344588610488945, 0.6031783940641463, 0.8656483415839102, 0.43986158402625497, 0.7524420613123411, 0.3965201441779188, 0.1905475008538451, 0.5484707264245137, 0.344203480816045, 0.009900629480145029, 0.6574972440758317, 0.8880546065754985, 0.5949771642765174, 0.7127709047357214, 0.5284806488131697, 0.5571052704197698, 0.19187958117242443, 0.4683002823027661, 0.6953404553051732, 0.15192594776818835, 0.7777480923836222, 0.42668291669449665, 0.8150150912279405, 0.8899240052085794, 0.5838594298538653, 0.4858467641689149, 0.9504536263296325, 0.7862540020148352, 0.642194058242723, 0.41352856151515105, 0.5718923120409027, 0.9927176688561632, 0.6713704439386358, 0.8693793588025164, 0.3134918523498196, 0.4238560309713939, 0.38162953165727087, 0.9358323934496319, 0.9737019888123128, 0.16779542061578134, 0.0463070982913788, 0.013981221400875543, 0.041562368647210635, 0.5591620147767499, 0.40043046533741156, 0.7755514656547978, 0.3737324456822547, 0.6825338279528202, 0.617150828370086, 0.1266471517416432, 0.9138195833364484, 0.3678759592244092, 0.8360064889897666, 0.2723009404655078, 0.16622266035376776, 0.43127338027664575, 0.7376211347031769, 0.1900736849268393, 0.43900843177376225, 0.9955014056647603, 0.89303635195075, 0.1534149135527212, 0.4964767951383465, 0.27829489574883537, 0.5743451500907372, 0.21762350501087535, 0.735034366330862, 0.7251166837090426, 0.664593388340304, 0.2977994030312553, 0.30144048229985254, 0.0845084634448161, 0.995635134851757, 0.9166142444823936, 0.9666806958938474, 0.2626902192330284, 0.6275168705386093, 0.891071449656104, 0.8415206090744147, 0.3818789160170304, 0.3282057734741426, 0.3142930695744207, 0.6971741142393718, 0.2682372295463441, 0.9568228986657156, 0.6186442422980434, 0.1718785257727482, 0.8727239529030081, 0.5478065584520785, 0.05652517300758886, 0.8904410672591415, 0.4384942279260724, 0.6442895976038356, 0.8280932269945421, 0.2834429511658507, 0.9158215603197403, 0.5093282160232573, 0.9080653112016185, 0.43085992170968335, 0.18785259830611656, 0.21612925850903497, 0.9729607119899871, 0.8442927183974572, 0.3132315717225326, 0.9889675720598395, 0.6184690004492538, 0.3234607696590871, 0.7970305933960604, 0.12163738705845795, 0.27102079436280324, 0.29043139927810013, 0.34154193556948464, 0.9806166693093233, 0.7463226794249775, 0.5762567819770816, 0.7799340916363083, 0.53976229047184, 0.5738236203113702, 0.9367811391146843, 0.8882973232082787, 0.9742516762714406, 0.9110159596495111, 0.8603623269075282, 0.3064912817990616, 0.23035242752436524, 0.8057051712575578, 0.40669937967368286, 0.1175110680990441, 0.895500747583005, 0.47009446133562816, 0.9054624459609492, 0.08568836430344529, 0.36626960973579004, 0.5602441915520207, 0.8345101081150171, 0.2228628702962202, 0.3460672112839138, 0.20484292661251136, 0.7467344266988611, 0.5011203578214714, 0.5810559001698333, 0.20042394435456556, 0.2550275459853818, 0.437495834078109, 0.3502670336901408, 0.041331175423582334, 0.7836090848737568, 0.4536330537680159, 0.8188232148429642, 0.3370303529455143, 0.7785899343260836, 0.19675607459979372, 0.5426950762010787, 0.2528998545361786, 0.16864662743535574, 0.07114743764279452, 0.6297021279907552, 0.4239616485533697, 0.30465152398668904, 0.11706584629217565, 0.5613236555392489, 0.561323683670498, 0.2326361313694839, 0.5177396320634163, 0.027835507647529623, 0.3051264320526832, 0.8133355480813557, 0.3580327461764722, 0.4782002780210751, 0.5531330439794514, 0.07914750923295255, 0.5797511130585181, 0.9780696759363786, 0.4863163290020599, 0.4123924698624992, 0.16341325654766192, 0.8917521176620512, 0.8481672612078209, 0.8510981110258017, 0.6564156911261676, 0.564831569959665, 0.8726089325964326, 0.6054518957772484, 0.33597831632445363, 0.35337976356322764, 0.688666794871606, 0.23229962095034895, 0.01484368424479543, 0.4039330793886836, 0.7620534654907409, 0.7169656247854092, 0.548496778834871, 0.3531376017083697, 0.8372522530315838, 0.16247854008417306, 0.40471070910417906, 0.4713888721819638, 0.50951687984169, 0.005333860172462623, 0.6139368993548, 0.5723880896453907, 0.8203885280808363, 0.9193782763206231, 0.772572731410142, 0.5350875924160577, 0.2169185306676037, 0.7818504303350879, 0.6619668563013515, 0.5010961170464322, 0.9657361044475519, 0.029756158670924404, 0.7118587804143762, 0.6302176548849213, 0.5144317764973361, 0.8770089050729013, 0.3357013501902979, 0.35367888873910247, 0.05685006908136636, 0.7420282208200184, 0.5134947040029337, 0.8088826121851742, 0.7639872128642832, 0.12390905073865277, 0.04477475955817767, 0.09364716546752361, 0.372505193919328, 0.7603293685077399, 0.08595211420401605, 0.4089167806327132, 0.2739296937941953, 0.3376259236656729, 0.7967616577087252, 0.23498374601487249, 0.46464819933710766, 0.025945258645318603, 0.284626148444878, 0.7226973370160598, 0.01078023305142306, 0.7666812711560178, 0.5349351960129669, 0.1366648316277128, 0.583999750890187, 0.5774993135897312, 0.7422669600417889, 0.061960152289858184, 0.16333076645775246, 0.0025607209562688027, 0.1951944756741445, 0.6270780823941542, 0.756598651149106, 0.9463960734870384, 0.1657086255376472, 0.8531205083602247, 0.044470829620854135, 0.44754220794858524, 0.7701071014661427, 0.0457811715296752, 0.42638562698722693, 0.27622638518246356, 0.09291471258383588, 0.17890955180023904, 0.4206643721887854, 0.524775511887901, 0.7741425753716078, 0.7814135275537942, 0.7630329593880127, 0.35488034355062537, 0.8194076372776392, 0.6261053193177466, 0.9322812731052698, 0.38371924165132265, 0.2721585234471142, 0.6202344965450154, 0.45398076243834473, 0.8972713225118831, 0.6226872324870506, 0.8705286133573261, 0.9215667189446192, 0.015975433864905186, 0.8714011142134623, 0.6019236078513434, 0.47305557927535624, 0.8481667281315558, 0.3627853794167184, 0.16738472338694899, 0.2814372246525456, 0.4248133011818911, 0.7209725379930139, 0.36049106201516623, 0.8197904407579293, 0.3086107736953896, 0.5891578909647137, 0.8995064496345951, 0.6169467403451937, 0.4044262165234429, 0.8529128104601208, 0.27216230697862387, 0.7263052076140986, 0.7403277918863618, 0.09990368551573803, 0.6511632187066719, 0.9316498214719467, 0.5844478532774479, 0.3240933121684608, 0.05030333741117288, 0.35350034837621014, 0.27227411803326007, 0.5943511364230658, 0.1908244644820457, 0.3052151163831046, 0.780693165747541, 0.45900511964755353, 0.11498890271082429, 0.41051625805273817, 0.385909450189989, 0.11612405915294033, 0.3073784471156583, 0.470253738736087, 0.8791433799603302, 0.27250041875429143, 0.5778628621584133, 0.05774796441444541, 0.19472818245878565, 0.9489467518256041, 0.3874301958766735, 0.5617160963972391, 0.6698918563056502, 0.5037553594619721, 0.8438871660586753, 0.911949614674525, 0.02709585834012629, 0.5051737243183662, 0.994165499192289, 0.20048488690273958, 0.9764821724826116, 0.26805133785379887, 0.8274579636299555, 0.11367551270044307, 0.7729264430047417, 0.6310395873267434, 0.9183742662793112, 0.509632685758568, 0.7921841076637581, 0.46311966693271167, 0.9218382204050641, 0.20080432990625308, 0.9937035382564232, 0.1031189097240055, 0.5058315208668248, 0.13340271825902128, 0.8865742263140193, 0.9889472584165465, 0.6804105676966486, 0.5137657820034426, 0.47123439290699654, 0.9345051895461288, 0.6515179662341368, 0.142084250144058, 0.9972266959163512, 0.0005949651844611159, 0.4179654887357557, 0.3473454066586362, 0.38787060170209986, 0.9366163800009827, 0.43007250933274155, 0.5079131347069591, 0.8189313546965682, 0.6417670249285709, 0.35004745446706753, 0.9420940548921395, 0.5796928186596902, 0.4917695139816023, 0.8554028051017076, 0.44641168508442153, 0.34520503188088203, 0.04504782803523821, 0.869074691034748, 0.46701231219883366, 0.18853528208362247, 0.9188101820250285, 0.13410264026802565, 0.34782581320456807, 0.9171882231045678, 0.5404900935897672, 0.40639607589630355, 0.37176125120164105, 0.8811032356997041, 0.48961219673353495, 0.5703825590798491, 0.657051398088682, 0.2675593162561105, 0.47652403250939546, 0.19139710470166793, 0.2605409612771883, 0.9074323211503212, 0.6887342277718735, 0.6940299152415016, 0.7829857174682875, 0.9064770218462095, 0.7210205246063583, 0.16216145157038797, 0.42486714990458374, 0.798330355432116, 0.9810676267528498, 0.20517514442598328, 0.2558821923676863, 0.8718143213018922, 0.7565757320937324, 0.10555612230287892, 0.5858090594039411, 0.935801600565141, 0.3417964696304636, 0.6226225195551526, 0.46370840313476636, 0.8937991787826053, 0.9780237638935213, 0.7598797634782815, 0.717244702133823, 0.30417432501366426, 0.9393724811606409, 0.6965584229458298, 0.041939794330914104, 0.25187692436921816, 0.416103774213179, 0.9047922009722897, 0.3217013185063887, 0.9901514968215416, 0.9597286917912559, 0.8867989649309458, 0.17699409686257805, 0.024799902490826864, 0.1210076275647205, 0.33817832485501254, 0.36152118155211377, 0.367181400164885, 0.793385079285185, 0.7069148551378989, 0.2904038047458095, 0.079943624013315, 0.16193746530304465, 0.5858733699793525, 0.21764965940738423, 0.9536071992169927, 0.8922159545100463, 0.9834246555811866, 0.018815471892799973, 0.5733699672377677, 0.8714546322697075, 0.6935395071777894, 0.7364544515942502, 0.33131631416218, 0.33145781065527335, 0.4684982014089213, 0.2919329141203564, 0.26101952469081136, 0.2171404518492559, 0.8348086023345749, 0.36270992745041253, 0.6005610261505202, 0.4917410057264371, 0.8148488472442061, 0.9001992401748655, 0.988137158626888, 0.6746429855154066, 0.7069863195180465, 0.0674843892016308, 0.15945105132366055, 0.29830145678205466, 0.6927594156540278, 0.8180672226024285, 0.17308553913232916, 0.9902223621206543, 0.6311861573513877, 0.809690453155234, 0.19192151150992587, 0.18313896190908896, 0.3491543220323795, 0.8254077258226903, 0.9657781337821518, 0.20615961082996803, 0.9899958248765538, 0.8284342100461449, 0.547190740464929, 0.2207811881322581, 0.11291703946465215, 0.29584039066680046, 0.5977371825958736, 0.26434466610073715, 0.15318730727751417, 0.8213628659685003, 0.14930861800812245, 0.39731154998719187, 0.826988152354807, 0.5512198216933386, 0.5440904782941621, 0.48272277164354893, 0.498103775855522, 0.8167376034713866, 0.8605540491540176, 0.9879344543042438, 0.37120859209886437, 0.46537008799759594, 0.9607482672066561, 0.28408748386684746, 0.01370358425114393, 0.9093291604893644, 0.9088707244220318, 0.15267555651701814, 0.5004009522039123, 0.16405911928878225, 0.935093374884947, 0.8094753690907022, 0.6474322516076126, 0.9573794226853352, 0.4026707645689923, 0.5736671866707472, 0.3227778643194148, 0.7789796552741124, 0.5370655611738934, 0.6823021904863539, 0.38692565116892097, 0.8295285173984724, 0.12687844028321082, 0.8129543065350571, 0.9952188380752344, 0.8003417296853862, 0.17019790697596127, 0.5426809411833465, 0.6305504923342433, 0.9723047789348951, 0.5407712933705637, 0.2576613132432922, 0.9236250744400989, 0.20481507765889329, 0.10346661640755417, 0.5156276104682014, 0.06103884933631909, 0.18907227940270432, 0.9136622226739916, 0.9932151006522282, 0.7266653088947709, 0.7300929317396078, 0.4668502288298021, 0.3102837784659479, 0.2659834785299512, 0.13026071841660603, 0.9254075293257326, 0.08529586460698046, 0.5525575307115453, 0.21343858683748318, 0.18060289706324217, 0.8683506637020498, 0.6848930695805433, 0.6755154127436478, 0.2061481738644, 0.4298575389580429, 0.34168578962829554, 0.8454335802901116, 0.9033778297545824, 0.3401244429147189, 0.08965274313171268, 0.1569139124055624, 0.646742011344807, 0.5871233685539055, 0.36616461039778603, 0.6383094108189803, 0.8555840857328585, 0.8645675155149569, 0.6607827923299152, 0.6761344905641318, 0.3017867901904404, 0.4517706542862252, 0.269490128193246]}}}
+Response:
+{'data': {'tftensor': {'dtype': 'DT_FLOAT', 'tensorShape': {'dim': [{'size': '1'}, {'size': '10'}]}, 'floatVal': [8.493433e-22, 2.851194e-35, 0.123584226, 0.066573136, 1.1826565e-28, 0.80983657, 4.1654608e-13, 1.4864153e-19, 6.0619104e-06, 2.4017428e-20]}}}
+</pre></div></div>
+</div>
+<p>And delete the model we deployed</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>delete<span class="w"> </span>-f<span class="w"> </span>./resources/mnist_rest.yaml
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+seldondeployment.machinelearning.seldon.io "tfserving" deleted
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="Serve-Tensorflow-Model-with-Tensorflow-protocol">
+<h3 id="Serve-Tensorflow-Model-with-Tensorflow-protocol">Serve Tensorflow Model with Tensorflow protocol<a class="headerlink" href="#Serve-Tensorflow-Model-with-Tensorflow-protocol" title="Permalink to this heading">¶</a></h3>
+<p>The config file below shows how you can deploy your Tensorflow model which exposes the Tensorflow protocol.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%writefile</span> ./resources/halfplustwo_rest.yaml
+<span class="n">apiVersion</span><span class="p">:</span> <span class="n">machinelearning</span><span class="o">.</span><span class="n">seldon</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">v1alpha2</span>
+<span class="n">kind</span><span class="p">:</span> <span class="n">SeldonDeployment</span>
+<span class="n">metadata</span><span class="p">:</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">hpt</span>
+<span class="n">spec</span><span class="p">:</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">hpt</span>
+  <span class="n">protocol</span><span class="p">:</span> <span class="n">tensorflow</span>
+  <span class="n">transport</span><span class="p">:</span> <span class="n">rest</span>
+  <span class="n">predictors</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">graph</span><span class="p">:</span>
+      <span class="n">children</span><span class="p">:</span> <span class="p">[]</span>
+      <span class="n">implementation</span><span class="p">:</span> <span class="n">TENSORFLOW_SERVER</span>
+      <span class="n">modelUri</span><span class="p">:</span> <span class="n">gs</span><span class="p">:</span><span class="o">//</span><span class="n">seldon</span><span class="o">-</span><span class="n">models</span><span class="o">/</span><span class="n">tfserving</span><span class="o">/</span><span class="n">half_plus_two</span>
+      <span class="n">name</span><span class="p">:</span>  <span class="n">halfplustwo</span>
+      <span class="n">parameters</span><span class="p">:</span>
+        <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">model_name</span>
+          <span class="nb">type</span><span class="p">:</span> <span class="n">STRING</span>
+          <span class="n">value</span><span class="p">:</span> <span class="n">halfplustwo</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">default</span>
+    <span class="n">replicas</span><span class="p">:</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Overwriting ./resources/halfplustwo_rest.yaml
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[46]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>./resources/halfplustwo_rest.yaml
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+seldondeployment.machinelearning.seldon.io/hpt created
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[47]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deploy/<span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>deploy<span class="w"> </span>-l<span class="w"> </span>seldon-deployment-id<span class="o">=</span>hpt<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.items[0].metadata.name}'</span><span class="k">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Waiting for deployment "hpt-default-0-halfplustwo" rollout to finish: 0 of 1 updated replicas are available...
+deployment "hpt-default-0-halfplustwo" successfully rolled out
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[48]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
+<span class="n">X</span><span class="o">=!</span>curl<span class="w"> </span>-s<span class="w"> </span>-d<span class="w"> </span><span class="s1">'{"instances": [1.0, 2.0, 5.0]}'</span><span class="w"> </span><span class="err">\</span>
+   <span class="o">-</span><span class="n">X</span> <span class="n">POST</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">8003</span><span class="o">/</span><span class="n">seldon</span><span class="o">/</span><span class="n">seldon</span><span class="o">/</span><span class="n">hpt</span><span class="o">/</span><span class="n">v1</span><span class="o">/</span><span class="n">models</span><span class="o">/</span><span class="n">halfplustwo</span><span class="o">/</span><span class="p">:</span><span class="n">predict</span> \
+   <span class="o">-</span><span class="n">H</span> <span class="s2">"Content-Type: application/json"</span>
+<span class="n">d</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="k">assert</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">"predictions"</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mf">2.5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{'predictions': [2.5, 3.0, 4.5]}
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[49]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="o">=!</span><span class="nb">cd</span><span class="w"> </span>../executor/proto<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>grpcurl<span class="w"> </span><span class="err">\</span>
+   <span class="o">-</span><span class="n">d</span> <span class="s1">'{"model_spec":{"name":"halfplustwo"},"inputs":{"x":{"dtype": 1, "tensor_shape": {"dim":[{"size": 3}]}, "floatVal" : [1.0, 2.0, 3.0]}}}'</span> \
+   <span class="o">-</span><span class="n">rpc</span><span class="o">-</span><span class="n">header</span> <span class="n">seldon</span><span class="p">:</span><span class="n">hpt</span> <span class="o">-</span><span class="n">rpc</span><span class="o">-</span><span class="n">header</span> <span class="n">namespace</span><span class="p">:</span><span class="n">seldon</span> \
+   <span class="o">-</span><span class="n">plaintext</span> <span class="o">-</span><span class="n">proto</span> <span class="o">./</span><span class="n">prediction_service</span><span class="o">.</span><span class="n">proto</span> \
+   <span class="mf">0.0.0.0</span><span class="p">:</span><span class="mi">8003</span> <span class="n">tensorflow</span><span class="o">.</span><span class="n">serving</span><span class="o">.</span><span class="n">PredictionService</span><span class="o">/</span><span class="n">Predict</span>
+<span class="n">d</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="k">assert</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">"outputs"</span><span class="p">][</span><span class="s2">"x"</span><span class="p">][</span><span class="s2">"floatVal"</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mf">2.5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{'outputs': {'x': {'dtype': 'DT_FLOAT', 'tensorShape': {'dim': [{'size': '3'}]}, 'floatVal': [2.5, 3, 3.5]}}, 'modelSpec': {'name': 'halfplustwo', 'version': '123', 'signatureName': 'serving_default'}}
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[50]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>delete<span class="w"> </span>-f<span class="w"> </span>./resources/halfplustwo_rest.yaml
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+seldondeployment.machinelearning.seldon.io "hpt" deleted
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="Serve-MLFlow-Elasticnet-Wines-Model">
+<h2 id="Serve-MLFlow-Elasticnet-Wines-Model">Serve MLFlow Elasticnet Wines Model<a class="headerlink" href="#Serve-MLFlow-Elasticnet-Wines-Model" title="Permalink to this heading">¶</a></h2>
+<p>We can deploy an MLFlow model uploaded to an object store by using the MLFlow model server implementation as the config below:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[51]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%writefile</span> ./resources/elasticnet_wine.yaml
+<span class="n">apiVersion</span><span class="p">:</span> <span class="n">machinelearning</span><span class="o">.</span><span class="n">seldon</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">v1alpha2</span>
+<span class="n">kind</span><span class="p">:</span> <span class="n">SeldonDeployment</span>
+<span class="n">metadata</span><span class="p">:</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">mlflow</span>
+<span class="n">spec</span><span class="p">:</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">wines</span>
+  <span class="n">predictors</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">componentSpecs</span><span class="p">:</span>
+    <span class="o">-</span> <span class="n">spec</span><span class="p">:</span>
+        <span class="c1"># We are setting high failureThreshold as installing conda dependencies</span>
+        <span class="c1"># can take long time and we want to avoid k8s killing the container prematurely</span>
+        <span class="n">containers</span><span class="p">:</span>
+        <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">classifier</span>
+          <span class="n">livenessProbe</span><span class="p">:</span>
+            <span class="n">initialDelaySeconds</span><span class="p">:</span> <span class="mi">80</span>
+            <span class="n">failureThreshold</span><span class="p">:</span> <span class="mi">200</span>
+            <span class="n">periodSeconds</span><span class="p">:</span> <span class="mi">5</span>
+            <span class="n">successThreshold</span><span class="p">:</span> <span class="mi">1</span>
+            <span class="n">httpGet</span><span class="p">:</span>
+              <span class="n">path</span><span class="p">:</span> <span class="o">/</span><span class="n">health</span><span class="o">/</span><span class="n">ping</span>
+              <span class="n">port</span><span class="p">:</span> <span class="n">http</span>
+              <span class="n">scheme</span><span class="p">:</span> <span class="n">HTTP</span>
+          <span class="n">readinessProbe</span><span class="p">:</span>
+            <span class="n">initialDelaySeconds</span><span class="p">:</span> <span class="mi">80</span>
+            <span class="n">failureThreshold</span><span class="p">:</span> <span class="mi">200</span>
+            <span class="n">periodSeconds</span><span class="p">:</span> <span class="mi">5</span>
+            <span class="n">successThreshold</span><span class="p">:</span> <span class="mi">1</span>
+            <span class="n">httpGet</span><span class="p">:</span>
+              <span class="n">path</span><span class="p">:</span> <span class="o">/</span><span class="n">health</span><span class="o">/</span><span class="n">ping</span>
+              <span class="n">port</span><span class="p">:</span> <span class="n">http</span>
+              <span class="n">scheme</span><span class="p">:</span> <span class="n">HTTP</span>
+    <span class="n">graph</span><span class="p">:</span>
+      <span class="n">children</span><span class="p">:</span> <span class="p">[]</span>
+      <span class="n">implementation</span><span class="p">:</span> <span class="n">MLFLOW_SERVER</span>
+      <span class="n">modelUri</span><span class="p">:</span> <span class="n">gs</span><span class="p">:</span><span class="o">//</span><span class="n">seldon</span><span class="o">-</span><span class="n">models</span><span class="o">/</span><span class="n">v1</span><span class="mf">.10.0</span><span class="o">-</span><span class="n">dev</span><span class="o">/</span><span class="n">mlflow</span><span class="o">/</span><span class="n">elasticnet_wine</span>
+      <span class="n">name</span><span class="p">:</span> <span class="n">classifier</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">default</span>
+    <span class="n">replicas</span><span class="p">:</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Writing ./resources/elasticnet_wine.yaml
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[52]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>./resources/elasticnet_wine.yaml
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+seldondeployment.machinelearning.seldon.io/mlflow created
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[53]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deploy/<span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>deploy<span class="w"> </span>-l<span class="w"> </span>seldon-deployment-id<span class="o">=</span>mlflow<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.items[0].metadata.name}'</span><span class="k">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Waiting for deployment "mlflow-default-0-classifier" rollout to finish: 0 of 1 updated replicas are available...
+deployment "mlflow-default-0-classifier" successfully rolled out
+</pre></div></div>
+</div>
+<section id="REST-requests">
+<h3 id="REST-requests">REST requests<a class="headerlink" href="#REST-requests" title="Permalink to this heading">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[54]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="o">=!</span>curl<span class="w"> </span>-s<span class="w"> </span>-d<span class="w"> </span><span class="s1">'{"data": {"ndarray":[[0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0,1.1]]}}'</span><span class="w"> </span><span class="err">\</span>
+   <span class="o">-</span><span class="n">X</span> <span class="n">POST</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">8003</span><span class="o">/</span><span class="n">seldon</span><span class="o">/</span><span class="n">seldon</span><span class="o">/</span><span class="n">mlflow</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">v1</span><span class="mf">.0</span><span class="o">/</span><span class="n">predictions</span> \
+   <span class="o">-</span><span class="n">H</span> <span class="s2">"Content-Type: application/json"</span>
+<span class="n">d</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{'data': {'names': [], 'ndarray': [5.275558760255375]}, 'meta': {'requestPath': {'classifier': 'seldonio/mlflowserver:1.14.0-dev'}}}
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[55]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">seldon_core.seldon_client</span> <span class="kn">import</span> <span class="n">SeldonClient</span>
+
+<span class="n">sc</span> <span class="o">=</span> <span class="n">SeldonClient</span><span class="p">(</span><span class="n">deployment_name</span><span class="o">=</span><span class="s2">"mlflow"</span><span class="p">,</span> <span class="n">namespace</span><span class="o">=</span><span class="s2">"seldon"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[56]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">gateway</span><span class="o">=</span><span class="s2">"istio"</span><span class="p">,</span> <span class="n">transport</span><span class="o">=</span><span class="s2">"rest"</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">r</span><span class="o">.</span><span class="n">success</span> <span class="o">==</span> <span class="kc">True</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Success:True message:
+Request:
+meta {
+}
+data {
+  tensor {
+    shape: 1
+    shape: 11
+    values: 0.08557947016760259
+    values: 0.3904340887602685
+    values: 0.013650233499940545
+    values: 0.667873429847926
+    values: 0.8854441380301948
+    values: 0.2158356850044546
+    values: 0.39582510842260477
+    values: 0.6090407713228351
+    values: 0.7908824041187265
+    values: 0.6806393014966566
+    values: 0.5804883985108746
+  }
+}
+
+Response:
+{'data': {'names': [], 'tensor': {'shape': [1], 'values': [5.2237671948422015]}}, 'meta': {'requestPath': {'classifier': 'seldonio/mlflowserver:1.14.0-dev'}}}
+</pre></div></div>
+</div>
+</section>
+<section id="id7">
+<h3 id="id7">gRPC Requests<a class="headerlink" href="#id7" title="Permalink to this heading">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[57]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="o">=!</span><span class="nb">cd</span><span class="w"> </span>../executor/proto<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>grpcurl<span class="w"> </span>-d<span class="w"> </span><span class="s1">'{"data":{"ndarray":[[0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0,1.1]]}}'</span><span class="w"> </span><span class="err">\</span>
+         <span class="o">-</span><span class="n">rpc</span><span class="o">-</span><span class="n">header</span> <span class="n">seldon</span><span class="p">:</span><span class="n">mlflow</span> <span class="o">-</span><span class="n">rpc</span><span class="o">-</span><span class="n">header</span> <span class="n">namespace</span><span class="p">:</span><span class="n">seldon</span> \
+         <span class="o">-</span><span class="n">plaintext</span> \
+         <span class="o">-</span><span class="n">proto</span> <span class="o">./</span><span class="n">prediction</span><span class="o">.</span><span class="n">proto</span>  <span class="mf">0.0.0.0</span><span class="p">:</span><span class="mi">8003</span> <span class="n">seldon</span><span class="o">.</span><span class="n">protos</span><span class="o">.</span><span class="n">Seldon</span><span class="o">/</span><span class="n">Predict</span>
+<span class="n">d</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{'meta': {'requestPath': {'classifier': 'seldonio/mlflowserver:1.14.0-dev'}}, 'data': {'ndarray': [5.275558760255375]}}
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[58]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">gateway</span><span class="o">=</span><span class="s2">"istio"</span><span class="p">,</span> <span class="n">transport</span><span class="o">=</span><span class="s2">"grpc"</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">r</span><span class="o">.</span><span class="n">success</span> <span class="o">==</span> <span class="kc">True</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Success:True message:
+Request:
+{'meta': {}, 'data': {'tensor': {'shape': [1, 11], 'values': [0.1504501387663657, 0.09916272705865703, 0.48360619526082804, 0.10653978599045866, 0.28875817583971986, 0.2490316271245857, 0.7923655335917282, 0.2630601591638151, 0.33789481427553547, 0.30831566652953724, 0.6134317115838707]}}}
+Response:
+{'meta': {'requestPath': {'classifier': 'seldonio/mlflowserver:1.14.0-dev'}}, 'data': {'tensor': {'shape': [1], 'values': [5.225506841935588]}}}
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[59]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>delete<span class="w"> </span>-f<span class="w"> </span>./resources/elasticnet_wine.yaml
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+seldondeployment.machinelearning.seldon.io "mlflow" deleted
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="MLFlow-V2-protocol">
+<h2 id="MLFlow-V2-protocol">MLFlow V2 protocol<a class="headerlink" href="#MLFlow-V2-protocol" title="Permalink to this heading">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[60]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%writefile</span> ./resources/elasticnet_wine_v2.yaml
+<span class="n">apiVersion</span><span class="p">:</span> <span class="n">machinelearning</span><span class="o">.</span><span class="n">seldon</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">v1alpha2</span>
+<span class="n">kind</span><span class="p">:</span> <span class="n">SeldonDeployment</span>
+<span class="n">metadata</span><span class="p">:</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">mlflow</span>
+<span class="n">spec</span><span class="p">:</span>
+  <span class="n">protocol</span><span class="p">:</span> <span class="n">v2</span>  <span class="c1"># Activate v2 protocol</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">wines</span>
+  <span class="n">predictors</span><span class="p">:</span>
+    <span class="o">-</span> <span class="n">graph</span><span class="p">:</span>
+        <span class="n">children</span><span class="p">:</span> <span class="p">[]</span>
+        <span class="n">implementation</span><span class="p">:</span> <span class="n">MLFLOW_SERVER</span>
+        <span class="n">modelUri</span><span class="p">:</span> <span class="n">gs</span><span class="p">:</span><span class="o">//</span><span class="n">seldon</span><span class="o">-</span><span class="n">models</span><span class="o">/</span><span class="n">v1</span><span class="mf">.12.0</span><span class="o">-</span><span class="n">dev</span><span class="o">/</span><span class="n">mlflow</span><span class="o">/</span><span class="n">elasticnet_wine</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">classifier</span>
+      <span class="n">name</span><span class="p">:</span> <span class="n">default</span>
+      <span class="n">replicas</span><span class="p">:</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Overwriting ./resources/elasticnet_wine_v2.yaml
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[61]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>./resources/elasticnet_wine_v2.yaml
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+seldondeployment.machinelearning.seldon.io/mlflow created
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[62]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deploy/<span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>deploy<span class="w"> </span>-l<span class="w"> </span>seldon-deployment-id<span class="o">=</span>mlflow<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.items[0].metadata.name}'</span><span class="k">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Waiting for deployment "mlflow-default-0-classifier" rollout to finish: 0 of 1 updated replicas are available...
+deployment "mlflow-default-0-classifier" successfully rolled out
+</pre></div></div>
+</div>
+</section>
+<section id="id8">
+<h2 id="id8">REST requests<a class="headerlink" href="#id8" title="Permalink to this heading">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[63]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
+
+<span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="n">inference_request</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"parameters"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"content_type"</span><span class="p">:</span> <span class="s2">"pd"</span><span class="p">},</span>
+    <span class="s2">"inputs"</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"fixed acidity"</span><span class="p">,</span>
+            <span class="s2">"shape"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="s2">"datatype"</span><span class="p">:</span> <span class="s2">"FP32"</span><span class="p">,</span>
+            <span class="s2">"data"</span><span class="p">:</span> <span class="p">[</span><span class="mf">7.4</span><span class="p">],</span>
+            <span class="s2">"parameters"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"content_type"</span><span class="p">:</span> <span class="s2">"np"</span><span class="p">},</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"volatile acidity"</span><span class="p">,</span>
+            <span class="s2">"shape"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="s2">"datatype"</span><span class="p">:</span> <span class="s2">"FP32"</span><span class="p">,</span>
+            <span class="s2">"data"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.7000</span><span class="p">],</span>
+            <span class="s2">"parameters"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"content_type"</span><span class="p">:</span> <span class="s2">"np"</span><span class="p">},</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"citric acidity"</span><span class="p">,</span>
+            <span class="s2">"shape"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="s2">"datatype"</span><span class="p">:</span> <span class="s2">"FP32"</span><span class="p">,</span>
+            <span class="s2">"data"</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="s2">"parameters"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"content_type"</span><span class="p">:</span> <span class="s2">"np"</span><span class="p">},</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"residual sugar"</span><span class="p">,</span>
+            <span class="s2">"shape"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="s2">"datatype"</span><span class="p">:</span> <span class="s2">"FP32"</span><span class="p">,</span>
+            <span class="s2">"data"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.9</span><span class="p">],</span>
+            <span class="s2">"parameters"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"content_type"</span><span class="p">:</span> <span class="s2">"np"</span><span class="p">},</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"chlorides"</span><span class="p">,</span>
+            <span class="s2">"shape"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="s2">"datatype"</span><span class="p">:</span> <span class="s2">"FP32"</span><span class="p">,</span>
+            <span class="s2">"data"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.076</span><span class="p">],</span>
+            <span class="s2">"parameters"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"content_type"</span><span class="p">:</span> <span class="s2">"np"</span><span class="p">},</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"free sulfur dioxide"</span><span class="p">,</span>
+            <span class="s2">"shape"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="s2">"datatype"</span><span class="p">:</span> <span class="s2">"FP32"</span><span class="p">,</span>
+            <span class="s2">"data"</span><span class="p">:</span> <span class="p">[</span><span class="mi">11</span><span class="p">],</span>
+            <span class="s2">"parameters"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"content_type"</span><span class="p">:</span> <span class="s2">"np"</span><span class="p">},</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"total sulfur dioxide"</span><span class="p">,</span>
+            <span class="s2">"shape"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="s2">"datatype"</span><span class="p">:</span> <span class="s2">"FP32"</span><span class="p">,</span>
+            <span class="s2">"data"</span><span class="p">:</span> <span class="p">[</span><span class="mi">34</span><span class="p">],</span>
+            <span class="s2">"parameters"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"content_type"</span><span class="p">:</span> <span class="s2">"np"</span><span class="p">},</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"density"</span><span class="p">,</span>
+            <span class="s2">"shape"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="s2">"datatype"</span><span class="p">:</span> <span class="s2">"FP32"</span><span class="p">,</span>
+            <span class="s2">"data"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.9978</span><span class="p">],</span>
+            <span class="s2">"parameters"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"content_type"</span><span class="p">:</span> <span class="s2">"np"</span><span class="p">},</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"pH"</span><span class="p">,</span>
+            <span class="s2">"shape"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="s2">"datatype"</span><span class="p">:</span> <span class="s2">"FP32"</span><span class="p">,</span>
+            <span class="s2">"data"</span><span class="p">:</span> <span class="p">[</span><span class="mf">3.51</span><span class="p">],</span>
+            <span class="s2">"parameters"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"content_type"</span><span class="p">:</span> <span class="s2">"np"</span><span class="p">},</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"sulphates"</span><span class="p">,</span>
+            <span class="s2">"shape"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="s2">"datatype"</span><span class="p">:</span> <span class="s2">"FP32"</span><span class="p">,</span>
+            <span class="s2">"data"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.56</span><span class="p">],</span>
+            <span class="s2">"parameters"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"content_type"</span><span class="p">:</span> <span class="s2">"np"</span><span class="p">},</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"alcohol"</span><span class="p">,</span>
+            <span class="s2">"shape"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="s2">"datatype"</span><span class="p">:</span> <span class="s2">"FP32"</span><span class="p">,</span>
+            <span class="s2">"data"</span><span class="p">:</span> <span class="p">[</span><span class="mf">9.4</span><span class="p">],</span>
+            <span class="s2">"parameters"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"content_type"</span><span class="p">:</span> <span class="s2">"np"</span><span class="p">},</span>
+        <span class="p">},</span>
+    <span class="p">],</span>
+<span class="p">}</span>
+
+<span class="n">endpoint</span> <span class="o">=</span> <span class="s2">"http://localhost:8003/seldon/seldon/mlflow/v2/models/infer"</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">inference_request</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">(),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+<span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">ok</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{
+  "model_name": "classifier",
+  "model_version": "v1",
+  "id": "a43e833e-0e20-46b9-b0b2-c8b6917febd7",
+  "parameters": null,
+  "outputs": [
+    {
+      "name": "predict",
+      "shape": [
+        1
+      ],
+      "datatype": "FP64",
+      "parameters": null,
+      "data": [
+        6.016145744177844
+      ]
+    }
+  ]
+}
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[64]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>delete<span class="w"> </span>-f<span class="w"> </span>./resources/elasticnet_wine_v2.yaml
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+seldondeployment.machinelearning.seldon.io "mlflow" deleted
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="seldon_client.html" title="Advanced Usage Exampes for Seldon Client"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> "Previous" </span> Advanced Usage Exampes for Seldon Client </span>
+              </div>
+            </a>
+          
+          
+            <a href="triton_mnist_e2e.html" title="Tensorflow MNIST model and Triton (e2e example)"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> "Next" </span> Tensorflow MNIST model and Triton (e2e example) </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2024, Seldon Technologies Ltd.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

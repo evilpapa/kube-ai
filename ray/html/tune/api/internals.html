@@ -1,0 +1,1030 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Tune Internals &#8212; Ray 2.7.2</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/termynal.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/versionwarning.js"></script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+    <script defer="defer" src="../../_static/js/docsearch.js"></script>
+    <script defer="defer" src="../../_static/js/csat.js"></script>
+    <script defer="defer" src="../../_static/js/termynal.js"></script>
+    <script defer="defer" src="../../_static/js/custom.js"></script>
+    <script defer="defer" src="../../_static/js/top-navigation.js"></script>
+    <script src="../../_static/js/tags.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <link rel="canonical" href="https://docs.ray.io/en/latest/tune/api/internals.html" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Tune Client API" href="client.html" />
+    <link rel="prev" title="ray.tune.integration.lightgbm.TuneReportCheckpointCallback.order" href="doc/ray.tune.integration.lightgbm.TuneReportCheckpointCallback.order.html" />
+
+<!-- Fathom - beautiful, simple website analytics -->
+<script src="https://deer.ray.io/script.js" data-site="WYYANYOS" defer></script>
+<!-- / Fathom -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-110413294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-110413294-1');
+</script>
+
+<script
+  src="https://widget.kapa.ai/kapa-widget.bundle.js"
+  data-website-id="18a8c339-4ec5-43c8-8182-db3f2bc8c6b6"
+  data-project-name="Ray"
+  data-project-color="#2C2C2C"
+  data-project-logo="https://global.discourse-cdn.com/business7/uploads/ray/original/1X/8f4dcb72f7cd34e2a332d548bd65860994bc8ff1.png"
+  data-modal-disclaimer = "Results are automated and may be incorrect or contain inappropriate information. Do not include any personal data or confidential information."
+  data-modal-title = "Ray Docs AI - Ask a Question"
+  data-button-position-bottom = "60px"
+></script>
+
+<script>
+(function(apiKey){
+    (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
+    v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
+        o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
+        y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
+        z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
+
+        pendo.initialize({
+            visitor: {
+                id: 'VISITOR-UNIQUE-ID'
+            },
+            account: {
+                id: 'ACCOUNT-UNIQUE-ID'
+            }
+        });
+})('f89fa48a-6dd7-4d7c-67cf-a8051ed891f2');
+</script>
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"><div class='topnav'></div></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Ray 2.7.2</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main Navigation">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../index.html">
+                    欢迎来到 Ray ！
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Ray
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/index.html">
+   概述「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/getting-started.html">
+   入门「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/installation.html">
+   安装「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/use-cases.html">
+   用例「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/examples.html">
+   示例库「1%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/ray-libraries.html">
+   生态「3%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-core/walkthrough.html">
+   Ray 核心「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../data/data.html">
+   Ray 数据「85%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../train/train.html">
+   Ray 训练「95%」
+  </a>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="../index.html">
+   Ray 调参「0%」
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="../getting-started.html">
+     入门
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../key-concepts.html">
+     关键概念
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorials/overview.html">
+     用户指南
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/index.html">
+     Ray Tune 示例
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../faq.html">
+     Ray Tune 问答
+    </a>
+   </li>
+   <li class="toctree-l2 current active has-children">
+    <a class="reference internal" href="api.html">
+     Ray Tune API
+    </a>
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+    <label for="toctree-checkbox-2">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul class="current">
+     <li class="toctree-l3">
+      <a class="reference internal" href="execution.html">
+       Tune Execution (tune.Tuner)
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="result_grid.html">
+       Tune Experiment Results (tune.ResultGrid)
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="trainable.html">
+       Training in Tune (tune.Trainable, session.report)
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="search_space.html">
+       Tune Search Space API
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="suggestion.html">
+       Tune Search Algorithms (tune.search)
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="schedulers.html">
+       Tune Trial Schedulers (tune.schedulers)
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="stoppers.html">
+       Tune Stopping Mechanisms (tune.stopper)
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="reporters.html">
+       Tune Console Output (Reporters)
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="syncing.html">
+       Syncing in Tune (train.SyncConfig)
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="logging.html">
+       Tune Loggers (tune.logger)
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="callbacks.html">
+       Tune Callbacks (tune.Callback)
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="env.html">
+       Environment variables used by Ray Tune
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="sklearn.html">
+       Tune Scikit-Learn API  (tune.sklearn)
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="integration.html">
+       External library integrations for Ray Tune
+      </a>
+     </li>
+     <li class="toctree-l3 current active">
+      <a class="current reference internal" href="#">
+       Tune Internals
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="client.html">
+       Tune Client API
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="cli.html">
+       Tune CLI (Experimental)
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../serve/index.html">
+   Ray Serve「1%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../rllib/index.html">
+   Ray RLlib「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-more-libs/index.html">
+   更多类库「40%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../cluster/getting-started.html">
+   Ray 集群「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-observability/index.html">
+   监控调试「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-references/api.html">
+   参考「20%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-contribute/index.html">
+   开发者指引「30%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-security/index.html">
+   安全「100%」
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/ray-project/ray"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/issues/new?title=Issue%20on%20page%20%2Ftune/api/internals.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/edit/master/doc/source/tune/api/internals.rst"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../_sources/tune/api/internals.rst.txt"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.rst</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tunerinternal">
+   TunerInternal
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#trial">
+   Trial
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#functiontrainable">
+   FunctionTrainable
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#registry">
+   Registry
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Tune Internals</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tunerinternal">
+   TunerInternal
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#trial">
+   Trial
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#functiontrainable">
+   FunctionTrainable
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#registry">
+   Registry
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section id="tune-internals">
+<h1>Tune Internals<a class="headerlink" href="#tune-internals" title="Permalink to this headline">#</a></h1>
+<section id="tunerinternal">
+<span id="raytrialexecutor-docstring"></span><h2>TunerInternal<a class="headerlink" href="#tunerinternal" title="Permalink to this headline">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="ray.tune.impl.tuner_internal.TunerInternal">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ray.tune.impl.tuner_internal.</span></span><span class="sig-name descname"><span class="pre">TunerInternal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">restore_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storage_filesystem</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">pyarrow._fs.FileSystem</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resume_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">ray.tune.execution.experiment_state._ResumeConfig</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trainable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="doc/ray.tune.Trainable.html#ray.tune.Trainable" title="ray.tune.trainable.trainable.Trainable"><span class="pre">ray.tune.trainable.trainable.Trainable</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">BaseTrainer</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_space</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tune_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="doc/ray.tune.TuneConfig.html#ray.tune.TuneConfig" title="ray.tune.tune_config.TuneConfig"><span class="pre">ray.tune.tune_config.TuneConfig</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../../train/api/doc/ray.train.RunConfig.html#ray.train.RunConfig" title="ray.train.RunConfig"><span class="pre">ray.train.RunConfig</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_tuner_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_entrypoint</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ray.air._internal.usage.AirEntrypoint</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">AirEntrypoint.TUNER</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ray/tune/impl/tuner_internal.html#TunerInternal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ray.tune.impl.tuner_internal.TunerInternal" title="Permalink to this definition">#</a></dt>
+<dd><p>The real implementation behind external facing <code class="docutils literal notranslate"><span class="pre">Tuner</span></code>.</p>
+<p>The external facing <code class="docutils literal notranslate"><span class="pre">Tuner</span></code> multiplexes between local Tuner and remote Tuner
+depending on whether in Ray client mode.</p>
+<p>In Ray client mode, external <code class="docutils literal notranslate"><span class="pre">Tuner</span></code> wraps <code class="docutils literal notranslate"><span class="pre">TunerInternal</span></code> into a remote actor,
+which is guaranteed to be placed on head node.</p>
+<p><code class="docutils literal notranslate"><span class="pre">TunerInternal</span></code> can be constructed from fresh, in which case, <code class="docutils literal notranslate"><span class="pre">trainable</span></code> needs
+to be provided, together with optional <code class="docutils literal notranslate"><span class="pre">param_space</span></code>, <code class="docutils literal notranslate"><span class="pre">tune_config</span></code> and
+<code class="docutils literal notranslate"><span class="pre">run_config</span></code>.</p>
+<p>It can also be restored from a previous failed run (given <code class="docutils literal notranslate"><span class="pre">restore_path</span></code>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>restore_path</strong> – The path from where the Tuner can be restored. If provided, None
+of the rest args are needed.</p></li>
+<li><p><strong>resume_config</strong> – Resume config to configure which trials to continue.</p></li>
+<li><p><strong>trainable</strong> – The trainable to be tuned.</p></li>
+<li><p><strong>param_space</strong> – Search space of the tuning job.
+One thing to note is that both preprocessor and dataset can be tuned here.</p></li>
+<li><p><strong>tune_config</strong> – Tuning algorithm specific configs.
+Refer to ray.tune.tune_config.TuneConfig for more info.</p></li>
+<li><p><strong>run_config</strong> – Runtime configuration that is specific to individual trials.
+If passed, this will overwrite the run config passed to the Trainer,
+if applicable. Refer to ray.train.RunConfig for more info.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="ray.tune.impl.tuner_internal.TunerInternal.setup_create_experiment_checkpoint_dir">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setup_create_experiment_checkpoint_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trainable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="doc/ray.tune.Trainable.html#ray.tune.Trainable" title="ray.tune.trainable.trainable.Trainable"><span class="pre">ray.tune.trainable.trainable.Trainable</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../../train/api/doc/ray.train.RunConfig.html#ray.train.RunConfig" title="ray.train.RunConfig"><span class="pre">ray.train.RunConfig</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/ray/tune/impl/tuner_internal.html#TunerInternal.setup_create_experiment_checkpoint_dir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ray.tune.impl.tuner_internal.TunerInternal.setup_create_experiment_checkpoint_dir" title="Permalink to this definition">#</a></dt>
+<dd><p>Sets up and creates the local experiment checkpoint dir.
+This is so that the <code class="xref py py-obj docutils literal notranslate"><span class="pre">tuner.pkl</span></code> file gets stored in the same directory
+and gets synced with other experiment results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>(experiment_path, experiment_dir_name)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="trial">
+<span id="trial-docstring"></span><h2>Trial<a class="headerlink" href="#trial" title="Permalink to this headline">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="ray.tune.experiment.trial.Trial">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ray.tune.experiment.trial.</span></span><span class="sig-name descname"><span class="pre">Trial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trainable_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trial_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">ray.train._internal.storage.StorageContext</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">experiment_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">experiment_dir_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evaluated_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">experiment_tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">placement_group_factory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="doc/ray.tune.execution.placement_groups.PlacementGroupFactory.html#ray.tune.execution.placement_groups.PlacementGroupFactory" title="ray.tune.execution.placement_groups.PlacementGroupFactory"><span class="pre">ray.tune.execution.placement_groups.PlacementGroupFactory</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stopping_criterion</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sync_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../../train/api/doc/ray.train.SyncConfig.html#ray.train.SyncConfig" title="ray.train.SyncConfig"><span class="pre">ray.train.SyncConfig</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">checkpoint_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../../train/api/doc/ray.train.CheckpointConfig.html#ray.train.CheckpointConfig" title="ray.train.CheckpointConfig"><span class="pre">ray.train.CheckpointConfig</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_formats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">restore_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trial_name_creator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ray.tune.experiment.trial.Trial" title="ray.tune.experiment.trial.Trial"><span class="pre">ray.tune.experiment.trial.Trial</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trial_dirname_creator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ray.tune.experiment.trial.Trial" title="ray.tune.experiment.trial.Trial"><span class="pre">ray.tune.experiment.trial.Trial</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_to_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_failures</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_setup_default_resource</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ray/tune/experiment/trial.html#Trial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ray.tune.experiment.trial.Trial" title="Permalink to this definition">#</a></dt>
+<dd><p>A trial object holds the state for one model training run.</p>
+<p>Trials are themselves managed by the TrialRunner class, which implements
+the event loop for submitting trial runs to a Ray cluster.</p>
+<p>Trials start in the PENDING state, and transition to RUNNING once started.
+On error, it transitions to ERROR, otherwise TERMINATED on success.</p>
+<p>There are resources allocated to each trial. These should be specified
+using <code class="docutils literal notranslate"><span class="pre">PlacementGroupFactory</span></code>.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ray.tune.experiment.trial.Trial.trainable_name">
+<span class="sig-name descname"><span class="pre">trainable_name</span></span><a class="headerlink" href="#ray.tune.experiment.trial.Trial.trainable_name" title="Permalink to this definition">#</a></dt>
+<dd><p>Name of the trainable object to be executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ray.tune.experiment.trial.Trial.config">
+<span class="sig-name descname"><span class="pre">config</span></span><a class="headerlink" href="#ray.tune.experiment.trial.Trial.config" title="Permalink to this definition">#</a></dt>
+<dd><p>Provided configuration dictionary with evaluated params.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ray.tune.experiment.trial.Trial.trial_id">
+<span class="sig-name descname"><span class="pre">trial_id</span></span><a class="headerlink" href="#ray.tune.experiment.trial.Trial.trial_id" title="Permalink to this definition">#</a></dt>
+<dd><p>Unique identifier for the trial.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ray.tune.experiment.trial.Trial.path">
+<span class="sig-name descname"><span class="pre">path</span></span><a class="headerlink" href="#ray.tune.experiment.trial.Trial.path" title="Permalink to this definition">#</a></dt>
+<dd><p>Path where results for this trial are stored. Can be on
+the local node or on cloud storage.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ray.tune.experiment.trial.Trial.local_path">
+<span class="sig-name descname"><span class="pre">local_path</span></span><a class="headerlink" href="#ray.tune.experiment.trial.Trial.local_path" title="Permalink to this definition">#</a></dt>
+<dd><p>Path on the local disk where results are stored.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ray.tune.experiment.trial.Trial.remote_path">
+<span class="sig-name descname"><span class="pre">remote_path</span></span><a class="headerlink" href="#ray.tune.experiment.trial.Trial.remote_path" title="Permalink to this definition">#</a></dt>
+<dd><p>Path on cloud storage where results are stored,
+or None if not set.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ray.tune.experiment.trial.Trial.relative_logdir">
+<span class="sig-name descname"><span class="pre">relative_logdir</span></span><a class="headerlink" href="#ray.tune.experiment.trial.Trial.relative_logdir" title="Permalink to this definition">#</a></dt>
+<dd><p>Directory of the trial relative to its
+experiment directory.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ray.tune.experiment.trial.Trial.evaluated_params">
+<span class="sig-name descname"><span class="pre">evaluated_params</span></span><a class="headerlink" href="#ray.tune.experiment.trial.Trial.evaluated_params" title="Permalink to this definition">#</a></dt>
+<dd><p>Evaluated parameters by search algorithm,</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ray.tune.experiment.trial.Trial.experiment_tag">
+<span class="sig-name descname"><span class="pre">experiment_tag</span></span><a class="headerlink" href="#ray.tune.experiment.trial.Trial.experiment_tag" title="Permalink to this definition">#</a></dt>
+<dd><p>Identifying trial name to show in the console</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ray.tune.experiment.trial.Trial.status">
+<span class="sig-name descname"><span class="pre">status</span></span><a class="headerlink" href="#ray.tune.experiment.trial.Trial.status" title="Permalink to this definition">#</a></dt>
+<dd><p>One of PENDING, RUNNING, PAUSED, TERMINATED, ERROR/</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ray.tune.experiment.trial.Trial.error_file">
+<span class="sig-name descname"><span class="pre">error_file</span></span><a class="headerlink" href="#ray.tune.experiment.trial.Trial.error_file" title="Permalink to this definition">#</a></dt>
+<dd><p>Path to the errors that this trial has raised.</p>
+</dd></dl>
+
+<p><strong>DeveloperAPI:</strong> This API may change across minor Ray releases.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ray.tune.experiment.trial.Trial.create_placement_group_factory">
+<span class="sig-name descname"><span class="pre">create_placement_group_factory</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ray/tune/experiment/trial.html#Trial.create_placement_group_factory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ray.tune.experiment.trial.Trial.create_placement_group_factory" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute placement group factory if needed.</p>
+<p>Note: this must be called after all the placeholders in
+self.config are resolved.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="ray.tune.experiment.trial.Trial.local_dir">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">local_dir</span></span><a class="headerlink" href="#ray.tune.experiment.trial.Trial.local_dir" title="Permalink to this definition">#</a></dt>
+<dd><div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><strong>DEPRECATED</strong>: This API is deprecated and may be removed in future Ray releases.</p>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="ray.tune.experiment.trial.Trial.logdir">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logdir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ray.tune.experiment.trial.Trial.logdir" title="Permalink to this definition">#</a></dt>
+<dd><div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><strong>DEPRECATED</strong>: This API is deprecated and may be removed in future Ray releases.</p>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="ray.tune.experiment.trial.Trial.remote_checkpoint_dir">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">remote_checkpoint_dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ray.tune.experiment.trial.Trial.remote_checkpoint_dir" title="Permalink to this definition">#</a></dt>
+<dd><div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><strong>DEPRECATED</strong>: This API is deprecated and may be removed in future Ray releases.</p>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="ray.tune.experiment.trial.Trial.checkpoint">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">checkpoint</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../../train/api/doc/ray.train.Checkpoint.html#ray.train.Checkpoint" title="ray.train.Checkpoint"><span class="pre">ray.train.Checkpoint</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ray.tune.experiment.trial.Trial.checkpoint" title="Permalink to this definition">#</a></dt>
+<dd><p>Returns the most recent checkpoint if one has been saved.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ray.tune.experiment.trial.Trial.init_logdir">
+<span class="sig-name descname"><span class="pre">init_logdir</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ray/tune/experiment/trial.html#Trial.init_logdir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ray.tune.experiment.trial.Trial.init_logdir" title="Permalink to this definition">#</a></dt>
+<dd><div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><strong>DEPRECATED</strong>: This API is deprecated and may be removed in future Ray releases.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ray.tune.experiment.trial.Trial.init_local_path">
+<span class="sig-name descname"><span class="pre">init_local_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ray/tune/experiment/trial.html#Trial.init_local_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ray.tune.experiment.trial.Trial.init_local_path" title="Permalink to this definition">#</a></dt>
+<dd><p>Init logdir.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ray.tune.experiment.trial.Trial.update_resources">
+<span class="sig-name descname"><span class="pre">update_resources</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resources</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="doc/ray.tune.execution.placement_groups.PlacementGroupFactory.html#ray.tune.execution.placement_groups.PlacementGroupFactory" title="ray.tune.execution.placement_groups.PlacementGroupFactory"><span class="pre">ray.tune.execution.placement_groups.PlacementGroupFactory</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ray/tune/experiment/trial.html#Trial.update_resources"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ray.tune.experiment.trial.Trial.update_resources" title="Permalink to this definition">#</a></dt>
+<dd><p>EXPERIMENTAL: Updates the resource requirements.</p>
+<p>Should only be called when the trial is not running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>ValueError if trial status is running.</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ray.tune.experiment.trial.Trial.set_location">
+<span class="sig-name descname"><span class="pre">set_location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ray/tune/experiment/trial.html#Trial.set_location"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ray.tune.experiment.trial.Trial.set_location" title="Permalink to this definition">#</a></dt>
+<dd><p>Sets the location of the trial.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ray.tune.experiment.trial.Trial.set_status">
+<span class="sig-name descname"><span class="pre">set_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ray/tune/experiment/trial.html#Trial.set_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ray.tune.experiment.trial.Trial.set_status" title="Permalink to this definition">#</a></dt>
+<dd><p>Sets the status of the trial.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ray.tune.experiment.trial.Trial.should_stop">
+<span class="sig-name descname"><span class="pre">should_stop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ray/tune/experiment/trial.html#Trial.should_stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ray.tune.experiment.trial.Trial.should_stop" title="Permalink to this definition">#</a></dt>
+<dd><p>Whether the given result meets this trial’s stopping criteria.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ray.tune.experiment.trial.Trial.should_checkpoint">
+<span class="sig-name descname"><span class="pre">should_checkpoint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ray/tune/experiment/trial.html#Trial.should_checkpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ray.tune.experiment.trial.Trial.should_checkpoint" title="Permalink to this definition">#</a></dt>
+<dd><p>Whether this trial is due for checkpointing.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ray.tune.experiment.trial.Trial.on_checkpoint">
+<span class="sig-name descname"><span class="pre">on_checkpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">checkpoint</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">ray.air._internal.checkpoint_manager._TrackedCheckpoint</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ray.train._internal.session._TrainingResult</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ray/tune/experiment/trial.html#Trial.on_checkpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ray.tune.experiment.trial.Trial.on_checkpoint" title="Permalink to this definition">#</a></dt>
+<dd><p>Hook for handling checkpoints taken by the Trainable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>checkpoint</strong> – Checkpoint taken.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ray.tune.experiment.trial.Trial.on_restore">
+<span class="sig-name descname"><span class="pre">on_restore</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ray/tune/experiment/trial.html#Trial.on_restore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ray.tune.experiment.trial.Trial.on_restore" title="Permalink to this definition">#</a></dt>
+<dd><p>Handles restoration completion.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ray.tune.experiment.trial.Trial.should_recover">
+<span class="sig-name descname"><span class="pre">should_recover</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ray/tune/experiment/trial.html#Trial.should_recover"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ray.tune.experiment.trial.Trial.should_recover" title="Permalink to this definition">#</a></dt>
+<dd><p>Returns whether the trial qualifies for retrying.</p>
+<p>This is if the trial has not failed more than max_failures. Note this
+may return true even when there is no checkpoint, either because
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">self.checkpoint_freq</span></code> is <code class="xref py py-obj docutils literal notranslate"><span class="pre">0</span></code> or because the trial failed before
+a checkpoint has been made.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="functiontrainable">
+<h2>FunctionTrainable<a class="headerlink" href="#functiontrainable" title="Permalink to this headline">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="ray.tune.trainable.function_trainable.FunctionTrainable">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ray.tune.trainable.function_trainable.</span></span><span class="sig-name descname"><span class="pre">FunctionTrainable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger_creator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Logger</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remote_checkpoint_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sync_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../../train/api/doc/ray.train.SyncConfig.html#ray.train.SyncConfig" title="ray.train.SyncConfig"><span class="pre">ray.train.SyncConfig</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">ray.train._internal.storage.StorageContext</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ray/tune/trainable/function_trainable.html#FunctionTrainable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ray.tune.trainable.function_trainable.FunctionTrainable" title="Permalink to this definition">#</a></dt>
+<dd><p>Trainable that runs a user function reporting results.</p>
+<p>This mode of execution does not support checkpoint/restore.</p>
+<p><strong>DeveloperAPI:</strong> This API may change across minor Ray releases.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ray.tune.trainable.function_trainable.wrap_function">
+<span class="sig-prename descclassname"><span class="pre">ray.tune.trainable.function_trainable.</span></span><span class="sig-name descname"><span class="pre">wrap_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ray.tune.trainable.function_trainable.FunctionTrainable" title="ray.tune.trainable.function_trainable.FunctionTrainable"><span class="pre">ray.tune.trainable.function_trainable.FunctionTrainable</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/ray/tune/trainable/function_trainable.html#wrap_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ray.tune.trainable.function_trainable.wrap_function" title="Permalink to this definition">#</a></dt>
+<dd><p><strong>DeveloperAPI:</strong> This API may change across minor Ray releases.</p>
+</dd></dl>
+
+</section>
+<section id="registry">
+<h2>Registry<a class="headerlink" href="#registry" title="Permalink to this headline">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="ray.tune.register_trainable">
+<span class="sig-prename descclassname"><span class="pre">ray.tune.</span></span><span class="sig-name descname"><span class="pre">register_trainable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trainable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Type</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ray/tune/registry.html#register_trainable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ray.tune.register_trainable" title="Permalink to this definition">#</a></dt>
+<dd><p>Register a trainable function or class.</p>
+<p>This enables a class or function to be accessed on every Ray process
+in the cluster.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – Name to register.</p></li>
+<li><p><strong>trainable</strong> – Function or tune.Trainable class. Functions must
+take (config, status_reporter) as arguments and will be
+automatically converted into a class during registration.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>DeveloperAPI:</strong> This API may change across minor Ray releases.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ray.tune.register_env">
+<span class="sig-prename descclassname"><span class="pre">ray.tune.</span></span><span class="sig-name descname"><span class="pre">register_env</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env_creator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ray/tune/registry.html#register_env"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ray.tune.register_env" title="Permalink to this definition">#</a></dt>
+<dd><p>Register a custom environment for use with RLlib.</p>
+<p>This enables the environment to be accessed on every Ray process
+in the cluster.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – Name to register.</p></li>
+<li><p><strong>env_creator</strong> – Callable that creates an env.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>DeveloperAPI:</strong> This API may change across minor Ray releases.</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="doc/ray.tune.integration.lightgbm.TuneReportCheckpointCallback.order.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">ray.tune.integration.lightgbm.TuneReportCheckpointCallback.order</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="client.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Tune Client API</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><!-- Override the footer area for the sphinx-book-theme to include the CSAT widget -->
+<div id="csat">
+  <div id="csat-feedback-received" class="csat-hidden">
+    <span>谢谢你的反馈！</span>
+  </div>
+  <div id="csat-inputs">
+    <span>是否能帮助到你？</span>
+    <div id="csat-yes" class="csat-button">
+      <svg id="csat-yes-icon" class="csat-hidden csat-icon" width="18" height="13" viewBox="0 0 18 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 10.172L16.1922 0.979004L17.6072 2.393L7.00023 13L0.63623 6.636L2.05023 5.222L7.00023 10.172Z" fill="black"/>
+      </svg>
+      <span>是<span>
+    </div>
+    <div id="csat-no" class="csat-button">
+      <svg id="csat-no-icon" class="csat-hidden csat-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 5.58599L11.9502 0.635986L13.3642 2.04999L8.41423 6.99999L13.3642 11.95L11.9502 13.364L7.00023 8.41399L2.05023 13.364L0.63623 11.95L5.58623 6.99999L0.63623 2.04999L2.05023 0.635986L7.00023 5.58599Z" fill="black"/>
+      </svg>
+      <span>否<span>
+    </div>
+  </div>
+  <div id="csat-textarea-group" class="csat-hidden">
+    <span id="csat-feedback-label">反馈</span>
+    <textarea id="csat-textarea"></textarea>
+    <div id="csat-submit">提交</div>
+  </div>
+</div><p>
+  
+    By The Ray Team<br/>
+  
+      &copy; Copyright 2024, The Ray Team.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

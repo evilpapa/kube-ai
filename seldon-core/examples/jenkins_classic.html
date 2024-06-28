@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../_static/javascripts/modernizr.js"></script>
+  
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-54780881-2"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-54780881-2');
+</script>
+  
+  
+    <title>MLOps with Seldon and Jenkins Classic &#8212; seldon-core  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=83e35b93" />
+    <link rel="stylesheet" type="text/css" href="../_static/material.css?v=79c92029" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/rtd_sphinx_search.min.css?v=e72958e9" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+    <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=15a8f09d" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/rtd_search_config.js?v=b0596c34"></script>
+    <script src="../_static/js/rtd_sphinx_search.min.js?v=43f26ba4"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="End-to-end MLOps with Seldon Core and Jenkins X" href="jenkins_x.html" />
+    <link rel="prev" title="Distributed Tracing Template" href="tracing.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=indigo data-md-color-accent=teal>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#examples/jenkins_classic" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../index.html" title="seldon-core  documentation"
+           class="md-header-nav__button md-logo">
+          
+            &nbsp;
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">Seldon Core Documentation</span>
+          <span class="md-header-nav__topic"> MLOps with Seldon and Jenkins Classic </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder=""Search""
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+            
+            <li class="md-tabs__item"><a href="/" class="md-tabs__link">🚀 Our Other Projects & Products:</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi/en/stable/" class="md-tabs__link">Alibi Explain</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi-detect/en/stable/" class="md-tabs__link">Alibi Detect</a></li>
+            
+            <li class="md-tabs__item"><a href="https://mlserver.readthedocs.io/en/latest/" class="md-tabs__link">MLServer</a></li>
+            
+            <li class="md-tabs__item"><a href="https://tempo.readthedocs.io/en/latest/" class="md-tabs__link">Tempo SDK</a></li>
+            
+            <li class="md-tabs__item"><a href="https://deploy.seldon.io" class="md-tabs__link">Seldon Enterprise Platform</a></li>
+            
+            <li class="md-tabs__item"><a href="https://github.com/SeldonIO/seldon-deploy-sdk#seldon-deploy-sdk" class="md-tabs__link">Seldon Enterprise Platform SDK</a></li>
+          <li class="md-tabs__item"><a href="../nav/tutorials.html" class="md-tabs__link">教程</a></li>
+          <li class="md-tabs__item"><a href="notebooks.html" class="md-tabs__link">笔记本</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../index.html" title="seldon-core documentation" class="md-nav__button md-logo">
+      
+        <img src="../_static/" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../index.html"
+       title="seldon-core documentation">Seldon Core Documentation</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/getting-started.html" class="md-nav__link">开始</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/concepts.html" class="md-nav__link">概念</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/configuration.html" class="md-nav__link">配置</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/tutorials.html" class="md-nav__link">教程</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html" class="md-nav__link">笔记本</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#seldon-core" class="md-nav__link">Seldon Core 设置</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id2" class="md-nav__link">预包装推理服务示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#python" class="md-nav__link">Python 语言封装示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id3" class="md-nav__link">专门的框架示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id4" class="md-nav__link">孵化项目示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id5" class="md-nav__link">基于云的基础示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id6" class="md-nav__link">高级机器学习监控</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id7" class="md-nav__link">Seldon Core 批处理</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#mlops" class="md-nav__link">MLOps: 扩展、监控和可观察性</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id8" class="md-nav__link">生产配置及实现</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#ab" class="md-nav__link">AB 测试及渐进式部署</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id9" class="md-nav__link">复杂图示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id10" class="md-nav__link">入口</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id11" class="md-nav__link">基础设施</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id12" class="md-nav__link">基准测试和负载测试</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id13" class="md-nav__link">升级示例</a>
+      
+    
+    </li></ul>
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/reference.html" class="md-nav__link">参考</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/contributing.html" class="md-nav__link">贡献</a>
+      
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#examples-jenkins-classic--page-root" class="md-nav__link">MLOps with Seldon and Jenkins Classic</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#CI/CD-Pipeline" class="md-nav__link">CI/CD Pipeline</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#Model-implementation-repository" class="md-nav__link">Model implementation repository</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#Why-a-new-repo-for-every-model?" class="md-nav__link">Why a new repo for every model?</a>
+        </li>
+        <li class="md-nav__item"><a href="#Building-a-docker-image-in-model-implementation-repository" class="md-nav__link">Building a docker image in model implementation repository</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#GitOps-repository" class="md-nav__link">GitOps repository</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#Re-usable-model-server-repository" class="md-nav__link">Re-usable model server repository</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#Set-up" class="md-nav__link">Set up</a>
+        </li>
+        <li class="md-nav__item"><a href="#Use-cases" class="md-nav__link">Use cases</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#Diving-into-our-CI/CD-Pipeline" class="md-nav__link">Diving into our CI/CD Pipeline</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#Replicable-test-and-build-environment" class="md-nav__link">Replicable test and build environment</a>
+        </li>
+        <li class="md-nav__item"><a href="#Integration-tests" class="md-nav__link">Integration tests</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#Add-integration-stage-to-Jenkins" class="md-nav__link">Add integration stage to Jenkins</a>
+        </li>
+        <li class="md-nav__item"><a href="#Enable-Docker" class="md-nav__link">Enable Docker</a>
+        </li>
+        <li class="md-nav__item"><a href="#Run-tests-in-Kind" class="md-nav__link">Run tests in Kind</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#Promote-your-application" class="md-nav__link">Promote your application</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#Creating-a-CI/CD-pipeline" class="md-nav__link">Creating a CI/CD pipeline</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#Running-pipeline" class="md-nav__link">Running pipeline</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#Installing-Jenkins-on-your-K8s-cluster" class="md-nav__link">Installing Jenkins on your K8s cluster</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#Further-configuration" class="md-nav__link">Further configuration</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#Make-sure-plugins-are-updated" class="md-nav__link">Make sure plugins are updated</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#ArgoCD" class="md-nav__link">ArgoCD</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#Installation" class="md-nav__link">Installation</a>
+        </li>
+        <li class="md-nav__item"><a href="#Setting-up-GitOps-repository" class="md-nav__link">Setting up GitOps repository</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#Private-repositories-(optional)" class="md-nav__link">Private repositories (optional)</a>
+        </li>
+        <li class="md-nav__item"><a href="#Create-ArgoCD-projects" class="md-nav__link">Create ArgoCD projects</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/examples/jenkins_classic.nblink.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <div class="admonition note">
+<p>This page was generated from <a class="reference external" href="https://github.com/SeldonIO/seldon-core/blob/e665e4994eabf83fb43c68a5f85e96d5c45e91b5/examples/cicd/sig-mlops-jenkins-classic/jenkins_classic.ipynb">examples/cicd/sig-mlops-jenkins-classic/jenkins_classic.ipynb</a>.</p>
+</div>
+<section id="MLOps-with-Seldon-and-Jenkins-Classic">
+<h1 id="examples-jenkins-classic--page-root">MLOps with Seldon and Jenkins Classic<a class="headerlink" href="#examples-jenkins-classic--page-root" title="Permalink to this heading">¶</a></h1>
+<p>This repository shows how you can build a Jenkins Classic pipeline to enable Continuous Integration and Continuous Delivery (CI/CD) on your Machine Learning models leveraging Seldon for deployment. This CI/CD pipeline will allow you to:</p>
+<ul class="simple">
+<li><p>Run unit tests using Jenkins Classic.</p></li>
+<li><p>Run end-to-end tests for your model with KIND (Kubernetes in Docker).</p></li>
+<li><p>Promote your model as a across multiple (staging / prod) environments.</p></li>
+</ul>
+<p>To showcase these features we will implement add continuous integration and delivery to three different models. You can find these under the <code class="docutils literal notranslate"><span class="pre">/models</span></code> folder. As we shall see, each of them will require a <a class="reference internal" href="#Use-cases"><span class="std std-ref">different approach to deployment</span></a>.</p>
+<section id="CI/CD-Pipeline">
+<h2 id="CI/CD-Pipeline">CI/CD Pipeline<a class="headerlink" href="#CI/CD-Pipeline" title="Permalink to this heading">¶</a></h2>
+<p>The diagram below provides a high level overview of the CI/CD pipeline. It includes an overview of all the different types of repositories, together with the stakeholders that are the primary contributors of each, as well as the Kubernetes environments in which the applications are deployed.</p>
+<p>The key pieces to note on the diagram are:</p>
+<ul class="simple">
+<li><p>There are different types of environments with different restrictions and behaviours, e.g. staging and production.</p></li>
+<li><p>It’s possible to have more than one environment for each type (as the type is just what would give it a specific type of config/behaviour).</p></li>
+<li><p>The environments are by default in the same cluster (as namespaces), however it’s also possible to configure them across different clusters.</p></li>
+<li><p>Each of the green boxes is a single repository, but it can also have a mono-repo approach, whereby each of the white boxes is a folder within a repo.</p></li>
+</ul>
+<p><img alt="CI/CD Pipeline" src="../_images/pipeline-architecture.jpg"/></p>
+<section id="Model-implementation-repository">
+<h3 id="Model-implementation-repository">Model implementation repository<a class="headerlink" href="#Model-implementation-repository" title="Permalink to this heading">¶</a></h3>
+<p>From a high-level point of view, when a model implementation repository is updated by a Data Scientist or ML Engineer, the Jenkins CI will push changes to the <a class="reference internal" href="#GitOps-repository"><span class="std std-ref">GitOps repository</span></a>. This enables the following workflow:</p>
+<ol class="arabic simple">
+<li><p>A Data Scientist or ML Engineer trains a new model.</p></li>
+<li><p>The Data Scientist or ML Engineer pushes the updated configuration to the model implementation repository.</p></li>
+<li><p>The CI tool automatically builds and tests the model implementation.</p></li>
+<li><p>The CI tool automatically pushes the change into the GitOps staging repository.</p></li>
+<li><p>The CI tool automatically opens a PR into the GitOps production repository.</p></li>
+</ol>
+<p>One key point to highlight which may not be obvious by just looking at the diagram is that in this phase of model implementation, the example above showcases how we can leverage a re-usable model server - that is, reusing a pre-built docker image instead of building one every time. If there are more custom requirements, the user is in full control of the steps performed by the CI Platform Jenkins. This means that it is also possible to build s2i wrapped components which may require training the
+image every time.</p>
+<p>To gain a better understanding of how the CI/CD pipeline is implemented on each model implementation repository you can check the documented deep dive.</p>
+<section id="Why-a-new-repo-for-every-model?">
+<h4 id="Why-a-new-repo-for-every-model?">Why a new repo for every model?<a class="headerlink" href="#Why-a-new-repo-for-every-model?" title="Permalink to this heading">¶</a></h4>
+<p>A new model implementation repo is currently created because it provides us with a way to separate the “Model Deployment” phase and the “Model Training/Experimentation” phase, and allows us to use the repo as the integration between any frameworks that can serve as sources of models (MLFlow, Kubeflow, Spark, etc). The repo is able to store any metadata, IDs, and configuration files required, and is processed through the CI pipeline every time it is modified.</p>
+</section>
+<section id="Building-a-docker-image-in-model-implementation-repository">
+<h4 id="Building-a-docker-image-in-model-implementation-repository">Building a docker image in model implementation repository<a class="headerlink" href="#Building-a-docker-image-in-model-implementation-repository" title="Permalink to this heading">¶</a></h4>
+<p>Whilst most of the times users of this approach will be leveraging re-usable model servers such as the SKLearn model server, it is also possible to build a docker image every single time (i.e. build a non-reusable model every time a model changes). This can be be done by adding the relevant steps which would most often include the s2i utility. This may be desired if there are non-standard linux libraries or non-standard depdencies that need to be re-installed every time.</p>
+</section>
+</section>
+<section id="GitOps-repository">
+<h3 id="GitOps-repository">GitOps repository<a class="headerlink" href="#GitOps-repository" title="Permalink to this heading">¶</a></h3>
+<p>The state of each of our environments (e.g. production or staging) is stored on a GitOps repository. This repository contains all the different Kubernetes resources that have been deployed to each cluster. It is linked through <a class="reference internal" href="#ArgoCD"><span class="std std-ref">ArgoCD</span></a> to each of our Kubernetes clusters (or namespaces) so that a change in the repository triggers an update of our environment.</p>
+<p>When the deployment configuration of a machine learning model implementation is updated, this will automatically make the changes available through a PR to the respective manager/tech-lead/approver. This step will enable the end to end machine learning model promotion to be reviewed and approved by the respective individual.</p>
+<p>The manager/tech-lead will have to approve the PR before it can be merged. Once it’s approved, it will be merged into the GitOps repo, which will immediately trigger the update in the production namespace/cluster.</p>
+<p>You can see an example of a GitOps repository in the <a class="reference external" href="https://github.com/SeldonIO/seldon-gitops">SeldonIO/seldon-gitops</a> repository.</p>
+<section id="Re-usable-model-server-repository">
+<h4 id="Re-usable-model-server-repository">Re-usable model server repository<a class="headerlink" href="#Re-usable-model-server-repository" title="Permalink to this heading">¶</a></h4>
+<p>If there is a need for a new reusable model server, then it’s possible to do so by creating a repository which would follow a different path. This would be different to the model implementation repository as it would only be built once in a while, whilst the model server would be built multiple times.</p>
+</section>
+</section>
+<section id="Set-up">
+<h3 id="Set-up">Set up<a class="headerlink" href="#Set-up" title="Permalink to this heading">¶</a></h3>
+<p>As a pre-requisite you need to ensure that have access to a Kubernetes cluster. In particular, this guide requires the following pre-requisites:</p>
+<ul class="simple">
+<li><p>A Kubernetes cluster running v1.13+.</p></li>
+<li><p>Jenkins Classic installed in your cluster. You can find instructions on how to install and configure it on the <a class="reference internal" href="#Installing-Jenkins-on-your-K8s-cluster"><span class="std std-ref">Installing Jenkins on your K8s cluster</span></a> section.</p></li>
+<li><p>Seldon Core v0.5.1 installed in your cluster.</p></li>
+</ul>
+</section>
+<section id="Use-cases">
+<h3 id="Use-cases">Use cases<a class="headerlink" href="#Use-cases" title="Permalink to this heading">¶</a></h3>
+<p>This guide goes through three different methods to build and deploy your model. Each of these can be found under the <code class="docutils literal notranslate"><span class="pre">./models/</span></code> of this repository.</p>
+<ul class="simple">
+<li><p>Using Seldon pre-built re-usable model servers (<code class="docutils literal notranslate"><span class="pre">./models/news_classifier</span></code>).</p></li>
+<li><p>Using custom re-usable servers (<code class="docutils literal notranslate"><span class="pre">./models/images_classifier</span></code>).</p></li>
+<li><p>Using custom servers with an embedded model.</p></li>
+</ul>
+</section>
+</section>
+<section id="Diving-into-our-CI/CD-Pipeline">
+<h2 id="Diving-into-our-CI/CD-Pipeline">Diving into our CI/CD Pipeline<a class="headerlink" href="#Diving-into-our-CI/CD-Pipeline" title="Permalink to this heading">¶</a></h2>
+<p>On this section we will dive into the internals of the CI/CD pipeline for our <a class="reference internal" href="#Model-implementation-repository"><span class="std std-ref">model implementation repositories</span></a>. This includes a detailed description of the <code class="docutils literal notranslate"><span class="pre">Jenkinsfile</span></code>, as well as a look into our suggested testing methodology.</p>
+<p>Note that this will cover a generic example. However, as we shall see, specialising this approach into any of our <a class="reference internal" href="#Use-cases"><span class="std std-ref">three main use cases</span></a> will be straightforward.</p>
+<p>We leverage <a class="reference external" href="https://jenkins.io/doc/book/pipeline/">Jenkins Pipelines</a> in order to run our continuous integration and delivery automation. From a high-level point of view, the pipeline configuration will be responsible for:</p>
+<ul class="simple">
+<li><p>Define a <strong>replicable</strong> test and build environment.</p></li>
+<li><p>Run the unit and integration tests (if applicable).</p></li>
+<li><p>Promote the application into our staging and production environments.</p></li>
+</ul>
+<p>We can see a <code class="docutils literal notranslate"><span class="pre">Jenkinsfile</span></code> below taken from the <code class="docutils literal notranslate"><span class="pre">./models/news_classifier</span></code> example. This <code class="docutils literal notranslate"><span class="pre">Jenkinsfile</span></code> defines a pipeline which takes into account all of the points mentioned above. The following sections will dive into each of the sections in a much higher detail.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%writefile</span> ./models/news_classifier/Jenkinsfile
+<span class="n">pipeline</span> <span class="p">{</span>
+  <span class="n">agent</span> <span class="p">{</span>
+    <span class="n">kubernetes</span> <span class="p">{</span>
+      <span class="n">defaultContainer</span> <span class="s1">'core-builder'</span>
+      <span class="n">yamlFile</span> <span class="s1">'models/news_classifier/podTemplate.yaml'</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="n">stages</span> <span class="p">{</span>
+    <span class="n">stage</span><span class="p">(</span><span class="s1">'Test'</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">steps</span> <span class="p">{</span>
+        <span class="n">sh</span> <span class="s1">'''</span>
+<span class="s1">          cd models/news_classifier</span>
+<span class="s1">          make install_dev test</span>
+<span class="s1">        '''</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="n">stage</span><span class="p">(</span><span class="s1">'Test integration'</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">steps</span> <span class="p">{</span>
+        <span class="n">sh</span> <span class="s1">'''</span>
+<span class="s1">          cd models/news_classifier</span>
+<span class="s1">          ./integration/kind_test_all.sh</span>
+<span class="s1">        '''</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="n">stage</span><span class="p">(</span><span class="s1">'Promote application'</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">steps</span> <span class="p">{</span>
+        <span class="n">withCredentials</span><span class="p">([[</span><span class="err">$</span><span class="n">class</span><span class="p">:</span> <span class="s1">'UsernamePasswordMultiBinding'</span><span class="p">,</span>
+              <span class="n">credentialsId</span><span class="p">:</span> <span class="s1">'github-access'</span><span class="p">,</span>
+              <span class="n">usernameVariable</span><span class="p">:</span> <span class="s1">'GIT_USERNAME'</span><span class="p">,</span>
+              <span class="n">passwordVariable</span><span class="p">:</span> <span class="s1">'GIT_PASSWORD'</span><span class="p">]])</span> <span class="p">{</span>
+          <span class="n">sh</span> <span class="s1">'''</span>
+<span class="s1">            cd models/news_classifier</span>
+<span class="s1">            ./promote_application.sh</span>
+<span class="s1">          '''</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+  <span class="p">}</span>
+<span class="p">}</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Overwriting ./models/news_classifier/Jenkinsfile
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%writefile</span> ./models/news_classifier/podTemplate.yaml
+<span class="n">apiVersion</span><span class="p">:</span> <span class="n">v1</span>
+<span class="n">kind</span><span class="p">:</span> <span class="n">Pod</span>
+<span class="n">metadata</span><span class="p">:</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">test</span><span class="o">-</span><span class="n">pod</span>
+<span class="n">spec</span><span class="p">:</span>
+  <span class="n">containers</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">core</span><span class="o">-</span><span class="n">builder</span>
+    <span class="n">image</span><span class="p">:</span> <span class="n">seldonio</span><span class="o">/</span><span class="n">core</span><span class="o">-</span><span class="n">builder</span><span class="p">:</span><span class="mf">0.8</span>
+    <span class="n">resources</span><span class="p">:</span>
+      <span class="n">limits</span><span class="p">:</span>
+        <span class="n">cpu</span><span class="p">:</span> <span class="mi">500</span><span class="n">m</span>
+        <span class="n">memory</span><span class="p">:</span> <span class="mi">1500</span><span class="n">Mi</span>
+        <span class="n">ephemeral</span><span class="o">-</span><span class="n">storage</span><span class="p">:</span> <span class="s2">"15Gi"</span>
+      <span class="n">requests</span><span class="p">:</span>
+        <span class="n">cpu</span><span class="p">:</span> <span class="mi">200</span><span class="n">m</span>
+        <span class="n">memory</span><span class="p">:</span> <span class="mi">1500</span><span class="n">Mi</span>
+        <span class="n">ephemeral</span><span class="o">-</span><span class="n">storage</span><span class="p">:</span> <span class="s2">"15Gi"</span>
+    <span class="n">securityContext</span><span class="p">:</span>
+      <span class="n">privileged</span><span class="p">:</span> <span class="n">true</span>
+    <span class="n">tty</span><span class="p">:</span> <span class="n">true</span>
+    <span class="n">volumeMounts</span><span class="p">:</span>
+      <span class="o">-</span> <span class="n">mountPath</span><span class="p">:</span> <span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">modules</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">modules</span>
+        <span class="n">readOnly</span><span class="p">:</span> <span class="n">true</span>
+      <span class="o">-</span> <span class="n">mountPath</span><span class="p">:</span> <span class="o">/</span><span class="n">sys</span><span class="o">/</span><span class="n">fs</span><span class="o">/</span><span class="n">cgroup</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">cgroup</span>
+      <span class="o">-</span> <span class="n">mountPath</span><span class="p">:</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">docker</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">dind</span><span class="o">-</span><span class="n">storage</span>
+  <span class="n">volumes</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">modules</span>
+    <span class="n">hostPath</span><span class="p">:</span>
+      <span class="n">path</span><span class="p">:</span> <span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">modules</span>
+  <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">cgroup</span>
+    <span class="n">hostPath</span><span class="p">:</span>
+      <span class="n">path</span><span class="p">:</span> <span class="o">/</span><span class="n">sys</span><span class="o">/</span><span class="n">fs</span><span class="o">/</span><span class="n">cgroup</span>
+  <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">dind</span><span class="o">-</span><span class="n">storage</span>
+    <span class="n">emptyDir</span><span class="p">:</span> <span class="p">{}</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Overwriting ./models/news_classifier/podTemplate.yaml
+</pre></div></div>
+</div>
+<section id="Replicable-test-and-build-environment">
+<h3 id="Replicable-test-and-build-environment">Replicable test and build environment<a class="headerlink" href="#Replicable-test-and-build-environment" title="Permalink to this heading">¶</a></h3>
+<p>In order to ensure that our test environments are versioned and replicable, we make use of the <a class="reference external" href="https://github.com/jenkinsci/kubernetes-plugin">Jenkins Kubernetes plugin</a>. This will allow us to create a Docker image with all the necessary tools for testing and building our models. Using this image, we will then spin up a separate pod, where all our build instructions will be ran. We will use the <code class="docutils literal notranslate"><span class="pre">podTemplate()</span></code> object in the Jenkins Pipeline configuration to define the requirements of this
+pod</p>
+<p>Since it leverages Kubernetes underneath, this also ensure that our CI/CD pipelines are easily scalable.</p>
+</section>
+<section id="Integration-tests">
+<h3 id="Integration-tests">Integration tests<a class="headerlink" href="#Integration-tests" title="Permalink to this heading">¶</a></h3>
+<p>Now that we have a model that we want to be able to deploy, we want to make sure that we run end-to-end tests on that model to make sure everything works as expected. For this we will leverage the same framework that the Kubernetes team uses to test Kubernetes itself: <a class="reference external" href="https://kind.sigs.k8s.io/">KIND</a>.</p>
+<p>KIND stands for Kubernetes-in-Docker, and is used to isolate a Kubernetes environent for end-to-end tests. In our case, we will use this isolated environment to test our model.</p>
+<p>The steps we’ll have to carry out include:</p>
+<ol class="arabic simple">
+<li><p>Enable Docker within your CI/CD pod.</p></li>
+<li><p>Add an integration test stage.</p></li>
+<li><p>Leverage the <code class="docutils literal notranslate"><span class="pre">kind_test_all.sh</span></code> script that creates a KIND cluster and runs the tests.</p></li>
+</ol>
+<section id="Add-integration-stage-to-Jenkins">
+<h4 id="Add-integration-stage-to-Jenkins">Add integration stage to Jenkins<a class="headerlink" href="#Add-integration-stage-to-Jenkins" title="Permalink to this heading">¶</a></h4>
+<p>We can leverage Jenkins Pipelines to manage the different stages of our CI/CD pipeline. In particular, to add an integration stage, we can use the <code class="docutils literal notranslate"><span class="pre">stage()</span></code> object:</p>
+<div class="highlight-groovy notranslate"><div class="highlight"><pre><span></span><span class="n">stage</span><span class="o">(</span><span class="s1">'Test integration'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">sh</span><span class="w"> </span><span class="s1">'''</span>
+<span class="s1">      cd models/news_classifier</span>
+<span class="s1">      ./integration/kind_test_all.sh</span>
+<span class="s1">    '''</span>
+<span class="w">  </span><span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</section>
+<section id="Enable-Docker">
+<h4 id="Enable-Docker">Enable Docker<a class="headerlink" href="#Enable-Docker" title="Permalink to this heading">¶</a></h4>
+<p>To test our models, we will need to build their respective containers, for which we will need Docker.</p>
+<p>In order to do so, we will first need to mount a few volumes into the CI/CD container. These basically consist of the core components that docker will need to be able to run. To mount them we will add these entries into the <code class="docutils literal notranslate"><span class="pre">podTemplate.yaml</span></code> file.</p>
+<p>Please also note that we set container to run in <code class="docutils literal notranslate"><span class="pre">privileged</span></code> mode.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">ApiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nn">...</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">containers</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">core-builder</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="w">    </span><span class="nt">securityContext</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">privileged</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="w">    </span><span class="nt">volumeMounts</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/lib/modules</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">modules</span>
+<span class="w">        </span><span class="nt">readOnly</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/sys/fs/cgroup</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cgroup</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/var/lib/docker</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dind-storage</span>
+<span class="w">  </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">modules</span>
+<span class="w">    </span><span class="nt">hostPath</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/lib/modules</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cgroup</span>
+<span class="w">    </span><span class="nt">hostPath</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/sys/fs/cgroup</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dind-storage</span>
+<span class="w">    </span><span class="nt">emptyDir</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+</pre></div>
+</div>
+</section>
+<section id="Run-tests-in-Kind">
+<h4 id="Run-tests-in-Kind">Run tests in Kind<a class="headerlink" href="#Run-tests-in-Kind" title="Permalink to this heading">¶</a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">kind_run_all.sh</span></code> may seem complicated at first, but it’s actually quite simple. All the script does is set-up a kind cluster with all dependencies, deploy the model and clean everything up. Let’s break down each of the components within the script.</p>
+<p>We first start the docker daemon and wait until Docker is running (using <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">ps</span> <span class="pre">q</span></code> for guidance.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1">## FIRST WE START THE DOCKER DAEMON</span>
+service<span class="w"> </span>docker<span class="w"> </span>start
+<span class="c1">## the service can be started but the docker socket not ready, wait for ready</span>
+<span class="nv">WAIT_N</span><span class="o">=</span><span class="m">0</span>
+<span class="k">while</span><span class="w"> </span>true<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">    </span><span class="c1"># docker ps -q should only work if the daemon is ready</span>
+<span class="w">    </span>docker<span class="w"> </span>ps<span class="w"> </span>-q<span class="w"> </span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="k">break</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="si">${</span><span class="nv">WAIT_N</span><span class="si">}</span><span class="w"> </span>-lt<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="nv">WAIT_N</span><span class="o">=</span><span class="k">$((</span><span class="nv">WAIT_N</span><span class="o">+</span><span class="m">1</span><span class="k">))</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"[SETUP] Waiting for Docker to be ready, sleeping for </span><span class="si">${</span><span class="nv">WAIT_N</span><span class="si">}</span><span class="s2"> seconds ..."</span>
+<span class="w">        </span>sleep<span class="w"> </span><span class="si">${</span><span class="nv">WAIT_N</span><span class="si">}</span>
+<span class="w">    </span><span class="k">else</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"[SETUP] Reached maximum attempts, not waiting any longer ..."</span>
+<span class="w">        </span><span class="k">break</span>
+<span class="w">    </span><span class="k">fi</span>
+<span class="k">done</span>
+</pre></div>
+</div>
+<p>Once we’re running a docker daemon, we can run the command to create our KIND cluster, and install all the components. This will set up a Kubernetes cluster using the docker daemon (using containers as Nodes), and then install Ambassador + Seldon Core.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1">########################################</span>
+<span class="c1">## AVOID EXIT ON ERROR FOR FOLLOWING CMDS</span>
+<span class="nb">set</span><span class="w"> </span>+o<span class="w"> </span>errexit
+
+<span class="c1">## START CLUSTER</span>
+make<span class="w"> </span>kind_create_cluster
+<span class="nv">KIND_EXIT_VALUE</span><span class="o">=</span><span class="nv">$?</span>
+
+<span class="c1">## Ensure we reach the kubeconfig path</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">KUBECONFIG</span><span class="o">=</span><span class="k">$(</span>kind<span class="w"> </span>get<span class="w"> </span>kubeconfig-path<span class="k">)</span>
+
+<span class="c1">## ONLY RUN THE FOLLOWING IF SUCCESS</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="si">${</span><span class="nv">KIND_EXIT_VALUE</span><span class="si">}</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="c1"># KIND CLUSTER SETUP</span>
+<span class="w">    </span>make<span class="w"> </span>kind_setup
+<span class="w">    </span><span class="nv">SETUP_EXIT_VALUE</span><span class="o">=</span><span class="nv">$?</span>
+</pre></div>
+</div>
+<p>We can now run the tests; for this we run all the dev installations and kick off our tests (which we’ll add inside of the integration folder).</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="c1"># BUILD S2I BASE IMAGES</span>
+<span class="w">    </span>make<span class="w"> </span>build
+<span class="w">    </span><span class="nv">S2I_EXIT_VALUE</span><span class="o">=</span><span class="nv">$?</span>
+
+<span class="w">    </span><span class="c1">## INSTALL ALL REQUIRED DEPENDENCIES</span>
+<span class="w">    </span>make<span class="w"> </span>install_integration_dev
+<span class="w">    </span><span class="nv">INSTALL_EXIT_VALUE</span><span class="o">=</span><span class="nv">$?</span>
+
+<span class="w">    </span><span class="c1">## RUNNING TESTS AND CAPTURING ERROR</span>
+<span class="w">    </span>make<span class="w"> </span><span class="nb">test</span>
+<span class="w">    </span><span class="nv">TEST_EXIT_VALUE</span><span class="o">=</span><span class="nv">$?</span>
+<span class="k">fi</span>
+</pre></div>
+</div>
+<p>Finally we just clean everything, including the cluster, the containers and the docker daemon.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1">## DELETE KIND CLUSTER</span>
+make<span class="w"> </span>kind_delete_cluster
+<span class="nv">DELETE_EXIT_VALUE</span><span class="o">=</span><span class="nv">$?</span>
+
+<span class="c1">########################################</span>
+<span class="c1">## EXIT STOPS COMMANDS FROM HERE ONWARDS</span>
+<span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>errexit
+
+<span class="c1">## CLEANING DOCKER</span>
+docker<span class="w"> </span>ps<span class="w"> </span>-aq<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>-r<span class="w"> </span>docker<span class="w"> </span>rm<span class="w"> </span>-f<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
+service<span class="w"> </span>docker<span class="w"> </span>stop<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="Promote-your-application">
+<h3 id="Promote-your-application">Promote your application<a class="headerlink" href="#Promote-your-application" title="Permalink to this heading">¶</a></h3>
+<p>After running our integration tests, the last step is to promote our model to our staging and production environments. For that, we will leverage our <a class="reference internal" href="#GitOps-repository"><span class="std std-ref">GitOps repository</span></a> where the state of each environment is stored.</p>
+<p>In particular, we will:</p>
+<ul class="simple">
+<li><p>Push a change to the staging GitOps repository, which will update the staging environment instantly.</p></li>
+<li><p>Submit a PR to the production GitOps repository, which will wait for a Tech Lead / Manager approval.</p></li>
+</ul>
+<p>This will be handled by the <code class="docutils literal notranslate"><span class="pre">promote_application.sh</span></code> script, which can be seen below.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%writefile</span> ./models/news_classifier/promote_application.sh
+<span class="c1">##!/bin/bash</span>
+
+<span class="c1">## ENSURE WE ARE IN THE DIR OF SCRIPT</span>
+<span class="n">cd</span> <span class="o">-</span><span class="n">P</span> <span class="o">--</span> <span class="s2">"$(dirname -- "</span><span class="err">$</span><span class="mi">0</span><span class="s2">")"</span>
+<span class="c1">## SO WE CAN MOVE RELATIVE TO THE ACTUAL BASE DIR</span>
+
+<span class="n">export</span> <span class="n">GITOPS_REPO</span><span class="o">=</span><span class="s2">"seldon-gitops"</span>
+<span class="n">export</span> <span class="n">GITOPS_ORG</span><span class="o">=</span><span class="s2">"adriangonz"</span>
+<span class="n">export</span> <span class="n">STAGING_FOLDER</span><span class="o">=</span><span class="s2">"staging"</span>
+<span class="n">export</span> <span class="n">PROD_FOLDER</span><span class="o">=</span><span class="s2">"production"</span>
+
+<span class="c1">## This is the user that is going to be assigned to PRs</span>
+<span class="n">export</span> <span class="n">GIT_MANAGER</span><span class="o">=</span><span class="s2">"adriangonz"</span>
+
+<span class="n">export</span> <span class="n">UUID</span><span class="o">=</span><span class="err">$</span><span class="p">(</span><span class="n">cat</span> <span class="o">/</span><span class="n">proc</span><span class="o">/</span><span class="n">sys</span><span class="o">/</span><span class="n">kernel</span><span class="o">/</span><span class="n">random</span><span class="o">/</span><span class="n">uuid</span><span class="p">)</span>
+
+<span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="err">$</span><span class="p">{</span><span class="n">GIT_USERNAME</span><span class="p">}:</span><span class="err">$</span><span class="p">{</span><span class="n">GIT_PASSWORD</span><span class="p">}</span><span class="nd">@github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="err">$</span><span class="p">{</span><span class="n">GITOPS_ORG</span><span class="p">}</span><span class="o">/</span><span class="err">$</span><span class="p">{</span><span class="n">GITOPS_REPO</span><span class="p">}</span>
+
+<span class="n">cd</span> <span class="err">$</span><span class="p">{</span><span class="n">GITOPS_REPO</span><span class="p">}</span>
+<span class="n">cp</span> <span class="o">-</span><span class="n">r</span> <span class="o">../</span><span class="n">charts</span><span class="o">/*</span> <span class="err">$</span><span class="p">{</span><span class="n">STAGING_FOLDER</span><span class="p">}</span><span class="o">/.</span>
+<span class="n">ls</span> <span class="err">$</span><span class="p">{</span><span class="n">STAGING_FOLDER</span><span class="p">}</span>
+
+<span class="c1">## Check if any modifications identified</span>
+<span class="n">git</span> <span class="n">add</span> <span class="o">-</span><span class="n">N</span> <span class="err">$</span><span class="p">{</span><span class="n">STAGING_FOLDER</span><span class="p">}</span><span class="o">/</span>
+<span class="n">git</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">pager</span> <span class="n">diff</span> <span class="o">--</span><span class="n">exit</span><span class="o">-</span><span class="n">code</span> <span class="o">--</span><span class="n">name</span><span class="o">-</span><span class="n">only</span> <span class="n">origin</span><span class="o">/</span><span class="n">master</span> <span class="err">$</span><span class="p">{</span><span class="n">STAGING_FOLDER</span><span class="p">}</span>
+<span class="n">STAGING_MODIFIED</span><span class="o">=</span><span class="err">$?</span>
+<span class="k">if</span> <span class="p">[[</span> <span class="err">$</span><span class="n">STAGING_MODIFIED</span> <span class="o">-</span><span class="n">eq</span> <span class="mi">0</span> <span class="p">]];</span> <span class="n">then</span>
+  <span class="n">echo</span> <span class="s2">"Staging env not modified"</span>
+  <span class="n">exit</span> <span class="mi">0</span>
+<span class="n">fi</span>
+
+<span class="c1">## Adding changes to staging repo automatically</span>
+<span class="n">git</span> <span class="n">add</span> <span class="err">$</span><span class="p">{</span><span class="n">STAGING_FOLDER</span><span class="p">}</span><span class="o">/</span>
+<span class="n">git</span> <span class="n">commit</span> <span class="o">-</span><span class="n">m</span> <span class="s1">'{"Action":"Deployment created","Message":"","Author":"","Email":""}'</span>
+<span class="n">git</span> <span class="n">push</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="err">$</span><span class="p">{</span><span class="n">GIT_USERNAME</span><span class="p">}:</span><span class="err">$</span><span class="p">{</span><span class="n">GIT_PASSWORD</span><span class="p">}</span><span class="nd">@github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="err">$</span><span class="p">{</span><span class="n">GITOPS_ORG</span><span class="p">}</span><span class="o">/</span><span class="err">$</span><span class="p">{</span><span class="n">GITOPS_REPO</span><span class="p">}</span>
+
+<span class="c1">## Add PR to prod</span>
+<span class="n">cp</span> <span class="o">-</span><span class="n">r</span> <span class="o">../</span><span class="n">charts</span><span class="o">/*</span> <span class="n">production</span><span class="o">/.</span>
+
+<span class="c1">## Create branch and push</span>
+<span class="n">git</span> <span class="n">checkout</span> <span class="o">-</span><span class="n">b</span> <span class="err">$</span><span class="p">{</span><span class="n">UUID</span><span class="p">}</span>
+<span class="n">git</span> <span class="n">add</span> <span class="err">$</span><span class="p">{</span><span class="n">PROD_FOLDER</span><span class="p">}</span><span class="o">/</span>
+<span class="n">git</span> <span class="n">commit</span> <span class="o">-</span><span class="n">m</span> <span class="s1">'{"Action":"Moving deployment to production repo","Message":"","Author":"","Email":""}'</span>
+<span class="n">git</span> <span class="n">push</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="err">$</span><span class="p">{</span><span class="n">GIT_USERNAME</span><span class="p">}:</span><span class="err">$</span><span class="p">{</span><span class="n">GIT_PASSWORD</span><span class="p">}</span><span class="nd">@github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="err">$</span><span class="p">{</span><span class="n">GITOPS_ORG</span><span class="p">}</span><span class="o">/</span><span class="err">$</span><span class="p">{</span><span class="n">GITOPS_REPO</span><span class="p">}</span> <span class="err">$</span><span class="p">{</span><span class="n">UUID</span><span class="p">}</span>
+
+<span class="c1">## Create pull request</span>
+<span class="n">export</span> <span class="n">PR_RESULT</span><span class="o">=</span><span class="err">$</span><span class="p">(</span><span class="n">curl</span> \
+  <span class="o">-</span><span class="n">u</span> <span class="err">$</span><span class="p">{</span><span class="n">GIT_USERNAME</span><span class="p">}:</span><span class="err">$</span><span class="p">{</span><span class="n">GIT_PASSWORD</span><span class="p">}</span> \
+  <span class="o">-</span><span class="n">v</span> <span class="o">-</span><span class="n">H</span> <span class="s2">"Content-Type: application/json"</span> \
+  <span class="o">-</span><span class="n">X</span> <span class="n">POST</span> <span class="o">-</span><span class="n">d</span> <span class="s2">"{</span><span class="se">\"</span><span class="s2">title</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">SeldonDeployment Model Promotion Request - UUID: $</span><span class="si">{UUID}</span><span class="se">\"</span><span class="s2">, </span><span class="se">\"</span><span class="s2">body</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">This PR contains the deployment for the Seldon Deploy model and has been allocated for review and approval for relevant manager.</span><span class="se">\"</span><span class="s2">, </span><span class="se">\"</span><span class="s2">head</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">$</span><span class="si">{UUID}</span><span class="se">\"</span><span class="s2">, </span><span class="se">\"</span><span class="s2">base</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">master</span><span class="se">\"</span><span class="s2"> }"</span> \
+  <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">api</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">repos</span><span class="o">/</span><span class="err">$</span><span class="n">GITOPS_ORG</span><span class="o">/</span><span class="err">$</span><span class="n">GITOPS_REPO</span><span class="o">/</span><span class="n">pulls</span><span class="p">)</span>
+<span class="n">export</span> <span class="n">ISSUE_NUMBER</span><span class="o">=</span><span class="err">$</span><span class="p">(</span><span class="n">echo</span> \
+  <span class="err">$</span><span class="n">PR_RESULT</span> <span class="o">|</span>
+  <span class="n">python</span> <span class="o">-</span><span class="n">c</span> <span class="s1">'import json,sys;obj=json.load(sys.stdin);print(obj["number"])'</span><span class="p">)</span>
+
+<span class="c1">## Assign PR to relevant user</span>
+<span class="n">curl</span> \
+  <span class="o">-</span><span class="n">u</span> <span class="err">$</span><span class="p">{</span><span class="n">GIT_USERNAME</span><span class="p">}:</span><span class="err">$</span><span class="p">{</span><span class="n">GIT_PASSWORD</span><span class="p">}</span> \
+  <span class="o">-</span><span class="n">v</span> <span class="o">-</span><span class="n">H</span> <span class="s2">"Content-Type: application/json"</span> \
+  <span class="o">-</span><span class="n">X</span> <span class="n">POST</span> <span class="o">-</span><span class="n">d</span> <span class="s2">"{</span><span class="se">\"</span><span class="s2">assignees</span><span class="se">\"</span><span class="s2">: [</span><span class="se">\"</span><span class="s2">$</span><span class="si">{GIT_MANAGER}</span><span class="se">\"</span><span class="s2">] }"</span> \
+  <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">api</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">repos</span><span class="o">/</span><span class="err">$</span><span class="n">GITOPS_ORG</span><span class="o">/</span><span class="err">$</span><span class="n">GITOPS_REPO</span><span class="o">/</span><span class="n">issues</span><span class="o">/</span><span class="err">$</span><span class="n">ISSUE_NUMBER</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Overwriting ./models/news_classifier/promote_application.sh
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="Creating-a-CI/CD-pipeline">
+<h2 id="Creating-a-CI/CD-pipeline">Creating a CI/CD pipeline<a class="headerlink" href="#Creating-a-CI/CD-pipeline" title="Permalink to this heading">¶</a></h2>
+<p>In order to add a pipeline to Jenkins, you just have to go to the “Manage Jenkins” configuration dashboard, and click on “New Item” to create a new pipeline.</p>
+<p><img alt="New Item" src="../_images/new-item.png"/></p>
+<p>In the first menu, we’ll add a name. For example, we can create a new pipeline with name <code class="docutils literal notranslate"><span class="pre">news_classifier</span></code>. We will then be able to add the specific details. Most of these will remain on “default”, but we will need to change a couple of them to add a GitHub trigger, Docker access and to point to the right folder within the repository.</p>
+<p>Firstly, we will change the following:</p>
+<ul class="simple">
+<li><p>GitHub hook trigger for GITScm polling.</p></li>
+<li><p>Tick “This project is parameterised”, and then when you see the next dialog:</p>
+<ul>
+<li><p>Click on the “Add parameter” dropdown, and select “Credential Parameter”.</p></li>
+<li><p>This will open yet another box, where you want to provide the following details:</p>
+<ul>
+<li><p>name: <code class="docutils literal notranslate"><span class="pre">docker-access</span></code></p></li>
+<li><p>Credential type “Username and Password”</p></li>
+<li><p>Tick: required</p></li>
+<li><p>Default value: Click on the “Add” dropdown, and then on “Jenkins provider”:</p>
+<ul>
+<li><p>This has opened another dialog box, where you want to add your docker credentials.</p></li>
+<li><p>For this you need to make sure that the current selected option is “Username and Password”.</p></li>
+<li><p>There you have to enter your Docker username, and for password it’s advised to use a Docker API Key.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img alt="Pipeline Config" src="../_images/pipeline-config.png"/></p>
+<p>Lastly, we will need to point to the right <code class="docutils literal notranslate"><span class="pre">Jenkinsfile</span></code>. Note that since we are working with a monorepository, where multiple model implementations are tracked, we will need to point our pipeline to the <code class="docutils literal notranslate"><span class="pre">./models/news_classifier</span></code> folder. If we were working with a single model implementation repository, we would only need to point to the global repo.</p>
+<ul class="simple">
+<li><p>Select “Pipeline script from SCM” from dropdown.</p></li>
+<li><p>Add the repository as SCM (in this case <a class="reference external" href="https://github.com/SeldonIO/sig-mlops-jenkins-classic/">https://github.com/SeldonIO/sig-mlops-jenkins-classic/</a>)</p></li>
+<li><p>Point to the right <code class="docutils literal notranslate"><span class="pre">Jenkinsfile</span></code> under “Script Path”. In this case, <code class="docutils literal notranslate"><span class="pre">models/news_classifier/Jenkinsfile</span></code>.</p></li>
+<li><p>If needed, add credentials that will allow to access private repos.</p></li>
+</ul>
+<p><img alt="SCM Config" src="../_images/scm-config.png"/></p>
+<section id="Running-pipeline">
+<h3 id="Running-pipeline">Running pipeline<a class="headerlink" href="#Running-pipeline" title="Permalink to this heading">¶</a></h3>
+<p>In order to trigger a new build, we can do it manually by clicking on “Build with Parameters” and then on “Build” or we can just push a new change to our GitHub repo. This will take us to a view where we can see some details about each of the stages of the latest builds.</p>
+<p><img alt="Pipeline Stages" src="../_images/pipeline-stages.png"/></p>
+</section>
+</section>
+<section id="Installing-Jenkins-on-your-K8s-cluster">
+<h2 id="Installing-Jenkins-on-your-K8s-cluster">Installing Jenkins on your K8s cluster<a class="headerlink" href="#Installing-Jenkins-on-your-K8s-cluster" title="Permalink to this heading">¶</a></h2>
+<p>If you already have access to a cluster but which doesn’t have Jenkins installed, you can do so easily using Helm. In particular, you will need to run the following:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+helm<span class="w"> </span>install<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--name<span class="w"> </span><span class="s2">"jenkins"</span><span class="w"> </span>stable/jenkins<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--namespace<span class="w"> </span><span class="s2">"jenkins"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--set<span class="w"> </span><span class="s2">"rbac.create=true"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--set<span class="w"> </span><span class="s2">"master.adminUser=admin"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--set<span class="w"> </span><span class="s2">"master.adminPassword=admin"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--set<span class="w"> </span><span class="s2">"master.serviceType=LoadBalancer"</span>
+</pre></div>
+</div>
+</div>
+<p>This will install Jenkins and all the required services in the cluster. To get the Load Balancer where it can be accessed you can run:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>jenkins<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>jenkins
+</pre></div>
+</div>
+</div>
+<section id="Further-configuration">
+<h3 id="Further-configuration">Further configuration<a class="headerlink" href="#Further-configuration" title="Permalink to this heading">¶</a></h3>
+<p>If you wish to set up automated pipeline triggers, you will have to install the “GitHub” plugin (there are quite a few github related ones but the one you want is the one called plainly “GitHub”, which then will allow for triggering pipelines automatically on commit.</p>
+<ul class="simple">
+<li><p>Install the GitHub Plugin <a class="reference external" href="https://plugins.jenkins.io/github/">(for automated webhook triggers)</a>.</p></li>
+<li><p>Provide a GitHub token with read access so it can clone relevant repositories.</p></li>
+<li><p>Set-up webhooks so that GitHub can send push requests.</p></li>
+</ul>
+<p>Additionally, you will need to configure your Git’s <code class="docutils literal notranslate"><span class="pre">name</span></code> and <code class="docutils literal notranslate"><span class="pre">email</span></code> as part of Jenkins settings.</p>
+<p><img alt="Git user config" src="../_images/git-user.png"/></p>
+<section id="Make-sure-plugins-are-updated">
+<h4 id="Make-sure-plugins-are-updated">Make sure plugins are updated<a class="headerlink" href="#Make-sure-plugins-are-updated" title="Permalink to this heading">¶</a></h4>
+<p>If you try to run a pipeline and you get an error such as “No Such DSL Method”, or any strange Java exception when running a pipeline, the most probably reason is due to current plugins not being up to date.</p>
+<p>Updating your plugins can be done by going to “Manage Jenkins” -&gt; “Plugins”, and then selecct all the plugins and click “Update and load after restart”. This will take you to another screen - there you should tick the checkbox that reads “restart after plugins are downloaded and installed”.</p>
+<p>Once you update our plugins you should be ready to go.</p>
+</section>
+</section>
+</section>
+<section id="ArgoCD">
+<h2 id="ArgoCD">ArgoCD<a class="headerlink" href="#ArgoCD" title="Permalink to this heading">¶</a></h2>
+<p>A key point of this approach to MLOps relies on having a GitOps repository which gets synced with our Kubernetes cluster. To achieve this we leverage <a class="reference external" href="https://argo-cd.readthedocs.io/en/stable/">ArgoCD</a>, which will take care of setting up webhooks with your GitOps repository so that on every change it triggers a synchronisation between the resources you’ve pushed and what’s deployed on the cluster.</p>
+<section id="Installation">
+<h3 id="Installation">Installation<a class="headerlink" href="#Installation" title="Permalink to this heading">¶</a></h3>
+<p>If you don’t have it already, you can install ArgoCD following the <a class="reference external" href="https://argo-cd.readthedocs.io/en/stable/getting_started/#1-install-argo-cd">official documentation</a>:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+kubectl<span class="w"> </span>create<span class="w"> </span>namespace<span class="w"> </span>argocd
+kubectl<span class="w"> </span>apply<span class="w"> </span>-n<span class="w"> </span>argocd<span class="w"> </span>-f<span class="w"> </span>https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+</pre></div>
+</div>
+</div>
+<p>Additionally, you will need to install the accompanying CLI tool. This tool will allow you to easily link your GitOps repository taking care of the entire process. The instructions to install it will vary between different platforms. The official documentation shows the <a class="reference external" href="https://argo-cd.readthedocs.io/en/stable/cli_installation/">recommended method</a> on each of the major ones.</p>
+</section>
+<section id="Setting-up-GitOps-repository">
+<h3 id="Setting-up-GitOps-repository">Setting up GitOps repository<a class="headerlink" href="#Setting-up-GitOps-repository" title="Permalink to this heading">¶</a></h3>
+<p>To set up the GitOps repository so that it’s tracked by ArgoCD we will use the <code class="docutils literal notranslate"><span class="pre">argocd</span></code> CLI tool. We will assume that the <code class="docutils literal notranslate"><span class="pre">GITHUB_ORG</span></code> and <code class="docutils literal notranslate"><span class="pre">REPONAME</span></code> environment variables have been created and that the repository has already been created and can be found in the <code class="docutils literal notranslate"><span class="pre">https://github.com/$GITHUB_ORG/$REPONAME</span></code> url.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+<span class="nb">export</span><span class="w"> </span><span class="nv">GITHUB_ORG</span><span class="o">=</span>SeldonIO
+<span class="nb">export</span><span class="w"> </span><span class="nv">REPONAME</span><span class="o">=</span>seldon-gitops
+</pre></div>
+</div>
+</div>
+<section id="Private-repositories-(optional)">
+<h4 id="Private-repositories-(optional)">Private repositories (optional)<a class="headerlink" href="#Private-repositories-(optional)" title="Permalink to this heading">¶</a></h4>
+<p>If your repository is private, we will first need to provide the right credentials for ArgoCD to use. We can do so either using a <a class="reference external" href="https://argo-cd.readthedocs.io/en/stable/user-guide/private-repositories/#https-username-and-password-credential">user / password login</a> or using <a class="reference external" href="https://argo-cd.readthedocs.io/en/stable/user-guide/private-repositories/#tls-client-certificates-for-https-repositories">SSH keys</a>. Note that, for the former, we can also use a <a class="reference external" href="https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line">personal access
+token</a> instead of the password.</p>
+<p>As an example, we will add our GitOps repository using a personal access token. We will assume that the environment variables <code class="docutils literal notranslate"><span class="pre">GITHUB_USER</span></code> and <code class="docutils literal notranslate"><span class="pre">GITHUB_TOKEN</span></code> are set.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+<span class="nb">export</span><span class="w"> </span><span class="nv">GITHUB_USER</span><span class="o">=</span>john.doe
+<span class="nb">export</span><span class="w"> </span><span class="nv">GITHUB_TOKEN</span><span class="o">=</span><span class="m">12341234</span>
+
+argocd<span class="w"> </span>repo<span class="w"> </span>add<span class="w"> </span>https://github.com/<span class="nv">$GITHUB_ORG</span>/<span class="nv">$REPONAME</span><span class="w"> </span>--username<span class="w"> </span><span class="nv">$GITHUB_USER</span><span class="w"> </span>--password<span class="w"> </span><span class="nv">$GITHUB_TOKEN</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Create-ArgoCD-projects">
+<h4 id="Create-ArgoCD-projects">Create ArgoCD projects<a class="headerlink" href="#Create-ArgoCD-projects" title="Permalink to this heading">¶</a></h4>
+<p>The next step is to create two projects within ArgoCD to manage the staging and production environments respectively. Each of them will be linked to a folder within our GitOps repository.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+argocd<span class="w"> </span>app<span class="w"> </span>create<span class="w"> </span>seldon-staging<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--repo<span class="w"> </span>https://github.com/<span class="nv">$GITHUB_ORG</span>/<span class="nv">$REPONAME</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--path<span class="w"> </span>staging<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--dest-namespace<span class="w"> </span>staging
+argocd<span class="w"> </span>app<span class="w"> </span>create<span class="w"> </span>seldon-production<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--repo<span class="w"> </span>https://github.com/<span class="nv">$GITHUB_ORG</span>/<span class="nv">$REPONAME</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--path<span class="w"> </span>production<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--dest-namespace<span class="w"> </span>production
+</pre></div>
+</div>
+</div>
+<p>Note that we could also sync our <code class="docutils literal notranslate"><span class="pre">staging</span></code> and <code class="docutils literal notranslate"><span class="pre">production</span></code> environment differently. For example, we could have them on separate repositories or separate branches. In this case we would also need to update the <code class="docutils literal notranslate"><span class="pre">promote_application.sh</span></code> script so that it knows how it should promote the respective model between environments.</p>
+</section>
+</section>
+</section>
+</section>
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="tracing.html" title="Distributed Tracing Template"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> "Previous" </span> Distributed Tracing Template </span>
+              </div>
+            </a>
+          
+          
+            <a href="jenkins_x.html" title="End-to-end MLOps with Seldon Core and Jenkins X"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> "Next" </span> End-to-end MLOps with Seldon Core and Jenkins X </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2024, Seldon Technologies Ltd.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

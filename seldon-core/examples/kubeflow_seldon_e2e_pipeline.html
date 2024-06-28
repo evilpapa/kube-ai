@@ -1,0 +1,1767 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../_static/javascripts/modernizr.js"></script>
+  
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-54780881-2"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-54780881-2');
+</script>
+  
+  
+    <title>End-to-end Reusable ML Pipeline with Seldon and Kubeflow &#8212; seldon-core  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=83e35b93" />
+    <link rel="stylesheet" type="text/css" href="../_static/material.css?v=79c92029" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/rtd_sphinx_search.min.css?v=e72958e9" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+    <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=15a8f09d" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/rtd_search_config.js?v=b0596c34"></script>
+    <script src="../_static/js/rtd_sphinx_search.min.js?v=43f26ba4"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="H2O Model" href="h2o_mojo.html" />
+    <link rel="prev" title="Triton Examples" href="triton_examples.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=indigo data-md-color-accent=teal>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#examples/kubeflow_seldon_e2e_pipeline" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../index.html" title="seldon-core  documentation"
+           class="md-header-nav__button md-logo">
+          
+            &nbsp;
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">Seldon Core Documentation</span>
+          <span class="md-header-nav__topic"> End-to-end Reusable ML Pipeline with Seldon and Kubeflow </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder=""Search""
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+            
+            <li class="md-tabs__item"><a href="/" class="md-tabs__link">🚀 Our Other Projects & Products:</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi/en/stable/" class="md-tabs__link">Alibi Explain</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi-detect/en/stable/" class="md-tabs__link">Alibi Detect</a></li>
+            
+            <li class="md-tabs__item"><a href="https://mlserver.readthedocs.io/en/latest/" class="md-tabs__link">MLServer</a></li>
+            
+            <li class="md-tabs__item"><a href="https://tempo.readthedocs.io/en/latest/" class="md-tabs__link">Tempo SDK</a></li>
+            
+            <li class="md-tabs__item"><a href="https://deploy.seldon.io" class="md-tabs__link">Seldon Enterprise Platform</a></li>
+            
+            <li class="md-tabs__item"><a href="https://github.com/SeldonIO/seldon-deploy-sdk#seldon-deploy-sdk" class="md-tabs__link">Seldon Enterprise Platform SDK</a></li>
+          <li class="md-tabs__item"><a href="../nav/tutorials.html" class="md-tabs__link">教程</a></li>
+          <li class="md-tabs__item"><a href="notebooks.html" class="md-tabs__link">笔记本</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../index.html" title="seldon-core documentation" class="md-nav__button md-logo">
+      
+        <img src="../_static/" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../index.html"
+       title="seldon-core documentation">Seldon Core Documentation</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/getting-started.html" class="md-nav__link">开始</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/concepts.html" class="md-nav__link">概念</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/configuration.html" class="md-nav__link">配置</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/tutorials.html" class="md-nav__link">教程</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html" class="md-nav__link">笔记本</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#seldon-core" class="md-nav__link">Seldon Core 设置</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id2" class="md-nav__link">预包装推理服务示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#python" class="md-nav__link">Python 语言封装示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id3" class="md-nav__link">专门的框架示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id4" class="md-nav__link">孵化项目示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id5" class="md-nav__link">基于云的基础示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id6" class="md-nav__link">高级机器学习监控</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id7" class="md-nav__link">Seldon Core 批处理</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#mlops" class="md-nav__link">MLOps: 扩展、监控和可观察性</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id8" class="md-nav__link">生产配置及实现</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#ab" class="md-nav__link">AB 测试及渐进式部署</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id9" class="md-nav__link">复杂图示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id10" class="md-nav__link">入口</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id11" class="md-nav__link">基础设施</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id12" class="md-nav__link">基准测试和负载测试</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id13" class="md-nav__link">升级示例</a>
+      
+    
+    </li></ul>
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/reference.html" class="md-nav__link">参考</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/contributing.html" class="md-nav__link">贡献</a>
+      
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#examples-kubeflow-seldon-e2e-pipeline--page-root" class="md-nav__link">End-to-end Reusable ML Pipeline with Seldon and Kubeflow</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#Before-you-start" class="md-nav__link">Before you start</a>
+        </li>
+        <li class="md-nav__item"><a href="#1)-Test-and-build-all-our-reusable-pipeline-steps" class="md-nav__link">1) Test and build all our reusable pipeline steps</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#Let&#39;s-first-have-a-look-at-our-clean_text-step:" class="md-nav__link">Let’s first have a look at our clean_text step:</a>
+        </li>
+        <li class="md-nav__item"><a href="#Let&#39;s-check-out-the-CLI-for-clean_text" class="md-nav__link">Let’s check out the CLI for clean_text</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#3)-Train-our-NLP-Pipeline-through-the-Kubeflow-UI" class="md-nav__link">3) Train our NLP Pipeline through the Kubeflow UI</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#Define-the-pipeline" class="md-nav__link">Define the pipeline</a>
+        </li>
+        <li class="md-nav__item"><a href="#Breaking-down-the-code" class="md-nav__link">Breaking down the code</a>
+        </li>
+        <li class="md-nav__item"><a href="#Seldon-Production-pipeline-contents" class="md-nav__link">Seldon Production pipeline contents</a>
+        </li>
+        <li class="md-nav__item"><a href="#Generate-the-pipeline-files-to-upload-to-Kubeflow" class="md-nav__link">Generate the pipeline files to upload to Kubeflow</a>
+        </li>
+        <li class="md-nav__item"><a href="#Run-the-pipeline" class="md-nav__link">Run the pipeline</a>
+        </li>
+        <li class="md-nav__item"><a href="#Inspecting-the-data-created-in-the-Persistent-Volume" class="md-nav__link">Inspecting the data created in the Persistent Volume</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#5)-Test-Deployed-ML-REST-Endpoints" class="md-nav__link">5) Test Deployed ML REST Endpoints</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#Using-CURL-from-the-terminal" class="md-nav__link">Using CURL from the terminal</a>
+        </li>
+        <li class="md-nav__item"><a href="#Using-the-SeldonClient" class="md-nav__link">Using the SeldonClient</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#6)-Visualise-Seldon&#39;s-Production-ML-Pipelines" class="md-nav__link">6) Visualise Seldon’s Production ML Pipelines</a>
+        </li>
+        <li class="md-nav__item"><a href="#You-now-have-a-full-end-to-end-training-and-production-NLP-pipeline" class="md-nav__link">You now have a full end-to-end training and production NLP pipeline</a>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/examples/kubeflow_seldon_e2e_pipeline.nblink.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <div class="admonition note">
+<p>This page was generated from <a class="reference external" href="https://github.com/SeldonIO/seldon-core/blob/e665e4994eabf83fb43c68a5f85e96d5c45e91b5/examples/kubeflow/kubeflow_seldon_e2e_pipeline.ipynb">examples/kubeflow/kubeflow_seldon_e2e_pipeline.ipynb</a>.</p>
+</div>
+<section id="End-to-end-Reusable-ML-Pipeline-with-Seldon-and-Kubeflow">
+<h1 id="examples-kubeflow-seldon-e2e-pipeline--page-root">End-to-end Reusable ML Pipeline with Seldon and Kubeflow<a class="headerlink" href="#examples-kubeflow-seldon-e2e-pipeline--page-root" title="Permalink to this heading">¶</a></h1>
+<p>In this example we showcase how to build re-usable components to build an ML pipeline that can be trained and deployed at scale.</p>
+<p>We will automate content moderation on the Reddit comments in /r/science building a machine learning NLP model with the following components:</p>
+<p><img alt="completed-pipeline-deploy" src="../_images/completed-pipeline-deploy.jpg"/></p>
+<p>This tutorial will break down in the following sections:</p>
+<ol class="arabic simple">
+<li><p>Test and build all our reusable pipeline steps</p></li>
+<li><p>Use Kubeflow to Train the Pipeline and Deploy to Seldon</p></li>
+<li><p>Test Seldon Deployed ML REST Endpoints</p></li>
+<li><p>Visualise Seldon’s Production ML Pipelines</p></li>
+</ol>
+<section id="Before-you-start">
+<h2 id="Before-you-start">Before you start<a class="headerlink" href="#Before-you-start" title="Permalink to this heading">¶</a></h2>
+<p>Make sure you have the following components set-up and running in your Kubernetes cluster:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.seldon.io/projects/seldon-core/en/latest/workflow/install.html#install-seldon-core-with-helm">Seldon Core installed</a> with an <a class="reference external" href="https://docs.seldon.io/projects/seldon-core/en/latest/workflow/install.html#ingress-support">ingress (Ambassador / Istio) set up</a></p></li>
+<li><p>Kubeflow Pipelines <a class="reference external" href="https://www.kubeflow.org/docs/pipelines/installation/standalone-deployment/#deploying-kubeflow-pipelines">version 1.0.0 Standalone</a> set up</p></li>
+</ul>
+<p>Let’s get started! 🚀🔥 We will be building the end-to-end pipeline below:</p>
+<p><img alt="kubeflow-seldon-nlp-full" src="../_images/kubeflow-seldon-nlp-full.jpg"/></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%writefile</span> requirements-dev.txt
+<span class="n">python</span><span class="o">-</span><span class="n">dateutil</span><span class="o">==</span><span class="mf">2.8.1</span>
+<span class="n">kfp</span><span class="o">==</span><span class="mf">1.0.0</span>
+<span class="n">kubernetes</span><span class="o">==</span><span class="mf">11.0.0</span>
+<span class="n">click</span><span class="o">==</span><span class="mf">7.1.2</span>
+<span class="n">seldon_core</span><span class="o">==</span><span class="mf">1.2.3</span>
+<span class="n">numpy</span><span class="o">==</span><span class="mf">1.19.1</span>
+<span class="n">pandas</span><span class="o">==</span><span class="mf">1.1.1</span>
+<span class="n">spacy</span><span class="o">==</span><span class="mf">2.3.2</span>
+<span class="n">scikit</span><span class="o">-</span><span class="n">learn</span><span class="o">==</span><span class="mf">0.23.2</span>
+<span class="n">en</span><span class="o">-</span><span class="n">core</span><span class="o">-</span><span class="n">web</span><span class="o">-</span><span class="n">sm</span><span class="o">==</span><span class="mf">2.3.1</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Overwriting requirements-dev.txt
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements-dev.txt
+</pre></div>
+</div>
+</div>
+</section>
+<section id="1)-Test-and-build-all-our-reusable-pipeline-steps">
+<h2 id="1)-Test-and-build-all-our-reusable-pipeline-steps">1) Test and build all our reusable pipeline steps<a class="headerlink" href="#1)-Test-and-build-all-our-reusable-pipeline-steps" title="Permalink to this heading">¶</a></h2>
+<p>We will start by building each of the components in our ML pipeline.</p>
+<p><img alt="kubeflow-seldon-nlp-reusable-components" src="../_images/kubeflow-seldon-nlp-reusable-components.jpg"/></p>
+<section id="Let's-first-have-a-look-at-our-clean_text-step:">
+<h3 id="Let's-first-have-a-look-at-our-clean_text-step:">Let’s first have a look at our clean_text step:<a class="headerlink" href="#Let's-first-have-a-look-at-our-clean_text-step:" title="Permalink to this heading">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>ls<span class="w"> </span>pipeline/pipeline_steps
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+clean_text       lr_text_classifier  tfidf_vectorizer
+data_downloader  spacy_tokenize
+</pre></div></div>
+</div>
+<p>Like in this step, all of the other steps can be found in the <code class="docutils literal notranslate"><span class="pre">pipeline/pipeline_steps/</span></code> folder, and all have the following structure: * <code class="docutils literal notranslate"><span class="pre">pipeline_step.py</span></code> which exposes the functionality through a CLI * <code class="docutils literal notranslate"><span class="pre">Transformer.py</span></code> which transforms the data accordingly * <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> which states the python dependencies to run * <code class="docutils literal notranslate"><span class="pre">build_image.sh</span></code> which uses <code class="docutils literal notranslate"><span class="pre">s2i</span></code> to build the image with one line</p>
+</section>
+<section id="Let's-check-out-the-CLI-for-clean_text">
+<h3 id="Let's-check-out-the-CLI-for-clean_text">Let’s check out the CLI for clean_text<a class="headerlink" href="#Let's-check-out-the-CLI-for-clean_text" title="Permalink to this heading">¶</a></h3>
+<p>The pipeline_step CLI is the entry point for the kubeflow image as it will be able to pass any relevant parameters</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>python<span class="w"> </span>pipeline/pipeline_steps/clean_text/pipeline_step.py<span class="w"> </span>--help
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Usage: pipeline_step.py [OPTIONS]
+
+Options:
+  --in-path TEXT
+  --out-path TEXT
+  --help           Show this message and exit.
+</pre></div></div>
+</div>
+<p>This is actually a very simple file, as we are using the click library to define the commands:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>cat<span class="w"> </span>pipeline/pipeline_steps/clean_text/pipeline_step.py
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+import dill
+import click
+import dill
+try:
+    # Running for tests
+    from .Transformer import Transformer
+except:
+    # Running from CLI
+    from Transformer import Transformer
+
+@click.command()
+@click.option('--in-path', default="/mnt/raw_text.data")
+@click.option('--out-path', default="/mnt/clean_text.data")
+def run_pipeline(in_path, out_path):
+    clean_text_transformer = Transformer()
+    with open(in_path, 'rb') as in_f:
+        x = dill.load(in_f)
+    y = clean_text_transformer.predict(x)
+    with open(out_path, "wb") as out_f:
+        dill.dump(y, out_f)
+
+if __name__ == "__main__":
+    run_pipeline()
+
+</pre></div></div>
+</div>
+<p>The Transformer is where the data munging and transformation stage comes in, which will be wrapped by the container and exposed through the Seldon Engine to ensure our pipeline can be used in production.</p>
+<p>Seldon provides multiple different features, such as abilities to send custom metrics, pre-process / post-process data and more. In this example we will only be exposing the <code class="docutils literal notranslate"><span class="pre">predict</span></code> step.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>cat<span class="w"> </span>pipeline/pipeline_steps/clean_text/Transformer.py
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+import re
+from html.parser import HTMLParser
+import numpy as np
+import logging
+
+class Transformer():
+    __html_parser = HTMLParser()
+    __uplus_pattern = \
+        re.compile("\&lt;[uU]\+(?P&lt;digit&gt;[a-zA-Z0-9]+)\&gt;")
+    __markup_link_pattern = \
+        re.compile("\[(.*)\]\((.*)\)")
+
+    def predict(self, X, feature_names=[]):
+        logging.warning(X)
+        f = np.vectorize(Transformer.transform_clean_text)
+        X_clean = f(X)
+        logging.warning(X_clean)
+        return X_clean
+
+    def fit(self, X, y=None, **fit_params):
+        return self
+
+    @staticmethod
+    def transform_clean_text(raw_text):
+        try:
+            decoded = raw_text.encode("ISO-8859-1").decode("utf-8")
+        except:
+            decoded = raw_text.encode("ISO-8859-1").decode("cp1252")
+        html_unescaped =Transformer.\
+            __html_parser.unescape(decoded)
+        html_unescaped = re.sub(r"\r\n", " ", html_unescaped)
+        html_unescaped = re.sub(r"\r\r\n", " ", html_unescaped)
+        html_unescaped = re.sub(r"\r", " ", html_unescaped)
+        html_unescaped = html_unescaped.replace("&amp;gt;", " &gt; ")
+        html_unescaped = html_unescaped.replace("&amp;lt;", " &lt; ")
+        html_unescaped = html_unescaped.replace("--", " - ")
+        html_unescaped = Transformer.__uplus_pattern.sub(
+            " U\g&lt;digit&gt; ", html_unescaped)
+        html_unescaped = Transformer.__markup_link_pattern.sub(
+            " \1 \2 ", html_unescaped)
+        html_unescaped = html_unescaped.replace("\\", "")
+        return html_unescaped
+
+</pre></div></div>
+</div>
+<p>If you want to understand how the CLI pipeline talks to each other, have a look at the end to end test in <code class="docutils literal notranslate"><span class="pre">pipeline/pipeline_tests/</span></code>:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pytest<span class="w"> </span>./pipeline/pipeline_tests/.<span class="w"> </span>--disable-pytest-warnings
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-bold">Test session starts (platform: linux, Python 3.7.4, pytest 6.0.1, pytest-sugar 0.9.4)</span>
+rootdir: /home/alejandro/Programming/kubernetes/seldon/seldon-core/examples/kubeflow
+plugins: celery-4.4.0, flaky-3.6.1, cov-2.10.0, django-3.8.0, forked-1.1.3, sugar-0.9.4, xdist-1.30.0
+<span class="ansi-bold">collecting ... </span>
+ <span class="ansi-cyan-fg">pipeline/pipeline_tests/</span>test_pipeline.py <span class="ansi-green-fg">✓</span>                      <span class="ansi-green-fg">100% </span><span class="ansi-green-fg ansi-black-bg">█</span><span class="ansi-green-fg ansi-black-bg">█████████</span>
+
+Results (2.12s):
+<span class="ansi-green-fg">       1 passed</span>
+</pre></div></div>
+</div>
+<p>To build the image we provide a build script in each of the steps that contains the instructions:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>cat<span class="w"> </span>pipeline/pipeline_steps/clean_text/build_image.sh
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+#!/bin/bash
+
+s2i build . seldonio/seldon-core-s2i-python3:1.14.0 clean_text_transformer:0.1
+
+</pre></div></div>
+</div>
+<p>The only thing you need to make sure is that Seldon knows how to wrap the right model and file.</p>
+<p>This can be achieved with the s2i/environment file.</p>
+<p>As you can see, here we just tell it we want it to use our <code class="docutils literal notranslate"><span class="pre">Transformer.py</span></code> file:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>cat<span class="w"> </span>pipeline/pipeline_steps/clean_text/.s2i/environment
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+MODEL_NAME=Transformer
+API_TYPE=REST
+SERVICE_TYPE=MODEL
+PERSISTENCE=0
+</pre></div></div>
+</div>
+<p>Once this is defined, the only thing we need to do is to run the <code class="docutils literal notranslate"><span class="pre">build_image.sh</span></code> for all the reusable components.</p>
+<p>Here we show the manual way to do it:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+<span class="c1"># we must be in the same directory</span>
+<span class="nb">cd</span><span class="w"> </span>pipeline/pipeline_steps/clean_text/<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>./build_image.sh
+<span class="nb">cd</span><span class="w"> </span>../data_downloader<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>./build_image.sh
+<span class="nb">cd</span><span class="w"> </span>../lr_text_classifier<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>./build_image.sh
+<span class="nb">cd</span><span class="w"> </span>../spacy_tokenize<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>./build_image.sh
+<span class="nb">cd</span><span class="w"> </span>../tfidf_vectorizer<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>./build_image.sh
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Sending build context to Docker daemon  9.728kB
+Step 1/4 : FROM python:3.7-slim
+ ---&gt; d3fbf7fff365
+Step 2/4 : COPY . /microservice
+ ---&gt; Using cache
+ ---&gt; 6e9d7e162536
+Step 3/4 : WORKDIR /microservice
+ ---&gt; Using cache
+ ---&gt; b3d69a634dd1
+Step 4/4 : RUN pip install -r requirements.txt
+ ---&gt; Using cache
+ ---&gt; f1c421a68fe7
+Successfully built f1c421a68fe7
+Successfully tagged data_downloader:0.1
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+---&gt; Installing application source...
+---&gt; Installing dependencies ...
+Looking in links: /whl
+Collecting dill==0.3.2 (from -r requirements.txt (line 1))
+  WARNING: Url '/whl' is ignored. It is either a non-existing path or lacks a specific scheme.
+Downloading https://files.pythonhosted.org/packages/e2/96/518a8ea959a734b70d2e95fef98bcbfdc7adad1c1e5f5dd9148c835205a5/dill-0.3.2.zip (177kB)
+Requirement already satisfied: click==7.1.2 in /opt/conda/lib/python3.7/site-packages (from -r requirements.txt (line 2)) (7.1.2)
+Requirement already satisfied: numpy==1.19.1 in /opt/conda/lib/python3.7/site-packages (from -r requirements.txt (line 3)) (1.19.1)
+Building wheels for collected packages: dill
+Building wheel for dill (setup.py): started
+Building wheel for dill (setup.py): finished with status 'done'
+Created wheel for dill: filename=dill-0.3.2-cp37-none-any.whl size=78913 sha256=9f9ec39fffe7a46bdc1a164bc0cd8d61201f04ff0c4bfc68e7dda78d6a4c29cf
+Stored in directory: /root/.cache/pip/wheels/27/4b/a2/34ccdcc2f158742cfe9650675560dea85f78c3f4628f7daad0
+Successfully built dill
+Installing collected packages: dill
+Successfully installed dill-0.3.2
+WARNING: Url '/whl' is ignored. It is either a non-existing path or lacks a specific scheme.
+Collecting pip-licenses
+Downloading https://files.pythonhosted.org/packages/c5/50/6c4b4e69a0c43bd9f03a30579695093062ba72da4e3e4026cd2144dbcc71/pip_licenses-2.3.0-py3-none-any.whl
+Collecting PTable (from pip-licenses)
+Downloading https://files.pythonhosted.org/packages/ab/b3/b54301811173ca94119eb474634f120a49cd370f257d1aae5a4abaf12729/PTable-0.9.2.tar.gz
+Building wheels for collected packages: PTable
+Building wheel for PTable (setup.py): started
+Building wheel for PTable (setup.py): finished with status 'done'
+Created wheel for PTable: filename=PTable-0.9.2-cp37-none-any.whl size=22906 sha256=6c6c94080f12738603dbd55c01213f1c28f9922c915c92d72b547e85d229bfba
+Stored in directory: /root/.cache/pip/wheels/22/cc/2e/55980bfe86393df3e9896146a01f6802978d09d7ebcba5ea56
+Successfully built PTable
+Installing collected packages: PTable, pip-licenses
+Successfully installed PTable-0.9.2 pip-licenses-2.3.0
+created path: ./licenses/license_info.csv
+created path: ./licenses/license.txt
+Build completed successfully
+---&gt; Installing application source...
+---&gt; Installing dependencies ...
+Looking in links: /whl
+Collecting dill==0.3.2 (from -r requirements.txt (line 1))
+  WARNING: Url '/whl' is ignored. It is either a non-existing path or lacks a specific scheme.
+Downloading https://files.pythonhosted.org/packages/e2/96/518a8ea959a734b70d2e95fef98bcbfdc7adad1c1e5f5dd9148c835205a5/dill-0.3.2.zip (177kB)
+Requirement already satisfied: click==7.1.2 in /opt/conda/lib/python3.7/site-packages (from -r requirements.txt (line 2)) (7.1.2)
+Requirement already satisfied: numpy==1.19.1 in /opt/conda/lib/python3.7/site-packages (from -r requirements.txt (line 3)) (1.19.1)
+Collecting scikit-learn==0.23.2 (from -r requirements.txt (line 4))
+  WARNING: Url '/whl' is ignored. It is either a non-existing path or lacks a specific scheme.
+Downloading https://files.pythonhosted.org/packages/f4/cb/64623369f348e9bfb29ff898a57ac7c91ed4921f228e9726546614d63ccb/scikit_learn-0.23.2-cp37-cp37m-manylinux1_x86_64.whl (6.8MB)
+Collecting scipy&gt;=0.19.1 (from scikit-learn==0.23.2-&gt;-r requirements.txt (line 4))
+  WARNING: Url '/whl' is ignored. It is either a non-existing path or lacks a specific scheme.
+Downloading https://files.pythonhosted.org/packages/65/f9/f7a7e5009711579c72da2725174825e5056741bf4001815d097eef1b2e17/scipy-1.5.2-cp37-cp37m-manylinux1_x86_64.whl (25.9MB)
+Collecting joblib&gt;=0.11 (from scikit-learn==0.23.2-&gt;-r requirements.txt (line 4))
+  WARNING: Url '/whl' is ignored. It is either a non-existing path or lacks a specific scheme.
+Downloading https://files.pythonhosted.org/packages/51/dd/0e015051b4a27ec5a58b02ab774059f3289a94b0906f880a3f9507e74f38/joblib-0.16.0-py3-none-any.whl (300kB)
+Collecting threadpoolctl&gt;=2.0.0 (from scikit-learn==0.23.2-&gt;-r requirements.txt (line 4))
+  WARNING: Url '/whl' is ignored. It is either a non-existing path or lacks a specific scheme.
+Downloading https://files.pythonhosted.org/packages/f7/12/ec3f2e203afa394a149911729357aa48affc59c20e2c1c8297a60f33f133/threadpoolctl-2.1.0-py3-none-any.whl
+Building wheels for collected packages: dill
+Building wheel for dill (setup.py): started
+Building wheel for dill (setup.py): finished with status 'done'
+Created wheel for dill: filename=dill-0.3.2-cp37-none-any.whl size=78913 sha256=f4aa43d7acbc7953839cc8177c0e03bec249f9a7dffc10c7e9db79201ce519d3
+Stored in directory: /root/.cache/pip/wheels/27/4b/a2/34ccdcc2f158742cfe9650675560dea85f78c3f4628f7daad0
+Successfully built dill
+Installing collected packages: dill, scipy, joblib, threadpoolctl, scikit-learn
+Successfully installed dill-0.3.2 joblib-0.16.0 scikit-learn-0.23.2 scipy-1.5.2 threadpoolctl-2.1.0
+WARNING: Url '/whl' is ignored. It is either a non-existing path or lacks a specific scheme.
+Collecting pip-licenses
+Downloading https://files.pythonhosted.org/packages/c5/50/6c4b4e69a0c43bd9f03a30579695093062ba72da4e3e4026cd2144dbcc71/pip_licenses-2.3.0-py3-none-any.whl
+Collecting PTable (from pip-licenses)
+Downloading https://files.pythonhosted.org/packages/ab/b3/b54301811173ca94119eb474634f120a49cd370f257d1aae5a4abaf12729/PTable-0.9.2.tar.gz
+Building wheels for collected packages: PTable
+Building wheel for PTable (setup.py): started
+Building wheel for PTable (setup.py): finished with status 'done'
+Created wheel for PTable: filename=PTable-0.9.2-cp37-none-any.whl size=22906 sha256=e296b386d6581fe3343b84d718f7e7624bdbabfff569c4220a1f2039dd0abbdf
+Stored in directory: /root/.cache/pip/wheels/22/cc/2e/55980bfe86393df3e9896146a01f6802978d09d7ebcba5ea56
+Successfully built PTable
+Installing collected packages: PTable, pip-licenses
+Successfully installed PTable-0.9.2 pip-licenses-2.3.0
+created path: ./licenses/license_info.csv
+created path: ./licenses/license.txt
+Build completed successfully
+---&gt; Installing application source...
+---&gt; Installing dependencies ...
+Looking in links: /whl
+Collecting dill==0.3.2 (from -r requirements.txt (line 1))
+  WARNING: Url '/whl' is ignored. It is either a non-existing path or lacks a specific scheme.
+Downloading https://files.pythonhosted.org/packages/e2/96/518a8ea959a734b70d2e95fef98bcbfdc7adad1c1e5f5dd9148c835205a5/dill-0.3.2.zip (177kB)
+Requirement already satisfied: click==7.1.2 in /opt/conda/lib/python3.7/site-packages (from -r requirements.txt (line 2)) (7.1.2)
+Requirement already satisfied: numpy==1.19.1 in /opt/conda/lib/python3.7/site-packages (from -r requirements.txt (line 3)) (1.19.1)
+Collecting spacy==2.3.2 (from -r requirements.txt (line 4))
+  WARNING: Url '/whl' is ignored. It is either a non-existing path or lacks a specific scheme.
+Downloading https://files.pythonhosted.org/packages/55/24/70c615f5b22440c679a4132b81eee67d1dfd70d159505a28ff949c78a1ac/spacy-2.3.2-cp37-cp37m-manylinux1_x86_64.whl (9.9MB)
+Collecting en-core-web-sm==2.3.1 (from -r requirements.txt (line 5))
+  WARNING: Url '/whl' is ignored. It is either a non-existing path or lacks a specific scheme.
+  ERROR: Could not find a version that satisfies the requirement en-core-web-sm==2.3.1 (from -r requirements.txt (line 5)) (from versions: none)
+ERROR: No matching distribution found for en-core-web-sm==2.3.1 (from -r requirements.txt (line 5))
+WARNING: Url '/whl' is ignored. It is either a non-existing path or lacks a specific scheme.
+Build failed
+ERROR: An error occurred: non-zero (13) exit code from seldonio/seldon-core-s2i-python37:1.14.0
+---&gt; Installing application source...
+---&gt; Installing dependencies ...
+Looking in links: /whl
+Collecting dill==0.3.2 (from -r requirements.txt (line 1))
+  WARNING: Url '/whl' is ignored. It is either a non-existing path or lacks a specific scheme.
+Downloading https://files.pythonhosted.org/packages/e2/96/518a8ea959a734b70d2e95fef98bcbfdc7adad1c1e5f5dd9148c835205a5/dill-0.3.2.zip (177kB)
+Requirement already satisfied: click==7.1.2 in /opt/conda/lib/python3.7/site-packages (from -r requirements.txt (line 2)) (7.1.2)
+Requirement already satisfied: numpy==1.19.1 in /opt/conda/lib/python3.7/site-packages (from -r requirements.txt (line 3)) (1.19.1)
+Collecting scikit-learn==0.23.2 (from -r requirements.txt (line 4))
+  WARNING: Url '/whl' is ignored. It is either a non-existing path or lacks a specific scheme.
+Downloading https://files.pythonhosted.org/packages/f4/cb/64623369f348e9bfb29ff898a57ac7c91ed4921f228e9726546614d63ccb/scikit_learn-0.23.2-cp37-cp37m-manylinux1_x86_64.whl (6.8MB)
+Collecting joblib&gt;=0.11 (from scikit-learn==0.23.2-&gt;-r requirements.txt (line 4))
+  WARNING: Url '/whl' is ignored. It is either a non-existing path or lacks a specific scheme.
+Downloading https://files.pythonhosted.org/packages/51/dd/0e015051b4a27ec5a58b02ab774059f3289a94b0906f880a3f9507e74f38/joblib-0.16.0-py3-none-any.whl (300kB)
+Collecting scipy&gt;=0.19.1 (from scikit-learn==0.23.2-&gt;-r requirements.txt (line 4))
+  WARNING: Url '/whl' is ignored. It is either a non-existing path or lacks a specific scheme.
+Downloading https://files.pythonhosted.org/packages/65/f9/f7a7e5009711579c72da2725174825e5056741bf4001815d097eef1b2e17/scipy-1.5.2-cp37-cp37m-manylinux1_x86_64.whl (25.9MB)
+Collecting threadpoolctl&gt;=2.0.0 (from scikit-learn==0.23.2-&gt;-r requirements.txt (line 4))
+  WARNING: Url '/whl' is ignored. It is either a non-existing path or lacks a specific scheme.
+Downloading https://files.pythonhosted.org/packages/f7/12/ec3f2e203afa394a149911729357aa48affc59c20e2c1c8297a60f33f133/threadpoolctl-2.1.0-py3-none-any.whl
+Building wheels for collected packages: dill
+Building wheel for dill (setup.py): started
+Building wheel for dill (setup.py): finished with status 'done'
+Created wheel for dill: filename=dill-0.3.2-cp37-none-any.whl size=78913 sha256=2bdafea9bf8ead275cf6123cd330c7362915943a397e00ca7b203b9b8759f2a7
+Stored in directory: /root/.cache/pip/wheels/27/4b/a2/34ccdcc2f158742cfe9650675560dea85f78c3f4628f7daad0
+Successfully built dill
+Installing collected packages: dill, joblib, scipy, threadpoolctl, scikit-learn
+Successfully installed dill-0.3.2 joblib-0.16.0 scikit-learn-0.23.2 scipy-1.5.2 threadpoolctl-2.1.0
+WARNING: Url '/whl' is ignored. It is either a non-existing path or lacks a specific scheme.
+Collecting pip-licenses
+Downloading https://files.pythonhosted.org/packages/c5/50/6c4b4e69a0c43bd9f03a30579695093062ba72da4e3e4026cd2144dbcc71/pip_licenses-2.3.0-py3-none-any.whl
+Collecting PTable (from pip-licenses)
+Downloading https://files.pythonhosted.org/packages/ab/b3/b54301811173ca94119eb474634f120a49cd370f257d1aae5a4abaf12729/PTable-0.9.2.tar.gz
+Building wheels for collected packages: PTable
+Building wheel for PTable (setup.py): started
+Building wheel for PTable (setup.py): finished with status 'done'
+Created wheel for PTable: filename=PTable-0.9.2-cp37-none-any.whl size=22906 sha256=46a9ca3a63fe171ad06a2e9bbd7f00fba00ca0bb4bbda6177f3571077d79228e
+Stored in directory: /root/.cache/pip/wheels/22/cc/2e/55980bfe86393df3e9896146a01f6802978d09d7ebcba5ea56
+Successfully built PTable
+Installing collected packages: PTable, pip-licenses
+Successfully installed PTable-0.9.2 pip-licenses-2.3.0
+created path: ./licenses/license_info.csv
+created path: ./licenses/license.txt
+Build completed successfully
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="3)-Train-our-NLP-Pipeline-through-the-Kubeflow-UI">
+<h2 id="3)-Train-our-NLP-Pipeline-through-the-Kubeflow-UI">3) Train our NLP Pipeline through the Kubeflow UI<a class="headerlink" href="#3)-Train-our-NLP-Pipeline-through-the-Kubeflow-UI" title="Permalink to this heading">¶</a></h2>
+<p>We can access the Kubeflow dashboard to train our ML pipeline via <a class="reference external" href="http://localhost/_/pipeline-dashboard">http://localhost/_/pipeline-dashboard</a></p>
+<p>If you can’t edit this, you need to make sure that the ambassador gateway service is accessible:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>ambassador<span class="w"> </span>-n<span class="w"> </span>kubeflow
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+NAME         TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+ambassador   NodePort   10.97.236.196   &lt;none&gt;        80:30209/TCP   8m58s
+</pre></div></div>
+</div>
+<p>In my case, I need to change the kind from <code class="docutils literal notranslate"><span class="pre">NodePort</span></code> into <code class="docutils literal notranslate"><span class="pre">LoadBalancer</span></code> which can be done with the following command:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>patch<span class="w"> </span>svc<span class="w"> </span>ambassador<span class="w"> </span>--type<span class="o">=</span><span class="s1">'json'</span><span class="w"> </span>-p<span class="w"> </span><span class="s1">'[{"op":"replace","path":"/spec/type","value":"LoadBalancer"}]'</span><span class="w"> </span>-n<span class="w"> </span>kubeflow
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+service/ambassador patched
+</pre></div></div>
+</div>
+<p>Now that I’ve changed it to a loadbalancer, it has allocated the external IP as my localhost so I can access it at <a class="reference external" href="http://localhost/_/pipeline-dashboard">http://localhost/_/pipeline-dashboard</a></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>ambassador<span class="w"> </span>-n<span class="w"> </span>kubeflow
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+NAME         TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+ambassador   LoadBalancer   10.97.236.196   localhost     80:30209/TCP   9m20s
+</pre></div></div>
+</div>
+<p>If this was successful, you should be able to access the dashboard <img alt="kf-pipeline-dashboard" src="../_images/k-pipeline-dashboard.jpg"/></p>
+<section id="Define-the-pipeline">
+<h3 id="Define-the-pipeline">Define the pipeline<a class="headerlink" href="#Define-the-pipeline" title="Permalink to this heading">¶</a></h3>
+<p>Now we want to generate the pipeline. For this we can use the DSL provided by kubeflow to define the actual steps required.</p>
+<p>The pipeline will look as follows:</p>
+<p><img alt="kf-seldon-nlp-ml-pipelines" src="../_images/kubeflow-seldon-nlp-ml-pipelines.jpg"/></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[57]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>cat<span class="w"> </span>train_pipeline/nlp_pipeline.py
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+
+import kfp.dsl as dsl
+import yaml
+from kubernetes import client as k8s
+
+
+@dsl.pipeline(
+  name='NLP',
+  description='A pipeline demonstrating reproducible steps for NLP'
+)
+def nlp_pipeline(
+        csv_url="https://raw.githubusercontent.com/axsauze/reddit-classification-exploration/master/data/reddit_train.csv",
+        csv_encoding="ISO-8859-1",
+        features_column="BODY",
+        labels_column="REMOVED",
+        raw_text_path='/mnt/text.data',
+        labels_path='/mnt/labels.data',
+        clean_text_path='/mnt/clean.data',
+        spacy_tokens_path='/mnt/tokens.data',
+        tfidf_vectors_path='/mnt/tfidf.data',
+        lr_prediction_path='/mnt/prediction.data',
+        tfidf_model_path='/mnt/tfidf.model',
+        lr_model_path='/mnt/lr.model',
+        lr_c_param=0.1,
+        tfidf_max_features=10000,
+        tfidf_ngram_range=3,
+        batch_size='100'):
+    """
+    Pipeline
+    """
+    vop = dsl.VolumeOp(
+      name='my-pvc',
+      resource_name="my-pvc",
+      modes=["ReadWriteMany"],
+      size="1Gi"
+    )
+
+    download_step = dsl.ContainerOp(
+        name='data_downloader',
+        image='data_downloader:0.1',
+        command="python",
+        arguments=[
+            "/microservice/pipeline_step.py",
+            "--labels-path", labels_path,
+            "--features-path", raw_text_path,
+            "--csv-url", csv_url,
+            "--csv-encoding", csv_encoding,
+            "--features-column", features_column,
+            "--labels-column", labels_column
+        ],
+        pvolumes={"/mnt": vop.volume}
+    )
+
+    clean_step = dsl.ContainerOp(
+        name='clean_text',
+        image='clean_text_transformer:0.1',
+        command="python",
+        arguments=[
+            "/microservice/pipeline_step.py",
+            "--in-path", raw_text_path,
+            "--out-path", clean_text_path,
+        ],
+        pvolumes={"/mnt": download_step.pvolume}
+    )
+
+    tokenize_step = dsl.ContainerOp(
+        name='tokenize',
+        image='spacy_tokenizer:0.1',
+        command="python",
+        arguments=[
+            "/microservice/pipeline_step.py",
+            "--in-path", clean_text_path,
+            "--out-path", spacy_tokens_path,
+        ],
+        pvolumes={"/mnt": clean_step.pvolume}
+    )
+
+    vectorize_step = dsl.ContainerOp(
+        name='vectorize',
+        image='tfidf_vectorizer:0.1',
+        command="python",
+        arguments=[
+            "/microservice/pipeline_step.py",
+            "--in-path", spacy_tokens_path,
+            "--out-path", tfidf_vectors_path,
+            "--max-features", tfidf_max_features,
+            "--ngram-range", tfidf_ngram_range,
+            "--action", "train",
+            "--model-path", tfidf_model_path,
+        ],
+        pvolumes={"/mnt": tokenize_step.pvolume}
+    )
+
+    predict_step = dsl.ContainerOp(
+        name='predictor',
+        image='lr_text_classifier:0.1',
+        command="python",
+        arguments=[
+            "/microservice/pipeline_step.py",
+            "--in-path", tfidf_vectors_path,
+            "--labels-path", labels_path,
+            "--out-path", lr_prediction_path,
+            "--c-param", lr_c_param,
+            "--action", "train",
+            "--model-path", lr_model_path,
+        ],
+        pvolumes={"/mnt": vectorize_step.pvolume}
+    )
+
+    try:
+        seldon_config = yaml.load(open("../deploy_pipeline/seldon_production_pipeline.yaml"))
+    except:
+        # If this file is run from the project core directory
+        seldon_config = yaml.load(open("deploy_pipeline/seldon_production_pipeline.yaml"))
+
+    deploy_step = dsl.ResourceOp(
+        name="seldondeploy",
+        k8s_resource=seldon_config,
+        attribute_outputs={"name": "{.metadata.name}"})
+
+    deploy_step.after(predict_step)
+
+if __name__ == '__main__':
+  import kfp.compiler as compiler
+  compiler.Compiler().compile(nlp_pipeline, __file__ + '.tar.gz')
+</pre></div></div>
+</div>
+</section>
+<section id="Breaking-down-the-code">
+<h3 id="Breaking-down-the-code">Breaking down the code<a class="headerlink" href="#Breaking-down-the-code" title="Permalink to this heading">¶</a></h3>
+<p>As you can see in the DSL, we have the ContainerOp - each of those is a step in the Kubeflow pipeline.</p>
+<p>At the end we can see the <code class="docutils literal notranslate"><span class="pre">seldondeploy</span></code> step which basically deploys the trained pipeline</p>
+<p>The definition of the SeldonDeployment graph is provided in the <code class="docutils literal notranslate"><span class="pre">deploy_pipeline/seldon_production_pipeline.yaml</span></code> file.</p>
+<p>The seldondeployment file defines our production execution graph using the same reusable components.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[46]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>cat<span class="w"> </span>deploy_pipeline/seldon_production_pipeline.yaml
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+---
+apiVersion: machinelearning.seldon.io/v1alpha2
+kind: SeldonDeployment
+metadata:
+  labels:
+    app: seldon
+  name: "seldon-deployment-{{workflow.name}}"
+  namespace: kubeflow
+spec:
+  annotations:
+    project_name: NLP Pipeline
+    deployment_version: v1
+  name: "seldon-deployment-{{workflow.name}}"
+  predictors:
+  - componentSpecs:
+    - spec:
+        containers:
+        - image: clean_text_transformer:0.1
+          imagePullPolicy: IfNotPresent
+          name: cleantext
+          resources:
+            requests:
+              memory: 1Mi
+        - image: spacy_tokenizer:0.1
+          imagePullPolicy: IfNotPresent
+          name: spacytokenizer
+        - image: tfidf_vectorizer:0.1
+          imagePullPolicy: IfNotPresent
+          name: tfidfvectorizer
+          volumeMounts:
+          - name: mypvc
+            mountPath: /mnt
+        - image: lr_text_classifier:0.1
+          imagePullPolicy: IfNotPresent
+          name: lrclassifier
+          volumeMounts:
+          - name: mypvc
+            mountPath: /mnt
+        terminationGracePeriodSeconds: 20
+        volumes:
+        - name: mypvc
+          persistentVolumeClaim:
+            claimName: "{{workflow.name}}-my-pvc"
+    graph:
+      children:
+      - name: spacytokenizer
+        endpoint:
+          type: REST
+        type: MODEL
+        children:
+        - name: tfidfvectorizer
+          endpoint:
+            type: REST
+          type: MODEL
+          children:
+          - name: lrclassifier
+            endpoint:
+              type: REST
+            type: MODEL
+            children: []
+      name: cleantext
+      endpoint:
+        type: REST
+      type: MODEL
+    name: single-model
+    replicas: 1
+    annotations:
+      predictor_version: v1
+
+</pre></div></div>
+</div>
+</section>
+<section id="Seldon-Production-pipeline-contents">
+<h3 id="Seldon-Production-pipeline-contents">Seldon Production pipeline contents<a class="headerlink" href="#Seldon-Production-pipeline-contents" title="Permalink to this heading">¶</a></h3>
+<p>If we look at the file we’ll be using to deploy our pipeline, we can see that it has the following key points:</p>
+<ol class="arabic simple">
+<li><p>Reusable components definitions as containerSpecs: cleantext, spacytokenizer, tfidfvectorizer &amp; lrclassifier</p></li>
+<li><p>DAG (directed acyclic graph) definition for REST pipeline: cleantext -&gt; spacytokenizer -&gt; tfidfvectorizer -&gt; lrclassifier</p></li>
+</ol>
+<p>This graph in our production deployment looks as follows:</p>
+<p><img alt="kf-seldon-npl-pipelines-deploy" src="../_images/kubeflow-seldon-nlp-ml-pipelines-deploy.jpg"/></p>
+</section>
+<section id="Generate-the-pipeline-files-to-upload-to-Kubeflow">
+<h3 id="Generate-the-pipeline-files-to-upload-to-Kubeflow">Generate the pipeline files to upload to Kubeflow<a class="headerlink" href="#Generate-the-pipeline-files-to-upload-to-Kubeflow" title="Permalink to this heading">¶</a></h3>
+<p>To generate the pipeline we just have to run the pipeline file, which will output the <code class="docutils literal notranslate"><span class="pre">tar.gz</span></code> file that will be uploaded.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+<span class="c1"># Generating graph definition</span>
+python<span class="w"> </span>train_pipeline/nlp_pipeline.py
+ls<span class="w"> </span>train_pipeline/
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+nlp_pipeline.py
+nlp_pipeline.py.tar.gz
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/home/alejandro/miniconda3/lib/python3.7/site-packages/kfp/components/_data_passing.py:168: UserWarning: Missing type name was inferred as "Float" based on the value "0.1".
+  warnings.warn('Missing type name was inferred as "{}" based on the value "{}".'.format(type_name, str(value)))
+/home/alejandro/miniconda3/lib/python3.7/site-packages/kfp/components/_data_passing.py:168: UserWarning: Missing type name was inferred as "Integer" based on the value "10000".
+  warnings.warn('Missing type name was inferred as "{}" based on the value "{}".'.format(type_name, str(value)))
+/home/alejandro/miniconda3/lib/python3.7/site-packages/kfp/components/_data_passing.py:168: UserWarning: Missing type name was inferred as "Integer" based on the value "3".
+  warnings.warn('Missing type name was inferred as "{}" based on the value "{}".'.format(type_name, str(value)))
+train_pipeline/nlp_pipeline.py:114: YAMLLoadWarning: calling yaml.load() without Loader=... is deprecated, as the default Loader is unsafe. Please read https://msg.pyyaml.org/load for full details.
+  seldon_config = yaml.load(open("deploy_pipeline/seldon_production_pipeline.yaml"))
+</pre></div></div>
+</div>
+</section>
+<section id="Run-the-pipeline">
+<h3 id="Run-the-pipeline">Run the pipeline<a class="headerlink" href="#Run-the-pipeline" title="Permalink to this heading">¶</a></h3>
+<p>You can access the Kubeflow Pipelines UI by forwarding the port with the following command:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>kubectl port-forward -n kubeflow svc/ml-pipeline-ui 8000:80
+</pre></div>
+</div>
+<p>The UI should now be accessible via <a class="reference external" href="http://localhost:8000">http://localhost:8000</a>.</p>
+<p>We now need to upload the resulting <code class="docutils literal notranslate"><span class="pre">nlp_pipeline.py.tar.gz</span></code> file generated.</p>
+<p>This can be done through the “Upload PIpeline” button in the UI.</p>
+<p>Once it’s uploaded, we want to create and trigger a run! You should now be able to see how each step is executed:</p>
+<p><img alt="running-pipeline" src="../_images/running-pipeline.jpg"/></p>
+</section>
+<section id="Inspecting-the-data-created-in-the-Persistent-Volume">
+<h3 id="Inspecting-the-data-created-in-the-Persistent-Volume">Inspecting the data created in the Persistent Volume<a class="headerlink" href="#Inspecting-the-data-created-in-the-Persistent-Volume" title="Permalink to this heading">¶</a></h3>
+<p>The pipeline saves the output of the pipeline together with the trained model in the persistent volume claim.</p>
+<p>The persistent volume claim is the same name as the argo workflow:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>get<span class="w"> </span>workflow<span class="w"> </span>-n<span class="w"> </span>kubeflow
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+NAME        AGE
+nlp-bddff   2m
+</pre></div></div>
+</div>
+<p>Our workflow is there! So we can actually access it by running</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>get<span class="w"> </span>workflow<span class="w"> </span>-n<span class="w"> </span>kubeflow<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.items[0].metadata.name}'</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+nlp-bddff
+</pre></div></div>
+</div>
+<p>And we can use good old <code class="docutils literal notranslate"><span class="pre">sed</span></code> to insert this workflow name in our PVC-Access controler which we can use to inspect the contents of the volume:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[47]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>sed<span class="w"> </span><span class="s2">"s/PVC_NAME/"</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>workflow<span class="w"> </span>-n<span class="w"> </span>kubeflow<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.items[0].metadata.name}'</span><span class="k">)</span><span class="s2">"-my-pvc/g"</span><span class="w"> </span>deploy_pipeline/pvc-access.yaml
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pvc-access-container
+spec:
+  containers:
+  - name: pvc-access-container
+    image: busybox
+    command: ["/bin/sh", "-ec", "sleep 1000"]
+    volumeMounts:
+    - name: mypvc
+      mountPath: /mnt
+  volumes:
+  - name: mypvc
+    persistentVolumeClaim:
+      claimName: nlp-b7qt8-my-pvc
+</pre></div></div>
+</div>
+<p>We just need to apply this container with our kubectl command, and we can use it to inspect the mounted folder:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>sed<span class="w"> </span><span class="s2">"s/PVC_NAME/"</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>workflow<span class="w"> </span>-n<span class="w"> </span>kubeflow<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.items[0].metadata.name}'</span><span class="k">)</span><span class="s2">"-my-pvc/g"</span><span class="w"> </span>deploy_pipeline/pvc-access.yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>kubectl<span class="w"> </span>-n<span class="w"> </span>kubeflow<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>-
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+pod/pvc-access-container created
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>kubeflow<span class="w"> </span>pvc-access-container
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+NAME                   READY   STATUS    RESTARTS   AGE
+pvc-access-container   1/1     Running   0          6s
+</pre></div></div>
+</div>
+<p>Now we can run an <code class="docutils literal notranslate"><span class="pre">ls</span></code> command to see what’s inside:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>-n<span class="w"> </span>kubeflow<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>pvc-access-container<span class="w"> </span>ls<span class="w"> </span>/mnt
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-green-intense-fg ansi-bold">clean.data</span>       <span class="ansi-green-intense-fg ansi-bold">lr.model</span>         <span class="ansi-green-intense-fg ansi-bold">text.data</span>        <span class="ansi-green-intense-fg ansi-bold">tfidf.model</span>
+<span class="ansi-green-intense-fg ansi-bold">labels.data</span>      <span class="ansi-green-intense-fg ansi-bold">prediction.data</span>  <span class="ansi-green-intense-fg ansi-bold">tfidf.data</span>       <span class="ansi-green-intense-fg ansi-bold">tokens.data</span>
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>delete<span class="w"> </span>-f<span class="w"> </span>deploy_pipeline/pvc-access.yaml<span class="w"> </span>-n<span class="w"> </span>kubeflow
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+pod "pvc-access-container" deleted
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="5)-Test-Deployed-ML-REST-Endpoints">
+<h2 id="5)-Test-Deployed-ML-REST-Endpoints">5) Test Deployed ML REST Endpoints<a class="headerlink" href="#5)-Test-Deployed-ML-REST-Endpoints" title="Permalink to this heading">¶</a></h2>
+<p>Now that it’s running we have a production ML text pipeline that we can Query using REST and GRPC</p>
+<p>First we can check if our Seldon deployment is running with</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>-n<span class="w"> </span>kubeflow<span class="w"> </span>get<span class="w"> </span>seldondeployment
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+NAME                          AGE
+seldon-deployment-nlp-b7qt8   57m
+</pre></div></div>
+</div>
+<p>We will need the Seldon Pipeline Deployment name to reach the API, so we can get it using:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>-n<span class="w"> </span>kubeflow<span class="w"> </span>get<span class="w"> </span>seldondeployment<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.items[0].metadata.name}'</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+seldon-deployment-nlp-b7qt8
+</pre></div></div>
+</div>
+<p>Now we can interact with our API in two ways:</p>
+<ol class="arabic simple">
+<li><p>Using CURL or any client like PostMan</p></li>
+<li><p>Using the Python SeldonClient</p></li>
+</ol>
+<section id="Using-CURL-from-the-terminal">
+<h3 id="Using-CURL-from-the-terminal">Using CURL from the terminal<a class="headerlink" href="#Using-CURL-from-the-terminal" title="Permalink to this heading">¶</a></h3>
+<p>When using CURL, the only thing we need to provide is the data in JSON format, as well as the url, which is of the format:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>http://&lt;ENDPOINT&gt;/seldon/kubeflow/&lt;PIPELINE_NAME&gt;/api/v0.1/predictions
+</pre></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s1">'Content-Type: application/json'</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-d<span class="w"> </span><span class="s2">"{'data': {'names': ['text'], 'ndarray': ['Hello world this is a test']}}"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>http://127.0.0.1/seldon/kubeflow/<span class="k">$(</span>kubectl<span class="w"> </span>-n<span class="w"> </span>kubeflow<span class="w"> </span>get<span class="w"> </span>seldondeployment<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.items[0].metadata.name}'</span><span class="k">)</span>/api/v0.1/predictions
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{
+  "meta": {
+    "puid": "k89krp6t7tfgb386nt6vc3iftk",
+    "tags": {
+    },
+    "routing": {
+      "cleantext": -1,
+      "tfidfvectorizer": -1,
+      "spacytokenizer": -1
+    },
+    "requestPath": {
+      "cleantext": "clean_text_transformer:0.1",
+      "tfidfvectorizer": "tfidf_vectorizer:0.1",
+      "lrclassifier": "lr_text_classifier:0.1",
+      "spacytokenizer": "spacy_tokenizer:0.1"
+    },
+    "metrics": []
+  },
+  "data": {
+    "names": ["t:0", "t:1"],
+    "ndarray": [[0.6729318752883149, 0.3270681247116851]]
+  }
+}
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   599  100   527  100    72    516     70  0:00:01  0:00:01 --:--:--   588
+</pre></div></div>
+</div>
+</section>
+<section id="Using-the-SeldonClient">
+<h3 id="Using-the-SeldonClient">Using the SeldonClient<a class="headerlink" href="#Using-the-SeldonClient" title="Permalink to this heading">¶</a></h3>
+<p>We can also use the Python SeldonClient to interact with the pipeline we just deployed</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">subprocess</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">seldon_core.seldon_client</span> <span class="kn">import</span> <span class="n">SeldonClient</span>
+
+<span class="n">host</span> <span class="o">=</span> <span class="s2">"localhost"</span>
+<span class="n">port</span> <span class="o">=</span> <span class="s2">"80"</span>  <span class="c1"># Make sure you use the port above</span>
+<span class="n">batch</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s2">"Hello world this is a test"</span><span class="p">])</span>
+<span class="n">payload_type</span> <span class="o">=</span> <span class="s2">"ndarray"</span>
+<span class="c1"># Get the deployment name</span>
+<span class="n">deployment_name</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">getoutput</span><span class="p">(</span>
+    <span class="s2">"kubectl -n kubeflow get seldondeployment -o jsonpath='{.items[0].metadata.name}'"</span>
+<span class="p">)</span>
+<span class="n">transport</span> <span class="o">=</span> <span class="s2">"rest"</span>
+<span class="n">namespace</span> <span class="o">=</span> <span class="s2">"kubeflow"</span>
+
+<span class="n">sc</span> <span class="o">=</span> <span class="n">SeldonClient</span><span class="p">(</span>
+    <span class="n">gateway</span><span class="o">=</span><span class="s2">"ambassador"</span><span class="p">,</span> <span class="n">ambassador_endpoint</span><span class="o">=</span><span class="n">host</span> <span class="o">+</span> <span class="s2">":"</span> <span class="o">+</span> <span class="n">port</span><span class="p">,</span> <span class="n">namespace</span><span class="o">=</span><span class="n">namespace</span>
+<span class="p">)</span>
+
+<span class="n">client_prediction</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">batch</span><span class="p">,</span>
+    <span class="n">deployment_name</span><span class="o">=</span><span class="n">deployment_name</span><span class="p">,</span>
+    <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">"text"</span><span class="p">],</span>
+    <span class="n">payload_type</span><span class="o">=</span><span class="n">payload_type</span><span class="p">,</span>
+    <span class="n">transport</span><span class="o">=</span><span class="s2">"rest"</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">client_prediction</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Success:True message:
+Request:
+data {
+  names: "text"
+  ndarray {
+    values {
+      string_value: "Hello world this is a test"
+    }
+  }
+}
+
+Response:
+meta {
+  puid: "qtdca40d3s0463nn4ginhkvc6t"
+  routing {
+    key: "cleantext"
+    value: -1
+  }
+  routing {
+    key: "spacytokenizer"
+    value: -1
+  }
+  routing {
+    key: "tfidfvectorizer"
+    value: -1
+  }
+  requestPath {
+    key: "cleantext"
+    value: "clean_text_transformer:0.1"
+  }
+  requestPath {
+    key: "lrclassifier"
+    value: "lr_text_classifier:0.1"
+  }
+  requestPath {
+    key: "spacytokenizer"
+    value: "spacy_tokenizer:0.1"
+  }
+  requestPath {
+    key: "tfidfvectorizer"
+    value: "tfidf_vectorizer:0.1"
+  }
+}
+data {
+  names: "t:0"
+  names: "t:1"
+  ndarray {
+    values {
+      list_value {
+        values {
+          number_value: 0.6729318752883149
+        }
+        values {
+          number_value: 0.3270681247116851
+        }
+      }
+    }
+  }
+}
+
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="6)-Visualise-Seldon's-Production-ML-Pipelines">
+<h2 id="6)-Visualise-Seldon's-Production-ML-Pipelines">6) Visualise Seldon’s Production ML Pipelines<a class="headerlink" href="#6)-Visualise-Seldon's-Production-ML-Pipelines" title="Permalink to this heading">¶</a></h2>
+<p>We can visualise the performance using the SeldonAnalytics package, which we can deploy using:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>helm<span class="w"> </span>install<span class="w"> </span>seldon-core-analytics<span class="w"> </span>--repo<span class="w"> </span>https://storage.googleapis.com/seldon-charts<span class="w"> </span>--namespace<span class="w"> </span>kubeflow
+</pre></div>
+</div>
+</div>
+<p>In my case, similar to what I did with Ambassador, I need to make sure the service is a LoadBalancer instead of a NodePort</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>patch<span class="w"> </span>svc<span class="w"> </span>grafana-prom<span class="w"> </span>--type<span class="o">=</span><span class="s1">'json'</span><span class="w"> </span>-p<span class="w"> </span><span class="s1">'[{"op":"replace","path":"/spec/type","value":"LoadBalancer"}]'</span><span class="w"> </span>-n<span class="w"> </span>kubeflow
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+service/grafana-prom patched
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>grafana-prom<span class="w"> </span>-n<span class="w"> </span>kubeflow
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+NAME           TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+grafana-prom   LoadBalancer   10.98.248.223   localhost     80:32445/TCP   64m
+</pre></div></div>
+</div>
+<p>Now we can access it at the port provided, in my case it is <a class="reference external" href="http://localhost:32445/d/3swM2iGWz/prediction-analytics?refresh=5s&amp;orgId=1">http://localhost:32445/d/3swM2iGWz/prediction-analytics?refresh=5s&amp;orgId=1</a></p>
+<p>(initial username is admin and password is password, which will be requested to be changed on the first login)</p>
+<p>Generate a bunch of requests and visualise:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="n">client_prediction</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">batch</span><span class="p">,</span>
+        <span class="n">deployment_name</span><span class="o">=</span><span class="n">deployment_name</span><span class="p">,</span>
+        <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">"text"</span><span class="p">],</span>
+        <span class="n">payload_type</span><span class="o">=</span><span class="n">payload_type</span><span class="p">,</span>
+        <span class="n">transport</span><span class="o">=</span><span class="s2">"rest"</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="You-now-have-a-full-end-to-end-training-and-production-NLP-pipeline">
+<h2 id="You-now-have-a-full-end-to-end-training-and-production-NLP-pipeline">You now have a full end-to-end training and production NLP pipeline<a class="headerlink" href="#You-now-have-a-full-end-to-end-training-and-production-NLP-pipeline" title="Permalink to this heading">¶</a></h2>
+<p><img alt="seldon-analytics" src="../_images/seldon-analytics.jpg"/></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="triton_examples.html" title="Triton Examples"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> "Previous" </span> Triton Examples </span>
+              </div>
+            </a>
+          
+          
+            <a href="h2o_mojo.html" title="H2O Model"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> "Next" </span> H2O Model </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2024, Seldon Technologies Ltd.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

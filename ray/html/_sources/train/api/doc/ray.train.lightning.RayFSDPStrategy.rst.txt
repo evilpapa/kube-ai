@@ -1,0 +1,38 @@
+﻿
+
+ray.train.lightning.RayFSDPStrategy
+===================================
+
+.. currentmodule:: ray.train.lightning
+
+.. autoclass:: RayFSDPStrategy
+   :show-inheritance:
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :toctree:
+
+   
+      
+      ~RayFSDPStrategy.lightning_module_state_dict
+
+   
+   
+
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :toctree:
+
+   
+      ~RayFSDPStrategy.distributed_sampler_kwargs
+      ~RayFSDPStrategy.root_device
+
+   
+   

@@ -1,0 +1,2191 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../_static/javascripts/modernizr.js"></script>
+  
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-54780881-2"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-54780881-2');
+</script>
+  
+  
+    <title>Python Wrapper Benchmarking &#8212; seldon-core  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=83e35b93" />
+    <link rel="stylesheet" type="text/css" href="../_static/material.css?v=79c92029" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/rtd_sphinx_search.min.css?v=e72958e9" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+    <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=15a8f09d" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/rtd_search_config.js?v=b0596c34"></script>
+    <script src="../_static/js/rtd_sphinx_search.min.js?v=43f26ba4"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Python Wrapper KMP_AFFINITY Tests" href="python_kmp_affinity.html" />
+    <link rel="prev" title="Benchmarking with Argo Worfklows &amp; Vegeta" href="vegeta_bench_argo_workflows.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=indigo data-md-color-accent=teal>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#examples/python_serialization" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../index.html" title="seldon-core  documentation"
+           class="md-header-nav__button md-logo">
+          
+            &nbsp;
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">Seldon Core Documentation</span>
+          <span class="md-header-nav__topic"> Python Wrapper Benchmarking </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder=""Search""
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+            
+            <li class="md-tabs__item"><a href="/" class="md-tabs__link">🚀 Our Other Projects & Products:</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi/en/stable/" class="md-tabs__link">Alibi Explain</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi-detect/en/stable/" class="md-tabs__link">Alibi Detect</a></li>
+            
+            <li class="md-tabs__item"><a href="https://mlserver.readthedocs.io/en/latest/" class="md-tabs__link">MLServer</a></li>
+            
+            <li class="md-tabs__item"><a href="https://tempo.readthedocs.io/en/latest/" class="md-tabs__link">Tempo SDK</a></li>
+            
+            <li class="md-tabs__item"><a href="https://deploy.seldon.io" class="md-tabs__link">Seldon Enterprise Platform</a></li>
+            
+            <li class="md-tabs__item"><a href="https://github.com/SeldonIO/seldon-deploy-sdk#seldon-deploy-sdk" class="md-tabs__link">Seldon Enterprise Platform SDK</a></li>
+          <li class="md-tabs__item"><a href="../nav/tutorials.html" class="md-tabs__link">教程</a></li>
+          <li class="md-tabs__item"><a href="notebooks.html" class="md-tabs__link">笔记本</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../index.html" title="seldon-core documentation" class="md-nav__button md-logo">
+      
+        <img src="../_static/" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../index.html"
+       title="seldon-core documentation">Seldon Core Documentation</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/getting-started.html" class="md-nav__link">开始</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/concepts.html" class="md-nav__link">概念</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/configuration.html" class="md-nav__link">配置</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/tutorials.html" class="md-nav__link">教程</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html" class="md-nav__link">笔记本</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#seldon-core" class="md-nav__link">Seldon Core 设置</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id2" class="md-nav__link">预包装推理服务示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#python" class="md-nav__link">Python 语言封装示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id3" class="md-nav__link">专门的框架示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id4" class="md-nav__link">孵化项目示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id5" class="md-nav__link">基于云的基础示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id6" class="md-nav__link">高级机器学习监控</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id7" class="md-nav__link">Seldon Core 批处理</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#mlops" class="md-nav__link">MLOps: 扩展、监控和可观察性</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id8" class="md-nav__link">生产配置及实现</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#ab" class="md-nav__link">AB 测试及渐进式部署</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id9" class="md-nav__link">复杂图示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id10" class="md-nav__link">入口</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id11" class="md-nav__link">基础设施</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id12" class="md-nav__link">基准测试和负载测试</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id13" class="md-nav__link">升级示例</a>
+      
+    
+    </li></ul>
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/reference.html" class="md-nav__link">参考</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/contributing.html" class="md-nav__link">贡献</a>
+      
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#examples-python-serialization--page-root" class="md-nav__link">Python Wrapper Benchmarking</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#Prequisites" class="md-nav__link">Prequisites</a>
+        </li>
+        <li class="md-nav__item"><a href="#TLDR" class="md-nav__link">TLDR</a>
+        </li>
+        <li class="md-nav__item"><a href="#Test-with-Predict-method-on-Large-Batch-Size" class="md-nav__link">Test with Predict method on Large Batch Size</a>
+        </li>
+        <li class="md-nav__item"><a href="#Conclusions" class="md-nav__link">Conclusions</a>
+        </li>
+        <li class="md-nav__item"><a href="#Test-Predct-Raw" class="md-nav__link">Test Predct Raw</a>
+        </li>
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">Conclusions</a>
+        </li>
+        <li class="md-nav__item"><a href="#Test-with-Predict-method-on-Small-Batch-Size" class="md-nav__link">Test with Predict method on Small Batch Size</a>
+        </li>
+        <li class="md-nav__item"><a href="#id3" class="md-nav__link">Conclusions</a>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/examples/python_serialization.nblink.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <div class="admonition note">
+<p>This page was generated from <a class="reference external" href="https://github.com/SeldonIO/seldon-core/blob/e665e4994eabf83fb43c68a5f85e96d5c45e91b5/testing/benchmarking/python/python_serialization.ipynb">testing/benchmarking/python/python_serialization.ipynb</a>.</p>
+</div>
+<section id="Python-Wrapper-Benchmarking">
+<h1 id="examples-python-serialization--page-root">Python Wrapper Benchmarking<a class="headerlink" href="#examples-python-serialization--page-root" title="Permalink to this heading">¶</a></h1>
+<section id="Prequisites">
+<h2 id="Prequisites">Prequisites<a class="headerlink" href="#Prequisites" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>An authenticated K8S cluster with istio and Seldon Core installed</p>
+<ul>
+<li><p>You can use the ansible seldon-core playbook at <a class="reference external" href="https://github.com/SeldonIO/ansible-k8s-collection">https://github.com/SeldonIO/ansible-k8s-collection</a></p></li>
+</ul>
+</li>
+<li><p>vegeta and ghz benchmarking tools</p></li>
+</ul>
+<p>Port forward to istio</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>kubectl port-forward $(kubectl get pods -l istio=ingressgateway -n istio-system -o jsonpath='{.items[0].metadata.name}') -n istio-system 8003:8080
+</pre></div>
+</div>
+<p>Tests</p>
+<ul class="simple">
+<li><p><strong>Large Batch Size</strong></p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">predict</span></code> method with:</p>
+<ul>
+<li><p>REST</p>
+<ul>
+<li><p>ndarray</p></li>
+<li><p>tensor</p></li>
+<li><p>tftensor</p></li>
+</ul>
+</li>
+<li><p>gRPC</p>
+<ul>
+<li><p>ndarray</p></li>
+<li><p>tensor</p></li>
+<li><p>tftensor</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">predict_raw</span></code> method with:</p>
+<ul>
+<li><p>REST</p>
+<ul>
+<li><p>ndarray</p></li>
+<li><p>tensor</p></li>
+<li><p>tftensor</p></li>
+</ul>
+</li>
+<li><p>gRPC</p>
+<ul>
+<li><p>ndarray</p></li>
+<li><p>tensor</p></li>
+<li><p>tftensor</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Small Batch Size</strong></p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">predict</span></code> method with:</p>
+<ul>
+<li><p>REST</p>
+<ul>
+<li><p>ndarray</p></li>
+<li><p>tensor</p></li>
+<li><p>tftensor</p></li>
+</ul>
+</li>
+<li><p>gRPC</p>
+<ul>
+<li><p>ndarray</p></li>
+<li><p>tensor</p></li>
+<li><p>tftensor</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="TLDR">
+<h2 id="TLDR">TLDR<a class="headerlink" href="#TLDR" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>gRPC is faster than REST</p></li>
+<li><p>tftensor is best for large batch size</p></li>
+<li><p>ndarray with gRPC is bad for large batch size</p></li>
+<li><p>simpler tensor/ndarray is better for small batch size</p></li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">IPython.core.magic</span> <span class="kn">import</span> <span class="n">register_line_cell_magic</span>
+
+
+<span class="nd">@register_line_cell_magic</span>
+<span class="k">def</span> <span class="nf">writetemplate</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">cell</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="nb">globals</span><span class="p">()))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">VERSION</span> <span class="o">=</span> <span class="o">!</span>cat<span class="w"> </span>../../../version.txt
+<span class="n">VERSION</span> <span class="o">=</span> <span class="n">VERSION</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">VERSION</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+'1.10.0-dev'
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>create<span class="w"> </span>namespace<span class="w"> </span>seldon
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Error from server (AlreadyExists): namespaces "seldon" already exists
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>helm<span class="w"> </span>upgrade<span class="w"> </span>--install<span class="w"> </span>seldon-core<span class="w"> </span>seldon-core-operator<span class="w"> </span>--repo<span class="w"> </span>https://storage.googleapis.com/seldon-charts<span class="w"> </span>--version<span class="w"> </span><span class="m">1</span>.9.0<span class="w"> </span>--namespace<span class="w"> </span>seldon-system<span class="w"> </span>--set<span class="w"> </span>istio.enabled<span class="o">=</span><span class="s2">"true"</span><span class="w"> </span>--set<span class="w"> </span>istio.gateway<span class="o">=</span><span class="s2">"seldon-gateway.istio-system.svc.cluster.local"</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Release "seldon-core" has been upgraded. Happy Helming!
+NAME: seldon-core
+LAST DEPLOYED: Thu Jul  1 14:03:55 2021
+NAMESPACE: seldon-system
+STATUS: deployed
+REVISION: 2
+TEST SUITE: None
+</pre></div></div>
+</div>
+</section>
+<section id="Test-with-Predict-method-on-Large-Batch-Size">
+<h2 id="Test-with-Predict-method-on-Large-Batch-Size">Test with Predict method on Large Batch Size<a class="headerlink" href="#Test-with-Predict-method-on-Large-Batch-Size" title="Permalink to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">seldontest_predict</span></code> has simply a <code class="docutils literal notranslate"><span class="pre">predict</span></code> method that does a loop with a configurable number of iterations (default 1) to simulate work. The iterations can be set as a Seldon parameter but in this case we are looking to benchmark the serialization/deserialization cost so want a minimal amount of work.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">writetemplate</span> model.yaml
+apiVersion: machinelearning.seldon.io/v1
+kind: SeldonDeployment
+metadata:
+  name: seldon-model
+  namespace: seldon
+spec:
+  predictors:
+  - annotations:
+      seldon.io/no-engine: "true"
+    componentSpecs:
+    - spec:
+        containers:
+        - image: seldonio/seldontest_predict:{VERSION}
+          imagePullPolicy: IfNotPresent
+          name: classifier
+          resources:
+            requests:
+              cpu: 1
+            limits:
+              cpu: 1
+          env:
+          - name: GUNICORN_WORKERS
+            value: "1"
+          - name: GUNICORN_THREADS
+            value: "1"
+        tolerations:
+        - key: model
+          operator: Exists
+          effect: NoSchedule
+    graph:
+      children: []
+      name: classifier
+      type: MODEL
+    name: default
+    replicas: 1
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>model.yaml
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+seldondeployment.machinelearning.seldon.io/seldon-model created
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span><span class="nb">wait</span><span class="w"> </span>--for<span class="w"> </span><span class="nv">condition</span><span class="o">=</span>ready<span class="w"> </span>--timeout<span class="o">=</span>600s<span class="w"> </span>pods<span class="w"> </span>--all<span class="w"> </span>-n<span class="w"> </span>seldon
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+pod/seldon-model-default-0-classifier-5445bd4ccf-c2vdr condition met
+</pre></div></div>
+</div>
+<p>Create payloads and associated vegeta configurations for</p>
+<ol class="arabic simple">
+<li><p>ndarray</p></li>
+<li><p>tensor</p></li>
+<li><p>tftensor</p></li>
+</ol>
+<p>We will create an array of 100,000 consecutive integers.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
+
+<span class="n">sz</span> <span class="o">=</span> <span class="mi">100000</span>
+<span class="n">vals</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">sz</span><span class="p">))</span>
+<span class="n">valStr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">vals</span><span class="si">}</span><span class="s2">"</span>
+<span class="n">payload</span> <span class="o">=</span> <span class="s1">'{"data": {"ndarray": ['</span> <span class="o">+</span> <span class="n">valStr</span> <span class="o">+</span> <span class="s2">"]}}"</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"data_ndarray.json"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+<span class="n">payload_tensor</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s1">'{"data":{"tensor":{"shape":[1,'</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sz</span><span class="p">)</span> <span class="o">+</span> <span class="s1">'],"values":'</span> <span class="o">+</span> <span class="n">valStr</span> <span class="o">+</span> <span class="s2">"}}}"</span>
+<span class="p">)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"data_tensor.json"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">payload_tensor</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+<span class="kn">from</span> <span class="nn">google.protobuf</span> <span class="kn">import</span> <span class="n">json_format</span>
+
+<span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vals</span><span class="p">)</span>
+<span class="n">tftensor</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">make_tensor_proto</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
+<span class="n">jStrTensor</span> <span class="o">=</span> <span class="n">json_format</span><span class="o">.</span><span class="n">MessageToJson</span><span class="p">(</span><span class="n">tftensor</span><span class="p">)</span>
+<span class="n">jTensor</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">jStrTensor</span><span class="p">)</span>
+<span class="n">payload_tftensor</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s1">'{"data":{"tftensor":'</span> <span class="o">+</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">jTensor</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s2">","</span><span class="p">,</span> <span class="s2">":"</span><span class="p">))</span> <span class="o">+</span> <span class="s2">"}}"</span>
+<span class="p">)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"data_tftensor.json"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">payload_tftensor</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">base64</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="n">sample_string_bytes</span> <span class="o">=</span> <span class="n">payload_tensor</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">"ascii"</span><span class="p">)</span>
+<span class="n">base64_bytes</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">sample_string_bytes</span><span class="p">)</span>
+<span class="n">base64_string</span> <span class="o">=</span> <span class="n">base64_bytes</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"ascii"</span><span class="p">)</span>
+<span class="n">jqPayload</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"method"</span><span class="p">:</span> <span class="s2">"POST"</span><span class="p">,</span>
+    <span class="s2">"url"</span><span class="p">:</span> <span class="s2">"http://localhost:8003/seldon/seldon/seldon-model/api/v1.0/predictions"</span><span class="p">,</span>
+    <span class="s2">"body"</span><span class="p">:</span> <span class="n">base64_string</span><span class="p">,</span>
+    <span class="s2">"header"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"Content-Type"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"application/json"</span><span class="p">]},</span>
+<span class="p">}</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"vegeta_tensor.json"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">jqPayload</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s2">","</span><span class="p">,</span> <span class="s2">":"</span><span class="p">)))</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="n">sample_string_bytes</span> <span class="o">=</span> <span class="n">payload</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">"ascii"</span><span class="p">)</span>
+<span class="n">base64_bytes</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">sample_string_bytes</span><span class="p">)</span>
+<span class="n">base64_string</span> <span class="o">=</span> <span class="n">base64_bytes</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"ascii"</span><span class="p">)</span>
+<span class="n">jqPayload</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"method"</span><span class="p">:</span> <span class="s2">"POST"</span><span class="p">,</span>
+    <span class="s2">"url"</span><span class="p">:</span> <span class="s2">"http://localhost:8003/seldon/seldon/seldon-model/api/v1.0/predictions"</span><span class="p">,</span>
+    <span class="s2">"body"</span><span class="p">:</span> <span class="n">base64_string</span><span class="p">,</span>
+    <span class="s2">"header"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"Content-Type"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"application/json"</span><span class="p">]},</span>
+<span class="p">}</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"vegeta_ndarray.json"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">jqPayload</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s2">","</span><span class="p">,</span> <span class="s2">":"</span><span class="p">)))</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+
+
+<span class="n">sample_string_bytes</span> <span class="o">=</span> <span class="n">payload_tftensor</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">"ascii"</span><span class="p">)</span>
+<span class="n">base64_bytes</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">sample_string_bytes</span><span class="p">)</span>
+<span class="n">base64_string</span> <span class="o">=</span> <span class="n">base64_bytes</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"ascii"</span><span class="p">)</span>
+<span class="n">jqPayload</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"method"</span><span class="p">:</span> <span class="s2">"POST"</span><span class="p">,</span>
+    <span class="s2">"url"</span><span class="p">:</span> <span class="s2">"http://localhost:8003/seldon/seldon/seldon-model/api/v1.0/predictions"</span><span class="p">,</span>
+    <span class="s2">"body"</span><span class="p">:</span> <span class="n">base64_string</span><span class="p">,</span>
+    <span class="s2">"header"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"Content-Type"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"application/json"</span><span class="p">]},</span>
+<span class="p">}</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"vegeta_tftensor.json"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">jqPayload</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s2">","</span><span class="p">,</span> <span class="s2">":"</span><span class="p">)))</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Smoke test port-forward to check everything is working</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s1">'Content-Type: application/json'</span><span class="w"> </span><span class="err">\</span>
+   <span class="o">-</span><span class="n">d</span> <span class="s1">'@./data_ndarray.json'</span> \
+    <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">8003</span><span class="o">/</span><span class="n">seldon</span><span class="o">/</span><span class="n">seldon</span><span class="o">/</span><span class="n">seldon</span><span class="o">-</span><span class="n">model</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">v1</span><span class="mf">.0</span><span class="o">/</span><span class="n">predictions</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{"data":{"names":[],"ndarray":[1]},"meta":{"requestPath":{"classifier":"seldonio/seldontest_predict:1.10.0-dev"}}}
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s1">'Content-Type: application/json'</span><span class="w"> </span><span class="err">\</span>
+   <span class="o">-</span><span class="n">d</span> <span class="s1">'@./data_tensor.json'</span> \
+    <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">8003</span><span class="o">/</span><span class="n">seldon</span><span class="o">/</span><span class="n">seldon</span><span class="o">/</span><span class="n">seldon</span><span class="o">-</span><span class="n">model</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">v1</span><span class="mf">.0</span><span class="o">/</span><span class="n">predictions</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{"data":{"names":[],"tensor":{"shape":[1],"values":[1]}},"meta":{"requestPath":{"classifier":"seldonio/seldontest_predict:1.10.0-dev"}}}
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s1">'Content-Type: application/json'</span><span class="w"> </span><span class="err">\</span>
+   <span class="o">-</span><span class="n">d</span> <span class="s1">'@./data_tftensor.json'</span> \
+    <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">8003</span><span class="o">/</span><span class="n">seldon</span><span class="o">/</span><span class="n">seldon</span><span class="o">/</span><span class="n">seldon</span><span class="o">-</span><span class="n">model</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">v1</span><span class="mf">.0</span><span class="o">/</span><span class="n">predictions</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{"data":{"names":[],"tftensor":{"dtype":"DT_INT64","int64Val":["1"],"tensorShape":{"dim":[{"size":"1"}]}}},"meta":{"requestPath":{"classifier":"seldonio/seldontest_predict:1.10.0-dev"}}}
+</pre></div></div>
+</div>
+<p>Test REST</p>
+<ol class="arabic simple">
+<li><p>ndarray</p></li>
+<li><p>tensor</p></li>
+<li><p>tftensor</p></li>
+</ol>
+<p>This can be done locally as the results should be indicative of the relative differences rather than very accurate timings.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+vegeta<span class="w"> </span>attack<span class="w"> </span>-format<span class="o">=</span>json<span class="w"> </span>-duration<span class="o">=</span>10s<span class="w"> </span>-rate<span class="o">=</span><span class="m">0</span><span class="w"> </span>-max-workers<span class="o">=</span><span class="m">1</span><span class="w"> </span>-targets<span class="o">=</span>vegeta_ndarray.json<span class="w"> </span><span class="p">|</span>
+<span class="w">  </span>vegeta<span class="w"> </span>report<span class="w"> </span>-type<span class="o">=</span>text
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Requests      [total, rate, throughput]         518, 51.76, 51.66
+Duration      [total, attack, wait]             10.027s, 10.008s, 19.333ms
+Latencies     [min, mean, 50, 90, 95, 99, max]  17.337ms, 19.355ms, 19.136ms, 20.336ms, 21.214ms, 24.886ms, 27.831ms
+Bytes In      [total, mean]                     59570, 115.00
+Bytes Out     [total, mean]                     356857970, 688915.00
+Success       [ratio]                           100.00%
+Status Codes  [code:count]                      200:518
+Error Set:
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+vegeta<span class="w"> </span>attack<span class="w"> </span>-format<span class="o">=</span>json<span class="w"> </span>-duration<span class="o">=</span>10s<span class="w"> </span>-rate<span class="o">=</span><span class="m">0</span><span class="w"> </span>-max-workers<span class="o">=</span><span class="m">1</span><span class="w"> </span>-targets<span class="o">=</span>vegeta_tensor.json<span class="w"> </span><span class="p">|</span>
+<span class="w">  </span>vegeta<span class="w"> </span>report<span class="w"> </span>-type<span class="o">=</span>text
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Requests      [total, rate, throughput]         504, 50.35, 50.25
+Duration      [total, attack, wait]             10.03s, 10.01s, 19.353ms
+Latencies     [min, mean, 50, 90, 95, 99, max]  17.885ms, 19.897ms, 19.616ms, 21.1ms, 22.205ms, 25.498ms, 34.99ms
+Bytes In      [total, mean]                     69048, 137.00
+Bytes Out     [total, mean]                     347225760, 688940.00
+Success       [ratio]                           100.00%
+Status Codes  [code:count]                      200:504
+Error Set:
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+vegeta<span class="w"> </span>attack<span class="w"> </span>-format<span class="o">=</span>json<span class="w"> </span>-duration<span class="o">=</span>10s<span class="w"> </span>-rate<span class="o">=</span><span class="m">0</span><span class="w"> </span>-max-workers<span class="o">=</span><span class="m">1</span><span class="w"> </span>-targets<span class="o">=</span>vegeta_tftensor.json<span class="w"> </span><span class="p">|</span>
+<span class="w">  </span>vegeta<span class="w"> </span>report<span class="w"> </span>-type<span class="o">=</span>text
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Requests      [total, rate, throughput]         636, 63.55, 63.45
+Duration      [total, attack, wait]             10.023s, 10.008s, 14.782ms
+Latencies     [min, mean, 50, 90, 95, 99, max]  13.646ms, 15.756ms, 15.461ms, 17.41ms, 18.729ms, 20.628ms, 23.465ms
+Bytes In      [total, mean]                     118932, 187.00
+Bytes Out     [total, mean]                     678466356, 1066771.00
+Success       [ratio]                           100.00%
+Status Codes  [code:count]                      200:636
+Error Set:
+</pre></div></div>
+</div>
+<p>Example results</p>
+<table>
+<thead>
+<tr class="row-odd"><th class="head"><p>ndarray</p></th>
+<th class="head"><p>tensor</p></th>
+<th class="head"><p>tftensor</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>19.8ms</p></td>
+<td><p>19.7ms</p></td>
+<td><p>16.2ms</p></td>
+</tr>
+</tbody>
+</table>
+<p>Test gRPC</p>
+<ol class="arabic simple">
+<li><p>ndarray</p></li>
+<li><p>tensor</p></li>
+<li><p>tftensor</p></li>
+</ol>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+ghz<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--insecure<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--proto<span class="w"> </span>../../../proto/prediction.proto<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--call<span class="w"> </span>seldon.protos.Seldon/Predict<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--data-file<span class="o">=</span>./data_ndarray.json<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--qps<span class="o">=</span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--cpus<span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--concurrency<span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--duration<span class="o">=</span><span class="s2">"10s"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--format<span class="w"> </span>summary<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--metadata<span class="o">=</span><span class="s1">'{"seldon": "seldon-model", "namespace": "seldon"}'</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>localhost:8003
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+
+Summary:
+  Count:        24
+  Total:        10.13 s
+  Slowest:      278.81 ms
+  Fastest:      242.25 ms
+  Average:      244.06 ms
+  Requests/sec: 2.37
+
+Response time histogram:
+  242.253 [1]   |∎∎∎∎∎∎∎
+  245.909 [2]   |∎∎∎∎∎∎∎∎∎∎∎∎∎
+  249.564 [4]   |∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+  253.219 [6]   |∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+  256.874 [4]   |∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+  260.530 [1]   |∎∎∎∎∎∎∎
+  264.185 [1]   |∎∎∎∎∎∎∎
+  267.840 [2]   |∎∎∎∎∎∎∎∎∎∎∎∎∎
+  271.496 [0]   |
+  275.151 [1]   |∎∎∎∎∎∎∎
+  278.806 [1]   |∎∎∎∎∎∎∎
+
+Latency distribution:
+  10 % in 247.44 ms
+  25 % in 249.47 ms
+  50 % in 252.85 ms
+  75 % in 260.70 ms
+  90 % in 272.55 ms
+  95 % in 278.81 ms
+  0 % in 0 ns
+
+Status code distribution:
+  [OK]         23 responses
+  [Canceled]   1 responses
+
+Error distribution:
+  [1]   rpc error: code = Canceled desc = grpc: the client connection is closing
+
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+ghz<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--insecure<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--proto<span class="w"> </span>../../../proto/prediction.proto<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--call<span class="w"> </span>seldon.protos.Seldon/Predict<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--data-file<span class="o">=</span>./data_tensor.json<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--qps<span class="o">=</span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--cpus<span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--concurrency<span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--duration<span class="o">=</span><span class="s2">"10s"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--format<span class="w"> </span>summary<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--metadata<span class="o">=</span><span class="s1">'{"seldon": "seldon-model", "namespace": "seldon"}'</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>localhost:8003
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+
+Summary:
+  Count:        92
+  Total:        10.10 s
+  Slowest:      21.23 ms
+  Fastest:      4.91 ms
+  Average:      7.58 ms
+  Requests/sec: 9.11
+
+Response time histogram:
+  4.906 [1]     |∎
+  6.539 [55]    |∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+  8.171 [17]    |∎∎∎∎∎∎∎∎∎∎∎∎
+  9.804 [4]     |∎∎∎
+  11.436 [0]    |
+  13.069 [4]    |∎∎∎
+  14.701 [3]    |∎∎
+  16.334 [3]    |∎∎
+  17.966 [0]    |
+  19.599 [2]    |∎
+  21.232 [2]    |∎
+
+Latency distribution:
+  10 % in 5.51 ms
+  25 % in 5.70 ms
+  50 % in 6.14 ms
+  75 % in 7.09 ms
+  90 % in 14.14 ms
+  95 % in 18.77 ms
+  0 % in 0 ns
+
+Status code distribution:
+  [OK]         91 responses
+  [Canceled]   1 responses
+
+Error distribution:
+  [1]   rpc error: code = Canceled desc = grpc: the client connection is closing
+
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+ghz<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--insecure<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--proto<span class="w"> </span>../../../proto/prediction.proto<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--call<span class="w"> </span>seldon.protos.Seldon/Predict<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--data-file<span class="o">=</span>./data_tftensor.json<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--qps<span class="o">=</span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--cpus<span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--concurrency<span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--duration<span class="o">=</span><span class="s2">"10s"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--format<span class="w"> </span>summary<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--metadata<span class="o">=</span><span class="s1">'{"seldon": "seldon-model", "namespace": "seldon"}'</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>localhost:8003
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+
+Summary:
+  Count:        425
+  Total:        10.04 s
+  Slowest:      16.38 ms
+  Fastest:      3.97 ms
+  Average:      5.33 ms
+  Requests/sec: 42.31
+
+Response time histogram:
+  3.970 [1]     |
+  5.211 [281]   |∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+  6.452 [91]    |∎∎∎∎∎∎∎∎∎∎∎∎∎
+  7.692 [25]    |∎∎∎∎
+  8.933 [8]     |∎
+  10.174 [6]    |∎
+  11.415 [7]    |∎
+  12.656 [2]    |
+  13.896 [1]    |
+  15.137 [1]    |
+  16.378 [1]    |
+
+Latency distribution:
+  10 % in 4.34 ms
+  25 % in 4.54 ms
+  50 % in 4.89 ms
+  75 % in 5.52 ms
+  90 % in 6.79 ms
+  95 % in 8.30 ms
+  99 % in 11.71 ms
+
+Status code distribution:
+  [OK]         424 responses
+  [Canceled]   1 responses
+
+Error distribution:
+  [1]   rpc error: code = Canceled desc = grpc: the client connection is closing
+
+</pre></div></div>
+</div>
+<p>Example results</p>
+<table>
+<thead>
+<tr class="row-odd"><th class="head"><p>ndarray</p></th>
+<th class="head"><p>tensor</p></th>
+<th class="head"><p>tftensor</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>253ms</p></td>
+<td><p>8.4ms</p></td>
+<td><p>5.5ms</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="Conclusions">
+<h2 id="Conclusions">Conclusions<a class="headerlink" href="#Conclusions" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>gRPC is generally faster than REST except for ndarray which is much worse and should not be used with gRPC</p></li>
+<li><p>tftensor is fastest</p></li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[152]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>delete<span class="w"> </span>-f<span class="w"> </span>model.yaml
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+seldondeployment.machinelearning.seldon.io "seldon-model" deleted
+</pre></div></div>
+</div>
+</section>
+<section id="Test-Predct-Raw">
+<h2 id="Test-Predct-Raw">Test Predct Raw<a class="headerlink" href="#Test-Predct-Raw" title="Permalink to this heading">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[158]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">writetemplate</span> model.yaml
+apiVersion: machinelearning.seldon.io/v1
+kind: SeldonDeployment
+metadata:
+  name: seldon-model
+  namespace: seldon
+spec:
+  predictors:
+  - annotations:
+      seldon.io/no-engine: "true"
+    componentSpecs:
+    - spec:
+        containers:
+        - image: seldonio/seldontest_predict_raw:{VERSION}
+          imagePullPolicy: IfNotPresent
+          name: classifier
+          resources:
+            requests:
+              cpu: 1
+            limits:
+              cpu: 1
+          env:
+          - name: GUNICORN_WORKERS
+            value: "1"
+          - name: GUNICORN_THREADS
+            value: "1"
+        tolerations:
+        - key: model
+          operator: Exists
+          effect: NoSchedule
+    graph:
+      children: []
+      name: classifier
+      type: MODEL
+    name: default
+    replicas: 1
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[159]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>model.yaml
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+seldondeployment.machinelearning.seldon.io/seldon-model created
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[160]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span><span class="nb">wait</span><span class="w"> </span>--for<span class="w"> </span><span class="nv">condition</span><span class="o">=</span>ready<span class="w"> </span>--timeout<span class="o">=</span>600s<span class="w"> </span>pods<span class="w"> </span>--all<span class="w"> </span>-n<span class="w"> </span>seldon
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+pod/seldon-model-default-0-classifier-5dc8fbd597-kk7td condition met
+</pre></div></div>
+</div>
+<p>Smoke test port-forward to check everything is working</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[161]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s1">'Content-Type: application/json'</span><span class="w"> </span><span class="err">\</span>
+   <span class="o">-</span><span class="n">d</span> <span class="s1">'@./data_tftensor.json'</span> \
+    <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">8003</span><span class="o">/</span><span class="n">seldon</span><span class="o">/</span><span class="n">seldon</span><span class="o">/</span><span class="n">seldon</span><span class="o">-</span><span class="n">model</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">v1</span><span class="mf">.0</span><span class="o">/</span><span class="n">predictions</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[1]
+</pre></div></div>
+</div>
+<p>Test REST</p>
+<ol class="arabic simple">
+<li><p>ndarray</p></li>
+<li><p>tensor</p></li>
+<li><p>tftensor</p></li>
+</ol>
+<p>This can be done locally as the results should be indicative of the relative differences rather than very accurate timings.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[162]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+vegeta<span class="w"> </span>attack<span class="w"> </span>-format<span class="o">=</span>json<span class="w"> </span>-duration<span class="o">=</span>10s<span class="w"> </span>-rate<span class="o">=</span><span class="m">0</span><span class="w"> </span>-max-workers<span class="o">=</span><span class="m">1</span><span class="w"> </span>-targets<span class="o">=</span>vegeta_ndarray.json<span class="w"> </span><span class="p">|</span>
+<span class="w">  </span>vegeta<span class="w"> </span>report<span class="w"> </span>-type<span class="o">=</span>text
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Requests      [total, rate, throughput]         724, 72.35, 72.25
+Duration      [total, attack, wait]             10.021s, 10.007s, 14.458ms
+Latencies     [min, mean, 50, 90, 95, 99, max]  12.228ms, 13.838ms, 13.683ms, 14.641ms, 15.489ms, 17.888ms, 22.263ms
+Bytes In      [total, mean]                     2896, 4.00
+Bytes Out     [total, mean]                     498774460, 688915.00
+Success       [ratio]                           100.00%
+Status Codes  [code:count]                      200:724
+Error Set:
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[163]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+vegeta<span class="w"> </span>attack<span class="w"> </span>-format<span class="o">=</span>json<span class="w"> </span>-duration<span class="o">=</span>10s<span class="w"> </span>-rate<span class="o">=</span><span class="m">0</span><span class="w"> </span>-max-workers<span class="o">=</span><span class="m">1</span><span class="w"> </span>-targets<span class="o">=</span>vegeta_tensor.json<span class="w"> </span><span class="p">|</span>
+<span class="w">  </span>vegeta<span class="w"> </span>report<span class="w"> </span>-type<span class="o">=</span>text
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Requests      [total, rate, throughput]         724, 72.32, 72.22
+Duration      [total, attack, wait]             10.025s, 10.011s, 14.307ms
+Latencies     [min, mean, 50, 90, 95, 99, max]  12.362ms, 13.844ms, 13.701ms, 14.655ms, 15.493ms, 17.976ms, 18.802ms
+Bytes In      [total, mean]                     2896, 4.00
+Bytes Out     [total, mean]                     498792560, 688940.00
+Success       [ratio]                           100.00%
+Status Codes  [code:count]                      200:724
+Error Set:
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[164]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+vegeta<span class="w"> </span>attack<span class="w"> </span>-format<span class="o">=</span>json<span class="w"> </span>-duration<span class="o">=</span>10s<span class="w"> </span>-rate<span class="o">=</span><span class="m">0</span><span class="w"> </span>-max-workers<span class="o">=</span><span class="m">1</span><span class="w"> </span>-targets<span class="o">=</span>vegeta_tftensor.json<span class="w"> </span><span class="p">|</span>
+<span class="w">  </span>vegeta<span class="w"> </span>report<span class="w"> </span>-type<span class="o">=</span>text
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Requests      [total, rate, throughput]         901, 90.04, 89.93
+Duration      [total, attack, wait]             10.018s, 10.007s, 11.64ms
+Latencies     [min, mean, 50, 90, 95, 99, max]  8.955ms, 11.116ms, 10.994ms, 12.099ms, 12.721ms, 15.208ms, 19.918ms
+Bytes In      [total, mean]                     3604, 4.00
+Bytes Out     [total, mean]                     961160671, 1066771.00
+Success       [ratio]                           100.00%
+Status Codes  [code:count]                      200:901
+Error Set:
+</pre></div></div>
+</div>
+<p>Example results</p>
+<table>
+<thead>
+<tr class="row-odd"><th class="head"><p>ndarray</p></th>
+<th class="head"><p>tensor</p></th>
+<th class="head"><p>tftensor</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>13.3ms</p></td>
+<td><p>13.3ms</p></td>
+<td><p>11.1ms</p></td>
+</tr>
+</tbody>
+</table>
+<p>Test gRPC</p>
+<ol class="arabic simple">
+<li><p>ndarray</p></li>
+<li><p>tensor</p></li>
+<li><p>tftensor</p></li>
+</ol>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[165]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+ghz<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--insecure<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--proto<span class="w"> </span>../../../proto/prediction.proto<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--call<span class="w"> </span>seldon.protos.Seldon/Predict<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--data-file<span class="o">=</span>./data_ndarray.json<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--qps<span class="o">=</span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--cpus<span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--concurrency<span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--duration<span class="o">=</span><span class="s2">"10s"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--format<span class="w"> </span>summary<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--metadata<span class="o">=</span><span class="s1">'{"seldon": "seldon-model", "namespace": "seldon"}'</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>localhost:8003
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+
+Summary:
+  Count:        44
+  Total:        10.04 s
+  Slowest:      69.07 ms
+  Fastest:      44.44 ms
+  Average:      46.03 ms
+  Requests/sec: 4.38
+
+Response time histogram:
+  44.440 [1]    |∎
+  46.904 [31]   |∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+  49.367 [6]    |∎∎∎∎∎∎∎∎
+  51.831 [2]    |∎∎∎
+  54.294 [2]    |∎∎∎
+  56.758 [0]    |
+  59.221 [0]    |
+  61.684 [0]    |
+  64.148 [0]    |
+  66.611 [0]    |
+  69.075 [1]    |∎
+
+Latency distribution:
+  10 % in 45.05 ms
+  25 % in 45.40 ms
+  50 % in 46.30 ms
+  75 % in 47.34 ms
+  90 % in 50.16 ms
+  95 % in 53.38 ms
+  0 % in 0 ns
+
+Status code distribution:
+  [OK]         43 responses
+  [Canceled]   1 responses
+
+Error distribution:
+  [1]   rpc error: code = Canceled desc = grpc: the client connection is closing
+
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[166]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+ghz<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--insecure<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--proto<span class="w"> </span>../../../proto/prediction.proto<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--call<span class="w"> </span>seldon.protos.Seldon/Predict<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--data-file<span class="o">=</span>./data_tensor.json<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--qps<span class="o">=</span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--cpus<span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--concurrency<span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--duration<span class="o">=</span><span class="s2">"10s"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--format<span class="w"> </span>summary<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--metadata<span class="o">=</span><span class="s1">'{"seldon": "seldon-model", "namespace": "seldon"}'</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>localhost:8003
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+
+Summary:
+  Count:        92
+  Total:        10.10 s
+  Slowest:      19.81 ms
+  Fastest:      4.93 ms
+  Average:      7.91 ms
+  Requests/sec: 9.11
+
+Response time histogram:
+  4.932 [1]     |∎
+  6.419 [53]    |∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+  7.907 [12]    |∎∎∎∎∎∎∎∎∎
+  9.395 [5]     |∎∎∎∎
+  10.882 [4]    |∎∎∎
+  12.370 [1]    |∎
+  13.858 [3]    |∎∎
+  15.346 [3]    |∎∎
+  16.833 [2]    |∎∎
+  18.321 [3]    |∎∎
+  19.809 [4]    |∎∎∎
+
+Latency distribution:
+  10 % in 5.21 ms
+  25 % in 5.68 ms
+  50 % in 6.04 ms
+  75 % in 8.27 ms
+  90 % in 15.77 ms
+  95 % in 19.04 ms
+  0 % in 0 ns
+
+Status code distribution:
+  [OK]         91 responses
+  [Canceled]   1 responses
+
+Error distribution:
+  [1]   rpc error: code = Canceled desc = grpc: the client connection is closing
+
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[167]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+ghz<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--insecure<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--proto<span class="w"> </span>../../../proto/prediction.proto<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--call<span class="w"> </span>seldon.protos.Seldon/Predict<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--data-file<span class="o">=</span>./data_tftensor.json<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--qps<span class="o">=</span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--cpus<span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--concurrency<span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--duration<span class="o">=</span><span class="s2">"10s"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--format<span class="w"> </span>summary<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--metadata<span class="o">=</span><span class="s1">'{"seldon": "seldon-model", "namespace": "seldon"}'</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>localhost:8003
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+
+Summary:
+  Count:        426
+  Total:        10.03 s
+  Slowest:      11.74 ms
+  Fastest:      3.67 ms
+  Average:      5.02 ms
+  Requests/sec: 42.48
+
+Response time histogram:
+  3.668 [1]     |
+  4.475 [174]   |∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+  5.282 [141]   |∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+  6.089 [43]    |∎∎∎∎∎∎∎∎∎∎
+  6.897 [30]    |∎∎∎∎∎∎∎
+  7.704 [16]    |∎∎∎∎
+  8.511 [6]     |∎
+  9.318 [8]     |∎∎
+  10.126 [2]    |
+  10.933 [1]    |
+  11.740 [3]    |∎
+
+Latency distribution:
+  10 % in 4.08 ms
+  25 % in 4.27 ms
+  50 % in 4.61 ms
+  75 % in 5.30 ms
+  90 % in 6.62 ms
+  95 % in 7.66 ms
+  99 % in 10.26 ms
+
+Status code distribution:
+  [OK]         425 responses
+  [Canceled]   1 responses
+
+Error distribution:
+  [1]   rpc error: code = Canceled desc = grpc: the client connection is closing
+
+</pre></div></div>
+</div>
+<p>Example results</p>
+<table>
+<thead>
+<tr class="row-odd"><th class="head"><p>ndarray</p></th>
+<th class="head"><p>tensor</p></th>
+<th class="head"><p>tftensor</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>46ms</p></td>
+<td><p>7.9ms</p></td>
+<td><p>5.0ms</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id2">
+<h2 id="id2">Conclusions<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">predict_raw</span></code> is faster than <code class="docutils literal notranslate"><span class="pre">predict</span></code> but you will need to handle the serialization/deserializtion yourself which maybe will make them equivalent unless specific techniques can be applied for your use case.</p></li>
+</ul>
+</section>
+<section id="Test-with-Predict-method-on-Small-Batch-Size">
+<h2 id="Test-with-Predict-method-on-Small-Batch-Size">Test with Predict method on Small Batch Size<a class="headerlink" href="#Test-with-Predict-method-on-Small-Batch-Size" title="Permalink to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">seldontest_predict</span></code> has simply a <code class="docutils literal notranslate"><span class="pre">predict</span></code> method that does a loop with a configurable number of iterations (default 1) to simulate work. The iterations can be set as a Seldon parameter but in this case we are looking to benchmark the serialization/deserialization cost so want a minimal amount of work.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">writetemplate</span> model.yaml
+apiVersion: machinelearning.seldon.io/v1
+kind: SeldonDeployment
+metadata:
+  name: seldon-model
+  namespace: seldon
+spec:
+  predictors:
+  - annotations:
+      seldon.io/no-engine: "true"
+    componentSpecs:
+    - spec:
+        containers:
+        - image: seldonio/seldontest_predict:{VERSION}
+          imagePullPolicy: IfNotPresent
+          name: classifier
+          resources:
+            requests:
+              cpu: 1
+            limits:
+              cpu: 1
+          env:
+          - name: GUNICORN_WORKERS
+            value: "1"
+          - name: GUNICORN_THREADS
+            value: "1"
+        tolerations:
+        - key: model
+          operator: Exists
+          effect: NoSchedule
+    graph:
+      children: []
+      name: classifier
+      type: MODEL
+    name: default
+    replicas: 1
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>model.yaml
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+seldondeployment.machinelearning.seldon.io/seldon-model configured
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span><span class="nb">wait</span><span class="w"> </span>--for<span class="w"> </span><span class="nv">condition</span><span class="o">=</span>ready<span class="w"> </span>--timeout<span class="o">=</span>600s<span class="w"> </span>pods<span class="w"> </span>--all<span class="w"> </span>-n<span class="w"> </span>seldon
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+pod/seldon-model-default-0-classifier-5445bd4ccf-bgkcm condition met
+</pre></div></div>
+</div>
+<p>Create payloads and associated vegeta configurations for</p>
+<ol class="arabic simple">
+<li><p>ndarray</p></li>
+<li><p>tensor</p></li>
+<li><p>tftensor</p></li>
+</ol>
+<p>We will create an array of 100,000 consecutive integers.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
+
+<span class="n">sz</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">vals</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">sz</span><span class="p">))</span>
+<span class="n">valStr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">vals</span><span class="si">}</span><span class="s2">"</span>
+<span class="n">payload</span> <span class="o">=</span> <span class="s1">'{"data": {"ndarray": ['</span> <span class="o">+</span> <span class="n">valStr</span> <span class="o">+</span> <span class="s2">"]}}"</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"data_ndarray.json"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+<span class="n">payload_tensor</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s1">'{"data":{"tensor":{"shape":[1,'</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sz</span><span class="p">)</span> <span class="o">+</span> <span class="s1">'],"values":'</span> <span class="o">+</span> <span class="n">valStr</span> <span class="o">+</span> <span class="s2">"}}}"</span>
+<span class="p">)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"data_tensor.json"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">payload_tensor</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+<span class="kn">from</span> <span class="nn">google.protobuf</span> <span class="kn">import</span> <span class="n">json_format</span>
+
+<span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vals</span><span class="p">)</span>
+<span class="n">tftensor</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">make_tensor_proto</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
+<span class="n">jStrTensor</span> <span class="o">=</span> <span class="n">json_format</span><span class="o">.</span><span class="n">MessageToJson</span><span class="p">(</span><span class="n">tftensor</span><span class="p">)</span>
+<span class="n">jTensor</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">jStrTensor</span><span class="p">)</span>
+<span class="n">payload_tftensor</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s1">'{"data":{"tftensor":'</span> <span class="o">+</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">jTensor</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s2">","</span><span class="p">,</span> <span class="s2">":"</span><span class="p">))</span> <span class="o">+</span> <span class="s2">"}}"</span>
+<span class="p">)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"data_tftensor.json"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">payload_tftensor</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">base64</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="n">sample_string_bytes</span> <span class="o">=</span> <span class="n">payload_tensor</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">"ascii"</span><span class="p">)</span>
+<span class="n">base64_bytes</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">sample_string_bytes</span><span class="p">)</span>
+<span class="n">base64_string</span> <span class="o">=</span> <span class="n">base64_bytes</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"ascii"</span><span class="p">)</span>
+<span class="n">jqPayload</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"method"</span><span class="p">:</span> <span class="s2">"POST"</span><span class="p">,</span>
+    <span class="s2">"url"</span><span class="p">:</span> <span class="s2">"http://localhost:8003/seldon/seldon/seldon-model/api/v1.0/predictions"</span><span class="p">,</span>
+    <span class="s2">"body"</span><span class="p">:</span> <span class="n">base64_string</span><span class="p">,</span>
+    <span class="s2">"header"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"Content-Type"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"application/json"</span><span class="p">]},</span>
+<span class="p">}</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"vegeta_tensor.json"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">jqPayload</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s2">","</span><span class="p">,</span> <span class="s2">":"</span><span class="p">)))</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="n">sample_string_bytes</span> <span class="o">=</span> <span class="n">payload</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">"ascii"</span><span class="p">)</span>
+<span class="n">base64_bytes</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">sample_string_bytes</span><span class="p">)</span>
+<span class="n">base64_string</span> <span class="o">=</span> <span class="n">base64_bytes</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"ascii"</span><span class="p">)</span>
+<span class="n">jqPayload</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"method"</span><span class="p">:</span> <span class="s2">"POST"</span><span class="p">,</span>
+    <span class="s2">"url"</span><span class="p">:</span> <span class="s2">"http://localhost:8003/seldon/seldon/seldon-model/api/v1.0/predictions"</span><span class="p">,</span>
+    <span class="s2">"body"</span><span class="p">:</span> <span class="n">base64_string</span><span class="p">,</span>
+    <span class="s2">"header"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"Content-Type"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"application/json"</span><span class="p">]},</span>
+<span class="p">}</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"vegeta_ndarray.json"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">jqPayload</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s2">","</span><span class="p">,</span> <span class="s2">":"</span><span class="p">)))</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+
+
+<span class="n">sample_string_bytes</span> <span class="o">=</span> <span class="n">payload_tftensor</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">"ascii"</span><span class="p">)</span>
+<span class="n">base64_bytes</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">sample_string_bytes</span><span class="p">)</span>
+<span class="n">base64_string</span> <span class="o">=</span> <span class="n">base64_bytes</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"ascii"</span><span class="p">)</span>
+<span class="n">jqPayload</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"method"</span><span class="p">:</span> <span class="s2">"POST"</span><span class="p">,</span>
+    <span class="s2">"url"</span><span class="p">:</span> <span class="s2">"http://localhost:8003/seldon/seldon/seldon-model/api/v1.0/predictions"</span><span class="p">,</span>
+    <span class="s2">"body"</span><span class="p">:</span> <span class="n">base64_string</span><span class="p">,</span>
+    <span class="s2">"header"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"Content-Type"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"application/json"</span><span class="p">]},</span>
+<span class="p">}</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"vegeta_tftensor.json"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">jqPayload</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s2">","</span><span class="p">,</span> <span class="s2">":"</span><span class="p">)))</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Smoke test port-forward to check everything is working</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s1">'Content-Type: application/json'</span><span class="w"> </span><span class="err">\</span>
+   <span class="o">-</span><span class="n">d</span> <span class="s1">'@./data_tensor.json'</span> \
+    <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">8003</span><span class="o">/</span><span class="n">seldon</span><span class="o">/</span><span class="n">seldon</span><span class="o">/</span><span class="n">seldon</span><span class="o">-</span><span class="n">model</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">v1</span><span class="mf">.0</span><span class="o">/</span><span class="n">predictions</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{"data":{"names":[],"tensor":{"shape":[1],"values":[1]}},"meta":{"requestPath":{"classifier":"seldonio/seldontest_predict:1.10.0-dev"}}}
+</pre></div></div>
+</div>
+<p>Test REST</p>
+<ol class="arabic simple">
+<li><p>ndarray</p></li>
+<li><p>tensor</p></li>
+<li><p>tftensor</p></li>
+</ol>
+<p>This can be done locally as the results should be indicative of the relative differences rather than very accurate timings.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+vegeta<span class="w"> </span>attack<span class="w"> </span>-format<span class="o">=</span>json<span class="w"> </span>-duration<span class="o">=</span>10s<span class="w"> </span>-rate<span class="o">=</span><span class="m">0</span><span class="w"> </span>-max-workers<span class="o">=</span><span class="m">1</span><span class="w"> </span>-targets<span class="o">=</span>vegeta_ndarray.json<span class="w"> </span><span class="p">|</span>
+<span class="w">  </span>vegeta<span class="w"> </span>report<span class="w"> </span>-type<span class="o">=</span>text
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Requests      [total, rate, throughput]         5538, 553.80, 553.67
+Duration      [total, attack, wait]             10.002s, 10s, 2.364ms
+Latencies     [min, mean, 50, 90, 95, 99, max]  1.569ms, 1.804ms, 1.739ms, 1.984ms, 2.198ms, 2.861ms, 6.62ms
+Bytes In      [total, mean]                     636870, 115.00
+Bytes Out     [total, mean]                     155064, 28.00
+Success       [ratio]                           100.00%
+Status Codes  [code:count]                      200:5538
+Error Set:
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+vegeta<span class="w"> </span>attack<span class="w"> </span>-format<span class="o">=</span>json<span class="w"> </span>-duration<span class="o">=</span>10s<span class="w"> </span>-rate<span class="o">=</span><span class="m">0</span><span class="w"> </span>-max-workers<span class="o">=</span><span class="m">1</span><span class="w"> </span>-targets<span class="o">=</span>vegeta_tensor.json<span class="w"> </span><span class="p">|</span>
+<span class="w">  </span>vegeta<span class="w"> </span>report<span class="w"> </span>-type<span class="o">=</span>text
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Requests      [total, rate, throughput]         5557, 555.65, 555.55
+Duration      [total, attack, wait]             10.003s, 10.001s, 1.753ms
+Latencies     [min, mean, 50, 90, 95, 99, max]  1.578ms, 1.798ms, 1.74ms, 1.925ms, 2.119ms, 2.981ms, 5.968ms
+Bytes In      [total, mean]                     761309, 137.00
+Bytes Out     [total, mean]                     266736, 48.00
+Success       [ratio]                           100.00%
+Status Codes  [code:count]                      200:5557
+Error Set:
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+vegeta<span class="w"> </span>attack<span class="w"> </span>-format<span class="o">=</span>json<span class="w"> </span>-duration<span class="o">=</span>10s<span class="w"> </span>-rate<span class="o">=</span><span class="m">0</span><span class="w"> </span>-max-workers<span class="o">=</span><span class="m">1</span><span class="w"> </span>-targets<span class="o">=</span>vegeta_tftensor.json<span class="w"> </span><span class="p">|</span>
+<span class="w">  </span>vegeta<span class="w"> </span>report<span class="w"> </span>-type<span class="o">=</span>text
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Requests      [total, rate, throughput]         4548, 454.75, 454.65
+Duration      [total, attack, wait]             10.003s, 10.001s, 2.141ms
+Latencies     [min, mean, 50, 90, 95, 99, max]  1.937ms, 2.197ms, 2.138ms, 2.351ms, 2.482ms, 3.215ms, 9.424ms
+Bytes In      [total, mean]                     850476, 187.00
+Bytes Out     [total, mean]                     436608, 96.00
+Success       [ratio]                           100.00%
+Status Codes  [code:count]                      200:4548
+Error Set:
+</pre></div></div>
+</div>
+<p>Example results</p>
+<table>
+<thead>
+<tr class="row-odd"><th class="head"><p>ndarray</p></th>
+<th class="head"><p>tensor</p></th>
+<th class="head"><p>tftensor</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1.8ms</p></td>
+<td><p>1.8ms</p></td>
+<td><p>2.1ms</p></td>
+</tr>
+</tbody>
+</table>
+<p>Test gRPC</p>
+<ol class="arabic simple">
+<li><p>ndarray</p></li>
+<li><p>tensor</p></li>
+<li><p>tftensor</p></li>
+</ol>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+ghz<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--insecure<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--proto<span class="w"> </span>../../../proto/prediction.proto<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--call<span class="w"> </span>seldon.protos.Seldon/Predict<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--data-file<span class="o">=</span>./data_ndarray.json<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--qps<span class="o">=</span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--cpus<span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--concurrency<span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--duration<span class="o">=</span><span class="s2">"10s"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--format<span class="w"> </span>summary<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--metadata<span class="o">=</span><span class="s1">'{"seldon": "seldon-model", "namespace": "seldon"}'</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>localhost:8003
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+
+Summary:
+  Count:        6506
+  Total:        10.01 s
+  Slowest:      18.58 ms
+  Fastest:      1.26 ms
+  Average:      1.46 ms
+  Requests/sec: 650.23
+
+Response time histogram:
+  1.260 [1]     |
+  2.992 [6465]  |∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+  4.724 [30]    |
+  6.456 [5]     |
+  8.187 [2]     |
+  9.919 [1]     |
+  11.651 [0]    |
+  13.382 [0]    |
+  15.114 [0]    |
+  16.846 [0]    |
+  18.578 [1]    |
+
+Latency distribution:
+  10 % in 1.33 ms
+  25 % in 1.36 ms
+  50 % in 1.39 ms
+  75 % in 1.45 ms
+  90 % in 1.58 ms
+  95 % in 1.79 ms
+  99 % in 2.50 ms
+
+Status code distribution:
+  [OK]            6505 responses
+  [Unavailable]   1 responses
+
+Error distribution:
+  [1]   rpc error: code = Unavailable desc = transport is closing
+
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+ghz<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--insecure<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--proto<span class="w"> </span>../../../proto/prediction.proto<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--call<span class="w"> </span>seldon.protos.Seldon/Predict<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--data-file<span class="o">=</span>./data_tensor.json<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--qps<span class="o">=</span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--cpus<span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--concurrency<span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--duration<span class="o">=</span><span class="s2">"10s"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--format<span class="w"> </span>summary<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--metadata<span class="o">=</span><span class="s1">'{"seldon": "seldon-model", "namespace": "seldon"}'</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>localhost:8003
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+
+Summary:
+  Count:        6429
+  Total:        10.01 s
+  Slowest:      16.30 ms
+  Fastest:      1.29 ms
+  Average:      1.49 ms
+  Requests/sec: 642.56
+
+Response time histogram:
+  1.287 [1]     |
+  2.789 [6375]  |∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+  4.290 [36]    |
+  5.792 [11]    |
+  7.293 [2]     |
+  8.795 [1]     |
+  10.296 [0]    |
+  11.798 [1]    |
+  13.299 [0]    |
+  14.801 [0]    |
+  16.303 [1]    |
+
+Latency distribution:
+  10 % in 1.36 ms
+  25 % in 1.38 ms
+  50 % in 1.42 ms
+  75 % in 1.48 ms
+  90 % in 1.60 ms
+  95 % in 1.80 ms
+  99 % in 2.67 ms
+
+Status code distribution:
+  [OK]            6428 responses
+  [Unavailable]   1 responses
+
+Error distribution:
+  [1]   rpc error: code = Unavailable desc = transport is closing
+
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+ghz<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--insecure<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--proto<span class="w"> </span>../../../proto/prediction.proto<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--call<span class="w"> </span>seldon.protos.Seldon/Predict<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--data-file<span class="o">=</span>./data_tftensor.json<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--qps<span class="o">=</span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--cpus<span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--concurrency<span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--duration<span class="o">=</span><span class="s2">"10s"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--format<span class="w"> </span>summary<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--metadata<span class="o">=</span><span class="s1">'{"seldon": "seldon-model", "namespace": "seldon"}'</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>localhost:8003
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+
+Summary:
+  Count:        6066
+  Total:        10.01 s
+  Slowest:      9.38 ms
+  Fastest:      1.39 ms
+  Average:      1.57 ms
+  Requests/sec: 606.20
+
+Response time histogram:
+  1.387 [1]     |
+  2.187 [5945]  |∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+  2.986 [84]    |∎
+  3.785 [20]    |
+  4.585 [7]     |
+  5.384 [2]     |
+  6.183 [4]     |
+  6.983 [0]     |
+  7.782 [0]     |
+  8.582 [1]     |
+  9.381 [1]     |
+
+Latency distribution:
+  10 % in 1.46 ms
+  25 % in 1.48 ms
+  50 % in 1.52 ms
+  75 % in 1.57 ms
+  90 % in 1.66 ms
+  95 % in 1.81 ms
+  99 % in 2.61 ms
+
+Status code distribution:
+  [OK]            6065 responses
+  [Unavailable]   1 responses
+
+Error distribution:
+  [1]   rpc error: code = Unavailable desc = transport is closing
+
+</pre></div></div>
+</div>
+<p>Example results</p>
+<table>
+<thead>
+<tr class="row-odd"><th class="head"><p>ndarray</p></th>
+<th class="head"><p>tensor</p></th>
+<th class="head"><p>tftensor</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1.46ms</p></td>
+<td><p>1.49ms</p></td>
+<td><p>1.57ms</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id3">
+<h2 id="id3">Conclusions<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>gRPC is generally faster than REST</p></li>
+<li><p>There is very little difference between payload types with simpler tensor/ndarray probably being slightly faster</p></li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[152]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>delete<span class="w"> </span>-f<span class="w"> </span>model.yaml
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+seldondeployment.machinelearning.seldon.io "seldon-model" deleted
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="vegeta_bench_argo_workflows.html" title="Benchmarking with Argo Worfklows &amp; Vegeta"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> "Previous" </span> Benchmarking with Argo Worfklows &amp; Vegeta </span>
+              </div>
+            </a>
+          
+          
+            <a href="python_kmp_affinity.html" title="Python Wrapper KMP_AFFINITY Tests"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> "Next" </span> Python Wrapper KMP_AFFINITY Tests </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2024, Seldon Technologies Ltd.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

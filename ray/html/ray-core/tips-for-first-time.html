@@ -1,0 +1,1043 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>首次用户提示 &#8212; Ray 2.7.2</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/termynal.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/js/versionwarning.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+    <script defer="defer" src="../_static/js/docsearch.js"></script>
+    <script defer="defer" src="../_static/js/csat.js"></script>
+    <script defer="defer" src="../_static/js/termynal.js"></script>
+    <script defer="defer" src="../_static/js/custom.js"></script>
+    <script defer="defer" src="../_static/js/top-navigation.js"></script>
+    <script src="../_static/js/tags.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <link rel="canonical" href="https://docs.ray.io/en/latest/ray-core/tips-for-first-time.html" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="启动 Ray" href="starting-ray.html" />
+    <link rel="prev" title="高级主题" href="advanced-topics.html" />
+
+<!-- Fathom - beautiful, simple website analytics -->
+<script src="https://deer.ray.io/script.js" data-site="WYYANYOS" defer></script>
+<!-- / Fathom -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-110413294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-110413294-1');
+</script>
+
+<script
+  src="https://widget.kapa.ai/kapa-widget.bundle.js"
+  data-website-id="18a8c339-4ec5-43c8-8182-db3f2bc8c6b6"
+  data-project-name="Ray"
+  data-project-color="#2C2C2C"
+  data-project-logo="https://global.discourse-cdn.com/business7/uploads/ray/original/1X/8f4dcb72f7cd34e2a332d548bd65860994bc8ff1.png"
+  data-modal-disclaimer = "Results are automated and may be incorrect or contain inappropriate information. Do not include any personal data or confidential information."
+  data-modal-title = "Ray Docs AI - Ask a Question"
+  data-button-position-bottom = "60px"
+></script>
+
+<script>
+(function(apiKey){
+    (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
+    v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
+        o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
+        y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
+        z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
+
+        pendo.initialize({
+            visitor: {
+                id: 'VISITOR-UNIQUE-ID'
+            },
+            account: {
+                id: 'ACCOUNT-UNIQUE-ID'
+            }
+        });
+})('f89fa48a-6dd7-4d7c-67cf-a8051ed891f2');
+</script>
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"><div class='topnav'></div></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Ray 2.7.2</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main Navigation">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    欢迎来到 Ray ！
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Ray
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-overview/index.html">
+   概述「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-overview/getting-started.html">
+   入门「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-overview/installation.html">
+   安装「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-overview/use-cases.html">
+   用例「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-overview/examples.html">
+   示例库「1%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-overview/ray-libraries.html">
+   生态「3%」
+  </a>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="walkthrough.html">
+   Ray 核心「100%」
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="key-concepts.html">
+     关键概念
+    </a>
+   </li>
+   <li class="toctree-l2 current active has-children">
+    <a class="reference internal" href="user-guide.html">
+     用户指南
+    </a>
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+    <label for="toctree-checkbox-2">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul class="current">
+     <li class="toctree-l3">
+      <a class="reference internal" href="tasks.html">
+       任务
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="actors.html">
+       Actors
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="objects.html">
+       对象
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="handling-dependencies.html">
+       环境依赖
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="scheduling/index.html">
+       调度
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="fault-tolerance.html">
+       容错
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="patterns/index.html">
+       设计模型 及 反模式
+      </a>
+     </li>
+     <li class="toctree-l3 current active has-children">
+      <a class="reference internal" href="advanced-topics.html">
+       高级主题
+      </a>
+      <input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+      <label for="toctree-checkbox-3">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul class="current">
+       <li class="toctree-l4 current active">
+        <a class="current reference internal" href="#">
+         首次用户提示
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="starting-ray.html">
+         启动 Ray
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="namespaces.html">
+         使用命名空间
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="cross-language.html">
+         跨语言编程
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="using-ray-with-jupyter.html">
+         使用 Jupyter Notebook 和 JupyterLab
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="ray-dag.html">
+         使用 Ray DAG API 的惰性计算图
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="miscellaneous.html">
+         杂项主题
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="runtime_env_auth.html">
+         在 runtime_env 验证远程 URI
+        </a>
+       </li>
+      </ul>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="examples/overview.html">
+     示例
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="api/index.html">
+     Ray Core API
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../data/data.html">
+   Ray 数据「85%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../train/train.html">
+   Ray 训练「95%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../tune/index.html">
+   Ray 调参「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../serve/index.html">
+   Ray Serve「1%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../rllib/index.html">
+   Ray RLlib「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-more-libs/index.html">
+   更多类库「40%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cluster/getting-started.html">
+   Ray 集群「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-observability/index.html">
+   监控调试「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-references/api.html">
+   参考「20%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-contribute/index.html">
+   开发者指引「30%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-security/index.html">
+   安全「100%」
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/ray-project/ray"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/issues/new?title=Issue%20on%20page%20%2Fray-core/tips-for-first-time.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/edit/master/doc/source/ray-core/tips-for-first-time.rst"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/ray-core/tips-for-first-time.rst.txt"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.rst</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tip-1-ray-get">
+   Tip 1: 延迟 ray.get()
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tip-2">
+   Tip 2: 避免执行微小的任务
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tip-3">
+   Tip 3: 避免将同一对象重复传递给远程任务
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tip-4-pipeline">
+   Tip 4: Pipeline 数据处理
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>首次用户提示</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tip-1-ray-get">
+   Tip 1: 延迟 ray.get()
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tip-2">
+   Tip 2: 避免执行微小的任务
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tip-3">
+   Tip 3: 避免将同一对象重复传递给远程任务
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tip-4-pipeline">
+   Tip 4: Pipeline 数据处理
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section id="id1">
+<h1>首次用户提示<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h1>
+<p>Ray 提供了高度灵活、简约且易于使用的 API。
+在本页中，我们描述了一些技巧，可帮助首次使用 Ray 的用户避免一些常见错误，这些错误可能会严重损害其程序的性能。
+如需深入了解高级设计模式，请阅读 <a class="reference internal" href="patterns/index.html#core-patterns"><span class="std std-ref">核心设计模式</span></a>.</p>
+<table class="table" id="id2">
+<caption><span class="caption-text">我们在本文档中使用的核心 Ray API。</span><a class="headerlink" href="#id2" title="Permalink to this table">#</a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>API</p></th>
+<th class="head"><p>描述</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ray.init()</span></code></p></td>
+<td><p>初始化 Ray 上下文。</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">&#64;ray.remote</span></code></p></td>
+<td><div class="line-block">
+<div class="line">函数或类装饰器指定函数将作为任务执行，</div>
+<div class="line">或者作为不同进程中的 actor 执行。</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">.remote()</span></code></p></td>
+<td><div class="line-block">
+<div class="line">每个远程函数、远程类声明的后缀，或</div>
+<div class="line">调用远程类方法。</div>
+<div class="line">远程操作是异步的。</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ray.put()</span></code></p></td>
+<td><div class="line-block">
+<div class="line">将对象存储在对象存储中，并返回其 ID。</div>
+<div class="line">此 ID 可用于将对象作为参数传递</div>
+<div class="line">任何远程函数或方法调用。</div>
+<div class="line">这是一个同步操作。</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ray.get()</span></code></p></td>
+<td><div class="line-block">
+<div class="line">根据对象 ID 返回对象或对象列表</div>
+<div class="line">或对象 ID 列表。</div>
+<div class="line">这是一个同步（即阻塞）操作。</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ray.wait()</span></code></p></td>
+<td><div class="line-block">
+<div class="line">从对象 ID 列表中返回</div>
+<div class="line">（1）已就绪对象的 ID 列表，以及</div>
+<div class="line">（2）尚未准备好的对象的ID列表。</div>
+<div class="line">默认情况下，它每次返回一个就绪对象 ID。</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p>本页报告的所有结果均在配备 2.7 GHz Core i7 CPU 和 16GB RAM 的 13 英寸 MacBook Pro 上获得。
+虽然 <code class="docutils literal notranslate"><span class="pre">ray.init()</span></code> 在单台机器上运行时会自动检测内核数量，
+但为了减少在运行以下代码时在您的机器上观察到的结果的差异，
+我们在此处指定 num_cpus = 4，即具有 4 个 CPU 的机器。</p>
+<p>由于每个任务默认请求一个 CPU，因此此设置允许我们并行执行最多四个任务。
+因此，我们的 Ray 系统由一个执行程序的驱动程序和最多四个运行远程任务或 actor 的工作程序组成。</p>
+<section id="tip-1-ray-get">
+<span id="tip-delay-get"></span><h2>Tip 1: 延迟 ray.get()<a class="headerlink" href="#tip-1-ray-get" title="Permalink to this headline">#</a></h2>
+<p>使用 Ray，每个远程操作（例如任务、 actor 方法）的调用都是异步的。这意味着操作会立即返回一个 promise/future，这本质上是操作结果的标识符 (ID)。这是实现并行性的关键，因为它允许驱动程序并行启动多个操作。要获得实际结果，程序员需要使用 <code class="docutils literal notranslate"><span class="pre">ray.get()</span></code> 调用 ID 的结果。此调用会阻塞，直到结果可用。作为副作用，此操作还会阻止驱动程序调用其他操作，这可能会损害并行性。</p>
+<p>不幸的是，对于新的 Ray 用户来说，无意中使用 <code class="docutils literal notranslate"><span class="pre">ray.get()</span></code> 是很自然的。为了说明这一点，请考虑以下简单的 Python 代码，它四次调用该函数 <code class="docutils literal notranslate"><span class="pre">do_some_work()</span></code> ，每次调用大约需要 1 秒：</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ray</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="k">def</span> <span class="nf">do_some_work</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># Replace this with work you need to do.</span>
+    <span class="k">return</span> <span class="n">x</span>
+
+<span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="n">do_some_work</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;duration =&quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;results =&quot;</span><span class="p">,</span> <span class="n">results</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>程序执行的输出如下。正如预期的那样，该程序大约需要 4 秒：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>duration = 4.0149290561676025
+results = [0, 1, 2, 3]
+</pre></div>
+</div>
+<p>现在，让我们用 Ray 将上述程序并行化。一些初次使用的用户只需将函数设为远程即可，即</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">ray</span>
+
+<span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">num_cpus</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span> <span class="c1"># Specify this system has 4 CPUs.</span>
+
+<span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span>
+<span class="k">def</span> <span class="nf">do_some_work</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># Replace this with work you need to do.</span>
+    <span class="k">return</span> <span class="n">x</span>
+
+<span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="n">do_some_work</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;duration =&quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;results =&quot;</span><span class="p">,</span> <span class="n">results</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>然而，执行上述程序时会得到：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>duration = 0.0003619194030761719
+results = [ObjectRef(df5a1a828c9685d3ffffffff0100000001000000), ObjectRef(cb230a572350ff44ffffffff0100000001000000), ObjectRef(7bbd90284b71e599ffffffff0100000001000000), ObjectRef(bd37d2621480fc7dffffffff0100000001000000)]
+</pre></div>
+</div>
+<p>查看此输出时，有两点值得注意。首先，程序立即完成，即在不到 1 毫秒的时间内完成。其次，我们得到的不是预期的结果（即 [0, 1, 2, 3]），而是一堆标识符。回想一下，远程操作是异步的，它们返回的是 Future（即对象 ID），而不是结果本身。这正是我们在这里看到的。我们只测量调用任务所需的时间，而不是它们的运行时间，并且我们得到了与四个任务相对应的结果的 ID。</p>
+<p>为了获得实际结果，我们需要使用 ray.get()，这里的第一直觉就是调用 <code class="docutils literal notranslate"><span class="pre">ray.get()</span></code> 远程操作调用，即将第 12 行替换为：</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">do_some_work</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>更改后重新运行程序，我们得到：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>duration = 4.018050909042358
+results =  [0, 1, 2, 3]
+</pre></div>
+</div>
+<p>现在结果是正确的，但仍然需要 4 秒，因此没有加速！发生了什么？细心的读者肯定已经知道答案了：<code class="docutils literal notranslate"><span class="pre">ray.get()</span></code> 是阻塞的，因此在每次远程操作后调用它意味着我们等待该操作完成，这实际上意味着我们一次执行一个操作，因此没有并行性！</p>
+<p>为了实现并行性，我们需要在调用所有任务后调用 <code class="docutils literal notranslate"><span class="pre">ray.get()</span></code> 。在我们的示例中，我们可以轻松地做到这一点，只需将第 12 行替换为：</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">([</span><span class="n">do_some_work</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)])</span>
+</pre></div>
+</div>
+<p>通过在更改后重新运行程序，我们现在得到：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>duration = 1.0064549446105957
+results =  [0, 1, 2, 3]
+</pre></div>
+</div>
+<p>终于成功了！我们的 Ray 程序现在仅需 1 秒即可运行，这意味着所有 <code class="docutils literal notranslate"><span class="pre">do_some_work()</span></code> 调用在并行运行。</p>
+<p>总之，请始终记住， <code class="docutils literal notranslate"><span class="pre">ray.get()</span></code> 是一个阻塞操作，因此如果急切调用，可能会损害并行性。相反，您应该尝试编写程序， <code class="docutils literal notranslate"><span class="pre">ray.get()</span></code> 可能晚地被调用。</p>
+</section>
+<section id="tip-2">
+<h2>Tip 2: 避免执行微小的任务<a class="headerlink" href="#tip-2" title="Permalink to this headline">#</a></h2>
+<p>当初次开发的人想要使用 Ray 并行化他们的代码时，自然的本能是让每个函数或类都远程运行。不幸的是，这可能会导致不良后果；如果任务非常小，Ray 程序可能比同等的 Python 程序花费的时间更长。</p>
+<p>让我们再次考虑上述示例，但这次我们使任务变得更短（即每个任务仅需要 0.1 毫秒），并将任务调用次数大幅增加到 100,000 次。</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+
+<span class="k">def</span> <span class="nf">tiny_work</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.0001</span><span class="p">)</span> <span class="c1"># Replace this with work you need to do.</span>
+    <span class="k">return</span> <span class="n">x</span>
+
+<span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="n">tiny_work</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100000</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;duration =&quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>通过运行该程序我们得到：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>duration = 13.36544418334961
+</pre></div>
+</div>
+<p>这个结果应该是可以预料到的，因为执行 100,000 个每个耗时 0.1 毫秒的任务的下限是 10 秒，我们还需要添加其他开销，例如函数调用等。</p>
+<p>现在让我们使用 Ray 并行化此代码，通过每次调用远程 <code class="docutils literal notranslate"><span class="pre">tiny_work()</span></code> :</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">ray</span>
+
+<span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span>
+<span class="k">def</span> <span class="nf">tiny_work</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.0001</span><span class="p">)</span> <span class="c1"># Replace this with work you need to do.</span>
+    <span class="k">return</span> <span class="n">x</span>
+
+<span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">result_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">tiny_work</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100000</span><span class="p">)]</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">result_ids</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;duration =&quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>运行该代码的结果是：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>duration = 27.46447515487671
+</pre></div>
+</div>
+<p>令人惊讶的是，Ray 不仅没有改善执行时间，而且 Ray 程序实际上比顺序程序更慢！发生了什么？嗯，这里的问题是每个任务调用都有不小的开销（例如，调度、进程间通信、更新系统状态），并且这些开销决定了执行任务所需的实际时间。</p>
+<p>加快此程序速度的一种方法是增大远程任务，以分摊调用开销。以下是一种可能的解决方案，我们将 1000 个 <code class="docutils literal notranslate"><span class="pre">tiny_work()</span></code> 远程调用聚合到一个更大的远程函数中：</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">ray</span>
+
+<span class="k">def</span> <span class="nf">tiny_work</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.0001</span><span class="p">)</span> <span class="c1"># replace this is with work you need to do</span>
+    <span class="k">return</span> <span class="n">x</span>
+
+<span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span>
+<span class="k">def</span> <span class="nf">mega_work</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">tiny_work</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)]</span>
+
+<span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">result_ids</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="p">[</span><span class="n">result_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mega_work</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="mi">1000</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="mi">1000</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">)]</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">result_ids</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;duration =&quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>现在，如果我们运行上述程序，我们会得到：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>duration = 3.2539820671081543
+</pre></div>
+</div>
+<p>这大约是顺序执行的四分之一，符合我们的预期（回想一下，我们可以并行运行四个任务）。当然，自然而然的问题是，多大的任务才能足以分摊远程调用开销。找到这一点的一种方法是运行以下简单程序来估算每个任务的调用开销：</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span>
+<span class="k">def</span> <span class="nf">no_work</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span>
+
+<span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">num_calls</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="p">[</span><span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">no_work</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_calls</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;per task overhead (ms) =&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span><span class="o">*</span><span class="mi">1000</span><span class="o">/</span><span class="n">num_calls</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>在 2018 款 MacBook Pro 笔记本上运行上述程序显示：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>per task overhead (ms) = 0.4739549160003662
+</pre></div>
+</div>
+<p>换句话说，执行一个空任务需要将近半毫秒的时间。这意味着我们需要确保任务至少需要几毫秒才能分摊调用开销。需要注意的是，每个任务的开销会因机器而异，并且在同一台机器上运行的任务与远程运行的任务之间也会有所不同。话虽如此，确保任务至少需要几毫秒是开发 Ray 程序时的一个好经验法则。</p>
+</section>
+<section id="tip-3">
+<h2>Tip 3: 避免将同一对象重复传递给远程任务<a class="headerlink" href="#tip-3" title="Permalink to this headline">#</a></h2>
+<p>当我们将大型对象作为参数传递给远程函数时，Ray 会在后台调用该函数 <code class="docutils literal notranslate"><span class="pre">ray.put()</span></code> 该对象存储在本地对象存储中。 当远程任务在本地执行时，这可以显著提高远程任务调用的性能，因为所有本地任务都共享对象存储。</p>
+<p>但是，有时任务自动调用 <code class="docutils literal notranslate"><span class="pre">ray.put()</span></code> 会导致性能问题。。一个例子是重复传递同一个大对象作为参数，如下面的程序所示：</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">ray</span>
+
+<span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span>
+<span class="k">def</span> <span class="nf">no_work</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="k">return</span>
+
+<span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">5000</span><span class="p">,</span> <span class="mi">5000</span><span class="p">))</span>
+<span class="n">result_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">no_work</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">result_ids</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;duration =&quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>该程序输出：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>duration = 1.0837509632110596
+</pre></div>
+</div>
+<p>对于一个只调用 10 个不执行任何操作的远程任务的程序来说，这个运行时间相当长。运行时间出乎意料地长的原因是，每次我们调用 <code class="docutils literal notranslate"><span class="pre">no_work(a)</span></code> 时，Ray 都会调用 <code class="docutils literal notranslate"><span class="pre">ray.put(a)</span></code> ，这会导致将数组复制 <code class="docutils literal notranslate"><span class="pre">a</span></code> 到对象存储中。由于数组 <code class="docutils literal notranslate"><span class="pre">a</span></code> 有 250 万个条目，因此复制它需要花费不少时间。</p>
+<p>为了避免每次 <code class="docutils literal notranslate"><span class="pre">no_work()</span></code> 调用时复制 <code class="docutils literal notranslate"><span class="pre">a</span></code> 数组，一个简单的解决方案是显式调用 <code class="docutils literal notranslate"><span class="pre">ray.put(a)</span></code>，然后将 <code class="docutils literal notranslate"><span class="pre">a</span></code> 的 ID 传递给 <code class="docutils literal notranslate"><span class="pre">no_work()</span></code>，如下所示：</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">ray</span>
+
+<span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">num_cpus</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span>
+<span class="k">def</span> <span class="nf">no_work</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="k">return</span>
+
+<span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">a_id</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">5000</span><span class="p">,</span> <span class="mi">5000</span><span class="p">)))</span>
+<span class="n">result_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">no_work</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">a_id</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">result_ids</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;duration =&quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>运行该程序仅需：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>duration = 0.132796049118042
+</pre></div>
+</div>
+<p>这比原始程序快 7 倍，这是可以预料的，因为调用 <code class="docutils literal notranslate"><span class="pre">no_work(a)</span></code> 的主要开销是将数组 <code class="docutils literal notranslate"><span class="pre">a</span></code> 复制到对象存储中，现在只需要一次。</p>
+<p>可以说，避免将同一对象多次复制到对象存储的一个更重要的优点是，它可以防止对象存储过早填满并产生对象驱逐的成本。</p>
+</section>
+<section id="tip-4-pipeline">
+<h2>Tip 4: Pipeline 数据处理<a class="headerlink" href="#tip-4-pipeline" title="Permalink to this headline">#</a></h2>
+<p>如果我们使用 <code class="docutils literal notranslate"><span class="pre">ray.get()</span></code> 在多个任务的结果上，我们将不得不等到这些任务中的最后一个完成。如果任务花费的时间差异很大，这可能会成为一个问题。</p>
+<p>为了说明这个问题，请考虑以下示例，我们并行运行四个 <code class="docutils literal notranslate"><span class="pre">do_some_work()</span></code> 任务，每个任务花费的时间在 0 到 4 秒之间均匀分布。接下来，假设这些任务的结果由 <code class="docutils literal notranslate"><span class="pre">process_results()</span></code> 处理，每个结果需要 1 秒。预期的运行时间是（1）执行 <code class="docutils literal notranslate"><span class="pre">do_some_work()</span></code> 任务中最慢的任务所需的时间，加上（2）执行 <code class="docutils literal notranslate"><span class="pre">process_results()</span></code> 所需的 4 秒。</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">ray</span>
+
+<span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span>
+<span class="k">def</span> <span class="nf">do_some_work</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span> <span class="c1"># Replace this with work you need to do.</span>
+    <span class="k">return</span> <span class="n">x</span>
+
+<span class="k">def</span> <span class="nf">process_results</span><span class="p">(</span><span class="n">results</span><span class="p">):</span>
+    <span class="nb">sum</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># Replace this with some processing code.</span>
+        <span class="nb">sum</span> <span class="o">+=</span> <span class="n">x</span>
+    <span class="k">return</span> <span class="nb">sum</span>
+
+<span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">data_list</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">([</span><span class="n">do_some_work</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)])</span>
+<span class="nb">sum</span> <span class="o">=</span> <span class="n">process_results</span><span class="p">(</span><span class="n">data_list</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;duration =&quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">result = &quot;</span><span class="p">,</span> <span class="nb">sum</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>程序的输出显示运行需要接近 8 秒：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>duration = 7.82636022567749
+result =  6
+</pre></div>
+</div>
+<p>当其他任务可能早已完成时，等待最后一个任务完成可能会增加程序运行时间。更好的解决方案是一旦数据可用就立即处理数据。
+幸运的是，Ray 允许您通过在对象 ID 列表上调用 <code class="docutils literal notranslate"><span class="pre">ray.wait()</span></code> 来实现这一点。在不指定任何其他参数的情况下，此函数会在其参数列表中的对象准备就绪时立即返回。此调用有两个返回值：（1）准备就绪的对象的 ID，以及（2）包含尚未准备好的对象的 ID 列表。修改后的程序如下。请注意，我们需要做的一个更改是将 <code class="docutils literal notranslate"><span class="pre">process_results()</span></code> 替换为 <code class="docutils literal notranslate"><span class="pre">process_incremental()</span></code>，后者一次处理一个结果。</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">ray</span>
+
+<span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span>
+<span class="k">def</span> <span class="nf">do_some_work</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span> <span class="c1"># Replace this with work you need to do.</span>
+    <span class="k">return</span> <span class="n">x</span>
+
+<span class="k">def</span> <span class="nf">process_incremental</span><span class="p">(</span><span class="nb">sum</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># Replace this with some processing code.</span>
+    <span class="k">return</span> <span class="nb">sum</span> <span class="o">+</span> <span class="n">result</span>
+
+<span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">result_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">do_some_work</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)]</span>
+<span class="nb">sum</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">result_ids</span><span class="p">):</span>
+    <span class="n">done_id</span><span class="p">,</span> <span class="n">result_ids</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">result_ids</span><span class="p">)</span>
+    <span class="nb">sum</span> <span class="o">=</span> <span class="n">process_incremental</span><span class="p">(</span><span class="nb">sum</span><span class="p">,</span> <span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">done_id</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;duration =&quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">result = &quot;</span><span class="p">,</span> <span class="nb">sum</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>该程序现在仅需 4.8 秒多一点，这是一个显著的进步：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>duration = 4.852453231811523
+result =  6
+</pre></div>
+</div>
+<p>为了帮助直观理解，图 1 显示了两种情况下的执行时间线：在使用 <code class="docutils literal notranslate"><span class="pre">ray.get()</span></code> 等待所有结果可用之前处理它们，以及在使用 <code class="docutils literal notranslate"><span class="pre">ray.wait()</span></code> 在结果可用时立即开始处理结果。</p>
+<figure class="align-default" id="id3">
+<img alt="../_images/pipeline.png" src="../_images/pipeline.png" />
+<figcaption>
+<p><span class="caption-text">图 1：（a）使用 ray.get() 等待所有结果从 <code class="docutils literal notranslate"><span class="pre">do_some_work()</span></code> 任务中调用 <code class="docutils literal notranslate"><span class="pre">process_results()</span></code> 之前的执行时间线。 （b）使用 <code class="docutils literal notranslate"><span class="pre">ray.wait()</span></code> 处理结果的执行时间线，一旦结果可用就立即处理。</span><a class="headerlink" href="#id3" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="advanced-topics.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">高级主题</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="starting-ray.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">启动 Ray</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><!-- Override the footer area for the sphinx-book-theme to include the CSAT widget -->
+<div id="csat">
+  <div id="csat-feedback-received" class="csat-hidden">
+    <span>谢谢你的反馈！</span>
+  </div>
+  <div id="csat-inputs">
+    <span>是否能帮助到你？</span>
+    <div id="csat-yes" class="csat-button">
+      <svg id="csat-yes-icon" class="csat-hidden csat-icon" width="18" height="13" viewBox="0 0 18 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 10.172L16.1922 0.979004L17.6072 2.393L7.00023 13L0.63623 6.636L2.05023 5.222L7.00023 10.172Z" fill="black"/>
+      </svg>
+      <span>是<span>
+    </div>
+    <div id="csat-no" class="csat-button">
+      <svg id="csat-no-icon" class="csat-hidden csat-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 5.58599L11.9502 0.635986L13.3642 2.04999L8.41423 6.99999L13.3642 11.95L11.9502 13.364L7.00023 8.41399L2.05023 13.364L0.63623 11.95L5.58623 6.99999L0.63623 2.04999L2.05023 0.635986L7.00023 5.58599Z" fill="black"/>
+      </svg>
+      <span>否<span>
+    </div>
+  </div>
+  <div id="csat-textarea-group" class="csat-hidden">
+    <span id="csat-feedback-label">反馈</span>
+    <textarea id="csat-textarea"></textarea>
+    <div id="csat-submit">提交</div>
+  </div>
+</div><p>
+  
+    By The Ray Team<br/>
+  
+      &copy; Copyright 2024, The Ray Team.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

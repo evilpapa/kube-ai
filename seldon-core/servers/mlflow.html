@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../_static/javascripts/modernizr.js"></script>
+  
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-54780881-2"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-54780881-2');
+</script>
+  
+  
+    <title>MLflow 服务器 &#8212; seldon-core  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=83e35b93" />
+    <link rel="stylesheet" type="text/css" href="../_static/material.css?v=79c92029" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/rtd_sphinx_search.min.css?v=fb480935" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=15a8f09d" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/rtd_search_config.js"></script>
+    <script src="../_static/js/rtd_sphinx_search.min.js?v=60fbc683"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="HuggingFace Server" href="huggingface.html" />
+    <link rel="prev" title="Tempo 服务" href="tempo.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=indigo data-md-color-accent=teal>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#servers/mlflow" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../index.html" title="seldon-core  documentation"
+           class="md-header-nav__button md-logo">
+          
+            &nbsp;
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">Seldon Core Documentation</span>
+          <span class="md-header-nav__topic"> MLflow 服务器 </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder=""Search""
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+            
+            <li class="md-tabs__item"><a href="/" class="md-tabs__link">🚀 Our Other Projects & Products:</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi/en/stable/" class="md-tabs__link">Alibi Explain</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi-detect/en/stable/" class="md-tabs__link">Alibi Detect</a></li>
+            
+            <li class="md-tabs__item"><a href="https://mlserver.readthedocs.io/en/latest/" class="md-tabs__link">MLServer</a></li>
+            
+            <li class="md-tabs__item"><a href="https://tempo.readthedocs.io/en/latest/" class="md-tabs__link">Tempo SDK</a></li>
+            
+            <li class="md-tabs__item"><a href="https://deploy.seldon.io" class="md-tabs__link">Seldon Enterprise Platform</a></li>
+            
+            <li class="md-tabs__item"><a href="https://github.com/SeldonIO/seldon-deploy-sdk#seldon-deploy-sdk" class="md-tabs__link">Seldon Enterprise Platform SDK</a></li>
+          <li class="md-tabs__item"><a href="../nav/configuration.html" class="md-tabs__link">配置</a></li>
+          <li class="md-tabs__item"><a href="../nav/config/servers.html" class="md-tabs__link">服务端</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../index.html" title="seldon-core documentation" class="md-nav__button md-logo">
+      
+        <img src="../_static/" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../index.html"
+       title="seldon-core documentation">Seldon Core Documentation</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/getting-started.html" class="md-nav__link">开始</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/concepts.html" class="md-nav__link">概念</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/configuration.html" class="md-nav__link">配置</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/installation.html" class="md-nav__link">安装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/deployments.html" class="md-nav__link">发布</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/servers.html" class="md-nav__link">服务器</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="custom.html" class="md-nav__link">自定义推理服务</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="index.html" class="md-nav__link">存储初始化</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../production/optimization.html" class="md-nav__link">推理优化</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="xgboost.html" class="md-nav__link">XGBoost 服务</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="triton.html" class="md-nav__link">Triton 推理服务</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="sklearn.html" class="md-nav__link">SKLearn 服务</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="tempo.html" class="md-nav__link">Tempo 服务</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> MLFlow 服务 </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">MLFlow 服务</a>
+      
+        
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#servers-mlflow--page-root" class="md-nav__link">MLflow 服务器</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id1" class="md-nav__link">预处理</a>
+        </li>
+        <li class="md-nav__item"><a href="#conda" class="md-nav__link">Conda 环境创建</a>
+        </li>
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">示例</a>
+        </li>
+        <li class="md-nav__item"><a href="#mlflow-xtype" class="md-nav__link">MLFlow xtype</a>
+        </li>
+        <li class="md-nav__item"><a href="#v2-kfserving" class="md-nav__link">V2 KFServing 协议 [孵化中]</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#mlflow-seldon-core" class="md-nav__link">创建使用 <code class="docutils literal notranslate"><span class="pre">mlflow</span></code> 的模型并使用 <code class="docutils literal notranslate"><span class="pre">seldon-core</span></code> 发布</a>
+        </li>
+        <li class="md-nav__item"><a href="#id3" class="md-nav__link">注意事项</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/servers/mlflow.md.txt">Show Source</a> </li>
+
+  </ul>
+</nav>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="huggingface.html" class="md-nav__link">HuggingFace Server</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="tensorflow.html" class="md-nav__link">TensorFlow 服务</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/routing.html" class="md-nav__link">路由</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/wrappers.html" class="md-nav__link">语言封装和 SDK</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/integrations.html" class="md-nav__link">集成</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/tutorials.html" class="md-nav__link">教程</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/reference.html" class="md-nav__link">参考</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/contributing.html" class="md-nav__link">贡献</a>
+      
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#servers-mlflow--page-root" class="md-nav__link">MLflow 服务器</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id1" class="md-nav__link">预处理</a>
+        </li>
+        <li class="md-nav__item"><a href="#conda" class="md-nav__link">Conda 环境创建</a>
+        </li>
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">示例</a>
+        </li>
+        <li class="md-nav__item"><a href="#mlflow-xtype" class="md-nav__link">MLFlow xtype</a>
+        </li>
+        <li class="md-nav__item"><a href="#v2-kfserving" class="md-nav__link">V2 KFServing 协议 [孵化中]</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#mlflow-seldon-core" class="md-nav__link">创建使用 <code class="docutils literal notranslate"><span class="pre">mlflow</span></code> 的模型并使用 <code class="docutils literal notranslate"><span class="pre">seldon-core</span></code> 发布</a>
+        </li>
+        <li class="md-nav__item"><a href="#id3" class="md-nav__link">注意事项</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/servers/mlflow.md.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <section id="mlflow">
+<h1 id="servers-mlflow--page-root">MLflow 服务器<a class="headerlink" href="#servers-mlflow--page-root" title="Permalink to this heading">¶</a></h1>
+<p>如果您有一个 MLflow 模型你可以使用 Seldon 预封装服务进行一个（或多个）
+版本服务发布。
+在初始化过程中，内建的
+可复用服务器会自动创建 <a class="reference external" href="https://www.mlflow.org/docs/latest/projects.html#project-environments">Conda
+环境</a>
+并根据指定的 <code class="docutils literal notranslate"><span class="pre">conda.yaml</span></code> 文件来创建。</p>
+<section id="id1">
+<h2 id="id1">预处理<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h2>
+<p>要使用内置的 MLflow 服务器，需要满足以下先决条件：</p>
+<ul class="simple">
+<li><p>你的 <a class="reference external" href="https://www.mlflow.org/docs/latest/models.html">MLmodel artifact
+文件夹</a> 可
+远程访问（如：<code class="docutils literal notranslate"><span class="pre">gs://seldon-models/mlflow/elasticnet_wine_1.8.0</span></code>）。</p></li>
+<li><p>模型需要与 <a class="reference external" href="https://www.mlflow.org/docs/latest/models.html#python-function-python-function">python_function
+flavour</a>兼容。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MLproject</span></code> 环境需要指定使用 Conda。</p></li>
+</ul>
+</section>
+<section id="conda">
+<h2 id="conda">Conda 环境创建<a class="headerlink" href="#conda" title="Permalink to this heading">¶</a></h2>
+<p>MLflow内置服务器初始化期间会根据
+<code class="docutils literal notranslate"><span class="pre">MLmodel</span></code>的<code class="docutils literal notranslate"><span class="pre">conda.yaml</span></code>配置文件创建 Conda 环境。
+注意此方法可能会减慢你的 Kubernetes <code class="docutils literal notranslate"><span class="pre">SeldonDeployment</span></code>
+启动时间。</p>
+<p>某些情况下，可以考虑 <a class="reference internal" href="custom.html"><span class="doc">自定义创建可复用
+服务器</span></a>。
+比如，当 Conda 环境稳定时可使用
+一组固定的依赖库创建自己的镜像。
+此镜像可作为可复用预加载环境
+用于不同的模型版本。</p>
+</section>
+<section id="id2">
+<h2 id="id2">示例<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h2>
+<p>保存了 Iris 预估模型的示例如下</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">machinelearning.seldon.io/v1alpha2</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SeldonDeployment</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mlflow</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wines</span>
+<span class="w">  </span><span class="nt">predictors</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">graph</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">children</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+<span class="w">        </span><span class="nt">implementation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MLFLOW_SERVER</span>
+<span class="w">        </span><span class="nt">modelUri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gs://seldon-models/mlflow/elasticnet_wine_1.8.0</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">classifier</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="w">      </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+</pre></div>
+</div>
+</section>
+<section id="mlflow-xtype">
+<h2 id="mlflow-xtype">MLFlow xtype<a class="headerlink" href="#mlflow-xtype" title="Permalink to this heading">¶</a></h2>
+<p>默认情况下服务器会通过<code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code> 调用模型的预估函数。如果希望通过 <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> 替代，你可通过 <code class="docutils literal notranslate"><span class="pre">xtype</span></code> 参数赋值 <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> 来使用，如：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">machinelearning.seldon.io/v1alpha2</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SeldonDeployment</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mlflow</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wines</span>
+<span class="w">  </span><span class="nt">predictors</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">graph</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">children</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+<span class="w">        </span><span class="nt">implementation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MLFLOW_SERVER</span>
+<span class="w">        </span><span class="nt">modelUri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gs://seldon-models/mlflow/elasticnet_wine_1.8.0</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">classifier</span>
+<span class="w">        </span><span class="nt">parameters</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xtype</span>
+<span class="w">          </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">STRING</span>
+<span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DataFrame</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="w">      </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+</pre></div>
+</div>
+<p>也可尝试 <a class="reference external" href="../examples/server_examples.html#Serve-MLflow-Elasticnet-Wines-Model">可工作的
+notebook</a>
+或者查看 <a class="reference external" href="https://www.youtube.com/watch?v=D6eSfd9w9eA">talk at the Spark + AI Summit
+2019</a>。</p>
+</section>
+<section id="v2-kfserving">
+<h2 id="v2-kfserving">V2 KFServing 协议 [孵化中]<a class="headerlink" href="#v2-kfserving" title="Permalink to this heading">¶</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>V2 KFServing 协议支持被考虑在孵化
+特性中。
+这意味着 Seldon Core 的某些特性仍未得到支持（比如：
+tracing, graphs等）。</p>
+</div>
+<p>MLFlow 服务也可用于暴露兼容 V2
+KFServing 协议的 API。
+注意，某些情况下，这会使用到 <a class="reference external" href="https://github.com/SeldonIO/MLServer">Seldon
+MLServer</a> 运行时。</p>
+<section id="mlflow-seldon-core">
+<h3 id="mlflow-seldon-core">创建使用 <code class="docutils literal notranslate"><span class="pre">mlflow</span></code> 的模型并使用 <code class="docutils literal notranslate"><span class="pre">seldon-core</span></code> 发布<a class="headerlink" href="#mlflow-seldon-core" title="Permalink to this heading">¶</a></h3>
+<p>作为示例，我们将使用 elasticnet wine 模型。</p>
+<ul class="simple">
+<li><p>创建 <code class="docutils literal notranslate"><span class="pre">conda</span></code> 环境</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>conda<span class="w"> </span>-y<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>python3.8-mlflow-example<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.8
+$<span class="w"> </span>conda<span class="w"> </span>activate<span class="w"> </span>python3.8-mlflow-example
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>安装 <code class="docutils literal notranslate"><span class="pre">mlflow</span></code></p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>mlflow
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>训练 elasticnet wine 示例</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/mlflow/mlflow
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>mlflow/examples
+$<span class="w"> </span>python<span class="w"> </span>sklearn_elasticnet_wine/train.py
+</pre></div>
+</div>
+<p>脚本结束后，会有一个模型持久化存储在 <code class="docutils literal notranslate"><span class="pre">mlruns/0/&lt;uuid&gt;/artifacts/model</span></code>。这可以
+通过 ui 获取（<code class="docutils literal notranslate"><span class="pre">mlflow</span> <span class="pre">ui</span></code>）</p>
+<ul class="simple">
+<li><p>使用 <a class="reference external" href="https://conda.github.io/conda-pack/">conda-pack</a> 安装部署和打包conda 所需的附加软件包</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>conda-pack
+$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>mlserver
+$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>mlserver-mlflow
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>mlflow/examples/mlruns/0/&lt;uuid&gt;/artifacts/model
+$<span class="w"> </span>conda<span class="w"> </span>pack<span class="w"> </span>-o<span class="w"> </span>environment.tar.gz<span class="w"> </span>-f
+</pre></div>
+</div>
+<p>这会将当前的 conda 环境打包到 <code class="docutils literal notranslate"><span class="pre">environment.tar.gz</span></code>，这也是 <code class="docutils literal notranslate"><span class="pre">mlserver</span></code> 创建服务模型时同训练所需要的一样的环境。</p>
+<ul class="simple">
+<li><p>将模型目录复制到可由 seldon-core 访问的 Google Storage 存储桶</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>gsutil<span class="w"> </span>cp<span class="w"> </span>-r<span class="w"> </span>../model<span class="w"> </span>gs://seldon-models/test/elasticnet_wine_&lt;uuid&gt;
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>发布模型到 seldon-core
+为了支持 V2 KFServing 协议，需要
+指定 <code class="docutils literal notranslate"><span class="pre">SeldonDeployment</span></code> 配置项  <code class="docutils literal notranslate"><span class="pre">protocol</span></code> 为 <code class="docutils literal notranslate"><span class="pre">kfserving</span></code>。
+比如，</p></li>
+</ul>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">machinelearning.seldon.io/v1alpha2</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SeldonDeployment</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mlflow</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kfserving</span><span class="w">  </span><span class="c1"># Activate the v2 protocol</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wines</span>
+<span class="w">  </span><span class="nt">predictors</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">graph</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">children</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+<span class="w">        </span><span class="nt">implementation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MLFLOW_SERVER</span>
+<span class="w">        </span><span class="nt">modelUri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gs://seldon-models/test/elasticnet_wine_&lt;uuid&gt;</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">classifier</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="w">      </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>使用 REST 从部署的模型中获取预测</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
+
+<span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="n">inference_request</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"parameters"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"content_type"</span><span class="p">:</span> <span class="s2">"pd"</span>
+    <span class="p">},</span>
+    <span class="s2">"inputs"</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+          <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"fixed acidity"</span><span class="p">,</span>
+          <span class="s2">"shape"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+          <span class="s2">"datatype"</span><span class="p">:</span> <span class="s2">"FP32"</span><span class="p">,</span>
+          <span class="s2">"data"</span><span class="p">:</span> <span class="p">[</span><span class="mf">7.4</span><span class="p">],</span>
+          <span class="s2">"parameters"</span><span class="p">:</span> <span class="p">{</span>
+              <span class="s2">"content_type"</span><span class="p">:</span> <span class="s2">"np"</span>
+          <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+          <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"volatile acidity"</span><span class="p">,</span>
+          <span class="s2">"shape"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+          <span class="s2">"datatype"</span><span class="p">:</span> <span class="s2">"FP32"</span><span class="p">,</span>
+          <span class="s2">"data"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.7000</span><span class="p">],</span>
+          <span class="s2">"parameters"</span><span class="p">:</span> <span class="p">{</span>
+              <span class="s2">"content_type"</span><span class="p">:</span> <span class="s2">"np"</span>
+          <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+          <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"citric acidity"</span><span class="p">,</span>
+          <span class="s2">"shape"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+          <span class="s2">"datatype"</span><span class="p">:</span> <span class="s2">"FP32"</span><span class="p">,</span>
+          <span class="s2">"data"</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+          <span class="s2">"parameters"</span><span class="p">:</span> <span class="p">{</span>
+              <span class="s2">"content_type"</span><span class="p">:</span> <span class="s2">"np"</span>
+          <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+          <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"residual sugar"</span><span class="p">,</span>
+          <span class="s2">"shape"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+          <span class="s2">"datatype"</span><span class="p">:</span> <span class="s2">"FP32"</span><span class="p">,</span>
+          <span class="s2">"data"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.9</span><span class="p">],</span>
+          <span class="s2">"parameters"</span><span class="p">:</span> <span class="p">{</span>
+              <span class="s2">"content_type"</span><span class="p">:</span> <span class="s2">"np"</span>
+          <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+          <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"chlorides"</span><span class="p">,</span>
+          <span class="s2">"shape"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+          <span class="s2">"datatype"</span><span class="p">:</span> <span class="s2">"FP32"</span><span class="p">,</span>
+          <span class="s2">"data"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.076</span><span class="p">],</span>
+          <span class="s2">"parameters"</span><span class="p">:</span> <span class="p">{</span>
+              <span class="s2">"content_type"</span><span class="p">:</span> <span class="s2">"np"</span>
+          <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+          <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"free sulfur dioxide"</span><span class="p">,</span>
+          <span class="s2">"shape"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+          <span class="s2">"datatype"</span><span class="p">:</span> <span class="s2">"FP32"</span><span class="p">,</span>
+          <span class="s2">"data"</span><span class="p">:</span> <span class="p">[</span><span class="mi">11</span><span class="p">],</span>
+          <span class="s2">"parameters"</span><span class="p">:</span> <span class="p">{</span>
+              <span class="s2">"content_type"</span><span class="p">:</span> <span class="s2">"np"</span>
+          <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+          <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"total sulfur dioxide"</span><span class="p">,</span>
+          <span class="s2">"shape"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+          <span class="s2">"datatype"</span><span class="p">:</span> <span class="s2">"FP32"</span><span class="p">,</span>
+          <span class="s2">"data"</span><span class="p">:</span> <span class="p">[</span><span class="mi">34</span><span class="p">],</span>
+          <span class="s2">"parameters"</span><span class="p">:</span> <span class="p">{</span>
+              <span class="s2">"content_type"</span><span class="p">:</span> <span class="s2">"np"</span>
+          <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+          <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"density"</span><span class="p">,</span>
+          <span class="s2">"shape"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+          <span class="s2">"datatype"</span><span class="p">:</span> <span class="s2">"FP32"</span><span class="p">,</span>
+          <span class="s2">"data"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.9978</span><span class="p">],</span>
+          <span class="s2">"parameters"</span><span class="p">:</span> <span class="p">{</span>
+              <span class="s2">"content_type"</span><span class="p">:</span> <span class="s2">"np"</span>
+          <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+          <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"pH"</span><span class="p">,</span>
+          <span class="s2">"shape"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+          <span class="s2">"datatype"</span><span class="p">:</span> <span class="s2">"FP32"</span><span class="p">,</span>
+          <span class="s2">"data"</span><span class="p">:</span> <span class="p">[</span><span class="mf">3.51</span><span class="p">],</span>
+          <span class="s2">"parameters"</span><span class="p">:</span> <span class="p">{</span>
+              <span class="s2">"content_type"</span><span class="p">:</span> <span class="s2">"np"</span>
+          <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+          <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"sulphates"</span><span class="p">,</span>
+          <span class="s2">"shape"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+          <span class="s2">"datatype"</span><span class="p">:</span> <span class="s2">"FP32"</span><span class="p">,</span>
+          <span class="s2">"data"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.56</span><span class="p">],</span>
+          <span class="s2">"parameters"</span><span class="p">:</span> <span class="p">{</span>
+              <span class="s2">"content_type"</span><span class="p">:</span> <span class="s2">"np"</span>
+          <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+          <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"alcohol"</span><span class="p">,</span>
+          <span class="s2">"shape"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+          <span class="s2">"datatype"</span><span class="p">:</span> <span class="s2">"FP32"</span><span class="p">,</span>
+          <span class="s2">"data"</span><span class="p">:</span> <span class="p">[</span><span class="mf">9.4</span><span class="p">],</span>
+          <span class="s2">"parameters"</span><span class="p">:</span> <span class="p">{</span>
+              <span class="s2">"content_type"</span><span class="p">:</span> <span class="s2">"np"</span>
+          <span class="p">}</span>
+        <span class="p">},</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+
+<span class="n">endpoint</span> <span class="o">=</span> <span class="s2">"http://localhost:8003/seldon/seldon/mlflow/v2/models/infer"</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">inference_request</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">(),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="id3">
+<h3 id="id3">注意事项<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>conda 环境中安装的 <code class="docutils literal notranslate"><span class="pre">mlserver</span></code> 版本需与 <code class="docutils literal notranslate"><span class="pre">seldon-core</span></code> 匹配。我们正在开发工具以使其更加无缝。</p></li>
+<li><p>检查使用 <cite>``conda-pack`</cite> &lt;<a class="reference external" href="https://conda.github.io/conda-pack/#caveats">https://conda.github.io/conda-pack/#caveats</a>&gt;`__ 的注意事项</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="tempo.html" title="Tempo 服务"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> "Previous" </span> Tempo 服务 </span>
+              </div>
+            </a>
+          
+          
+            <a href="huggingface.html" title="HuggingFace Server"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> "Next" </span> HuggingFace Server </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2024, Seldon Technologies Ltd.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

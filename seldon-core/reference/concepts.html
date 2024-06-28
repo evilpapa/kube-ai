@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../_static/javascripts/modernizr.js"></script>
+  
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-54780881-2"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-54780881-2');
+</script>
+  
+  
+    <title>Seldon Core 核心概念 &#8212; seldon-core  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=83e35b93" />
+    <link rel="stylesheet" type="text/css" href="../_static/material.css?v=79c92029" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/rtd_sphinx_search.min.css?v=fb480935" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=15a8f09d" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/rtd_search_config.js"></script>
+    <script src="../_static/js/rtd_sphinx_search.min.js?v=60fbc683"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="NVIDIA 预估服务代理" href="integration_nvidia_link.html" />
+    <link rel="prev" title="参考" href="apis/readme.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=indigo data-md-color-accent=teal>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#reference/concepts" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../index.html" title="seldon-core  documentation"
+           class="md-header-nav__button md-logo">
+          
+            &nbsp;
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">Seldon Core Documentation</span>
+          <span class="md-header-nav__topic"> Seldon Core 核心概念 </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder=""Search""
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+            
+            <li class="md-tabs__item"><a href="/" class="md-tabs__link">🚀 Our Other Projects & Products:</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi/en/stable/" class="md-tabs__link">Alibi Explain</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi-detect/en/stable/" class="md-tabs__link">Alibi Detect</a></li>
+            
+            <li class="md-tabs__item"><a href="https://mlserver.readthedocs.io/en/latest/" class="md-tabs__link">MLServer</a></li>
+            
+            <li class="md-tabs__item"><a href="https://tempo.readthedocs.io/en/latest/" class="md-tabs__link">Tempo SDK</a></li>
+            
+            <li class="md-tabs__item"><a href="https://deploy.seldon.io" class="md-tabs__link">Seldon Enterprise Platform</a></li>
+            
+            <li class="md-tabs__item"><a href="https://github.com/SeldonIO/seldon-deploy-sdk#seldon-deploy-sdk" class="md-tabs__link">Seldon Enterprise Platform SDK</a></li>
+          <li class="md-tabs__item"><a href="../nav/reference.html" class="md-tabs__link">参考</a></li>
+          <li class="md-tabs__item"><a href="../nav/archive.html" class="md-tabs__link">供审核的存档文档</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../index.html" title="seldon-core documentation" class="md-nav__button md-logo">
+      
+        <img src="../_static/" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../index.html"
+       title="seldon-core documentation">Seldon Core Documentation</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/getting-started.html" class="md-nav__link">开始</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/concepts.html" class="md-nav__link">概念</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/configuration.html" class="md-nav__link">配置</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/tutorials.html" class="md-nav__link">教程</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/reference.html" class="md-nav__link">参考</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="../graph/annotations.html" class="md-nav__link">基于注解的配置</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="benchmarking.html" class="md-nav__link">基准测试</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="ga.html" class="md-nav__link">一般可用性（GA）</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../graph/helm_charts.html" class="md-nav__link">Helm Charts</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="images.html" class="md-nav__link">镜像</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../analytics/log_level.html" class="md-nav__link">日志及等级</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../graph/private_registries.html" class="md-nav__link">私有 Docker 注册中心</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="apis/index.html" class="md-nav__link">预估 APIs</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../python/api/modules.html" class="md-nav__link">Python API 参考</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="release-highlights.html" class="md-nav__link">发布亮点</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="seldon-deployment.html" class="md-nav__link">Seldon Deployment CRD</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../graph/svcorch.html" class="md-nav__link">服务编排器</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../analytics/kubeflow.html" class="md-nav__link">Kubeflow</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/archive.html" class="md-nav__link">归档文档</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="../R/r_wrapping_docker.html" class="md-nav__link">R 语言封装 Docker</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../charts/seldon-openvino.html" class="md-nav__link">Seldon OpenVino</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/ambassador_circuit_breakers.html" class="md-nav__link">Ambassador 熔断</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/custom_init_container.html" class="md-nav__link">Custom Init Containers with rclone and MinIO</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/custom_init_container.html#Cleanup" class="md-nav__link">Cleanup</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/drift_cifar10.html" class="md-nav__link">Drift CIFAR10</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/dvc.html" class="md-nav__link">DVC</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/graph-metadata.html" class="md-nav__link">图元数据</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/iris_anchor_tabular_explainer_v2.html" class="md-nav__link">Anchor Tabular Explainer</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/iris_explainer_poetry.html" class="md-nav__link">Explainer for Iris model with Poetry-defined Environment</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/iris_explainer_poetry.html#Deploy-Iris-Model" class="md-nav__link">Deploy Iris Model</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/iris_explainer_poetry.html#Train-Explainer" class="md-nav__link">Train Explainer</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/iris_explainer_poetry.html#Save-and-deploy-Explainer" class="md-nav__link">Save and deploy Explainer</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/iris_explainer_poetry.html#Test-Deployed-explainer" class="md-nav__link">Test Deployed explainer</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/istio.html" class="md-nav__link">Istio 示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/metadata.html" class="md-nav__link">元数据示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/metadata_grpc.html" class="md-nav__link">Metadata GRPC API example</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/metadata_grpc.html#Example-description" class="md-nav__link">Example description</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/metadata_schema.html" class="md-nav__link">元数据架构</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/pachyderm-simple.html" class="md-nav__link">Pachyderm 示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/pvc-tfjob.html" class="md-nav__link">PVC TFJob</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/seldon_client.html" class="md-nav__link">Seldon 客户端</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/server_examples.html" class="md-nav__link">Server 示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/triton_mnist_e2e.html" class="md-nav__link">Triton E2E</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../graph/custom_svc_name.html" class="md-nav__link">自定义 Service 名称示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../graph/grpc_load_balancing_ambassador.html" class="md-nav__link">gRPC 负载均衡</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../graph/model_rest_grpc_settings.html" class="md-nav__link">Rest gRPC 设置</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../graph/model_svcorch_sep.html" class="md-nav__link">模型服务编排</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../java-jni/README.html" class="md-nav__link">Java JNI</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="apis/readme.html" class="md-nav__link">APIs 读我</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> 概念 </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">概念</a>
+      
+        
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#reference-concepts--page-root" class="md-nav__link">Seldon Core 核心概念</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id1" class="md-nav__link">机器学习发布 / 推理图</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">机器学习部署/推理图的概念概述</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id3" class="md-nav__link">组件/推理服务器</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">组件/推理服务器的概念概述</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id5" class="md-nav__link">模型</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id6" class="md-nav__link">模型的概念概述</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id7" class="md-nav__link">语言封装</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id8" class="md-nav__link">语言封装的概念概述</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id9" class="md-nav__link">预封装推理服务器</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id10" class="md-nav__link">预封装推理服务器的概念概述</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id11" class="md-nav__link">图</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id12" class="md-nav__link">图的概念简述</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id13" class="md-nav__link">请求</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id14" class="md-nav__link">请求的概念概述</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#request" class="md-nav__link">Request 日志</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id15" class="md-nav__link">请求日志的概念描述</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id16" class="md-nav__link">有用的链接</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#kubeflow-pipelines" class="md-nav__link">Kubeflow pipelines 概念</a>
+        </li>
+        <li class="md-nav__item"><a href="#google-machine-learning" class="md-nav__link">Google machine learning 词汇表</a>
+        </li>
+        <li class="md-nav__item"><a href="#kubernetes-standardized" class="md-nav__link">Kubernetes standardized 词汇表</a>
+        </li>
+        <li class="md-nav__item"><a href="#helm" class="md-nav__link">Helm 词汇表</a>
+        </li>
+        <li class="md-nav__item"><a href="#jaeger" class="md-nav__link">Jaeger 术语</a>
+        </li>
+        <li class="md-nav__item"><a href="#elastic-search" class="md-nav__link">Elastic search 术语</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/reference/concepts.md.txt">Show Source</a> </li>
+
+  </ul>
+</nav>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="integration_nvidia_link.html" class="md-nav__link">Nvidia 实现</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="integration_sagemaker_link.html" class="md-nav__link">Sagemaker 实现</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../tutorials/blogs.html" class="md-nav__link">博客</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../tutorials/podcasts.html" class="md-nav__link">播客</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../tutorials/videos.html" class="md-nav__link">视频</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../workflow/quickstart.html" class="md-nav__link">快速开始</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../wrappers/language_wrappers.html" class="md-nav__link">语言封装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../wrappers/s2i.html" class="md-nav__link">S2I</a>
+      
+    
+    </li></ul>
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/contributing.html" class="md-nav__link">贡献</a>
+      
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#reference-concepts--page-root" class="md-nav__link">Seldon Core 核心概念</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id1" class="md-nav__link">机器学习发布 / 推理图</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">机器学习部署/推理图的概念概述</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id3" class="md-nav__link">组件/推理服务器</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">组件/推理服务器的概念概述</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id5" class="md-nav__link">模型</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id6" class="md-nav__link">模型的概念概述</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id7" class="md-nav__link">语言封装</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id8" class="md-nav__link">语言封装的概念概述</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id9" class="md-nav__link">预封装推理服务器</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id10" class="md-nav__link">预封装推理服务器的概念概述</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id11" class="md-nav__link">图</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id12" class="md-nav__link">图的概念简述</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id13" class="md-nav__link">请求</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id14" class="md-nav__link">请求的概念概述</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#request" class="md-nav__link">Request 日志</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id15" class="md-nav__link">请求日志的概念描述</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id16" class="md-nav__link">有用的链接</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#kubeflow-pipelines" class="md-nav__link">Kubeflow pipelines 概念</a>
+        </li>
+        <li class="md-nav__item"><a href="#google-machine-learning" class="md-nav__link">Google machine learning 词汇表</a>
+        </li>
+        <li class="md-nav__item"><a href="#kubernetes-standardized" class="md-nav__link">Kubernetes standardized 词汇表</a>
+        </li>
+        <li class="md-nav__item"><a href="#helm" class="md-nav__link">Helm 词汇表</a>
+        </li>
+        <li class="md-nav__item"><a href="#jaeger" class="md-nav__link">Jaeger 术语</a>
+        </li>
+        <li class="md-nav__item"><a href="#elastic-search" class="md-nav__link">Elastic search 术语</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/reference/concepts.md.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <section id="seldon-core">
+<h1 id="reference-concepts--page-root">Seldon Core 核心概念<a class="headerlink" href="#reference-concepts--page-root" title="Permalink to this heading">¶</a></h1>
+<p>此页面是一个正在进行的工作，提供 Seldon Core 的核心理念。
+这项工作正在进行中，我们欢迎反馈。</p>
+<section id="id1">
+<h2 id="id1">机器学习发布 / 推理图<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h2>
+<section id="id2">
+<h3 id="id2">机器学习部署/推理图的概念概述<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
+<p>机器学习部署（或推理图）是指 Seldon 系统下 Seldon（Seldon Deployments）相关的一组组件。它表示工作流程，将机器学习系统的组件分组到逻辑管道中。ML 部署包含组件的配置、系统输入和输出的定义以及每个组件的定义。</p>
+</section>
+</section>
+<section id="id3">
+<h2 id="id3">组件/推理服务器<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h2>
+<section id="id4">
+<h3 id="id4">组件/推理服务器的概念概述<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h3>
+<p>组件（或推理服务器）是：</p>
+<ul class="simple">
+<li><p>模型</p></li>
+<li><p>路由</p></li>
+<li><p>合并器</p></li>
+<li><p>转换器</p></li>
+<li><p>输出转换器</p></li>
+</ul>
+<p>一个程序提供工作流中的一个步骤。</p>
+</section>
+</section>
+<section id="id5">
+<h2 id="id5">模型<a class="headerlink" href="#id5" title="Permalink to this heading">¶</a></h2>
+<section id="id6">
+<h3 id="id6">模型的概念概述<a class="headerlink" href="#id6" title="Permalink to this heading">¶</a></h3>
+<p>机器学习部署中的组件，从训练数据中获取的训练模型。</p>
+</section>
+</section>
+<section id="id7">
+<h2 id="id7">语言封装<a class="headerlink" href="#id7" title="Permalink to this heading">¶</a></h2>
+<section id="id8">
+<h3 id="id8">语言封装的概念概述<a class="headerlink" href="#id8" title="Permalink to this heading">¶</a></h3>
+<p>语言封装一种针对特定编程语言
+A language wrapper is a model which enables cross language and/or runtime interoperability with a particular programming language.</p>
+</section>
+</section>
+<section id="id9">
+<h2 id="id9">预封装推理服务器<a class="headerlink" href="#id9" title="Permalink to this heading">¶</a></h2>
+<section id="id10">
+<h3 id="id10">预封装推理服务器的概念概述<a class="headerlink" href="#id10" title="Permalink to this heading">¶</a></h3>
+<p>预封装推理服务器包含如下：</p>
+<ul class="simple">
+<li><p>SKLearn Server</p></li>
+<li><p>XGBoost Server</p></li>
+<li><p>Tensorflow Serving</p></li>
+<li><p>MLflow Server</p></li>
+</ul>
+<p>可以发布训练模型的服务。</p>
+<p>Seldon Core 中内置了预封装的推理服务器，允许用户轻松地从 artifact (即序列化模型) 到 ML 部署而无需考虑工具包。请参阅以下文档页面，供用户查找有关如何创建自己的「预封装」推理服务器的说明：</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.seldon.io/projects/seldon-core/en/latest/servers/overview.html">https://docs.seldon.io/projects/seldon-core/en/latest/servers/overview.html</a></p></li>
+<li><p><a class="reference external" href="https://docs.seldon.io/projects/seldon-core/en/latest/servers/custom.html">https://docs.seldon.io/projects/seldon-core/en/latest/servers/custom.html</a></p></li>
+</ul>
+</section>
+</section>
+<section id="id11">
+<h2 id="id11">图<a class="headerlink" href="#id11" title="Permalink to this heading">¶</a></h2>
+<section id="id12">
+<h3 id="id12">图的概念简述<a class="headerlink" href="#id12" title="Permalink to this heading">¶</a></h3>
+<p>图将机器学习组件表示为节点，其表示从一个组件到下一个组件的传递输入和输出的操作。</p>
+</section>
+</section>
+<section id="id13">
+<h2 id="id13">请求<a class="headerlink" href="#id13" title="Permalink to this heading">¶</a></h2>
+<section id="id14">
+<h3 id="id14">请求的概念概述<a class="headerlink" href="#id14" title="Permalink to this heading">¶</a></h3>
+<p>请求代表对模型的单个调用以进行预测。该请求附加一个有效负载，其中包含通过特定协议传递的预测数据（通常以数组的形式）。它需遵循特定格式。</p>
+</section>
+</section>
+<section id="request">
+<h2 id="request">Request 日志<a class="headerlink" href="#request" title="Permalink to this heading">¶</a></h2>
+<section id="id15">
+<h3 id="id15">请求日志的概念描述<a class="headerlink" href="#id15" title="Permalink to this heading">¶</a></h3>
+<p>请求日志记录是 Seldon 的一项功能，能够跟踪已提交给模型的请求。在默认设置中，请求被记录并存储在 Elasticsearch 中。</p>
+</section>
+</section>
+<section id="id16">
+<h2 id="id16">有用的链接<a class="headerlink" href="#id16" title="Permalink to this heading">¶</a></h2>
+<section id="kubeflow-pipelines">
+<h3 id="kubeflow-pipelines">Kubeflow pipelines 概念<a class="headerlink" href="#kubeflow-pipelines" title="Permalink to this heading">¶</a></h3>
+<p><a class="reference external" href="https://www.kubeflow.org/docs/pipelines/overview/concepts/">https://www.kubeflow.org/docs/pipelines/overview/concepts/</a></p>
+</section>
+<section id="google-machine-learning">
+<h3 id="google-machine-learning">Google machine learning 词汇表<a class="headerlink" href="#google-machine-learning" title="Permalink to this heading">¶</a></h3>
+<p><a class="reference external" href="https://developers.google.com/machine-learning/glossary">https://developers.google.com/machine-learning/glossary</a></p>
+</section>
+<section id="kubernetes-standardized">
+<h3 id="kubernetes-standardized">Kubernetes standardized 词汇表<a class="headerlink" href="#kubernetes-standardized" title="Permalink to this heading">¶</a></h3>
+<p><a class="reference external" href="https://kubernetes.io/docs/reference/glossary/?fundamental=true">https://kubernetes.io/docs/reference/glossary/?fundamental=true</a></p>
+</section>
+<section id="helm">
+<h3 id="helm">Helm 词汇表<a class="headerlink" href="#helm" title="Permalink to this heading">¶</a></h3>
+<p><a class="reference external" href="https://helm.sh/docs/glossary/">https://helm.sh/docs/glossary/</a></p>
+</section>
+<section id="jaeger">
+<h3 id="jaeger">Jaeger 术语<a class="headerlink" href="#jaeger" title="Permalink to this heading">¶</a></h3>
+<p><a class="reference external" href="https://www.jaegertracing.io/docs/1.18/architecture/#terminology">https://www.jaegertracing.io/docs/1.18/architecture/#terminology</a></p>
+</section>
+<section id="elastic-search">
+<h3 id="elastic-search">Elastic search 术语<a class="headerlink" href="#elastic-search" title="Permalink to this heading">¶</a></h3>
+<p><a class="reference external" href="https://www.elastic.co/guide/en/elastic-stack-glossary/current/terms.html">https://www.elastic.co/guide/en/elastic-stack-glossary/current/terms.html</a></p>
+</section>
+</section>
+</section>
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="apis/readme.html" title="参考"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> "Previous" </span> 参考 </span>
+              </div>
+            </a>
+          
+          
+            <a href="integration_nvidia_link.html" title="NVIDIA 预估服务代理"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> "Next" </span> NVIDIA 预估服务代理 </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2024, Seldon Technologies Ltd.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

@@ -1,0 +1,6 @@
+ray.data.datasource.FileExtensionFilter.of
+==========================================
+
+.. currentmodule:: ray.data.datasource
+
+.. automethod:: FileExtensionFilter.of

@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../_static/javascripts/modernizr.js"></script>
+  
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-54780881-2"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-54780881-2');
+</script>
+  
+  
+    <title>Seldon Core 批处理 &#8212; seldon-core  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=83e35b93" />
+    <link rel="stylesheet" type="text/css" href="../_static/material.css?v=79c92029" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/rtd_sphinx_search.min.css?v=fb480935" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=15a8f09d" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/rtd_search_config.js"></script>
+    <script src="../_static/js/rtd_sphinx_search.min.js?v=60fbc683"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="KNative 事件集成" href="../streaming/knative_eventing.html" />
+    <link rel="prev" title="分布式追踪" href="../graph/distributed-tracing.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=indigo data-md-color-accent=teal>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#servers/batch" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../index.html" title="seldon-core  documentation"
+           class="md-header-nav__button md-logo">
+          
+            &nbsp;
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">Seldon Core Documentation</span>
+          <span class="md-header-nav__topic"> Seldon Core 批处理 </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder=""Search""
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+            
+            <li class="md-tabs__item"><a href="/" class="md-tabs__link">🚀 Our Other Projects & Products:</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi/en/stable/" class="md-tabs__link">Alibi Explain</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi-detect/en/stable/" class="md-tabs__link">Alibi Detect</a></li>
+            
+            <li class="md-tabs__item"><a href="https://mlserver.readthedocs.io/en/latest/" class="md-tabs__link">MLServer</a></li>
+            
+            <li class="md-tabs__item"><a href="https://tempo.readthedocs.io/en/latest/" class="md-tabs__link">Tempo SDK</a></li>
+            
+            <li class="md-tabs__item"><a href="https://deploy.seldon.io" class="md-tabs__link">Seldon Enterprise Platform</a></li>
+            
+            <li class="md-tabs__item"><a href="https://github.com/SeldonIO/seldon-deploy-sdk#seldon-deploy-sdk" class="md-tabs__link">Seldon Enterprise Platform SDK</a></li>
+          <li class="md-tabs__item"><a href="../nav/configuration.html" class="md-tabs__link">配置</a></li>
+          <li class="md-tabs__item"><a href="../nav/config/integrations.html" class="md-tabs__link">集成</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../index.html" title="seldon-core documentation" class="md-nav__button md-logo">
+      
+        <img src="../_static/" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../index.html"
+       title="seldon-core documentation">Seldon Core Documentation</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/getting-started.html" class="md-nav__link">开始</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/concepts.html" class="md-nav__link">概念</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/configuration.html" class="md-nav__link">配置</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/installation.html" class="md-nav__link">安装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/deployments.html" class="md-nav__link">发布</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/servers.html" class="md-nav__link">服务器</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/routing.html" class="md-nav__link">路由</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/wrappers.html" class="md-nav__link">语言封装和 SDK</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/integrations.html" class="md-nav__link">集成</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="../analytics/cicd-mlops.html" class="md-nav__link">CI/CD MLOps 缩放</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../analytics/logging.html" class="md-nav__link">有效载荷记录</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../graph/distributed-tracing.html" class="md-nav__link">Jaeger 链路追踪</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> 批处理 </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">批处理</a>
+      
+        
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#servers-batch--page-root" class="md-nav__link">Seldon Core 批处理</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#workers" class="md-nav__link">水平可扩展的 Workers 和副本</a>
+        </li>
+        <li class="md-nav__item"><a href="#etl" class="md-nav__link">与 ETL 和工作流管理器集成</a>
+        </li>
+        <li class="md-nav__item"><a href="#id1" class="md-nav__link">动手实例</a>
+        </li>
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">高级实现细节</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id3" class="md-nav__link">命令行参数</a>
+        </li>
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">身份标识</a>
+        </li>
+        <li class="md-nav__item"><a href="#id5" class="md-nav__link">表现</a>
+        </li>
+        <li class="md-nav__item"><a href="#id6" class="md-nav__link">微批量</a>
+        </li>
+        <li class="md-nav__item"><a href="#id7" class="md-nav__link">输入文件格式</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#data" class="md-nav__link">数据类型: data</a>
+        </li>
+        <li class="md-nav__item"><a href="#raw" class="md-nav__link">数据类型: raw</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/servers/batch.md.txt">Show Source</a> </li>
+
+  </ul>
+</nav>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../streaming/knative_eventing.html" class="md-nav__link">KNative 流处理</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../analytics/analytics.html" class="md-nav__link">Prometheus 指标</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../streaming/kafka.html" class="md-nav__link">原生 Kafka 实现</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../analytics/explainers.html" class="md-nav__link">模型解释</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../analytics/outlier_detection.html" class="md-nav__link">异常值检测</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../analytics/drift_detection.html" class="md-nav__link">漂移检测</a>
+      
+    
+    </li></ul>
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/tutorials.html" class="md-nav__link">教程</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/reference.html" class="md-nav__link">参考</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/contributing.html" class="md-nav__link">贡献</a>
+      
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#servers-batch--page-root" class="md-nav__link">Seldon Core 批处理</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#workers" class="md-nav__link">水平可扩展的 Workers 和副本</a>
+        </li>
+        <li class="md-nav__item"><a href="#etl" class="md-nav__link">与 ETL 和工作流管理器集成</a>
+        </li>
+        <li class="md-nav__item"><a href="#id1" class="md-nav__link">动手实例</a>
+        </li>
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">高级实现细节</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id3" class="md-nav__link">命令行参数</a>
+        </li>
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">身份标识</a>
+        </li>
+        <li class="md-nav__item"><a href="#id5" class="md-nav__link">表现</a>
+        </li>
+        <li class="md-nav__item"><a href="#id6" class="md-nav__link">微批量</a>
+        </li>
+        <li class="md-nav__item"><a href="#id7" class="md-nav__link">输入文件格式</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#data" class="md-nav__link">数据类型: data</a>
+        </li>
+        <li class="md-nav__item"><a href="#raw" class="md-nav__link">数据类型: raw</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/servers/batch.md.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <section id="seldon-core">
+<h1 id="servers-batch--page-root">Seldon Core 批处理<a class="headerlink" href="#servers-batch--page-root" title="Permalink to this heading">¶</a></h1>
+<p>Seldon Core 提供了一个命令行组件，允许使用水平可扩展的 Seldon 核心 kubernetes 模型部署进行高度并行化的批处理。</p>
+<p>流处理请查看<a class="reference internal" href="../streaming/knative_eventing.html"><span class="doc">基于 KNative 事件的流处理</span></a>。</p>
+<a class="reference external image-reference" href="../images/batch-processor.jpg"><img alt="" src="../_images/batch-processor.jpg"/></a>
+<section id="workers">
+<h2 id="workers">水平可扩展的 Workers 和副本<a class="headerlink" href="#workers" title="Permalink to this heading">¶</a></h2>
+<p>可并行化的批处理器工作线程允许高吞吐量，因为它能够利用 Seldon Core 水平扩展副本以及自动扩展，从而为用户提供灵活性以根据需要优化他们的配置。</p>
+<p>下图显示了一个标准工作流程，其中可以下载数据然后通过对象存储上传，并且可以在作业成功完成后创建和删除 Seldon 模型。</p>
+<a class="reference external image-reference" href="../images/batch-workflow-manager-integration.jpg"><img alt="" src="../_images/batch-workflow-manager-integration.jpg"/></a>
+</section>
+<section id="etl">
+<h2 id="etl">与 ETL 和工作流管理器集成<a class="headerlink" href="#etl" title="Permalink to this heading">¶</a></h2>
+<p>Seldon 批处理组件已构建为模块化和灵活化的，因此它可以跨任何工作流管理器进行集成。</p>
+<p>这允许您在大量批处理应用程序上利用 Seldon，包括必须按计划发生的触发器（例如，每天一次、每月一次等），或可以以编程方式触发的作业。</p>
+<a class="reference external image-reference" href="../images/batch-workflow-managers.jpg"><img alt="" src="../_images/batch-workflow-managers.jpg"/></a>
+</section>
+<section id="id1">
+<h2 id="id1">动手实例<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h2>
+<p>我们提供了一组示例，向您展示如何使用 Seldon 批处理组件：</p>
+<ul class="simple">
+<li><p><a class="reference external" href="../examples/argo_workflows_batch.html">使用 Argo 工作流和 S3 / Minio 进行批处理</a></p></li>
+<li><p><a class="reference external" href="../examples/argo_workflows_hdfs_batch.html">使用 Argo 工作流和 HDFS 进行批处理</a></p></li>
+<li><p><a class="reference external" href="../examples/kubeflow_pipelines_batch.html">使用 Kubeflow 流水线示例进行批处理</a></p></li>
+</ul>
+</section>
+<section id="id2">
+<h2 id="id2">高级实现细节<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h2>
+<section id="id3">
+<h3 id="id3">命令行参数<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h3>
+<p>要获得有关每个可用命令的更多信息，您可以按如下方式与批处理器组件交互：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>seldon-batch-processor<span class="w"> </span>--help
+
+Usage:<span class="w"> </span>seldon-batch-processor<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+
+<span class="w">  </span>Command<span class="w"> </span>line<span class="w"> </span>interface<span class="w"> </span><span class="k">for</span><span class="w"> </span>Seldon<span class="w"> </span>Batch<span class="w"> </span>Processor,<span class="w"> </span>which<span class="w"> </span>can<span class="w"> </span>be<span class="w"> </span>used<span class="w"> </span>to<span class="w"> </span>send
+<span class="w">  </span>requests<span class="w"> </span>through<span class="w"> </span>configurable<span class="w"> </span>parallel<span class="w"> </span>workers<span class="w"> </span>to<span class="w"> </span>Seldon<span class="w"> </span>Core<span class="w"> </span>models.<span class="w"> </span>It<span class="w"> </span>is
+<span class="w">  </span>recommended<span class="w"> </span>that<span class="w"> </span>the<span class="w"> </span>respective<span class="w"> </span>Seldon<span class="w"> </span>Core<span class="w"> </span>model<span class="w"> </span>is<span class="w"> </span>also<span class="w"> </span>optimized<span class="w"> </span>with
+<span class="w">  </span>number<span class="w"> </span>of<span class="w"> </span>replicas<span class="w"> </span>to<span class="w"> </span>distribute<span class="w"> </span>and<span class="w"> </span>scale<span class="w"> </span>out<span class="w"> </span>the<span class="w"> </span>batch<span class="w"> </span>processing<span class="w"> </span>work.
+<span class="w">  </span>The<span class="w"> </span>processor<span class="w"> </span>is<span class="w"> </span>able<span class="w"> </span>to<span class="w"> </span>process<span class="w"> </span>data<span class="w"> </span>from<span class="w"> </span><span class="nb">local</span><span class="w"> </span>filestore<span class="w"> </span>input<span class="w"> </span>file<span class="w"> </span><span class="k">in</span>
+<span class="w">  </span>various<span class="w"> </span>formats<span class="w"> </span>supported<span class="w"> </span>by<span class="w"> </span>the<span class="w"> </span>SeldonClient<span class="w"> </span>module.<span class="w"> </span>It<span class="w"> </span>is<span class="w"> </span>also<span class="w"> </span>suggested
+<span class="w">  </span>to<span class="w"> </span>use<span class="w"> </span>the<span class="w"> </span>batch<span class="w"> </span>processor<span class="w"> </span>component<span class="w"> </span>integrated<span class="w"> </span>with<span class="w"> </span>an<span class="w"> </span>ETL<span class="w"> </span>Workflow<span class="w"> </span>Manager
+<span class="w">  </span>such<span class="w"> </span>as<span class="w"> </span>Kubeflow,<span class="w"> </span>Argo<span class="w"> </span>Pipelines,<span class="w"> </span>Airflow,<span class="w"> </span>etc.<span class="w"> </span>which<span class="w"> </span>would<span class="w"> </span>allow<span class="w"> </span><span class="k">for</span><span class="w"> </span>extra
+<span class="w">  </span>setup<span class="w"> </span>/<span class="w"> </span>teardown<span class="w"> </span>steps<span class="w"> </span>such<span class="w"> </span>as<span class="w"> </span>downloading<span class="w"> </span>the<span class="w"> </span>data<span class="w"> </span>from<span class="w"> </span>object<span class="w"> </span>store<span class="w"> </span>or
+<span class="w">  </span>starting<span class="w"> </span>a<span class="w"> </span>seldon<span class="w"> </span>core<span class="w"> </span>model<span class="w"> </span>with<span class="w"> </span>replicas.<span class="w"> </span>See<span class="w"> </span>the<span class="w"> </span>Seldon<span class="w"> </span>Core<span class="w"> </span>examples
+<span class="w">  </span>folder<span class="w"> </span><span class="k">for</span><span class="w"> </span>implementations<span class="w"> </span>of<span class="w"> </span>this<span class="w"> </span>batch<span class="w"> </span>module<span class="w"> </span>with<span class="w"> </span>Seldon<span class="w"> </span>Core.
+
+Options:
+<span class="w">  </span>-d,<span class="w"> </span>--deployment-name<span class="w"> </span>TEXT<span class="w">      </span>The<span class="w"> </span>name<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>SeldonDeployment<span class="w"> </span>to<span class="w"> </span>send<span class="w"> </span>the
+<span class="w">                                  </span>requests<span class="w"> </span>to<span class="w">  </span><span class="o">[</span>required<span class="o">]</span>
+<span class="w">  </span>-g,<span class="w"> </span>--gateway-type<span class="w"> </span><span class="o">[</span>ambassador<span class="p">|</span>istio<span class="p">|</span>seldon<span class="o">]</span>
+<span class="w">                                  </span>The<span class="w"> </span>gateway<span class="w"> </span><span class="nb">type</span><span class="w"> </span><span class="k">for</span><span class="w"> </span>the<span class="w"> </span>seldon<span class="w"> </span>model,<span class="w"> </span>which
+<span class="w">                                  </span>can<span class="w"> </span>be<span class="w"> </span>through<span class="w"> </span>the<span class="w"> </span>ingress<span class="w"> </span>provider
+<span class="w">                                  </span><span class="o">(</span>istio/ambassador<span class="o">)</span><span class="w"> </span>or<span class="w"> </span>directly<span class="w"> </span>through<span class="w"> </span>the
+<span class="w">                                  </span>service<span class="w"> </span><span class="o">(</span>seldon<span class="o">)</span>
+<span class="w">  </span>-n,<span class="w"> </span>--namespace<span class="w"> </span>TEXT<span class="w">            </span>The<span class="w"> </span>Kubernetes<span class="w"> </span>namespace<span class="w"> </span>where<span class="w"> </span>the
+<span class="w">                                  </span>SeldonDeployment<span class="w"> </span>is<span class="w"> </span>deployed<span class="w"> </span><span class="k">in</span>
+<span class="w">  </span>-h,<span class="w"> </span>--host<span class="w"> </span>TEXT<span class="w">                 </span>The<span class="w"> </span>hostname<span class="w"> </span><span class="k">for</span><span class="w"> </span>the<span class="w"> </span>seldon<span class="w"> </span>model<span class="w"> </span>to<span class="w"> </span>send
+<span class="w">                                  </span>the<span class="w"> </span>request<span class="w"> </span>to,<span class="w"> </span>which<span class="w"> </span>can<span class="w"> </span>be<span class="w"> </span>the<span class="w"> </span>ingress<span class="w"> </span>of
+<span class="w">                                  </span>the<span class="w"> </span>Seldon<span class="w"> </span>model<span class="w"> </span>or<span class="w"> </span>the<span class="w"> </span>service<span class="w"> </span>itself
+<span class="w">  </span>-t,<span class="w"> </span>--transport<span class="w"> </span><span class="o">[</span>rest<span class="p">|</span>grpc<span class="o">]</span><span class="w">     </span>The<span class="w"> </span>transport<span class="w"> </span><span class="nb">type</span><span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>SeldonDeployment
+<span class="w">                                  </span>model<span class="w"> </span>which<span class="w"> </span>can<span class="w"> </span>be<span class="w"> </span>REST<span class="w"> </span>or<span class="w"> </span>GRPC
+<span class="w">  </span>-a,<span class="w"> </span>--data-type<span class="w"> </span><span class="o">[</span>data<span class="p">|</span>json<span class="p">|</span>str<span class="p">|</span>raw<span class="o">]</span>
+<span class="w">                                  </span>Whether<span class="w"> </span>to<span class="w"> </span>use<span class="w"> </span>json,<span class="w"> </span>strData<span class="w"> </span>or<span class="w"> </span>Seldon<span class="w"> </span>Data
+<span class="w">                                  </span><span class="nb">type</span><span class="w"> </span><span class="k">for</span><span class="w"> </span>the<span class="w"> </span>payload<span class="w"> </span>to<span class="w"> </span>send<span class="w"> </span>to<span class="w"> </span>the
+<span class="w">                                  </span>SeldonDeployment<span class="w"> </span>which<span class="w"> </span>aligns<span class="w"> </span>with<span class="w"> </span>the
+<span class="w">                                  </span>SeldonClient<span class="w"> </span>format
+<span class="w">  </span>-p,<span class="w"> </span>--payload-type<span class="w"> </span><span class="o">[</span>ndarray<span class="p">|</span>tensor<span class="p">|</span>tftensor<span class="o">]</span>
+<span class="w">                                  </span>The<span class="w"> </span>payload<span class="w"> </span><span class="nb">type</span><span class="w"> </span>expected<span class="w"> </span>by<span class="w"> </span>the
+<span class="w">                                  </span>SeldonDeployment<span class="w"> </span>and<span class="w"> </span>hence<span class="w"> </span>the<span class="w"> </span>expected
+<span class="w">                                  </span>format<span class="w"> </span><span class="k">for</span><span class="w"> </span>the<span class="w"> </span>data<span class="w"> </span><span class="k">in</span><span class="w"> </span>the<span class="w"> </span>input<span class="w"> </span>file<span class="w"> </span>which
+<span class="w">                                  </span>can<span class="w"> </span>be<span class="w"> </span>an<span class="w"> </span>array
+<span class="w">  </span>-w,<span class="w"> </span>--workers<span class="w"> </span>INTEGER<span class="w">           </span>The<span class="w"> </span>number<span class="w"> </span>of<span class="w"> </span>parallel<span class="w"> </span>request<span class="w"> </span>processor
+<span class="w">                                  </span>workers<span class="w"> </span>to<span class="w"> </span>run<span class="w"> </span><span class="k">for</span><span class="w"> </span>parallel<span class="w"> </span>processing
+<span class="w">  </span>-r,<span class="w"> </span>--retries<span class="w"> </span>INTEGER<span class="w">           </span>The<span class="w"> </span>number<span class="w"> </span>of<span class="w"> </span>retries<span class="w"> </span><span class="k">for</span><span class="w"> </span>each<span class="w"> </span>request
+<span class="w">                                  </span>before<span class="w"> </span>marking<span class="w"> </span>an<span class="w"> </span>error
+<span class="w">  </span>-i,<span class="w"> </span>--input-data-path<span class="w"> </span>PATH<span class="w">      </span>The<span class="w"> </span><span class="nb">local</span><span class="w"> </span>filestore<span class="w"> </span>path<span class="w"> </span>where<span class="w"> </span>the<span class="w"> </span>input
+<span class="w">                                  </span>file<span class="w"> </span>with<span class="w"> </span>the<span class="w"> </span>data<span class="w"> </span>to<span class="w"> </span>process<span class="w"> </span>is<span class="w"> </span>located
+<span class="w">  </span>-o,<span class="w"> </span>--output-data-path<span class="w"> </span>PATH<span class="w">     </span>The<span class="w"> </span><span class="nb">local</span><span class="w"> </span>filestore<span class="w"> </span>path<span class="w"> </span>where<span class="w"> </span>the<span class="w"> </span>output
+<span class="w">                                  </span>file<span class="w"> </span>should<span class="w"> </span>be<span class="w"> </span>written<span class="w"> </span>with<span class="w"> </span>the<span class="w"> </span>outputs<span class="w"> </span>of
+<span class="w">                                  </span>the<span class="w"> </span>batch<span class="w"> </span>processing
+<span class="w">  </span>-m,<span class="w"> </span>--method<span class="w"> </span><span class="o">[</span>predict<span class="p">|</span>feedback<span class="o">]</span>
+<span class="w">                                  </span>The<span class="w"> </span>method<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>SeldonDeployment<span class="w"> </span>to<span class="w"> </span>send
+<span class="w">                                  </span>the<span class="w"> </span>request<span class="w"> </span>to<span class="w"> </span>which<span class="w"> </span>currently<span class="w"> </span>only<span class="w"> </span>supports
+<span class="w">                                  </span>the<span class="w"> </span>predict<span class="w"> </span>method
+<span class="w">  </span>-l,<span class="w"> </span>--log-level<span class="w"> </span><span class="o">[</span>debug<span class="p">|</span>info<span class="p">|</span>warning<span class="p">|</span>error<span class="o">]</span>
+<span class="w">                                  </span>The<span class="w"> </span>log<span class="w"> </span>level<span class="w"> </span><span class="k">for</span><span class="w"> </span>the<span class="w"> </span>batch<span class="w"> </span>processor
+<span class="w">  </span>-b,<span class="w"> </span>--benchmark<span class="w">                 </span>If<span class="w"> </span><span class="nb">true</span><span class="w"> </span>the<span class="w"> </span>batch<span class="w"> </span>processor<span class="w"> </span>will<span class="w"> </span>print<span class="w"> </span>the
+<span class="w">                                  </span>elapsed<span class="w"> </span><span class="nb">time</span><span class="w"> </span>taken<span class="w"> </span>to<span class="w"> </span>run<span class="w"> </span>the<span class="w"> </span>process
+<span class="w">  </span>-u,<span class="w"> </span>--batch-id<span class="w"> </span>TEXT<span class="w">             </span>Unique<span class="w"> </span>batch<span class="w"> </span>ID<span class="w"> </span>to<span class="w"> </span>identify<span class="w"> </span>all<span class="w"> </span>data<span class="w"> </span>points
+<span class="w">                                  </span>processed<span class="w"> </span><span class="k">in</span><span class="w"> </span>this<span class="w"> </span>batch,<span class="w"> </span><span class="k">if</span><span class="w"> </span>not<span class="w"> </span>provided<span class="w"> </span>is
+<span class="w">                                  </span>auto<span class="w"> </span>generated
+<span class="w">  </span>-s,<span class="w"> </span>--batch-size<span class="w"> </span>INTEGER<span class="w">        </span>Batch<span class="w"> </span>size<span class="w"> </span>greater<span class="w"> </span>than<span class="w"> </span><span class="m">1</span><span class="w"> </span>can<span class="w"> </span>be<span class="w"> </span>used<span class="w"> </span>to
+<span class="w">                                  </span>group<span class="w"> </span>multiple<span class="w"> </span>predictions<span class="w"> </span>into<span class="w"> </span>a<span class="w"> </span>single
+<span class="w">                                  </span>request.
+<span class="w">  </span>-t,<span class="w"> </span>--batch-interval<span class="w"> </span>FLOAT<span class="w">      </span>Minimum<span class="w"> </span>Time<span class="w"> </span>interval<span class="w"> </span><span class="o">(</span><span class="k">in</span><span class="w"> </span>seconds<span class="o">)</span><span class="w"> </span>between
+<span class="w">                                  </span>batch<span class="w"> </span>predictions<span class="w"> </span>made<span class="w"> </span>by<span class="w"> </span>every<span class="w"> </span>worker.
+<span class="w">  </span>--use-ssl<span class="w"> </span>BOOLEAN<span class="w">               </span>Whether<span class="w"> </span>to<span class="w"> </span>use<span class="w"> </span>https<span class="w"> </span>rather<span class="w"> </span>than<span class="w"> </span>http<span class="w"> </span>as<span class="w"> </span>the
+<span class="w">                                  </span>REST<span class="w"> </span>transport<span class="w"> </span>protocol.
+<span class="w">  </span>--call-credentials-token<span class="w"> </span>TEXT<span class="w">   </span>Auth<span class="w"> </span>token<span class="w"> </span>used<span class="w"> </span>by<span class="w"> </span>Seldon<span class="w"> </span>Client,<span class="w"> </span><span class="k">if</span>
+<span class="w">                                  </span>supplied<span class="w"> </span>and<span class="w"> </span>using<span class="w"> </span>REST<span class="w"> </span>the<span class="w"> </span>transport
+<span class="w">                                  </span>protocol<span class="w"> </span>will<span class="w"> </span>be<span class="w"> </span>https.
+<span class="w">  </span>--ssl-verify<span class="w"> </span>BOOLEAN<span class="w">            </span>Can<span class="w"> </span>be<span class="w"> </span><span class="nb">set</span><span class="w"> </span>to<span class="w"> </span><span class="nb">false</span><span class="w"> </span>to<span class="w"> </span>avoid<span class="w"> </span>SSL
+<span class="w">                                  </span>verification<span class="w"> </span><span class="k">in</span><span class="w"> </span>REST.
+<span class="w">  </span>--help<span class="w">                          </span>Show<span class="w"> </span>this<span class="w"> </span>message<span class="w"> </span>and<span class="w"> </span>exit.
+</pre></div>
+</div>
+</section>
+<section id="id4">
+<h3 id="id4">身份标识<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h3>
+<p>发送到 Seldon 核心模型的每个数据点在请求元数据中包含以下标识符：</p>
+<ul class="simple">
+<li><p>Batch ID - 可以通过 CLI 提供或自动生成的唯一标识符</p></li>
+<li><p>Batch Instance ID - 为每个处理的数据点生成的唯一标识符</p></li>
+<li><p>Batch Index -  数据点相对于输入文件位置的本地有序降序索引</p></li>
+</ul>
+<p>这些标识符按如下方式添加到每个请求中：</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">seldon_request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="o">&lt;</span><span class="nx">data</span><span class="o">&gt;:</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">current_batch_instance</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"meta"</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">"tags"</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="s2">"batch_id"</span><span class="o">:</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">BATCH_ID</span><span class="o">&gt;</span>
+<span class="w">            </span><span class="s2">"batch_instance_id"</span><span class="o">:</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">BATCH_INSTANCE_ID</span><span class="o">&gt;</span>
+<span class="w">            </span><span class="s2">"batch_index"</span><span class="o">:</span><span class="w"> </span><span class="o">&lt;</span><span class="nx">BATCH_INDEX</span><span class="o">&gt;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>这允许识别请求并将其与数据中的初始请求进行匹配。</p>
+</section>
+<section id="id5">
+<h3 id="id5">表现<a class="headerlink" href="#id5" title="Permalink to this heading">¶</a></h3>
+<p>该模块的实现是利用 Python 的线程系统完成的。</p>
+<p>基准测试是使用普通 Python 请求模块进行的，以评估 Threading、Twisted 和 AsyncIO 的性能。结果显示 Asyncio 的性能更好，但是考虑到工作程序中的逻辑非常少（即发送请求）并且大部分时间都在等待响应，使用 Python 的本机线程的实现能够以最快的速度执行足够高效，可以很容易地扩展到数千工作器。</p>
+<p>然而，目前的实现使用 Seldon 客户端，它没有利用很多优化要求来提高处理性能，例如重用 requests.py 会话。然而，即使没有这些优化，worker 仍将达到高度并发的性能，并且这些优化将随着该组件（和反馈）的采用率的增长而引入。</p>
+</section>
+<section id="id6">
+<h3 id="id6">微批量<a class="headerlink" href="#id6" title="Permalink to this heading">¶</a></h3>
+<p>使用批处理器 CLI 时，您可以指定一个 <code class="docutils literal notranslate"><span class="pre">batch-size</span></code> 参数，该参数可以将多个预测分组到单个请求中。这使您可以利用为某些模型提供的更高性能，并减少网络开销。响应将被拆分回多个单个预测响应，以便输出文件看起来与运行批处理大小为 1 的处理器相同。</p>
+<p>目前我们只支持微批处理<code class="docutils literal notranslate"><span class="pre">ndarray</span></code>和<code class="docutils literal notranslate"><span class="pre">tensor</span></code>有效载荷类型。</p>
+</section>
+<section id="id7">
+<h3 id="id7">输入文件格式<a class="headerlink" href="#id7" title="Permalink to this heading">¶</a></h3>
+<section id="data">
+<h4 id="data">数据类型: data<a class="headerlink" href="#data" title="Permalink to this heading">¶</a></h4>
+<p>默认数据格式是 <code class="docutils literal notranslate"><span class="pre">ndarray</span></code> 负载类型的 <code class="docutils literal notranslate"><span class="pre">data</span></code>。<code class="docutils literal notranslate"><span class="pre">input.data</span></code> 文件看起来如下示例</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">[[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">2</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">3</span><span class="p p-Indicator">]]</span>
+<span class="p p-Indicator">[[</span><span class="nv">4</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">5</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">6</span><span class="p p-Indicator">]]</span>
+<span class="p p-Indicator">[[</span><span class="nv">7</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">8</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">9</span><span class="p p-Indicator">]]</span>
+<span class="p p-Indicator">[[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">3</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">6</span><span class="p p-Indicator">]]</span>
+</pre></div>
+</div>
+<p>输入文件中的每一行代表一个推理请求实例。 这些将被发送到模型如下</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">{</span><span class="s">"data"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">"ndarray"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">2</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">3</span><span class="p p-Indicator">]]},</span><span class="w"> </span><span class="s">"meta"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">"tags"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">"batch_index"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">0</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"batch_id"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">...</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"batch_instance_id"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">...</span><span class="p p-Indicator">}}}</span>
+<span class="p p-Indicator">{</span><span class="s">"data"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">"ndarray"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[[</span><span class="nv">4</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">5</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">6</span><span class="p p-Indicator">]]},</span><span class="w"> </span><span class="s">"meta"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">"tags"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">"batch_index"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"batch_id"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">...</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"batch_instance_id"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">...</span><span class="p p-Indicator">}}}</span>
+<span class="p p-Indicator">{</span><span class="s">"data"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">"ndarray"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[[</span><span class="nv">7</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">8</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">9</span><span class="p p-Indicator">]]},</span><span class="w"> </span><span class="s">"meta"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">"tags"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">"batch_index"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">2</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"batch_id"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">...</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"batch_instance_id"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">...</span><span class="p p-Indicator">}}}</span>
+<span class="p p-Indicator">{</span><span class="s">"data"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">"ndarray"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">3</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">6</span><span class="p p-Indicator">]]},</span><span class="w"> </span><span class="s">"meta"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">"tags"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">"batch_index"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">3</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"batch_id"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">...</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"batch_instance_id"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">...</span><span class="p p-Indicator">}}}</span>
+</pre></div>
+</div>
+<p>选择 <code class="docutils literal notranslate"><span class="pre">tensor</span></code> 负载类型会将有效结果发送到模型</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">{</span><span class="s">"data"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">"tensor"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">"shape"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">3</span><span class="p p-Indicator">],</span><span class="w"> </span><span class="s">"values"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">2</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">3</span><span class="p p-Indicator">]}},</span><span class="w"> </span><span class="s">"meta"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">...</span><span class="p p-Indicator">}</span>
+<span class="p p-Indicator">{</span><span class="s">"data"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">"tensor"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">"shape"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">3</span><span class="p p-Indicator">],</span><span class="w"> </span><span class="s">"values"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">4</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">5</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">6</span><span class="p p-Indicator">]}},</span><span class="w"> </span><span class="s">"meta"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">...</span><span class="p p-Indicator">}</span>
+<span class="p p-Indicator">{</span><span class="s">"data"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">"tensor"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">"shape"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">3</span><span class="p p-Indicator">],</span><span class="w"> </span><span class="s">"values"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">7</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">8</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">9</span><span class="p p-Indicator">]}},</span><span class="w"> </span><span class="s">"meta"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">...</span><span class="p p-Indicator">}</span>
+<span class="p p-Indicator">{</span><span class="s">"data"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">"tensor"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">"shape"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">3</span><span class="p p-Indicator">],</span><span class="w"> </span><span class="s">"values"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">3</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">6</span><span class="p p-Indicator">]}},</span><span class="w"> </span><span class="s">"meta"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">...</span><span class="p p-Indicator">}</span>
+</pre></div>
+</div>
+</section>
+<section id="raw">
+<h4 id="raw">数据类型: raw<a class="headerlink" href="#raw" title="Permalink to this heading">¶</a></h4>
+<p>如果数据类型被指定为 <code class="docutils literal notranslate"><span class="pre">raw</span></code>，那么输入文件中的每一行都将按原样发送到模型。
+在这种情况下，负载类型设置将被忽略。</p>
+<p>当不使用微批处理时，每一行将被理解为独立的 SeldonMessage 并按原样发送到模型，包括 <code class="docutils literal notranslate"><span class="pre">meta.tags</span></code> 信息。</p>
+<p>如果使用微批处理，则每个「原始」输入必须代表 <code class="docutils literal notranslate"><span class="pre">ndarray</span></code> 或 <code class="docutils literal notranslate"><span class="pre">tensor</span></code> 有效负载类型，并且仅包含单个推理请求。 在这种情况下，用户提供的标签不会发送到模型。 然而，它们将被合并到响应中并写入输出文件。</p>
+<p>Example raw <code class="docutils literal notranslate"><span class="pre">input.data</span></code> may look like this for example</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">{</span><span class="s">"data"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">"names"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"a"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"b"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"c"</span><span class="p p-Indicator">],</span><span class="w"> </span><span class="s">"ndarray"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">2</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">3</span><span class="p p-Indicator">]]},</span><span class="w"> </span><span class="s">"meta"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">"tags"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">"customer-id"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">0</span><span class="p p-Indicator">}}}</span>
+<span class="p p-Indicator">{</span><span class="s">"data"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">"names"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"a"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"b"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"c"</span><span class="p p-Indicator">],</span><span class="w"> </span><span class="s">"ndarray"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[[</span><span class="nv">4</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">5</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">6</span><span class="p p-Indicator">]]},</span><span class="w"> </span><span class="s">"meta"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">"tags"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">"customer-id"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">1</span><span class="p p-Indicator">}}}</span>
+<span class="p p-Indicator">{</span><span class="s">"data"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">"names"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"a"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"b"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"c"</span><span class="p p-Indicator">],</span><span class="w"> </span><span class="s">"ndarray"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[[</span><span class="nv">7</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">8</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">9</span><span class="p p-Indicator">]]},</span><span class="w"> </span><span class="s">"meta"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">"tags"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">"customer-id"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">2</span><span class="p p-Indicator">}}}</span>
+<span class="p p-Indicator">{</span><span class="s">"data"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">"names"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"a"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"b"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"c"</span><span class="p p-Indicator">],</span><span class="w"> </span><span class="s">"ndarray"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">3</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">6</span><span class="p p-Indicator">]]},</span><span class="w"> </span><span class="s">"meta"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">"tags"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">"customer-id"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">3</span><span class="p p-Indicator">}}}</span>
+</pre></div>
+</div>
+<p>查看 <a class="reference external" href="https://github.com/SeldonIO/seldon-core/issues/3702">#3702</a> 获取额外信息。</p>
+</section>
+</section>
+</section>
+</section>
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="../graph/distributed-tracing.html" title="分布式追踪"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> "Previous" </span> 分布式追踪 </span>
+              </div>
+            </a>
+          
+          
+            <a href="../streaming/knative_eventing.html" title="KNative 事件集成"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> "Next" </span> KNative 事件集成 </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2024, Seldon Technologies Ltd.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

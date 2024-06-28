@@ -1,0 +1,37 @@
+﻿
+
+ray.train.lightning.RayDDPStrategy
+==================================
+
+.. currentmodule:: ray.train.lightning
+
+.. autoclass:: RayDDPStrategy
+   :show-inheritance:
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :toctree:
+
+   
+      
+
+   
+   
+
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :toctree:
+
+   
+      ~RayDDPStrategy.distributed_sampler_kwargs
+      ~RayDDPStrategy.root_device
+
+   
+   

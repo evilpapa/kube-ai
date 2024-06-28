@@ -1,0 +1,29 @@
+﻿
+
+ray.serve.config.ProxyLocation
+==============================
+
+.. currentmodule:: ray.serve.config
+
+.. autoclass:: ProxyLocation
+   :show-inheritance:
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :toctree:
+
+   
+      ~ProxyLocation.Disabled
+      ~ProxyLocation.HeadOnly
+      ~ProxyLocation.EveryNode
+
+   
+   

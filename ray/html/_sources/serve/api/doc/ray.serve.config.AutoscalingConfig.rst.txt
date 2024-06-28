@@ -1,0 +1,6 @@
+﻿ray.serve.config.AutoscalingConfig
+==================================
+
+.. currentmodule:: ray.serve.config
+
+.. autopydantic_model:: AutoscalingConfig

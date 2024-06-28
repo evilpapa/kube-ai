@@ -1,0 +1,28 @@
+﻿
+
+ray.tune.integration.xgboost.TuneReportCallback
+===============================================
+
+.. currentmodule:: ray.tune.integration.xgboost
+
+.. autoclass:: TuneReportCallback
+   :show-inheritance:
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :toctree:
+
+   
+      
+      
+
+   
+   
+
+
+   
+   
+   

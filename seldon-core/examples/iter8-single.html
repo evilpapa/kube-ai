@@ -1,0 +1,1629 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../_static/javascripts/modernizr.js"></script>
+  
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-54780881-2"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-54780881-2');
+</script>
+  
+  
+    <title>Progressive Rollouts with Single Seldon Deployment &#8212; seldon-core  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=83e35b93" />
+    <link rel="stylesheet" type="text/css" href="../_static/material.css?v=79c92029" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/rtd_sphinx_search.min.css?v=e72958e9" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+    <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=15a8f09d" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/rtd_search_config.js?v=b0596c34"></script>
+    <script src="../_static/js/rtd_sphinx_search.min.js?v=43f26ba4"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Progressive Rollouts using Two Seldon Deployments" href="iter8-separate.html" />
+    <link rel="prev" title="Canary Rollout with Seldon and Ambassador" href="ambassador_canary.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=indigo data-md-color-accent=teal>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#examples/iter8-single" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../index.html" title="seldon-core  documentation"
+           class="md-header-nav__button md-logo">
+          
+            &nbsp;
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">Seldon Core Documentation</span>
+          <span class="md-header-nav__topic"> Progressive Rollouts with Single Seldon Deployment </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder=""Search""
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+            
+            <li class="md-tabs__item"><a href="/" class="md-tabs__link">🚀 Our Other Projects & Products:</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi/en/stable/" class="md-tabs__link">Alibi Explain</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi-detect/en/stable/" class="md-tabs__link">Alibi Detect</a></li>
+            
+            <li class="md-tabs__item"><a href="https://mlserver.readthedocs.io/en/latest/" class="md-tabs__link">MLServer</a></li>
+            
+            <li class="md-tabs__item"><a href="https://tempo.readthedocs.io/en/latest/" class="md-tabs__link">Tempo SDK</a></li>
+            
+            <li class="md-tabs__item"><a href="https://deploy.seldon.io" class="md-tabs__link">Seldon Enterprise Platform</a></li>
+            
+            <li class="md-tabs__item"><a href="https://github.com/SeldonIO/seldon-deploy-sdk#seldon-deploy-sdk" class="md-tabs__link">Seldon Enterprise Platform SDK</a></li>
+          <li class="md-tabs__item"><a href="../nav/tutorials.html" class="md-tabs__link">教程</a></li>
+          <li class="md-tabs__item"><a href="notebooks.html" class="md-tabs__link">笔记本</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../index.html" title="seldon-core documentation" class="md-nav__button md-logo">
+      
+        <img src="../_static/" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../index.html"
+       title="seldon-core documentation">Seldon Core Documentation</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/getting-started.html" class="md-nav__link">开始</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/concepts.html" class="md-nav__link">概念</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/configuration.html" class="md-nav__link">配置</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/tutorials.html" class="md-nav__link">教程</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html" class="md-nav__link">笔记本</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#seldon-core" class="md-nav__link">Seldon Core 设置</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id2" class="md-nav__link">预包装推理服务示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#python" class="md-nav__link">Python 语言封装示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id3" class="md-nav__link">专门的框架示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id4" class="md-nav__link">孵化项目示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id5" class="md-nav__link">基于云的基础示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id6" class="md-nav__link">高级机器学习监控</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id7" class="md-nav__link">Seldon Core 批处理</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#mlops" class="md-nav__link">MLOps: 扩展、监控和可观察性</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id8" class="md-nav__link">生产配置及实现</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#ab" class="md-nav__link">AB 测试及渐进式部署</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id9" class="md-nav__link">复杂图示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id10" class="md-nav__link">入口</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id11" class="md-nav__link">基础设施</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id12" class="md-nav__link">基准测试和负载测试</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id13" class="md-nav__link">升级示例</a>
+      
+    
+    </li></ul>
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/reference.html" class="md-nav__link">参考</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/contributing.html" class="md-nav__link">贡献</a>
+      
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#examples-iter8-single--page-root" class="md-nav__link">Progressive Rollouts with Single Seldon Deployment</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#Install-Depenendcies" class="md-nav__link">Install Depenendcies</a>
+        </li>
+        <li class="md-nav__item"><a href="#Create-ABTest-with-Two-Predictors" class="md-nav__link">Create ABTest with Two Predictors</a>
+        </li>
+        <li class="md-nav__item"><a href="#Create-some-load-on-models." class="md-nav__link">Create some load on models.</a>
+        </li>
+        <li class="md-nav__item"><a href="#Create-Metrics-to-evaluate" class="md-nav__link">Create Metrics to evaluate</a>
+        </li>
+        <li class="md-nav__item"><a href="#Create-Progressive-Rollout-Experiment" class="md-nav__link">Create Progressive Rollout Experiment</a>
+        </li>
+        <li class="md-nav__item"><a href="#Monitor-Experiment" class="md-nav__link">Monitor Experiment</a>
+        </li>
+        <li class="md-nav__item"><a href="#Cleanup" class="md-nav__link">Cleanup</a>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/examples/iter8-single.nblink.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <div class="admonition note">
+<p>This page was generated from <a class="reference external" href="https://github.com/SeldonIO/seldon-core/blob/e665e4994eabf83fb43c68a5f85e96d5c45e91b5/examples/iter8/progressive_rollout/single_sdep/abtest.ipynb">examples/iter8/progressive_rollout/single_sdep/abtest.ipynb</a>.</p>
+</div>
+<section id="Progressive-Rollouts-with-Single-Seldon-Deployment">
+<h1 id="examples-iter8-single--page-root">Progressive Rollouts with Single Seldon Deployment<a class="headerlink" href="#examples-iter8-single--page-root" title="Permalink to this heading">¶</a></h1>
+<p>In this example we will AB Test two Iris models: an SKLearn model and an XGBOOST model. We will run a progressive rollout allowing Iter8 to control the traffic to the two Seldon Deployments and gradually move traffic to the best model.</p>
+<section id="Install-Depenendcies">
+<h2 id="Install-Depenendcies">Install Depenendcies<a class="headerlink" href="#Install-Depenendcies" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Istio</p></li>
+<li><p>Seldon Core</p></li>
+<li><p>Seldon Core Analytics</p></li>
+<li><p>Iter8</p></li>
+</ul>
+<p>You can create a Kind cluster with all dependencies installed with <a class="reference external" href="https://www.ansible.com/">Ansible</a> with:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>pip install ansible openshift
+ansible-galaxy collection install git+https://github.com/SeldonIO/ansible-k8s-collection.git,v0.1.0
+</pre></div>
+</div>
+<p>Then from <code class="docutils literal notranslate"><span class="pre">example/iter8</span></code> folder run:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ansible-playbook playbooks/iter8.yml
+</pre></div>
+</div>
+</section>
+<section id="Create-ABTest-with-Two-Predictors">
+<h2 id="Create-ABTest-with-Two-Predictors">Create ABTest with Two Predictors<a class="headerlink" href="#Create-ABTest-with-Two-Predictors" title="Permalink to this heading">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>cat<span class="w"> </span>abtest.yaml
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+apiVersion: v1
+kind: Namespace
+metadata:
+    name: ns-production
+---
+apiVersion: machinelearning.seldon.io/v1
+kind: SeldonDeployment
+metadata:
+  name: iris
+  namespace: ns-production
+spec:
+  predictors:
+  - name: baseline
+    traffic: 100
+    graph:
+      name: classifier
+      modelUri: gs://seldon-models/v1.14.0/sklearn/iris
+      implementation: SKLEARN_SERVER
+  - name: candidate
+    traffic: 0
+    graph:
+      name: classifier
+      modelUri: gs://seldon-models/xgboost/iris
+      implementation: XGBOOST_SERVER
+
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>abtest.yaml
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+namespace/ns-production created
+seldondeployment.machinelearning.seldon.io/iris created
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span><span class="nb">wait</span><span class="w"> </span>--for<span class="w"> </span><span class="nv">condition</span><span class="o">=</span>ready<span class="w"> </span>--timeout<span class="o">=</span>600s<span class="w"> </span>pods<span class="w"> </span>--all<span class="w"> </span>-n<span class="w"> </span>ns-production
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+pod/iris-baseline-0-classifier-5759fd6c8-j4hc2 condition met
+pod/iris-candidate-0-classifier-6d6d54786c-nthhm condition met
+</pre></div></div>
+</div>
+</section>
+<section id="Create-some-load-on-models.">
+<h2 id="Create-some-load-on-models.">Create some load on models.<a class="headerlink" href="#Create-some-load-on-models." title="Permalink to this heading">¶</a></h2>
+<p>We will send reqeusts which will be split by the Seldon AB Test as well as random feedback to both models with feedback favouring the candidate</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>cat<span class="w"> </span>fortio.yaml
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: fortio-requests
+  namespace: default
+spec:
+  template:
+    spec:
+      volumes:
+      - name: shared
+        emptyDir: {}
+      containers:
+      - name: fortio
+        image: fortio/fortio
+        command: [ 'fortio', 'load', '-t', '6000s', '-qps', "5", '-json', '/shared/fortiooutput.json', '-H', 'Content-Type: application/json', '-payload', '{"data": {"ndarray":[[6.8,2.8,4.8,1.4]]}}',  "$(URL)" ]
+        env:
+        - name: URL
+          value: URL_VALUE/seldon/ns-production/iris/api/v1.0/predictions
+        volumeMounts:
+        - name: shared
+          mountPath: /shared
+      - name: busybox
+        image: busybox:1.28
+        command: ['sh', '-c', 'echo busybox is running! &amp;&amp; sleep 6000']
+        volumeMounts:
+        - name: shared
+          mountPath: /shared
+      restartPolicy: Never
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: fortio-irisv1-rewards
+  namespace: default
+spec:
+  template:
+    spec:
+      volumes:
+      - name: shared
+        emptyDir: {}
+      containers:
+      - name: fortio
+        image: fortio/fortio
+        command: [ 'fortio', 'load', '-t', '6000s', '-qps', "0.7", '-json', '/shared/fortiooutput.json', '-H', 'Content-Type: application/json', '-payload', '{"reward": 1}',  "$(URL)" ]
+        env:
+        - name: URL
+          value: iris-baseline.ns-production:8000/api/v1.0/feedback
+        volumeMounts:
+        - name: shared
+          mountPath: /shared
+      - name: busybox
+        image: busybox:1.28
+        command: ['sh', '-c', 'echo busybox is running! &amp;&amp; sleep 6000']
+        volumeMounts:
+        - name: shared
+          mountPath: /shared
+      restartPolicy: Never
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: fortio-irisv2-rewards
+  namespace: default
+spec:
+  template:
+    spec:
+      volumes:
+      - name: shared
+        emptyDir: {}
+      containers:
+      - name: fortio
+        image: fortio/fortio
+        command: [ 'fortio', 'load', '-t', '6000s', '-qps', "1", '-json', '/shared/fortiooutput.json', '-H', 'Content-Type: application/json', '-payload', '{"reward": 1}',  "$(URL)" ]
+        env:
+        - name: URL
+          value: iris-candidate.ns-production:8000/api/v1.0/feedback
+        volumeMounts:
+        - name: shared
+          mountPath: /shared
+      - name: busybox
+        image: busybox:1.28
+        command: ['sh', '-c', 'echo busybox is running! &amp;&amp; sleep 6000']
+        volumeMounts:
+        - name: shared
+          mountPath: /shared
+      restartPolicy: Never
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="nv">URL_VALUE</span><span class="o">=</span><span class="s2">"http://</span><span class="k">$(</span>kubectl<span class="w"> </span>-n<span class="w"> </span>istio-system<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>istio-ingressgateway<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.spec.clusterIP}'</span><span class="k">)</span><span class="s2">"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="err">\</span>
+  <span class="n">sed</span> <span class="s2">"s+URL_VALUE+$</span><span class="si">{URL_VALUE}</span><span class="s2">+g"</span> <span class="n">fortio</span><span class="o">.</span><span class="n">yaml</span> <span class="o">|</span> <span class="n">kubectl</span> <span class="n">apply</span> <span class="o">-</span><span class="n">f</span> <span class="o">-</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+job.batch/fortio-requests created
+job.batch/fortio-irisv1-rewards created
+job.batch/fortio-irisv2-rewards created
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span><span class="nb">wait</span><span class="w"> </span>--for<span class="w"> </span><span class="nv">condition</span><span class="o">=</span>ready<span class="w"> </span>--timeout<span class="o">=</span>600s<span class="w"> </span>pods<span class="w"> </span>--all<span class="w"> </span>-n<span class="w"> </span>default
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+pod/fortio-irisv1-rewards-5srd4 condition met
+pod/fortio-irisv2-rewards-jzs4s condition met
+pod/fortio-requests-lrzhp condition met
+</pre></div></div>
+</div>
+</section>
+<section id="Create-Metrics-to-evaluate">
+<h2 id="Create-Metrics-to-evaluate">Create Metrics to evaluate<a class="headerlink" href="#Create-Metrics-to-evaluate" title="Permalink to this heading">¶</a></h2>
+<p>These are a standard set of metrics we use in all examples.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>cat<span class="w"> </span>../../metrics.yaml
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: iter8-seldon
+---
+apiVersion: iter8.tools/v2alpha2
+kind: Metric
+metadata:
+  name: 95th-percentile-tail-latency
+  namespace: iter8-seldon
+spec:
+  description: 95th percentile tail latency
+  jqExpression: .data.result[0].value[1] | tonumber
+  params:
+  - name: query
+    value: |
+      histogram_quantile(0.95, sum(rate(seldon_api_executor_client_requests_seconds_bucket{seldon_deployment_id='$sid',predictor_name='$predictor',kubernetes_namespace='$ns'}[${elapsedTime}s])) by (le))
+  provider: prometheus
+  sampleSize: iter8-seldon/request-count
+  type: Gauge
+  units: milliseconds
+  urlTemplate: http://seldon-core-analytics-prometheus-seldon.seldon-system/api/v1/query
+---
+apiVersion: iter8.tools/v2alpha2
+kind: Metric
+metadata:
+  name: error-count
+  namespace: iter8-seldon
+spec:
+  description: Number of error responses
+  jqExpression: .data.result[0].value[1] | tonumber
+  params:
+  - name: query
+    value: |
+      sum(increase(seldon_api_executor_server_requests_seconds_count{code!='200',seldon_deployment_id='$sid',predictor_name='$predictor',kubernetes_namespace='$ns'}[${elapsedTime}s])) or on() vector(0)
+  provider: prometheus
+  type: Counter
+  urlTemplate: http://seldon-core-analytics-prometheus-seldon.seldon-system/api/v1/query
+---
+apiVersion: iter8.tools/v2alpha2
+kind: Metric
+metadata:
+  name: error-rate
+  namespace: iter8-seldon
+spec:
+  description: Fraction of requests with error responses
+  jqExpression: .data.result[0].value[1] | tonumber
+  params:
+  - name: query
+    value: |
+      (sum(increase(seldon_api_executor_server_requests_seconds_count{code!='200',seldon_deployment_id='$sid',predictor_name='$predictor',kubernetes_namespace='$ns'}[${elapsedTime}s])) or on() vector(0)) / (sum(increase(seldon_api_executor_server_requests_seconds_count{seldon_deployment_id='$sid',predictor_name='$predictor',kubernetes_namespace='$ns'}[${elapsedTime}s])) or on() vector(0))
+  provider: prometheus
+  sampleSize: iter8-seldon/request-count
+  type: Gauge
+  urlTemplate: http://seldon-core-analytics-prometheus-seldon.seldon-system/api/v1/query
+---
+apiVersion: iter8.tools/v2alpha2
+kind: Metric
+metadata:
+  name: mean-latency
+  namespace: iter8-seldon
+spec:
+  description: Mean latency
+  jqExpression: .data.result[0].value[1] | tonumber
+  params:
+  - name: query
+    value: |
+      (sum(increase(seldon_api_executor_client_requests_seconds_sum{seldon_deployment_id='$sid',predictor_name='$predictor',kubernetes_namespace='$ns'}[${elapsedTime}s])) or on() vector(0)) / (sum(increase(seldon_api_executor_client_requests_seconds_count{seldon_deployment_id='$sid',predictor_name='$predictor',kubernetes_namespace='$ns'}[${elapsedTime}s])) or on() vector(0))
+  provider: prometheus
+  sampleSize: iter8-seldon/request-count
+  type: Gauge
+  units: milliseconds
+  urlTemplate: http://seldon-core-analytics-prometheus-seldon.seldon-system/api/v1/query
+---
+apiVersion: iter8.tools/v2alpha2
+kind: Metric
+metadata:
+  name: request-count
+  namespace: iter8-seldon
+spec:
+  description: Number of requests
+  jqExpression: .data.result[0].value[1] | tonumber
+  params:
+  - name: query
+    value: |
+      sum(increase(seldon_api_executor_client_requests_seconds_sum{seldon_deployment_id='$sid',predictor_name='$predictor',kubernetes_namespace='$ns'}[${elapsedTime}s])) or on() vector(0)
+  provider: prometheus
+  type: Counter
+  urlTemplate: http://seldon-core-analytics-prometheus-seldon.seldon-system/api/v1/query
+---
+apiVersion: iter8.tools/v2alpha2
+kind: Metric
+metadata:
+  name: user-engagement
+  namespace: iter8-seldon
+spec:
+  description: Number of feedback requests
+  jqExpression: .data.result[0].value[1] | tonumber
+  params:
+  - name: query
+    value: |
+      sum(increase(seldon_api_executor_server_requests_seconds_count{service='feedback',seldon_deployment_id='$sid',predictor_name='$predictor',kubernetes_namespace='$ns'}[${elapsedTime}s])) or on() vector(0)
+  provider: prometheus
+  type: Gauge
+  urlTemplate: http://seldon-core-analytics-prometheus-seldon.seldon-system/api/v1/query
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>create<span class="w"> </span>-f<span class="w"> </span>../../metrics.yaml
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+namespace/iter8-seldon created
+metric.iter8.tools/95th-percentile-tail-latency created
+metric.iter8.tools/error-count created
+metric.iter8.tools/error-rate created
+metric.iter8.tools/mean-latency created
+metric.iter8.tools/request-count created
+metric.iter8.tools/user-engagement created
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>get<span class="w"> </span>metrics<span class="w"> </span>-n<span class="w"> </span>iter8-seldon
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+NAME                           TYPE      DESCRIPTION
+95th-percentile-tail-latency   Gauge     95th percentile tail latency
+error-count                    Counter   Number of error responses
+error-rate                     Gauge     Fraction of requests with error responses
+mean-latency                   Gauge     Mean latency
+request-count                  Counter   Number of requests
+user-engagement                Gauge     Number of feedback requests
+</pre></div></div>
+</div>
+</section>
+<section id="Create-Progressive-Rollout-Experiment">
+<h2 id="Create-Progressive-Rollout-Experiment">Create Progressive Rollout Experiment<a class="headerlink" href="#Create-Progressive-Rollout-Experiment" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Run 15 iterations with 5 second gaps between default and candidate models</p></li>
+<li><p>Both models must pass objectives</p></li>
+<li><p>winnder will be chosen based on user engagement metric</p></li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>cat<span class="w"> </span>experiment.yaml
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+apiVersion: iter8.tools/v2alpha2
+kind: Experiment
+metadata:
+  name: quickstart-exp
+spec:
+  target: iris
+  strategy:
+    testingPattern: A/B
+    deploymentPattern: Progressive
+    actions:
+      # when the experiment completes, promote the winning version using kubectl apply
+      finish:
+      - task: common/exec
+        with:
+          cmd: /bin/bash
+          args: [ "-c", "kubectl apply -f {{ .promote }}" ]
+  criteria:
+    requestCount: iter8-seldon/request-count
+    rewards: # Business rewards
+    - metric: iter8-seldon/user-engagement
+      preferredDirection: High # maximize user engagement
+    objectives:
+    - metric: iter8-seldon/mean-latency
+      upperLimit: 2000
+    - metric: iter8-seldon/95th-percentile-tail-latency
+      upperLimit: 5000
+    - metric: iter8-seldon/error-rate
+      upperLimit: "0.01"
+  duration:
+    intervalSeconds: 10
+    iterationsPerLoop: 15
+  versionInfo:
+    # information about model versions used in this experiment
+    baseline:
+      name: iris-v1
+      weightObjRef:
+        apiVersion: machinelearning.seldon.io/v1
+        kind: SeldonDeployment
+        name: iris
+        namespace: ns-production
+        fieldPath: .spec.predictors[0].traffic
+      variables:
+      - name: ns
+        value: ns-production
+      - name: sid
+        value: iris
+      - name: predictor
+        value: baseline
+      - name: promote
+        value: https://gist.githubusercontent.com/cliveseldon/acac9b7e6ba3c52cde556323be0fc776/raw/78781a1f5c86a6cc24c3c7e64e3df211bc083207/promote-v1.yaml
+    candidates:
+    - name: iris-v2
+      weightObjRef:
+        apiVersion: machinelearning.seldon.io/v1
+        kind: SeldonDeployment
+        name: iris
+        namespace: ns-production
+        fieldPath: .spec.predictors[1].traffic
+      variables:
+      - name: ns
+        value: ns-production
+      - name: sid
+        value: iris
+      - name: predictor
+        value: candidate
+      - name: promote
+        value: https://gist.githubusercontent.com/cliveseldon/3766b9315a187aa2800422205832ad9b/raw/ba00718fcacb8014e826cc6410a8190aa19116d4/promote-v2.yaml
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>create<span class="w"> </span>-f<span class="w"> </span>experiment.yaml
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+experiment.iter8.tools/quickstart-exp created
+</pre></div></div>
+</div>
+</section>
+<section id="Monitor-Experiment">
+<h2 id="Monitor-Experiment">Monitor Experiment<a class="headerlink" href="#Monitor-Experiment" title="Permalink to this heading">¶</a></h2>
+<p>Download iter8ctl.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>GO111MODULE=on GOBIN=/usr/local/bin go get github.com/iter8-tools/iter8ctl@v0.1.3
+</pre></div>
+</div>
+<p>Then:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>while clear; do kubectl get experiment quickstart-exp -o yaml | iter8ctl describe -f -; sleep 8; done
+</pre></div>
+</div>
+<p>By the end you should see the xgboost candidate model is promoted.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span><span class="nb">wait</span><span class="w"> </span>experiment<span class="w"> </span>quickstart-exp<span class="w"> </span>--for<span class="o">=</span><span class="nv">condition</span><span class="o">=</span>Completed<span class="w"> </span>--timeout<span class="o">=</span>300s
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+experiment.iter8.tools/quickstart-exp condition met
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>get<span class="w"> </span>experiment<span class="w"> </span>quickstart-exp<span class="w"> </span>-o<span class="w"> </span>yaml
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+apiVersion: iter8.tools/v2alpha2
+kind: Experiment
+metadata:
+  creationTimestamp: "2021-06-15T15:20:18Z"
+  generation: 1
+  managedFields:
+  - apiVersion: iter8.tools/v2alpha2
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:spec:
+        .: {}
+        f:criteria:
+          .: {}
+          f:requestCount: {}
+          f:rewards: {}
+        f:duration:
+          .: {}
+          f:intervalSeconds: {}
+          f:iterationsPerLoop: {}
+        f:strategy:
+          .: {}
+          f:actions:
+            .: {}
+            f:finish: {}
+          f:deploymentPattern: {}
+          f:testingPattern: {}
+        f:target: {}
+        f:versionInfo:
+          .: {}
+          f:baseline:
+            .: {}
+            f:name: {}
+            f:variables: {}
+            f:weightObjRef:
+              .: {}
+              f:apiVersion: {}
+              f:fieldPath: {}
+              f:kind: {}
+              f:name: {}
+              f:namespace: {}
+          f:candidates: {}
+    manager: kubectl-create
+    operation: Update
+    time: "2021-06-15T15:20:18Z"
+  - apiVersion: iter8.tools/v2alpha2
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:spec:
+        f:criteria:
+          f:objectives: {}
+          f:strength: {}
+        f:duration:
+          f:maxLoops: {}
+        f:strategy:
+          f:weights:
+            .: {}
+            f:maxCandidateWeight: {}
+            f:maxCandidateWeightIncrement: {}
+      f:status:
+        .: {}
+        f:analysis:
+          .: {}
+          f:aggregatedMetrics:
+            .: {}
+            f:data:
+              .: {}
+              f:iter8-seldon/95th-percentile-tail-latency:
+                .: {}
+                f:data:
+                  .: {}
+                  f:iris-v1:
+                    .: {}
+                    f:value: {}
+                  f:iris-v2:
+                    .: {}
+                    f:value: {}
+              f:iter8-seldon/error-rate:
+                .: {}
+                f:data:
+                  .: {}
+                  f:iris-v1:
+                    .: {}
+                    f:value: {}
+                  f:iris-v2:
+                    .: {}
+                    f:value: {}
+              f:iter8-seldon/mean-latency:
+                .: {}
+                f:data:
+                  .: {}
+                  f:iris-v1:
+                    .: {}
+                    f:value: {}
+                  f:iris-v2:
+                    .: {}
+                    f:value: {}
+              f:iter8-seldon/request-count:
+                .: {}
+                f:data:
+                  .: {}
+                  f:iris-v1:
+                    .: {}
+                    f:value: {}
+                  f:iris-v2:
+                    .: {}
+                    f:value: {}
+              f:iter8-seldon/user-engagement:
+                .: {}
+                f:data:
+                  .: {}
+                  f:iris-v1:
+                    .: {}
+                    f:value: {}
+                  f:iris-v2:
+                    .: {}
+                    f:value: {}
+            f:message: {}
+            f:provenance: {}
+            f:timestamp: {}
+          f:versionAssessments:
+            .: {}
+            f:data:
+              .: {}
+              f:iris-v1: {}
+              f:iris-v2: {}
+            f:message: {}
+            f:provenance: {}
+            f:timestamp: {}
+          f:weights:
+            .: {}
+            f:data: {}
+            f:message: {}
+            f:provenance: {}
+            f:timestamp: {}
+          f:winnerAssessment:
+            .: {}
+            f:data:
+              .: {}
+              f:winner: {}
+              f:winnerFound: {}
+            f:message: {}
+            f:provenance: {}
+            f:timestamp: {}
+        f:completedIterations: {}
+        f:conditions: {}
+        f:currentWeightDistribution: {}
+        f:initTime: {}
+        f:lastUpdateTime: {}
+        f:message: {}
+        f:metrics: {}
+        f:stage: {}
+        f:startTime: {}
+        f:versionRecommendedForPromotion: {}
+    manager: manager
+    operation: Update
+    time: "2021-06-15T15:20:51Z"
+  name: quickstart-exp
+  namespace: seldon
+  resourceVersion: "68311"
+  selfLink: /apis/iter8.tools/v2alpha2/namespaces/seldon/experiments/quickstart-exp
+  uid: 5cefaea5-48f3-448c-9f76-c11df0a54b10
+spec:
+  criteria:
+    objectives:
+    - metric: iter8-seldon/mean-latency
+      upperLimit: 2000
+    - metric: iter8-seldon/95th-percentile-tail-latency
+      upperLimit: 5000
+    - metric: iter8-seldon/error-rate
+      upperLimit: "0.01"
+    requestCount: iter8-seldon/request-count
+    rewards:
+    - metric: iter8-seldon/user-engagement
+      preferredDirection: High
+  duration:
+    intervalSeconds: 10
+    iterationsPerLoop: 15
+  strategy:
+    actions:
+      finish:
+      - task: common/exec
+        with:
+          args:
+          - -c
+          - kubectl apply -f {{ .promote }}
+          cmd: /bin/bash
+    deploymentPattern: Progressive
+    testingPattern: A/B
+  target: iris
+  versionInfo:
+    baseline:
+      name: iris-v1
+      variables:
+      - name: ns
+        value: ns-production
+      - name: sid
+        value: iris
+      - name: predictor
+        value: baseline
+      - name: promote
+        value: https://gist.githubusercontent.com/cliveseldon/acac9b7e6ba3c52cde556323be0fc776/raw/78781a1f5c86a6cc24c3c7e64e3df211bc083207/promote-v1.yaml
+      weightObjRef:
+        apiVersion: machinelearning.seldon.io/v1
+        fieldPath: .spec.predictors[0].traffic
+        kind: SeldonDeployment
+        name: iris
+        namespace: ns-production
+    candidates:
+    - name: iris-v2
+      variables:
+      - name: ns
+        value: ns-production
+      - name: sid
+        value: iris
+      - name: predictor
+        value: candidate
+      - name: promote
+        value: https://gist.githubusercontent.com/cliveseldon/3766b9315a187aa2800422205832ad9b/raw/ba00718fcacb8014e826cc6410a8190aa19116d4/promote-v2.yaml
+      weightObjRef:
+        apiVersion: machinelearning.seldon.io/v1
+        fieldPath: .spec.predictors[1].traffic
+        kind: SeldonDeployment
+        name: iris
+        namespace: ns-production
+status:
+  analysis:
+    aggregatedMetrics:
+      data:
+        iter8-seldon/95th-percentile-tail-latency:
+          data:
+            iris-v1:
+              value: 24804743n
+            iris-v2:
+              value: 24029853n
+        iter8-seldon/error-rate:
+          data:
+            iris-v1:
+              value: "0"
+            iris-v2:
+              value: "0"
+        iter8-seldon/mean-latency:
+          data:
+            iris-v1:
+              value: 13352538n
+            iris-v2:
+              value: 10753143n
+        iter8-seldon/request-count:
+          data:
+            iris-v1:
+              value: 7500676139n
+            iris-v2:
+              value: 7384333605n
+        iter8-seldon/user-engagement:
+          data:
+            iris-v1:
+              value: 133384533334n
+            iris-v2:
+              value: 188753612054n
+      message: 'Error: ; Warning: ; Info: '
+      provenance: http://iter8-analytics.iter8-system:8080/v2/analytics_results
+      timestamp: "2021-06-15T15:23:23Z"
+    versionAssessments:
+      data:
+        iris-v1:
+        - true
+        - true
+        - true
+        iris-v2:
+        - true
+        - true
+        - true
+      message: 'Error: ; Warning: ; Info: '
+      provenance: http://iter8-analytics.iter8-system:8080/v2/analytics_results
+      timestamp: "2021-06-15T15:23:23Z"
+    weights:
+      data:
+      - name: iris-v1
+        value: 5
+      - name: iris-v2
+        value: 95
+      message: 'Error: ; Warning: ; Info: all ok'
+      provenance: http://iter8-analytics.iter8-system:8080/v2/analytics_results
+      timestamp: "2021-06-15T15:23:23Z"
+    winnerAssessment:
+      data:
+        winner: iris-v2
+        winnerFound: true
+      message: 'Error: ; Warning: ; Info: found unique winner'
+      provenance: http://iter8-analytics.iter8-system:8080/v2/analytics_results
+      timestamp: "2021-06-15T15:23:23Z"
+  completedIterations: 15
+  conditions:
+  - lastTransitionTime: "2021-06-15T15:23:38Z"
+    message: Experiment Completed
+    reason: ExperimentCompleted
+    status: "True"
+    type: Completed
+  - lastTransitionTime: "2021-06-15T15:20:18Z"
+    status: "False"
+    type: Failed
+  - lastTransitionTime: "2021-06-15T15:20:18Z"
+    message: ""
+    reason: TargetAcquired
+    status: "True"
+    type: TargetAcquired
+  currentWeightDistribution:
+  - name: iris-v1
+    value: 5
+  - name: iris-v2
+    value: 95
+  initTime: "2021-06-15T15:20:18Z"
+  lastUpdateTime: "2021-06-15T15:23:25Z"
+  message: 'ExperimentCompleted: Experiment Completed'
+  metrics:
+  - metricObj:
+      apiVersion: iter8.tools/v2alpha2
+      kind: Metric
+      metadata:
+        creationTimestamp: "2021-06-15T12:21:06Z"
+        generation: 1
+        managedFields:
+        - apiVersion: iter8.tools/v2alpha2
+          fieldsType: FieldsV1
+          fieldsV1:
+            f:spec:
+              .: {}
+              f:description: {}
+              f:jqExpression: {}
+              f:method: {}
+              f:params: {}
+              f:provider: {}
+              f:type: {}
+              f:urlTemplate: {}
+          manager: kubectl-create
+          operation: Update
+          time: "2021-06-15T12:21:06Z"
+        name: request-count
+        namespace: iter8-seldon
+        resourceVersion: "19711"
+        selfLink: /apis/iter8.tools/v2alpha2/namespaces/iter8-seldon/metrics/request-count
+        uid: cce03836-477f-4527-9979-2992b4ff89f6
+      spec:
+        description: Number of requests
+        jqExpression: .data.result[0].value[1] | tonumber
+        method: GET
+        params:
+        - name: query
+          value: |
+            sum(increase(seldon_api_executor_client_requests_seconds_sum{seldon_deployment_id='$sid',predictor_name='$predictor',kubernetes_namespace='$ns'}[${elapsedTime}s])) or on() vector(0)
+        provider: prometheus
+        type: Counter
+        urlTemplate: http://seldon-core-analytics-prometheus-seldon.seldon-system/api/v1/query
+    name: iter8-seldon/request-count
+  - metricObj:
+      apiVersion: iter8.tools/v2alpha2
+      kind: Metric
+      metadata:
+        creationTimestamp: "2021-06-15T12:21:06Z"
+        generation: 1
+        managedFields:
+        - apiVersion: iter8.tools/v2alpha2
+          fieldsType: FieldsV1
+          fieldsV1:
+            f:spec:
+              .: {}
+              f:description: {}
+              f:jqExpression: {}
+              f:method: {}
+              f:params: {}
+              f:provider: {}
+              f:type: {}
+              f:urlTemplate: {}
+          manager: kubectl-create
+          operation: Update
+          time: "2021-06-15T12:21:06Z"
+        name: user-engagement
+        namespace: iter8-seldon
+        resourceVersion: "19712"
+        selfLink: /apis/iter8.tools/v2alpha2/namespaces/iter8-seldon/metrics/user-engagement
+        uid: b33392f0-8bb4-4e30-b044-63b8750721af
+      spec:
+        description: Number of feedback requests
+        jqExpression: .data.result[0].value[1] | tonumber
+        method: GET
+        params:
+        - name: query
+          value: |
+            sum(increase(seldon_api_executor_server_requests_seconds_count{service='feedback',seldon_deployment_id='$sid',predictor_name='$predictor',kubernetes_namespace='$ns'}[${elapsedTime}s])) or on() vector(0)
+        provider: prometheus
+        type: Gauge
+        urlTemplate: http://seldon-core-analytics-prometheus-seldon.seldon-system/api/v1/query
+    name: iter8-seldon/user-engagement
+  - metricObj:
+      apiVersion: iter8.tools/v2alpha2
+      kind: Metric
+      metadata:
+        creationTimestamp: "2021-06-15T12:21:06Z"
+        generation: 1
+        managedFields:
+        - apiVersion: iter8.tools/v2alpha2
+          fieldsType: FieldsV1
+          fieldsV1:
+            f:spec:
+              .: {}
+              f:description: {}
+              f:jqExpression: {}
+              f:method: {}
+              f:params: {}
+              f:provider: {}
+              f:sampleSize: {}
+              f:type: {}
+              f:units: {}
+              f:urlTemplate: {}
+          manager: kubectl-create
+          operation: Update
+          time: "2021-06-15T12:21:06Z"
+        name: mean-latency
+        namespace: iter8-seldon
+        resourceVersion: "19709"
+        selfLink: /apis/iter8.tools/v2alpha2/namespaces/iter8-seldon/metrics/mean-latency
+        uid: 05bf8e06-348f-4367-b7d3-37c83e548f2e
+      spec:
+        description: Mean latency
+        jqExpression: .data.result[0].value[1] | tonumber
+        method: GET
+        params:
+        - name: query
+          value: |
+            (sum(increase(seldon_api_executor_client_requests_seconds_sum{seldon_deployment_id='$sid',predictor_name='$predictor',kubernetes_namespace='$ns'}[${elapsedTime}s])) or on() vector(0)) / (sum(increase(seldon_api_executor_client_requests_seconds_count{seldon_deployment_id='$sid',predictor_name='$predictor',kubernetes_namespace='$ns'}[${elapsedTime}s])) or on() vector(0))
+        provider: prometheus
+        sampleSize: iter8-seldon/request-count
+        type: Gauge
+        units: milliseconds
+        urlTemplate: http://seldon-core-analytics-prometheus-seldon.seldon-system/api/v1/query
+    name: iter8-seldon/mean-latency
+  - metricObj:
+      apiVersion: iter8.tools/v2alpha2
+      kind: Metric
+      metadata:
+        creationTimestamp: "2021-06-15T12:21:06Z"
+        generation: 1
+        managedFields:
+        - apiVersion: iter8.tools/v2alpha2
+          fieldsType: FieldsV1
+          fieldsV1:
+            f:spec:
+              .: {}
+              f:description: {}
+              f:jqExpression: {}
+              f:method: {}
+              f:params: {}
+              f:provider: {}
+              f:sampleSize: {}
+              f:type: {}
+              f:units: {}
+              f:urlTemplate: {}
+          manager: kubectl-create
+          operation: Update
+          time: "2021-06-15T12:21:06Z"
+        name: 95th-percentile-tail-latency
+        namespace: iter8-seldon
+        resourceVersion: "19705"
+        selfLink: /apis/iter8.tools/v2alpha2/namespaces/iter8-seldon/metrics/95th-percentile-tail-latency
+        uid: e33054b8-8cb3-422f-9b24-698f38728759
+      spec:
+        description: 95th percentile tail latency
+        jqExpression: .data.result[0].value[1] | tonumber
+        method: GET
+        params:
+        - name: query
+          value: |
+            histogram_quantile(0.95, sum(rate(seldon_api_executor_client_requests_seconds_bucket{seldon_deployment_id='$sid',predictor_name='$predictor',kubernetes_namespace='$ns'}[${elapsedTime}s])) by (le))
+        provider: prometheus
+        sampleSize: iter8-seldon/request-count
+        type: Gauge
+        units: milliseconds
+        urlTemplate: http://seldon-core-analytics-prometheus-seldon.seldon-system/api/v1/query
+    name: iter8-seldon/95th-percentile-tail-latency
+  - metricObj:
+      apiVersion: iter8.tools/v2alpha2
+      kind: Metric
+      metadata:
+        creationTimestamp: "2021-06-15T12:21:06Z"
+        generation: 1
+        managedFields:
+        - apiVersion: iter8.tools/v2alpha2
+          fieldsType: FieldsV1
+          fieldsV1:
+            f:spec:
+              .: {}
+              f:description: {}
+              f:jqExpression: {}
+              f:method: {}
+              f:params: {}
+              f:provider: {}
+              f:sampleSize: {}
+              f:type: {}
+              f:urlTemplate: {}
+          manager: kubectl-create
+          operation: Update
+          time: "2021-06-15T12:21:06Z"
+        name: error-rate
+        namespace: iter8-seldon
+        resourceVersion: "19707"
+        selfLink: /apis/iter8.tools/v2alpha2/namespaces/iter8-seldon/metrics/error-rate
+        uid: 2e5bec2f-bad2-4375-927d-05e2897d2280
+      spec:
+        description: Fraction of requests with error responses
+        jqExpression: .data.result[0].value[1] | tonumber
+        method: GET
+        params:
+        - name: query
+          value: |
+            (sum(increase(seldon_api_executor_server_requests_seconds_count{code!='200',seldon_deployment_id='$sid',predictor_name='$predictor',kubernetes_namespace='$ns'}[${elapsedTime}s])) or on() vector(0)) / (sum(increase(seldon_api_executor_server_requests_seconds_count{seldon_deployment_id='$sid',predictor_name='$predictor',kubernetes_namespace='$ns'}[${elapsedTime}s])) or on() vector(0))
+        provider: prometheus
+        sampleSize: iter8-seldon/request-count
+        type: Gauge
+        urlTemplate: http://seldon-core-analytics-prometheus-seldon.seldon-system/api/v1/query
+    name: iter8-seldon/error-rate
+  stage: Completed
+  startTime: "2021-06-15T15:20:20Z"
+  versionRecommendedForPromotion: iris-v2
+</pre></div></div>
+</div>
+</section>
+<section id="Cleanup">
+<h2 id="Cleanup">Cleanup<a class="headerlink" href="#Cleanup" title="Permalink to this heading">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>delete<span class="w"> </span>-f<span class="w"> </span>fortio.yaml
+<span class="o">!</span>kubectl<span class="w"> </span>delete<span class="w"> </span>-f<span class="w"> </span>experiment.yaml
+<span class="o">!</span>kubectl<span class="w"> </span>delete<span class="w"> </span>-f<span class="w"> </span>../../metrics.yaml
+<span class="o">!</span>kubectl<span class="w"> </span>delete<span class="w"> </span>-f<span class="w"> </span>abtest.yaml
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+job.batch "fortio-requests" deleted
+job.batch "fortio-irisv1-rewards" deleted
+job.batch "fortio-irisv2-rewards" deleted
+experiment.iter8.tools "quickstart-exp" deleted
+namespace "iter8-seldon" deleted
+metric.iter8.tools "95th-percentile-tail-latency" deleted
+metric.iter8.tools "error-count" deleted
+metric.iter8.tools "error-rate" deleted
+metric.iter8.tools "mean-latency" deleted
+metric.iter8.tools "request-count" deleted
+metric.iter8.tools "user-engagement" deleted
+namespace "ns-production" deleted
+seldondeployment.machinelearning.seldon.io "iris" deleted
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="ambassador_canary.html" title="Canary Rollout with Seldon and Ambassador"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> "Previous" </span> Canary Rollout with Seldon and Ambassador </span>
+              </div>
+            </a>
+          
+          
+            <a href="iter8-separate.html" title="Progressive Rollouts using Two Seldon Deployments"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> "Next" </span> Progressive Rollouts using Two Seldon Deployments </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2024, Seldon Technologies Ltd.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

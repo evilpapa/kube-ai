@@ -1,0 +1,844 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ray.train._checkpoint &#8212; Ray 2.7.2</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/termynal.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/js/versionwarning.js"></script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+    <script defer="defer" src="../../../_static/js/docsearch.js"></script>
+    <script defer="defer" src="../../../_static/js/csat.js"></script>
+    <script defer="defer" src="../../../_static/js/termynal.js"></script>
+    <script defer="defer" src="../../../_static/js/custom.js"></script>
+    <script defer="defer" src="../../../_static/js/top-navigation.js"></script>
+    <script src="../../../_static/js/tags.js"></script>
+    <script src="../../../_static/tabs.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <link rel="canonical" href="https://docs.ray.io/en/latest/_modules/ray/train/_checkpoint.html" />
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+
+<!-- Fathom - beautiful, simple website analytics -->
+<script src="https://deer.ray.io/script.js" data-site="WYYANYOS" defer></script>
+<!-- / Fathom -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-110413294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-110413294-1');
+</script>
+
+<script
+  src="https://widget.kapa.ai/kapa-widget.bundle.js"
+  data-website-id="18a8c339-4ec5-43c8-8182-db3f2bc8c6b6"
+  data-project-name="Ray"
+  data-project-color="#2C2C2C"
+  data-project-logo="https://global.discourse-cdn.com/business7/uploads/ray/original/1X/8f4dcb72f7cd34e2a332d548bd65860994bc8ff1.png"
+  data-modal-disclaimer = "Results are automated and may be incorrect or contain inappropriate information. Do not include any personal data or confidential information."
+  data-modal-title = "Ray Docs AI - Ask a Question"
+  data-button-position-bottom = "60px"
+></script>
+
+<script>
+(function(apiKey){
+    (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
+    v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
+        o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
+        y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
+        z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
+
+        pendo.initialize({
+            visitor: {
+                id: 'VISITOR-UNIQUE-ID'
+            },
+            account: {
+                id: 'ACCOUNT-UNIQUE-ID'
+            }
+        });
+})('f89fa48a-6dd7-4d7c-67cf-a8051ed891f2');
+</script>
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"><div class='topnav'></div></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Ray 2.7.2</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main Navigation">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../index.html">
+                    欢迎来到 Ray ！
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Ray
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/index.html">
+   概述「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/getting-started.html">
+   入门「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/installation.html">
+   安装「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/use-cases.html">
+   用例「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/examples.html">
+   示例库「1%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/ray-libraries.html">
+   生态「3%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-core/walkthrough.html">
+   Ray 核心「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../data/data.html">
+   Ray 数据「75%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../train/train.html">
+   Ray 训练「20%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../tune/index.html">
+   Ray 调参「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../serve/index.html">
+   Ray Serve「1%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../rllib/index.html">
+   Ray RLlib「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-more-libs/index.html">
+   更多类库「40%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../cluster/getting-started.html">
+   Ray 集群「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-observability/index.html">
+   监控调试「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-references/api.html">
+   参考「20%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-contribute/index.html">
+   开发者指引「30%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-security/index.html">
+   安全「100%」
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/ray-project/ray"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/issues/new?title=Issue%20on%20page%20%2F_modules/ray/train/_checkpoint.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1></h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <h1>Source code for ray.train._checkpoint</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">contextlib</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">platform</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+
+<span class="kn">import</span> <span class="nn">pyarrow.fs</span>
+
+<span class="kn">from</span> <span class="nn">ray.air._internal.filelock</span> <span class="kn">import</span> <span class="n">TempFileLock</span>
+<span class="kn">from</span> <span class="nn">ray.train._internal.storage</span> <span class="kn">import</span> <span class="n">_download_from_fs_path</span><span class="p">,</span> <span class="n">_exists_at_fs_path</span>
+<span class="kn">from</span> <span class="nn">ray.util.annotations</span> <span class="kn">import</span> <span class="n">PublicAPI</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="c1"># The filename of the file that stores user metadata set on the checkpoint.</span>
+<span class="n">_METADATA_FILE_NAME</span> <span class="o">=</span> <span class="s2">&quot;.metadata.json&quot;</span>
+
+<span class="c1"># The prefix of the temp checkpoint directory that `to_directory` downloads to</span>
+<span class="c1"># on the local filesystem.</span>
+<span class="n">_CHECKPOINT_TEMP_DIR_PREFIX</span> <span class="o">=</span> <span class="s2">&quot;checkpoint_tmp_&quot;</span>
+
+
+<span class="k">class</span> <span class="nc">_CheckpointMetaClass</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">item</span> <span class="ow">in</span> <span class="p">{</span>
+                <span class="s2">&quot;from_dict&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;to_dict&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;from_bytes&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;to_bytes&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;get_internal_representation&quot;</span><span class="p">,</span>
+            <span class="p">}:</span>
+                <span class="k">raise</span> <span class="n">_get_migration_error</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">exc</span>
+            <span class="k">elif</span> <span class="n">item</span> <span class="ow">in</span> <span class="p">{</span>
+                <span class="s2">&quot;from_uri&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;to_uri&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;uri&quot;</span><span class="p">,</span>
+            <span class="p">}:</span>
+                <span class="k">raise</span> <span class="n">_get_uri_error</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">exc</span>
+            <span class="k">elif</span> <span class="n">item</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;get_preprocessor&quot;</span><span class="p">,</span> <span class="s2">&quot;set_preprocessor&quot;</span><span class="p">}:</span>
+                <span class="k">raise</span> <span class="n">_get_preprocessor_error</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">exc</span>
+
+            <span class="k">raise</span> <span class="n">exc</span>
+
+
+<span class="nd">@PublicAPI</span><span class="p">(</span><span class="n">stability</span><span class="o">=</span><span class="s2">&quot;beta&quot;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Checkpoint</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">_CheckpointMetaClass</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A reference to data persisted as a directory in local or remote storage.</span>
+
+<span class="sd">    Access the checkpoint contents locally using ``checkpoint.to_directory()``</span>
+<span class="sd">    or ``checkpoint.as_directory``.</span>
+
+<span class="sd">    Example creating a checkpoint using ``Checkpoint.from_directory``:</span>
+
+<span class="sd">        &gt;&gt;&gt; from ray.train import Checkpoint</span>
+<span class="sd">        &gt;&gt;&gt; checkpoint = Checkpoint.from_directory(&quot;/tmp/example_checkpoint_dir&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; checkpoint.filesystem  # doctest: +ELLIPSIS</span>
+<span class="sd">        &lt;pyarrow._fs.LocalFileSystem object...</span>
+<span class="sd">        &gt;&gt;&gt; checkpoint.path</span>
+<span class="sd">        &#39;/tmp/example_checkpoint_dir&#39;</span>
+
+<span class="sd">    Example creating a checkpoint from a remote URI:</span>
+
+<span class="sd">        &gt;&gt;&gt; checkpoint = Checkpoint(&quot;s3://bucket/path/to/checkpoint&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; checkpoint.filesystem  # doctest: +ELLIPSIS</span>
+<span class="sd">        &lt;pyarrow._s3fs.S3FileSystem object...</span>
+<span class="sd">        &gt;&gt;&gt; checkpoint.path</span>
+<span class="sd">        &#39;bucket/path/to/checkpoint&#39;</span>
+
+<span class="sd">    Example creating a checkpoint with a custom filesystem:</span>
+
+<span class="sd">        &gt;&gt;&gt; checkpoint = Checkpoint(</span>
+<span class="sd">        ...     path=&quot;bucket/path/to/checkpoint&quot;,</span>
+<span class="sd">        ...     filesystem=pyarrow.fs.S3FileSystem(),</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; checkpoint.filesystem  # doctest: +ELLIPSIS</span>
+<span class="sd">        &lt;pyarrow._s3fs.S3FileSystem object...</span>
+<span class="sd">        &gt;&gt;&gt; checkpoint.path</span>
+<span class="sd">        &#39;bucket/path/to/checkpoint&#39;</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        path: A path on the filesystem containing the checkpoint contents.</span>
+<span class="sd">        filesystem: PyArrow FileSystem that can be used to access data at the `path`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Checkpoint.__init__"><a class="viewcode-back" href="../../../train/api/doc/ray.train.Checkpoint.__init__.html#ray.train.Checkpoint.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">],</span>
+        <span class="n">filesystem</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;pyarrow.fs.FileSystem&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Construct a Checkpoint.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path: A local path or remote URI containing the checkpoint data.</span>
+<span class="sd">                If a filesystem is provided, then this path must NOT be a URI.</span>
+<span class="sd">                It should be a path on the filesystem with the prefix already stripped.</span>
+<span class="sd">            filesystem: PyArrow FileSystem to use to access data at the path.</span>
+<span class="sd">                If not specified, this is inferred from the URI scheme.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filesystem</span> <span class="o">=</span> <span class="n">filesystem</span>
+
+        <span class="k">if</span> <span class="n">path</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">filesystem</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">filesystem</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">pyarrow</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">FileSystem</span><span class="o">.</span><span class="n">from_uri</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+        <span class="c1"># This random UUID is used to create a temporary directory name on the</span>
+        <span class="c1"># local filesystem, which will be used for downloading checkpoint data.</span>
+        <span class="c1"># This ensures that if multiple processes download the same checkpoint object</span>
+        <span class="c1"># only one process performs the actual download while the others wait.</span>
+        <span class="c1"># This prevents duplicated download efforts and data.</span>
+        <span class="c1"># NOTE: Calling `to_directory` from multiple `Checkpoint` objects</span>
+        <span class="c1"># that point to the same (fs, path) will still download the data multiple times.</span>
+        <span class="c1"># This only ensures a canonical temp directory name for a single `Checkpoint`.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_uuid</span> <span class="o">=</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Checkpoint(filesystem=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">type_name</span><span class="si">}</span><span class="s2">, path=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+<div class="viewcode-block" id="Checkpoint.get_metadata"><a class="viewcode-back" href="../../../train/api/doc/ray.train.Checkpoint.get_metadata.html#ray.train.Checkpoint.get_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">get_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Return the metadata dict stored with the checkpoint.</span>
+
+<span class="sd">        If no metadata is stored, an empty dict is returned.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">metadata_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">_METADATA_FILE_NAME</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">_exists_at_fs_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filesystem</span><span class="p">,</span> <span class="n">metadata_path</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">{}</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">open_input_file</span><span class="p">(</span><span class="n">metadata_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">readall</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Checkpoint.set_metadata"><a class="viewcode-back" href="../../../train/api/doc/ray.train.Checkpoint.set_metadata.html#ray.train.Checkpoint.set_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">set_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Set the metadata stored with this checkpoint.</span>
+
+<span class="sd">        This will overwrite any existing metadata stored with this checkpoint.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">metadata_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">_METADATA_FILE_NAME</span><span class="p">)</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">open_output_stream</span><span class="p">(</span><span class="n">metadata_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Checkpoint.update_metadata"><a class="viewcode-back" href="../../../train/api/doc/ray.train.Checkpoint.update_metadata.html#ray.train.Checkpoint.update_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">update_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Update the metadata stored with this checkpoint.</span>
+
+<span class="sd">        This will update any existing metadata stored with this checkpoint.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">existing_metadata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_metadata</span><span class="p">()</span>
+        <span class="n">existing_metadata</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_metadata</span><span class="p">(</span><span class="n">existing_metadata</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Checkpoint.from_directory"><a class="viewcode-back" href="../../../train/api/doc/ray.train.Checkpoint.from_directory.html#ray.train.Checkpoint.from_directory">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_directory</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;Checkpoint&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Create checkpoint object from a local directory.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path: Local directory containing checkpoint data.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A ray.train.Checkpoint object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">filesystem</span><span class="o">=</span><span class="n">pyarrow</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">LocalFileSystem</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="Checkpoint.to_directory"><a class="viewcode-back" href="../../../train/api/doc/ray.train.Checkpoint.to_directory.html#ray.train.Checkpoint.to_directory">[docs]</a>    <span class="k">def</span> <span class="nf">to_directory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Write checkpoint data to a local directory.</span>
+
+<span class="sd">        *If multiple processes on the same node call this method simultaneously,*</span>
+<span class="sd">        only a single process will perform the download, while the others</span>
+<span class="sd">        wait for the download to finish. Once the download finishes, all processes</span>
+<span class="sd">        receive the same local directory to read from.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path: Target directory to download data to. If not specified,</span>
+<span class="sd">                this method will use a temporary directory.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Directory containing checkpoint data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">user_provided_path</span> <span class="o">=</span> <span class="n">path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="n">local_path</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">path</span> <span class="k">if</span> <span class="n">user_provided_path</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_temporary_checkpoint_dir</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="n">local_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">local_path</span><span class="p">)))</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">local_path</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Timeout 0 means there will be only one attempt to acquire</span>
+            <span class="c1"># the file lock. If it cannot be acquired, throw a TimeoutError</span>
+            <span class="k">with</span> <span class="n">TempFileLock</span><span class="p">(</span><span class="n">local_path</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+                <span class="n">_download_from_fs_path</span><span class="p">(</span>
+                    <span class="n">fs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">filesystem</span><span class="p">,</span> <span class="n">fs_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">local_path</span><span class="o">=</span><span class="n">local_path</span>
+                <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TimeoutError</span><span class="p">:</span>
+            <span class="c1"># if the directory is already locked, then wait but do not do anything.</span>
+            <span class="k">with</span> <span class="n">TempFileLock</span><span class="p">(</span><span class="n">local_path</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+                <span class="k">pass</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">local_path</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Checkpoint directory </span><span class="si">{</span><span class="n">local_path</span><span class="si">}</span><span class="s2"> does not exist, &quot;</span>
+                    <span class="s2">&quot;even though it should have been created by &quot;</span>
+                    <span class="s2">&quot;another process. Please raise an issue on GitHub: &quot;</span>
+                    <span class="s2">&quot;https://github.com/ray-project/ray/issues&quot;</span>
+                <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">local_path</span></div>
+
+<div class="viewcode-block" id="Checkpoint.as_directory"><a class="viewcode-back" href="../../../train/api/doc/ray.train.Checkpoint.as_directory.html#ray.train.Checkpoint.as_directory">[docs]</a>    <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
+    <span class="k">def</span> <span class="nf">as_directory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Returns checkpoint contents in a local directory as a context.</span>
+
+<span class="sd">        This function makes checkpoint data available as a directory while avoiding</span>
+<span class="sd">        unnecessary copies and left-over temporary data.</span>
+
+<span class="sd">        *If the checkpoint points to a local directory*, this method just returns the</span>
+<span class="sd">        local directory path without making a copy, and nothing will be cleaned up</span>
+<span class="sd">        after exiting the context.</span>
+
+<span class="sd">        *If the checkpoint points to a remote directory*, this method will download the</span>
+<span class="sd">        checkpoint to a local temporary directory and return the path</span>
+<span class="sd">        to the temporary directory.</span>
+
+<span class="sd">        *If multiple processes on the same node call this method simultaneously,*</span>
+<span class="sd">        only a single process will perform the download, while the others</span>
+<span class="sd">        wait for the download to finish. Once the download finishes, all processes</span>
+<span class="sd">        receive the same local (temporary) directory to read from.</span>
+
+<span class="sd">        Once all processes have finished working with the checkpoint,</span>
+<span class="sd">        the temporary directory is cleaned up.</span>
+
+<span class="sd">        Users should treat the returned checkpoint directory as read-only and avoid</span>
+<span class="sd">        changing any data within it, as it may be deleted when exiting the context.</span>
+
+<span class="sd">        Example:</span>
+
+<span class="sd">        .. testcode::</span>
+<span class="sd">            :hide:</span>
+
+<span class="sd">            from pathlib import Path</span>
+<span class="sd">            import tempfile</span>
+
+<span class="sd">            from ray.train import Checkpoint</span>
+
+<span class="sd">            temp_dir = tempfile.mkdtemp()</span>
+<span class="sd">            (Path(temp_dir) / &quot;example.txt&quot;).write_text(&quot;example checkpoint data&quot;)</span>
+<span class="sd">            checkpoint = Checkpoint.from_directory(temp_dir)</span>
+
+<span class="sd">        .. testcode::</span>
+
+<span class="sd">            with checkpoint.as_directory() as checkpoint_dir:</span>
+<span class="sd">                # Do some read-only processing of files within checkpoint_dir</span>
+<span class="sd">                pass</span>
+
+<span class="sd">            # At this point, if a temporary directory was created, it will have</span>
+<span class="sd">            # been deleted.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filesystem</span><span class="p">,</span> <span class="n">pyarrow</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">LocalFileSystem</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">del_lock_path</span> <span class="o">=</span> <span class="n">_get_del_lock_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_temporary_checkpoint_dir</span><span class="p">())</span>
+            <span class="nb">open</span><span class="p">(</span><span class="n">del_lock_path</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">temp_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_directory</span><span class="p">()</span>
+                <span class="k">yield</span> <span class="n">temp_dir</span>
+            <span class="k">finally</span><span class="p">:</span>
+                <span class="c1"># Always cleanup the del lock after we&#39;re done with the directory.</span>
+                <span class="c1"># This avoids leaving a lock file behind in the case of an exception</span>
+                <span class="c1"># in the user code.</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">del_lock_path</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Could not remove </span><span class="si">{</span><span class="n">del_lock_path</span><span class="si">}</span><span class="s2"> deletion file lock. &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;Traceback:</span><span class="se">\n</span><span class="si">{</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+
+                <span class="c1"># In the edge case (process crash before del lock file is removed),</span>
+                <span class="c1"># we do not remove the directory at all.</span>
+                <span class="c1"># Since it&#39;s in /tmp, this is not that big of a deal.</span>
+                <span class="c1"># check if any lock files are remaining</span>
+                <span class="n">remaining_locks</span> <span class="o">=</span> <span class="n">_list_existing_del_locks</span><span class="p">(</span><span class="n">temp_dir</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">remaining_locks</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="c1"># Timeout 0 means there will be only one attempt to acquire</span>
+                        <span class="c1"># the file lock. If it cannot be acquired, a TimeoutError</span>
+                        <span class="c1"># will be thrown.</span>
+                        <span class="k">with</span> <span class="n">TempFileLock</span><span class="p">(</span><span class="n">temp_dir</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+                            <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">temp_dir</span><span class="p">,</span> <span class="n">ignore_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">TimeoutError</span><span class="p">:</span>
+                        <span class="k">pass</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_temporary_checkpoint_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Return the name for the temporary checkpoint dir that this checkpoint</span>
+<span class="sd">        will get downloaded to, if accessing via `to_directory` or `as_directory`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tmp_dir_path</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">()</span>
+        <span class="n">checkpoint_dir_name</span> <span class="o">=</span> <span class="n">_CHECKPOINT_TEMP_DIR_PREFIX</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_uuid</span><span class="o">.</span><span class="n">hex</span>
+        <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Windows&quot;</span><span class="p">:</span>
+            <span class="c1"># Max path on Windows is 260 chars, -1 for joining \</span>
+            <span class="c1"># Also leave a little for the del lock</span>
+            <span class="n">del_lock_name</span> <span class="o">=</span> <span class="n">_get_del_lock_path</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">checkpoint_dir_name</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">_CHECKPOINT_TEMP_DIR_PREFIX</span>
+                <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_uuid</span><span class="o">.</span><span class="n">hex</span><span class="p">[</span>
+                    <span class="o">-</span><span class="mi">259</span>
+                    <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">_CHECKPOINT_TEMP_DIR_PREFIX</span><span class="p">)</span>
+                    <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">tmp_dir_path</span><span class="p">)</span>
+                    <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">del_lock_name</span><span class="p">)</span> <span class="p">:</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">checkpoint_dir_name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">_CHECKPOINT_TEMP_DIR_PREFIX</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                    <span class="s2">&quot;Couldn&#39;t create checkpoint directory due to length &quot;</span>
+                    <span class="s2">&quot;constraints. Try specifying a shorter checkpoint path.&quot;</span>
+                <span class="p">)</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmp_dir_path</span><span class="p">,</span> <span class="n">checkpoint_dir_name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__fspath__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="s2">&quot;You cannot use `Checkpoint` objects directly as paths. &quot;</span>
+            <span class="s2">&quot;Use `Checkpoint.to_directory()` or `Checkpoint.as_directory()` instead.&quot;</span>
+        <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_get_del_lock_path</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Get the path to the deletion lock file for a file/directory at `path`.</span>
+
+<span class="sd">    Example:</span>
+
+<span class="sd">        &gt;&gt;&gt; _get_del_lock_path(&quot;/tmp/checkpoint_tmp&quot;)  # doctest: +ELLIPSIS</span>
+<span class="sd">        &#39;/tmp/checkpoint_tmp.del_lock_...</span>
+<span class="sd">        &gt;&gt;&gt; _get_del_lock_path(&quot;/tmp/checkpoint_tmp/&quot;)  # doctest: +ELLIPSIS</span>
+<span class="sd">        &#39;/tmp/checkpoint_tmp.del_lock_...</span>
+<span class="sd">        &gt;&gt;&gt; _get_del_lock_path(&quot;/tmp/checkpoint_tmp.txt&quot;)  # doctest: +ELLIPSIS</span>
+<span class="sd">        &#39;/tmp/checkpoint_tmp.txt.del_lock_...</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">suffix</span> <span class="o">=</span> <span class="n">suffix</span> <span class="k">if</span> <span class="n">suffix</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">())</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">.del_lock_</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">&quot;</span>
+
+
+<span class="k">def</span> <span class="nf">_list_existing_del_locks</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;List all the deletion lock files for a file/directory at `path`.</span>
+
+<span class="sd">    For example, if 2 checkpoints are being read via `as_directory`,</span>
+<span class="sd">    then this should return a list of 2 deletion lock files.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">_get_del_lock_path</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">_get_migration_error</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">return</span> <span class="ne">AttributeError</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;The new `ray.train.Checkpoint` class does not support `</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">()`. &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;Instead, only directories are supported.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;Example to store a dictionary in a checkpoint:</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;import os, tempfile</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;import ray.cloudpickle as pickle</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;from ray import train</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;from ray.train import Checkpoint</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;with tempfile.TemporaryDirectory() as checkpoint_dir:</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;  with open(os.path.join(checkpoint_dir, &#39;data.pkl&#39;), &#39;wb&#39;) as fp:</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;    pickle.dump(</span><span class="se">{{</span><span class="s2">&#39;data&#39;: &#39;value&#39;</span><span class="se">}}</span><span class="s2">, fp)</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;  checkpoint = Checkpoint.from_directory(checkpoint_dir)</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;  train.report(..., checkpoint=checkpoint)</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;Example to load a dictionary from a checkpoint:</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;if train.get_checkpoint():</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;  with train.get_checkpoint().as_directory() as checkpoint_dir:</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;    with open(os.path.join(checkpoint_dir, &#39;data.pkl&#39;), &#39;rb&#39;) as fp:</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;      data = pickle.load(fp)&quot;</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_get_uri_error</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">return</span> <span class="ne">AttributeError</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;The new `ray.train.Checkpoint` class does not support `</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">()`. &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;To create a checkpoint from remote storage, create a `Checkpoint` using its &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;constructor instead of `from_directory`.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s1">&#39;Example: `Checkpoint(path=&quot;s3://a/b/c&quot;)`.</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="sa">f</span><span class="s2">&quot;Then, access the contents of the checkpoint with &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;`checkpoint.as_directory()` / `checkpoint.to_directory()`.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;To upload data to remote storage, use e.g. `pyarrow.fs.FileSystem` &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;or your client of choice.&quot;</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_get_preprocessor_error</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">return</span> <span class="ne">AttributeError</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;The new `ray.train.Checkpoint` class does not support `</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">()`. &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;To include preprocessor information in checkpoints, &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;pass it as metadata in the &lt;Framework&gt;Trainer constructor.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;Example: `TorchTrainer(..., metadata=</span><span class="se">{{</span><span class="s2">...</span><span class="se">}}</span><span class="s2">)`.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;After training, access it in the checkpoint via `checkpoint.get_metadata()`. &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;See here: https://docs.ray.io/en/master/train/user-guides/&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;data-loading-preprocessing.html#preprocessing-structured-data&quot;</span>
+    <span class="p">)</span>
+</pre></div>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><!-- Override the footer area for the sphinx-book-theme to include the CSAT widget -->
+<div id="csat">
+  <div id="csat-feedback-received" class="csat-hidden">
+    <span>谢谢你的反馈！</span>
+  </div>
+  <div id="csat-inputs">
+    <span>是否能帮助到你？</span>
+    <div id="csat-yes" class="csat-button">
+      <svg id="csat-yes-icon" class="csat-hidden csat-icon" width="18" height="13" viewBox="0 0 18 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 10.172L16.1922 0.979004L17.6072 2.393L7.00023 13L0.63623 6.636L2.05023 5.222L7.00023 10.172Z" fill="black"/>
+      </svg>
+      <span>是<span>
+    </div>
+    <div id="csat-no" class="csat-button">
+      <svg id="csat-no-icon" class="csat-hidden csat-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 5.58599L11.9502 0.635986L13.3642 2.04999L8.41423 6.99999L13.3642 11.95L11.9502 13.364L7.00023 8.41399L2.05023 13.364L0.63623 11.95L5.58623 6.99999L0.63623 2.04999L2.05023 0.635986L7.00023 5.58599Z" fill="black"/>
+      </svg>
+      <span>否<span>
+    </div>
+  </div>
+  <div id="csat-textarea-group" class="csat-hidden">
+    <span id="csat-feedback-label">反馈</span>
+    <textarea id="csat-textarea"></textarea>
+    <div id="csat-submit">提交</div>
+  </div>
+</div><p>
+  
+    By The Ray Team<br/>
+  
+      &copy; Copyright 2024, The Ray Team.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

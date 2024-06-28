@@ -1,0 +1,12 @@
+.rst-versions .rst-current-version {
+    background-color: #873bf4 !important;
+    color: #fff !important;
+}
+
+.rst-versions {
+    background-color: #fff !important;
+}
+
+.rst-versions .rst-other-versions dd a {
+    color: #873bf4 !important
+}

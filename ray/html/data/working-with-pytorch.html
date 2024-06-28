@@ -1,0 +1,1241 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>使用 PyTorch &#8212; Ray 2.7.2</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/termynal.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/js/versionwarning.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+    <script defer="defer" src="../_static/js/docsearch.js"></script>
+    <script defer="defer" src="../_static/js/csat.js"></script>
+    <script defer="defer" src="../_static/js/termynal.js"></script>
+    <script defer="defer" src="../_static/js/custom.js"></script>
+    <script defer="defer" src="../_static/js/top-navigation.js"></script>
+    <script src="../_static/js/tags.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <link rel="canonical" href="https://docs.ray.io/en/latest/data/working-with-pytorch.html" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="端到端：离线批量预估" href="batch_inference.html" />
+    <link rel="prev" title="处理张量" href="working-with-tensors.html" />
+
+<!-- Fathom - beautiful, simple website analytics -->
+<script src="https://deer.ray.io/script.js" data-site="WYYANYOS" defer></script>
+<!-- / Fathom -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-110413294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-110413294-1');
+</script>
+
+<script
+  src="https://widget.kapa.ai/kapa-widget.bundle.js"
+  data-website-id="18a8c339-4ec5-43c8-8182-db3f2bc8c6b6"
+  data-project-name="Ray"
+  data-project-color="#2C2C2C"
+  data-project-logo="https://global.discourse-cdn.com/business7/uploads/ray/original/1X/8f4dcb72f7cd34e2a332d548bd65860994bc8ff1.png"
+  data-modal-disclaimer = "Results are automated and may be incorrect or contain inappropriate information. Do not include any personal data or confidential information."
+  data-modal-title = "Ray Docs AI - Ask a Question"
+  data-button-position-bottom = "60px"
+></script>
+
+<script>
+(function(apiKey){
+    (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
+    v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
+        o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
+        y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
+        z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
+
+        pendo.initialize({
+            visitor: {
+                id: 'VISITOR-UNIQUE-ID'
+            },
+            account: {
+                id: 'ACCOUNT-UNIQUE-ID'
+            }
+        });
+})('f89fa48a-6dd7-4d7c-67cf-a8051ed891f2');
+</script>
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"><div class='topnav'></div></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Ray 2.7.2</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main Navigation">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    欢迎来到 Ray ！
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Ray
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-overview/index.html">
+   概述「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-overview/getting-started.html">
+   入门「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-overview/installation.html">
+   安装「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-overview/use-cases.html">
+   用例「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-overview/examples.html">
+   示例库「1%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-overview/ray-libraries.html">
+   生态「3%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-core/walkthrough.html">
+   Ray 核心「100%」
+  </a>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="data.html">
+   Ray 数据「85%」
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="overview.html">
+     概述
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="key-concepts.html">
+     关键概念
+    </a>
+   </li>
+   <li class="toctree-l2 current active has-children">
+    <a class="reference internal" href="user-guide.html">
+     用户指南
+    </a>
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+    <label for="toctree-checkbox-2">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul class="current">
+     <li class="toctree-l3">
+      <a class="reference internal" href="loading-data.html">
+       数据加载
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="transforming-data.html">
+       数据转换
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="inspecting-data.html">
+       检查数据
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="iterating-over-data.html">
+       数据迭代
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="saving-data.html">
+       数据保存
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="working-with-images.html">
+       处理图像
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="working-with-text.html">
+       文本处理
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="working-with-tensors.html">
+       处理张量
+      </a>
+     </li>
+     <li class="toctree-l3 current active">
+      <a class="current reference internal" href="#">
+       使用 PyTorch
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="batch_inference.html">
+       端到端：离线批量预估
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="performance-tips.html">
+       高级：性能技巧和调整
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="preprocessors.html">
+       使用预处理器
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="examples/index.html">
+     Ray Data 示例
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="api/api.html">
+     Ray 数据 API
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="data-internals.html">
+     Ray Data 内部结构
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../train/train.html">
+   Ray 训练「95%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../tune/index.html">
+   Ray 调参「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../serve/index.html">
+   Ray Serve「1%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../rllib/index.html">
+   Ray RLlib「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-more-libs/index.html">
+   更多类库「40%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cluster/getting-started.html">
+   Ray 集群「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-observability/index.html">
+   监控调试「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-references/api.html">
+   参考「20%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-contribute/index.html">
+   开发者指引「30%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-security/index.html">
+   安全「100%」
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/ray-project/ray"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/issues/new?title=Issue%20on%20page%20%2Fdata/working-with-pytorch.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/edit/master/doc/source/data/working-with-pytorch.rst"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/data/working-with-pytorch.rst.txt"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.rst</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#torch">
+   迭代 Torch 张量进行训练
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ray-train">
+     与 Ray Train 集成
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#transform-pytorch">
+   使用 Torch 张量进行变换
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id2">
+     内置 PyTorch 转换
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#batch-inference-pytorch">
+   使用 PyTorch 进行批量推理
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#saving-pytorch">
+   保存包含 Torch 张量的数据集
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#pytorch-dataloaders">
+   从 PyTorch 数据集和 DataLoaders 迁移
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id5">
+     内置 PyTorch 数据集
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id6">
+     自定义 PyTorch 数据集
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id7">
+     PyTorch 数据加载器
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>使用 PyTorch</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#torch">
+   迭代 Torch 张量进行训练
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ray-train">
+     与 Ray Train 集成
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#transform-pytorch">
+   使用 Torch 张量进行变换
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id2">
+     内置 PyTorch 转换
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#batch-inference-pytorch">
+   使用 PyTorch 进行批量推理
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#saving-pytorch">
+   保存包含 Torch 张量的数据集
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#pytorch-dataloaders">
+   从 PyTorch 数据集和 DataLoaders 迁移
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id5">
+     内置 PyTorch 数据集
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id6">
+     自定义 PyTorch 数据集
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id7">
+     PyTorch 数据加载器
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section id="pytorch">
+<span id="working-with-pytorch"></span><h1>使用 PyTorch<a class="headerlink" href="#pytorch" title="Permalink to this headline">#</a></h1>
+<p>Ray Data 与 PyTorch 生态系统集成。</p>
+<p>本指南介绍了如何：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#iterating-pytorch"><span class="std std-ref">将数据集作为 Torch 张量进行迭代以进行模型训练</span></a></p></li>
+<li><p><a class="reference internal" href="#transform-pytorch"><span class="std std-ref">编写处理 Torch 张量的转换</span></a></p></li>
+<li><p><a class="reference internal" href="#batch-inference-pytorch"><span class="std std-ref">使用 Torch 模型执行批量推理</span></a></p></li>
+<li><p><a class="reference internal" href="#saving-pytorch"><span class="std std-ref">保存包含 Torch 张量的数据集</span></a></p></li>
+<li><p><a class="reference internal" href="#migrate-pytorch"><span class="std std-ref">从 PyTorch 数据集迁移到 Ray 数据</span></a></p></li>
+</ul>
+<section id="torch">
+<span id="iterating-pytorch"></span><h2>迭代 Torch 张量进行训练<a class="headerlink" href="#torch" title="Permalink to this headline">#</a></h2>
+<p>要迭代 Torch 格式的批量数据，请调用 <a class="reference internal" href="api/doc/ray.data.Dataset.iter_torch_batches.html#ray.data.Dataset.iter_torch_batches" title="ray.data.Dataset.iter_torch_batches"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Dataset.iter_torch_batches()</span></code></a>。每个批次表示为 <code class="xref py py-obj docutils literal notranslate"><span class="pre">Dict[str,</span> <span class="pre">torch.Tensor]</span></code>，数据集中每列一个张量。</p>
+<p>这对于使用数据集中的批次训练 Torch 模型非常有用。有关提供 <code class="docutils literal notranslate"><span class="pre">collate_fn</span></code> 进行自定义转换的配置详细信息，请参阅 <a class="reference internal" href="api/doc/ray.data.Dataset.iter_torch_batches.html#ray.data.Dataset.iter_torch_batches" title="ray.data.Dataset.iter_torch_batches"><code class="xref py py-obj docutils literal notranslate"><span class="pre">API</span> <span class="pre">参考</span></code></a>。</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ray</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="n">ds</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">read_images</span><span class="p">(</span><span class="s2">&quot;s3://anonymous@ray-example-data/image-datasets/simple&quot;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">iter_torch_batches</span><span class="p">(</span><span class="n">batch_size</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;image&#39;: tensor([[[[...]]]], dtype=torch.uint8)}
+...
+{&#39;image&#39;: tensor([[[[...]]]], dtype=torch.uint8)}
+</pre></div>
+</div>
+<section id="ray-train">
+<h3>与 Ray Train 集成<a class="headerlink" href="#ray-train" title="Permalink to this headline">#</a></h3>
+<p>Ray Data 与 <a class="reference internal" href="../train/train.html#train-docs"><span class="std std-ref">Ray Train</span></a> 集成，可轻松摄取数据以进行数据并行训练，并支持 PyTorch、PyTorch Lightning 或 Hugging Face 训练。</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">nn</span>
+<span class="kn">import</span> <span class="nn">ray</span>
+<span class="kn">from</span> <span class="nn">ray</span> <span class="kn">import</span> <span class="n">train</span>
+<span class="kn">from</span> <span class="nn">ray.train</span> <span class="kn">import</span> <span class="n">ScalingConfig</span>
+<span class="kn">from</span> <span class="nn">ray.train.torch</span> <span class="kn">import</span> <span class="n">TorchTrainer</span>
+
+<span class="k">def</span> <span class="nf">train_func</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sigmoid</span><span class="p">())</span>
+    <span class="n">loss_fn</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">BCELoss</span><span class="p">()</span>
+    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">)</span>
+
+    <span class="c1"># Datasets can be accessed in your train_func via ``get_dataset_shard``.</span>
+    <span class="n">train_data_shard</span> <span class="o">=</span> <span class="n">train</span><span class="o">.</span><span class="n">get_dataset_shard</span><span class="p">(</span><span class="s2">&quot;train&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">epoch_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">train_data_shard</span><span class="o">.</span><span class="n">iter_torch_batches</span><span class="p">(</span><span class="n">batch_size</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">dtypes</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">):</span>
+            <span class="n">features</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">batch</span><span class="p">[</span><span class="n">col_name</span><span class="p">]</span> <span class="k">for</span> <span class="n">col_name</span> <span class="ow">in</span> <span class="n">batch</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="n">col_name</span> <span class="o">!=</span> <span class="s2">&quot;target&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">predictions</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+            <span class="n">train_loss</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">batch</span><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+            <span class="n">train_loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+            <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+
+<span class="n">train_dataset</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;s3://anonymous@air-example-data/breast_cancer.csv&quot;</span><span class="p">)</span>
+
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">TorchTrainer</span><span class="p">(</span>
+    <span class="n">train_func</span><span class="p">,</span>
+    <span class="n">datasets</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;train&quot;</span><span class="p">:</span> <span class="n">train_dataset</span><span class="p">},</span>
+    <span class="n">scaling_config</span><span class="o">=</span><span class="n">ScalingConfig</span><span class="p">(</span><span class="n">num_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">trainer</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>有关更多详细信息，请参阅 <a class="reference internal" href="../train/user-guides/data-loading-preprocessing.html#data-ingest-torch"><span class="std std-ref">Ray 训练用户指南</span></a>。</p>
+</section>
+</section>
+<section id="transform-pytorch">
+<span id="id1"></span><h2>使用 Torch 张量进行变换<a class="headerlink" href="#transform-pytorch" title="Permalink to this headline">#</a></h2>
+<p>使用 <code class="xref py py-obj docutils literal notranslate"><span class="pre">map</span></code> 或 <code class="docutils literal notranslate"><span class="pre">map_batches</span></code> 变换，可以返回 Torch 张量。</p>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>在底层，Ray Data 自动将 Torch 张量转换为 NumPy 数组。后续转换接受 NumPy 数组作为输入，而不是 Torch 张量。</p>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-0">
+map</label><div class="sd-tab-content docutils">
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">ray</span>
+
+<span class="n">ds</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">read_images</span><span class="p">(</span><span class="s2">&quot;s3://anonymous@ray-example-data/image-datasets/simple&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">convert_to_torch</span><span class="p">(</span><span class="n">row</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;tensor&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">])}</span>
+
+<span class="c1"># The tensor gets converted into a Numpy array under the hood</span>
+<span class="n">transformed_ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">convert_to_torch</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">transformed_ds</span><span class="o">.</span><span class="n">schema</span><span class="p">())</span>
+
+<span class="c1"># Subsequent transformations take in Numpy array as input.</span>
+<span class="k">def</span> <span class="nf">check_numpy</span><span class="p">(</span><span class="n">row</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]):</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;tensor&quot;</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">row</span>
+
+<span class="n">transformed_ds</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">check_numpy</span><span class="p">)</span><span class="o">.</span><span class="n">take_all</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Column  Type
+------  ----
+tensor  numpy.ndarray(shape=(32, 32, 3), dtype=uint8)
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-1">
+map_batches</label><div class="sd-tab-content docutils">
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">ray</span>
+
+<span class="n">ds</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">read_images</span><span class="p">(</span><span class="s2">&quot;s3://anonymous@ray-example-data/image-datasets/simple&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">convert_to_torch</span><span class="p">(</span><span class="n">batch</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;tensor&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">batch</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">])}</span>
+
+<span class="c1"># The tensor gets converted into a Numpy array under the hood</span>
+<span class="n">transformed_ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">map_batches</span><span class="p">(</span><span class="n">convert_to_torch</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">transformed_ds</span><span class="o">.</span><span class="n">schema</span><span class="p">())</span>
+
+<span class="c1"># Subsequent transformations take in Numpy array as input.</span>
+<span class="k">def</span> <span class="nf">check_numpy</span><span class="p">(</span><span class="n">batch</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]):</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">batch</span><span class="p">[</span><span class="s2">&quot;tensor&quot;</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">batch</span>
+
+<span class="n">transformed_ds</span><span class="o">.</span><span class="n">map_batches</span><span class="p">(</span><span class="n">check_numpy</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">take_all</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Column  Type
+------  ----
+tensor  numpy.ndarray(shape=(32, 32, 3), dtype=uint8)
+</pre></div>
+</div>
+</div>
+</div>
+<p>有关转换数据的更多信息，请参阅 <a class="reference internal" href="transforming-data.html#transforming-data"><span class="std std-ref">转换数据</span></a>。</p>
+<section id="id2">
+<h3>内置 PyTorch 转换<a class="headerlink" href="#id2" title="Permalink to this headline">#</a></h3>
+<p>你可以使用 Ray Data 转换内置的 PyTorch 转换如 <code class="docutils literal notranslate"><span class="pre">torchvision</span></code>， <code class="docutils literal notranslate"><span class="pre">torchtext</span></code> 和 <code class="docutils literal notranslate"><span class="pre">torchaudio</span></code> 。</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-2" name="sd-tab-set-1" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-2">
+torchvision</label><div class="sd-tab-content docutils">
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torchvision</span> <span class="kn">import</span> <span class="n">transforms</span>
+<span class="kn">import</span> <span class="nn">ray</span>
+
+<span class="c1"># Create the Dataset.</span>
+<span class="n">ds</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">read_images</span><span class="p">(</span><span class="s2">&quot;s3://anonymous@ray-example-data/image-datasets/simple&quot;</span><span class="p">)</span>
+
+<span class="c1"># Define the torchvision transform.</span>
+<span class="n">transform</span> <span class="o">=</span> <span class="n">transforms</span><span class="o">.</span><span class="n">Compose</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="n">transforms</span><span class="o">.</span><span class="n">ToTensor</span><span class="p">(),</span>
+        <span class="n">transforms</span><span class="o">.</span><span class="n">CenterCrop</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># Define the map function</span>
+<span class="k">def</span> <span class="nf">transform_image</span><span class="p">(</span><span class="n">row</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+    <span class="n">row</span><span class="p">[</span><span class="s2">&quot;transformed_image&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transform</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">row</span>
+
+<span class="c1"># Apply the transform over the dataset.</span>
+<span class="n">transformed_ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">transform_image</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">transformed_ds</span><span class="o">.</span><span class="n">schema</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Column             Type
+------             ----
+image              numpy.ndarray(shape=(32, 32, 3), dtype=uint8)
+transformed_image  numpy.ndarray(shape=(3, 10, 10), dtype=float)
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-3" name="sd-tab-set-1" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-3">
+torchtext</label><div class="sd-tab-content docutils">
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">torchtext</span> <span class="kn">import</span> <span class="n">transforms</span>
+<span class="kn">import</span> <span class="nn">ray</span>
+
+<span class="c1"># Create the Dataset.</span>
+<span class="n">ds</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="s2">&quot;s3://anonymous@ray-example-data/simple.txt&quot;</span><span class="p">)</span>
+
+<span class="c1"># Define the torchtext transform.</span>
+<span class="n">VOCAB_FILE</span> <span class="o">=</span> <span class="s2">&quot;https://huggingface.co/bert-base-uncased/resolve/main/vocab.txt&quot;</span>
+<span class="n">transform</span> <span class="o">=</span> <span class="n">transforms</span><span class="o">.</span><span class="n">BERTTokenizer</span><span class="p">(</span><span class="n">vocab_path</span><span class="o">=</span><span class="n">VOCAB_FILE</span><span class="p">,</span> <span class="n">do_lower_case</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_tokens</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Define the map_batches function.</span>
+<span class="k">def</span> <span class="nf">tokenize_text</span><span class="p">(</span><span class="n">batch</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+    <span class="n">batch</span><span class="p">[</span><span class="s2">&quot;tokenized_text&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transform</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">batch</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="n">batch</span>
+
+<span class="c1"># Apply the transform over the dataset.</span>
+<span class="n">transformed_ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">map_batches</span><span class="p">(</span><span class="n">tokenize_text</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">transformed_ds</span><span class="o">.</span><span class="n">schema</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Column          Type
+------          ----
+text            &lt;class &#39;object&#39;&gt;
+tokenized_text  &lt;class &#39;object&#39;&gt;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="batch-inference-pytorch">
+<span id="id3"></span><h2>使用 PyTorch 进行批量推理<a class="headerlink" href="#batch-inference-pytorch" title="Permalink to this headline">#</a></h2>
+<p>借助 Ray 数据集，您可以通过将预先训练的模型映射到数据上，使用 Torch 模型进行可扩展的离线批量推理。</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+
+<span class="kn">import</span> <span class="nn">ray</span>
+
+<span class="c1"># Step 1: Create a Ray Dataset from in-memory Numpy arrays.</span>
+<span class="c1"># You can also create a Ray Dataset from many other sources and file</span>
+<span class="c1"># formats.</span>
+<span class="n">ds</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">)))</span>
+
+<span class="c1"># Step 2: Define a Predictor class for inference.</span>
+<span class="c1"># Use a class to initialize the model just once in `__init__`</span>
+<span class="c1"># and re-use it for inference across multiple batches.</span>
+<span class="k">class</span> <span class="nc">TorchPredictor</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Load a dummy neural network.</span>
+        <span class="c1"># Set `self.model` to your pre-trained PyTorch model.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">in_features</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">out_features</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Sigmoid</span><span class="p">(),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+
+    <span class="c1"># Logic for inference on 1 batch of data.</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+        <span class="n">tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">batch</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">inference_mode</span><span class="p">():</span>
+            <span class="c1"># Get the predictions from the input batch.</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;output&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">tensor</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">()}</span>
+
+<span class="c1"># Use 2 parallel actors for inference. Each actor predicts on a</span>
+<span class="c1"># different partition of data.</span>
+<span class="n">scale</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">ActorPoolStrategy</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="c1"># Step 3: Map the Predictor over the Dataset to get predictions.</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">map_batches</span><span class="p">(</span><span class="n">TorchPredictor</span><span class="p">,</span> <span class="n">compute</span><span class="o">=</span><span class="n">scale</span><span class="p">)</span>
+<span class="c1"># Step 4: Show one prediction output.</span>
+<span class="n">predictions</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;output&#39;: array([0.5590901], dtype=float32)}
+</pre></div>
+</div>
+<p>更多信息，请参阅 <a class="reference internal" href="batch_inference.html#batch-inference-home"><span class="std std-ref">批量推理用户指南</span></a>。</p>
+</section>
+<section id="saving-pytorch">
+<span id="id4"></span><h2>保存包含 Torch 张量的数据集<a class="headerlink" href="#saving-pytorch" title="Permalink to this headline">#</a></h2>
+<p>包含 Torch 张量的数据集可以保存到文件中，例如 parquet 或 NumPy。</p>
+<p>更多信息，请参阅 <a class="reference internal" href="saving-data.html#saving-data"><span class="std std-ref">保存数据</span></a>。</p>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>Torch 张量在 GPU 设备上无法序列化并写入磁盘。在保存数据之前将张量转换为 CPU（ <code class="docutils literal notranslate"><span class="pre">tensor.to(&quot;cpu&quot;)</span></code>）。</p>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-4" name="sd-tab-set-2" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-4">
+Parquet</label><div class="sd-tab-content docutils">
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">ray</span>
+
+<span class="n">tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ds</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">from_items</span><span class="p">([{</span><span class="s2">&quot;tensor&quot;</span><span class="p">:</span> <span class="n">tensor</span><span class="p">}])</span>
+
+<span class="n">ds</span><span class="o">.</span><span class="n">write_parquet</span><span class="p">(</span><span class="s2">&quot;local:///tmp/tensor&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-5" name="sd-tab-set-2" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-5">
+Numpy</label><div class="sd-tab-content docutils">
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">ray</span>
+
+<span class="n">tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ds</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">from_items</span><span class="p">([{</span><span class="s2">&quot;tensor&quot;</span><span class="p">:</span> <span class="n">tensor</span><span class="p">}])</span>
+
+<span class="n">ds</span><span class="o">.</span><span class="n">write_numpy</span><span class="p">(</span><span class="s2">&quot;local:///tmp/tensor&quot;</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s2">&quot;tensor&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="pytorch-dataloaders">
+<span id="migrate-pytorch"></span><h2>从 PyTorch 数据集和 DataLoaders 迁移<a class="headerlink" href="#pytorch-dataloaders" title="Permalink to this headline">#</a></h2>
+<p>如果您正在使用 PyTorch 数据集和 DataLoader，您可以迁移到 Ray Data 以处理分布式数据集。</p>
+<p>PyTorch 数据集被 <a class="reference internal" href="api/doc/ray.data.Dataset.html#ray.data.Dataset" title="ray.data.Dataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></a> 抽象替换，PyTorch DataLoader 被 <a class="reference internal" href="api/doc/ray.data.Dataset.iter_torch_batches.html#ray.data.Dataset.iter_torch_batches" title="ray.data.Dataset.iter_torch_batches"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Dataset.iter_torch_batches()</span></code></a> 替换。</p>
+<section id="id5">
+<h3>内置 PyTorch 数据集<a class="headerlink" href="#id5" title="Permalink to this headline">#</a></h3>
+<p>如果你使用的是内置的 PyTorch 数据集，例如来自 <code class="docutils literal notranslate"><span class="pre">torchvision</span></code>，可以使用 <a class="reference internal" href="api/doc/ray.data.from_torch.html#ray.data.from_torch" title="ray.data.from_torch"><code class="xref py py-meth docutils literal notranslate"><span class="pre">from_torch()</span></code></a> API 将其转换为 Ray 数据集。</p>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p><a class="reference internal" href="api/doc/ray.data.from_torch.html#ray.data.from_torch" title="ray.data.from_torch"><code class="xref py py-meth docutils literal notranslate"><span class="pre">from_torch()</span></code></a> 需要 PyTorch 数据集适合内存。仅将其用于小型内置数据集以进行原型设计或测试。</p>
+</div>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torchvision</span>
+<span class="kn">import</span> <span class="nn">ray</span>
+
+<span class="n">mnist</span> <span class="o">=</span> <span class="n">torchvision</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">MNIST</span><span class="p">(</span><span class="n">root</span><span class="o">=</span><span class="s2">&quot;/tmp/&quot;</span><span class="p">,</span> <span class="n">download</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">ds</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">from_torch</span><span class="p">(</span><span class="n">mnist</span><span class="p">)</span>
+
+<span class="c1"># The data for each item of the Torch dataset is under the &quot;item&quot; key.</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">schema</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Column  Type
+------  ----
+item    &lt;class &#39;object&#39;&gt;
+</pre></div>
+</div>
+</section>
+<section id="id6">
+<h3>自定义 PyTorch 数据集<a class="headerlink" href="#id6" title="Permalink to this headline">#</a></h3>
+<p>如果您有自定义 PyTorch 数据集，则可以通过 <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code> 替换 Ray 数据读取和准换操作逻辑来迁移到 Ray Data。</p>
+<p>任何从云存储和磁盘读取数据的逻辑都可以通过 Ray Data <code class="docutils literal notranslate"><span class="pre">read_*</span></code> API 之一替换，任何转换逻辑都可以作为 Dataset 上的 <a class="reference internal" href="api/doc/ray.data.Dataset.map.html#ray.data.Dataset.map" title="ray.data.Dataset.map"><code class="xref py py-meth docutils literal notranslate"><span class="pre">map</span></code></a> 调用应用。</p>
+<p>以下示例显示了一个自定义 PyTorch 数据集，以及使用 Ray Data 的类似情况。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>与 PyTorch 地图样式数据集不同， Ray 数据集不可索引。</p>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-6" name="sd-tab-set-3" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-6">
+PyTorch Dataset</label><div class="sd-tab-content docutils">
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">import</span> <span class="nn">boto3</span>
+<span class="kn">from</span> <span class="nn">botocore</span> <span class="kn">import</span> <span class="n">UNSIGNED</span>
+<span class="kn">from</span> <span class="nn">botocore.config</span> <span class="kn">import</span> <span class="n">Config</span>
+
+<span class="kn">from</span> <span class="nn">torchvision</span> <span class="kn">import</span> <span class="n">transforms</span>
+<span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">Dataset</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+
+<span class="k">class</span> <span class="nc">ImageDataset</span><span class="p">(</span><span class="n">Dataset</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dir_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s3</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">resource</span><span class="p">(</span><span class="s2">&quot;s3&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">Config</span><span class="p">(</span><span class="n">signature_version</span><span class="o">=</span><span class="n">UNSIGNED</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bucket</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s3</span><span class="o">.</span><span class="n">Bucket</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="n">obj</span><span class="o">.</span><span class="n">key</span> <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bucket</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Prefix</span><span class="o">=</span><span class="n">dir_path</span><span class="p">)]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">transform</span> <span class="o">=</span> <span class="n">transforms</span><span class="o">.</span><span class="n">Compose</span><span class="p">([</span>
+            <span class="n">transforms</span><span class="o">.</span><span class="n">ToTensor</span><span class="p">(),</span>
+            <span class="n">transforms</span><span class="o">.</span><span class="n">Resize</span><span class="p">((</span><span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">)),</span>
+            <span class="n">transforms</span><span class="o">.</span><span class="n">Normalize</span><span class="p">((</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+        <span class="p">])</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+        <span class="n">img_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+
+        <span class="c1"># Infer the label from the file name.</span>
+        <span class="n">last_slash_idx</span> <span class="o">=</span> <span class="n">img_name</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+        <span class="n">dot_idx</span> <span class="o">=</span> <span class="n">img_name</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">img_name</span><span class="p">[</span><span class="n">last_slash_idx</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="n">dot_idx</span><span class="p">])</span>
+
+        <span class="c1"># Download the S3 file locally.</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bucket</span><span class="o">.</span><span class="n">Object</span><span class="p">(</span><span class="n">img_name</span><span class="p">)</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">()</span>
+        <span class="n">tmp_name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.jpg&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tmp</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">tmp_name</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">download_fileobj</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">tmp_name</span><span class="p">)</span>
+
+        <span class="c1"># Preprocess the image.</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">image</span><span class="p">,</span> <span class="n">label</span>
+
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">ImageDataset</span><span class="p">(</span><span class="n">bucket_name</span><span class="o">=</span><span class="s2">&quot;ray-example-data&quot;</span><span class="p">,</span> <span class="n">dir_path</span><span class="o">=</span><span class="s2">&quot;batoidea/JPEGImages/&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-7" name="sd-tab-set-3" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-7">
+Ray Data</label><div class="sd-tab-content docutils">
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torchvision</span>
+<span class="kn">import</span> <span class="nn">ray</span>
+
+<span class="n">ds</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">read_images</span><span class="p">(</span><span class="s2">&quot;s3://anonymous@ray-example-data/batoidea/JPEGImages&quot;</span><span class="p">,</span> <span class="n">include_paths</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Extract the label from the file path.</span>
+<span class="k">def</span> <span class="nf">extract_label</span><span class="p">(</span><span class="n">row</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="n">filepath</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span>
+    <span class="n">last_slash_idx</span> <span class="o">=</span> <span class="n">filepath</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+    <span class="n">dot_idx</span> <span class="o">=</span> <span class="n">filepath</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">filepath</span><span class="p">[</span><span class="n">last_slash_idx</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="n">dot_idx</span><span class="p">])</span>
+    <span class="n">row</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">label</span>
+    <span class="k">return</span> <span class="n">row</span>
+
+<span class="n">transform</span> <span class="o">=</span> <span class="n">transforms</span><span class="o">.</span><span class="n">Compose</span><span class="p">([</span>
+                <span class="n">transforms</span><span class="o">.</span><span class="n">ToTensor</span><span class="p">(),</span>
+                <span class="n">transforms</span><span class="o">.</span><span class="n">Resize</span><span class="p">((</span><span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">)),</span>
+                <span class="n">transforms</span><span class="o">.</span><span class="n">Normalize</span><span class="p">((</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+            <span class="p">])</span>
+
+<span class="c1"># Preprocess the images.</span>
+<span class="k">def</span> <span class="nf">transform_image</span><span class="p">(</span><span class="n">row</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="n">row</span><span class="p">[</span><span class="s2">&quot;transformed_image&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transform</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">row</span>
+
+<span class="c1"># Map the transformations over the dataset.</span>
+<span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">extract_label</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">transform_image</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id7">
+<h3>PyTorch 数据加载器<a class="headerlink" href="#id7" title="Permalink to this headline">#</a></h3>
+<p>数据加载器可以通过调用 <a class="reference internal" href="api/doc/ray.data.Dataset.iter_torch_batches.html#ray.data.Dataset.iter_torch_batches" title="ray.data.Dataset.iter_torch_batches"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Dataset.iter_torch_batches()</span></code></a> 来批次迭代数据集。</p>
+<p>以下表格描述了 PyTorch DataLoader 的参数如何映射到 Ray Data。请注意，行为可能不一定相同。有关确切的语义和用法，请 <a class="reference internal" href="api/doc/ray.data.Dataset.iter_torch_batches.html#ray.data.Dataset.iter_torch_batches" title="ray.data.Dataset.iter_torch_batches"><code class="xref py py-meth docutils literal notranslate"><span class="pre">参见</span> <span class="pre">API</span> <span class="pre">参考</span></code></a>。</p>
+<table class="table">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>PyTorch DataLoader arguments</p></th>
+<th class="head"><p>Ray Data API</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">batch_size</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">batch_size</span></code> argument to <a class="reference internal" href="api/doc/ray.data.Dataset.iter_torch_batches.html#ray.data.Dataset.iter_torch_batches" title="ray.data.Dataset.iter_torch_batches"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ds.iter_torch_batches()</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">shuffle</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">local_shuffle_buffer_size</span></code> argument to <a class="reference internal" href="api/doc/ray.data.Dataset.iter_torch_batches.html#ray.data.Dataset.iter_torch_batches" title="ray.data.Dataset.iter_torch_batches"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ds.iter_torch_batches()</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">collate_fn</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">collate_fn</span></code> argument to <a class="reference internal" href="api/doc/ray.data.Dataset.iter_torch_batches.html#ray.data.Dataset.iter_torch_batches" title="ray.data.Dataset.iter_torch_batches"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ds.iter_torch_batches()</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sampler</span></code></p></td>
+<td><p>Not supported. Can be manually implemented after iterating through the dataset with <a class="reference internal" href="api/doc/ray.data.Dataset.iter_torch_batches.html#ray.data.Dataset.iter_torch_batches" title="ray.data.Dataset.iter_torch_batches"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ds.iter_torch_batches()</span></code></a>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">batch_sampler</span></code></p></td>
+<td><p>Not supported. Can be manually implemented after iterating through the dataset with <a class="reference internal" href="api/doc/ray.data.Dataset.iter_torch_batches.html#ray.data.Dataset.iter_torch_batches" title="ray.data.Dataset.iter_torch_batches"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ds.iter_torch_batches()</span></code></a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">drop_last</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">drop_last</span></code> argument to <a class="reference internal" href="api/doc/ray.data.Dataset.iter_torch_batches.html#ray.data.Dataset.iter_torch_batches" title="ray.data.Dataset.iter_torch_batches"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ds.iter_torch_batches()</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">num_workers</span></code></p></td>
+<td><p>Use <code class="docutils literal notranslate"><span class="pre">prefetch_batches</span></code> argument to <a class="reference internal" href="api/doc/ray.data.Dataset.iter_torch_batches.html#ray.data.Dataset.iter_torch_batches" title="ray.data.Dataset.iter_torch_batches"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ds.iter_torch_batches()</span></code></a> to indicate how many batches to prefetch. The number of prefetching threads are automatically configured according to <code class="docutils literal notranslate"><span class="pre">prefetch_batches</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">prefetch_factor</span></code></p></td>
+<td><p>Use <code class="docutils literal notranslate"><span class="pre">prefetch_batches</span></code> argument to <a class="reference internal" href="api/doc/ray.data.Dataset.iter_torch_batches.html#ray.data.Dataset.iter_torch_batches" title="ray.data.Dataset.iter_torch_batches"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ds.iter_torch_batches()</span></code></a> to indicate how many batches to prefetch. The number of prefetching threads are automatically configured according to <code class="docutils literal notranslate"><span class="pre">prefetch_batches</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pin_memory</span></code></p></td>
+<td><p>Pass in <code class="docutils literal notranslate"><span class="pre">device</span></code> to <a class="reference internal" href="api/doc/ray.data.Dataset.iter_torch_batches.html#ray.data.Dataset.iter_torch_batches" title="ray.data.Dataset.iter_torch_batches"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ds.iter_torch_batches()</span></code></a> to get tensors that have already been moved to the correct device.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="working-with-tensors.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">处理张量</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="batch_inference.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">端到端：离线批量预估</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><!-- Override the footer area for the sphinx-book-theme to include the CSAT widget -->
+<div id="csat">
+  <div id="csat-feedback-received" class="csat-hidden">
+    <span>谢谢你的反馈！</span>
+  </div>
+  <div id="csat-inputs">
+    <span>是否能帮助到你？</span>
+    <div id="csat-yes" class="csat-button">
+      <svg id="csat-yes-icon" class="csat-hidden csat-icon" width="18" height="13" viewBox="0 0 18 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 10.172L16.1922 0.979004L17.6072 2.393L7.00023 13L0.63623 6.636L2.05023 5.222L7.00023 10.172Z" fill="black"/>
+      </svg>
+      <span>是<span>
+    </div>
+    <div id="csat-no" class="csat-button">
+      <svg id="csat-no-icon" class="csat-hidden csat-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 5.58599L11.9502 0.635986L13.3642 2.04999L8.41423 6.99999L13.3642 11.95L11.9502 13.364L7.00023 8.41399L2.05023 13.364L0.63623 11.95L5.58623 6.99999L0.63623 2.04999L2.05023 0.635986L7.00023 5.58599Z" fill="black"/>
+      </svg>
+      <span>否<span>
+    </div>
+  </div>
+  <div id="csat-textarea-group" class="csat-hidden">
+    <span id="csat-feedback-label">反馈</span>
+    <textarea id="csat-textarea"></textarea>
+    <div id="csat-submit">提交</div>
+  </div>
+</div><p>
+  
+    By The Ray Team<br/>
+  
+      &copy; Copyright 2024, The Ray Team.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

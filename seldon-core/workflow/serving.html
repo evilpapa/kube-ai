@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../_static/javascripts/modernizr.js"></script>
+  
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-54780881-2"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-54780881-2');
+</script>
+  
+  
+    <title>模型 Endpoints 测试 &#8212; seldon-core  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=83e35b93" />
+    <link rel="stylesheet" type="text/css" href="../_static/material.css?v=79c92029" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/rtd_sphinx_search.min.css?v=fb480935" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=15a8f09d" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/rtd_search_config.js"></script>
+    <script src="../_static/js/rtd_sphinx_search.min.js?v=60fbc683"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="扩缩容" href="../graph/scaling.html" />
+    <link rel="prev" title="协议" href="../graph/protocols.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=indigo data-md-color-accent=teal>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#workflow/serving" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../index.html" title="seldon-core  documentation"
+           class="md-header-nav__button md-logo">
+          
+            &nbsp;
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">Seldon Core Documentation</span>
+          <span class="md-header-nav__topic"> 模型 Endpoints 测试 </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder=""Search""
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+            
+            <li class="md-tabs__item"><a href="/" class="md-tabs__link">🚀 Our Other Projects & Products:</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi/en/stable/" class="md-tabs__link">Alibi Explain</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi-detect/en/stable/" class="md-tabs__link">Alibi Detect</a></li>
+            
+            <li class="md-tabs__item"><a href="https://mlserver.readthedocs.io/en/latest/" class="md-tabs__link">MLServer</a></li>
+            
+            <li class="md-tabs__item"><a href="https://tempo.readthedocs.io/en/latest/" class="md-tabs__link">Tempo SDK</a></li>
+            
+            <li class="md-tabs__item"><a href="https://deploy.seldon.io" class="md-tabs__link">Seldon Enterprise Platform</a></li>
+            
+            <li class="md-tabs__item"><a href="https://github.com/SeldonIO/seldon-deploy-sdk#seldon-deploy-sdk" class="md-tabs__link">Seldon Enterprise Platform SDK</a></li>
+          <li class="md-tabs__item"><a href="../nav/configuration.html" class="md-tabs__link">配置</a></li>
+          <li class="md-tabs__item"><a href="../nav/config/deployments.html" class="md-tabs__link">部署</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../index.html" title="seldon-core documentation" class="md-nav__button md-logo">
+      
+        <img src="../_static/" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../index.html"
+       title="seldon-core documentation">Seldon Core Documentation</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/getting-started.html" class="md-nav__link">开始</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/concepts.html" class="md-nav__link">概念</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/configuration.html" class="md-nav__link">配置</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/installation.html" class="md-nav__link">安装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/deployments.html" class="md-nav__link">发布</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="deploying.html" class="md-nav__link">部署技术</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../graph/protocols.html" class="md-nav__link">支持的 API 协议</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> 测试模型节点 </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">测试模型节点</a>
+      
+        
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#workflow-serving--page-root" class="md-nav__link">模型 Endpoints 测试</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#testing" class="md-nav__link">Testing 选项</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#python" class="md-nav__link">直接用 Python 客户端运行您的模型</a>
+        </li>
+        <li class="md-nav__item"><a href="#docker" class="md-nav__link">以 Docker 容器方式运行模型</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#k8s" class="md-nav__link">在K8s中测试模型</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#swagger-ui" class="md-nav__link">生成的 Swagger UI</a>
+        </li>
+        <li class="md-nav__item"><a href="#ambassador" class="md-nav__link">Ambassador</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#ambassador-rest" class="md-nav__link">Ambassador REST</a>
+        </li>
+        <li class="md-nav__item"><a href="#ambassador-grpc" class="md-nav__link">Ambassador gRPC</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#istio" class="md-nav__link">Istio</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#istio-rest" class="md-nav__link">Istio REST</a>
+        </li>
+        <li class="md-nav__item"><a href="#istio-grpc" class="md-nav__link">Istio gRPC</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id1" class="md-nav__link">客户端实现</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#curl" class="md-nav__link">Curl 示例</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">Ambassador REST</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#openapi-rest" class="md-nav__link">OpenAPI REST</a>
+        </li>
+        <li class="md-nav__item"><a href="#grpc" class="md-nav__link">gRPC</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id3" class="md-nav__link">PYTHON 客户端参考</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/workflow/serving.md.txt">Show Source</a> </li>
+
+  </ul>
+</nav>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../graph/scaling.html" class="md-nav__link">扩缩容</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../reference/apis/metadata.html" class="md-nav__link">模型元数据</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../graph/disruption-budgets.html" class="md-nav__link">熔断</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../graph/graph-modes.html" class="md-nav__link">图部署选项</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../rollouts/abtests.html" class="md-nav__link">AB 测试和渐进式部署</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="troubleshooting.html" class="md-nav__link">部署故障排除</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/servers.html" class="md-nav__link">服务器</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/routing.html" class="md-nav__link">路由</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/wrappers.html" class="md-nav__link">语言封装和 SDK</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/integrations.html" class="md-nav__link">集成</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/tutorials.html" class="md-nav__link">教程</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/reference.html" class="md-nav__link">参考</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/contributing.html" class="md-nav__link">贡献</a>
+      
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#workflow-serving--page-root" class="md-nav__link">模型 Endpoints 测试</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#testing" class="md-nav__link">Testing 选项</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#python" class="md-nav__link">直接用 Python 客户端运行您的模型</a>
+        </li>
+        <li class="md-nav__item"><a href="#docker" class="md-nav__link">以 Docker 容器方式运行模型</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#k8s" class="md-nav__link">在K8s中测试模型</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#swagger-ui" class="md-nav__link">生成的 Swagger UI</a>
+        </li>
+        <li class="md-nav__item"><a href="#ambassador" class="md-nav__link">Ambassador</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#ambassador-rest" class="md-nav__link">Ambassador REST</a>
+        </li>
+        <li class="md-nav__item"><a href="#ambassador-grpc" class="md-nav__link">Ambassador gRPC</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#istio" class="md-nav__link">Istio</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#istio-rest" class="md-nav__link">Istio REST</a>
+        </li>
+        <li class="md-nav__item"><a href="#istio-grpc" class="md-nav__link">Istio gRPC</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id1" class="md-nav__link">客户端实现</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#curl" class="md-nav__link">Curl 示例</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">Ambassador REST</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#openapi-rest" class="md-nav__link">OpenAPI REST</a>
+        </li>
+        <li class="md-nav__item"><a href="#grpc" class="md-nav__link">gRPC</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id3" class="md-nav__link">PYTHON 客户端参考</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/workflow/serving.md.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <section id="endpoints">
+<h1 id="workflow-serving--page-root">模型 Endpoints 测试<a class="headerlink" href="#workflow-serving--page-root" title="Permalink to this heading">¶</a></h1>
+<p>为了测试组件，可使用 CURL/grpCURL 或者相似工具，或者我们的 Python SeldonClient SDK。</p>
+<section id="testing">
+<h2 id="testing">Testing 选项<a class="headerlink" href="#testing" title="Permalink to this heading">¶</a></h2>
+<p>在部署模型之前，有几个选项用于测试模型。</p>
+<ul class="simple">
+<li><p>直接用 Python 客户端运行模型</p></li>
+<li><p>以 Docker 容器方式运行模型</p>
+<ul>
+<li><p>此法可用于所有封装语言（除却预封装推理服务）</p></li>
+</ul>
+</li>
+<li><p>在 K8s 开发环境运行 SeldonDeployment，比如 KIND，或者 minikube</p>
+<ul>
+<li><p>此法可用于所有模型</p></li>
+<li><p>可通过生成的文档 UI, Python 客户端或者 CLI 工具发送请求</p></li>
+</ul>
+</li>
+</ul>
+<section id="python">
+<h3 id="python">直接用 Python 客户端运行您的模型<a class="headerlink" href="#python" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>只能用于使用 Python 封装语言的模型</p></li>
+</ul>
+<p>创建带有逻辑的 Python 模型文件 <code class="docutils literal notranslate"><span class="pre">MyModel.py</span></code>：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyModel</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s2">"hello"</span><span class="p">,</span> <span class="s2">"world"</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>您可以通过运行 Python 模块提供的微服务 CLI 来测试您的模型 <a class="reference external" href="../python/python_module.xhtml">Python 模块</a></p>
+<p>安装 Python seldon-core 模块后，可通过命令运行：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">&gt; seldon-core-microservice MyModel REST --service-type MODEL</span>
+
+<span class="go">2020-03-23 16:59:17,320 - seldon_core.microservice:main:190 - INFO:  Starting microservice.py:main</span>
+<span class="go">2020-03-23 16:59:17,322 - seldon_core.microservice:main:246 - INFO:  Parse JAEGER_EXTRA_TAGS []</span>
+<span class="go">2020-03-23 16:59:17,322 - seldon_core.microservice:main:257 - INFO:  Annotations: {}</span>
+<span class="go">2020-03-23 16:59:17,322 - seldon_core.microservice:main:261 - INFO:  Importing Model</span>
+<span class="go">hello world</span>
+<span class="go">2020-03-23 16:59:17,323 - seldon_core.microservice:main:325 - INFO:  REST microservice running on port 5000</span>
+<span class="go">2020-03-23 16:59:17,323 - seldon_core.microservice:main:369 - INFO:  Starting servers</span>
+<span class="go"> * Serving Flask app "seldon_core.wrapper" (lazy loading)</span>
+<span class="go"> * Environment: production</span>
+<span class="go">   WARNING: This is a development server. Do not use it in a production deployment.</span>
+<span class="go">   Use a production WSGI server instead.</span>
+<span class="go"> * Debug mode: off</span>
+<span class="go">2020-03-23 16:59:17,366 - werkzeug:_log:122 - INFO:   * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)</span>
+</pre></div>
+</div>
+<p>现在，我们的模型微服务正在运行，我们可以使用 curl 发送请求：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">&gt; curl -X POST \</span>
+<span class="go">&gt;     -H 'Content-Type: application/json' \</span>
+<span class="go">&gt;     -d '{"data": { "ndarray": [[1,2,3,4]]}}' \</span>
+<span class="go">&gt;         http://localhost:5000/api/v1.0/predictions</span>
+
+<span class="go">{"data":{"names":[],"ndarray":["hello","world"]},"meta":{}}</span>
+</pre></div>
+</div>
+<p>我们可以看到模型通过 API 返回的输出。</p>
+<p>您也可以使用 <a class="reference external" href="../python/seldon_client.xhtml">Python 客户端</a> 发送请求。</p>
+</section>
+<section id="docker">
+<h3 id="docker">以 Docker 容器方式运行模型<a class="headerlink" href="#docker" title="Permalink to this heading">¶</a></h3>
+<p>如果以其他封装语言创建模型，可在本地 Docker 客户端运行 <a class="reference external" href="../wrappers/language_wrappers.xhtml">S2I</a> 构建的模型。</p>
+<p>为此，您只需使用以下命令运行 Docker 客户端：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">run</span> <span class="o">--</span><span class="n">rm</span> <span class="o">--</span><span class="n">name</span> <span class="n">mymodel</span> <span class="o">-</span><span class="n">p</span> <span class="mi">5000</span><span class="p">:</span><span class="mi">5000</span> <span class="n">mymodel</span><span class="p">:</span><span class="mf">0.1</span>
+</pre></div>
+</div>
+<p>模型将运行在端口 5000 上，因此我们可以使用 CURL 发送请求：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">&gt; curl -X POST \</span>
+<span class="go">&gt;     -H 'Content-Type: application/json' \</span>
+<span class="go">&gt;     -d '{"data": { "ndarray": [[1,2,3,4]]}}' \</span>
+<span class="go">&gt;         http://localhost:5000/api/v1.0/predictions</span>
+
+<span class="go">{"data":{"names":[],"ndarray":["hello","world"]},"meta":{}}</span>
+</pre></div>
+</div>
+<p>您也可以使用 <a class="reference external" href="../python/seldon_client.xhtml">Python 客户端</a> 发送请求。</p>
+</section>
+</section>
+<section id="k8s">
+<h2 id="k8s">在K8s中测试模型<a class="headerlink" href="#k8s" title="Permalink to this heading">¶</a></h2>
+<p>对于 Kubernetes，您可以按照文档的安装部分设置一个集群。</p>
+<p>您也可以使用本地客户端（如 KIND，我们使用 Kind 开发并进行 e2e 测试）来运行 Seldon。</p>
+<p>一旦通过 Kind 或自建 k8s 集群完成，你需要为集群创建 <a class="reference external" href="install.xhtml">Ingress （如安装文档中所述）</a> 支持，只会，可以向模型发送请求。</p>
+<p>根据你 Seldon Core 设定的 Ambassador 或 API 网关，可以通过以下讨论方式访问模型：</p>
+<section id="swagger-ui">
+<h3 id="swagger-ui">生成的 Swagger UI<a class="headerlink" href="#swagger-ui" title="Permalink to this heading">¶</a></h3>
+<p>每个部署在 K8s 集群后的模型都会暴露标准化的用户界面，以便使用我们的 OpenAPI 模式发送请求。</p>
+<p>通过浏览器访问 <code class="docutils literal notranslate"><span class="pre">http://&lt;ingress_url&gt;/seldon/&lt;namespace&gt;/&lt;model-name&gt;/api/v1.0/doc/</span></code> 节点来发送请求。</p>
+<a class="reference external image-reference" href="https://raw.githubusercontent.com/SeldonIO/seldon-core/master/doc/source/images/rest-openapi.jpg"><img alt="" src="https://raw.githubusercontent.com/SeldonIO/seldon-core/master/doc/source/images/rest-openapi.jpg"/></a>
+</section>
+<section id="ambassador">
+<h3 id="ambassador">Ambassador<a class="headerlink" href="#ambassador" title="Permalink to this heading">¶</a></h3>
+<section id="ambassador-rest">
+<h4 id="ambassador-rest">Ambassador REST<a class="headerlink" href="#ambassador-rest" title="Permalink to this heading">¶</a></h4>
+<p>假设名为 <code class="docutils literal notranslate"><span class="pre">&lt;deploymentName&gt;</span></code> 的 Seldon deployment 在命名空间 <code class="docutils literal notranslate"><span class="pre">&lt;namespace&gt;</span></code> 通过 Ambassador 中暴露在 <code class="docutils literal notranslate"><span class="pre">&lt;ambassadorEndpoint&gt;</span></code> 节点：</p>
+<ul class="simple">
+<li><p>REST节点暴露为 : <code class="docutils literal notranslate"><span class="pre">http://&lt;ambassadorEndpoint&gt;/seldon/&lt;namespace&gt;/&lt;deploymentName&gt;/api/v1.0/predictions</span></code></p></li>
+</ul>
+</section>
+<section id="ambassador-grpc">
+<h4 id="ambassador-grpc">Ambassador gRPC<a class="headerlink" href="#ambassador-grpc" title="Permalink to this heading">¶</a></h4>
+<p>假设名为 <code class="docutils literal notranslate"><span class="pre">&lt;deploymentName&gt;</span></code> 的 Seldon deployment 通过 Ambassador 暴露在 <code class="docutils literal notranslate"><span class="pre">&lt;ambassadorEndpoint&gt;</span></code>：</p>
+<ul class="simple">
+<li><p>gRPC 节点暴露为 <code class="docutils literal notranslate"><span class="pre">&lt;ambassadorEndpoint&gt;</span></code> ，你需要在请求中设置 metadata 头信息</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">seldon</span></code> 参数和 <code class="docutils literal notranslate"><span class="pre">&lt;deploymentName&gt;</span></code> 值</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">namespace</span></code> 参数和 <code class="docutils literal notranslate"><span class="pre">&lt;namespace&gt;</span></code> 值</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="istio">
+<h3 id="istio">Istio<a class="headerlink" href="#istio" title="Permalink to this heading">¶</a></h3>
+<section id="istio-rest">
+<h4 id="istio-rest">Istio REST<a class="headerlink" href="#istio-rest" title="Permalink to this heading">¶</a></h4>
+<p>假设名为 <code class="docutils literal notranslate"><span class="pre">&lt;deploymentName&gt;</span></code> 的 Seldon deployment，通过命名空间 <code class="docutils literal notranslate"><span class="pre">&lt;namespace&gt;</span></code> 通过暴露在 istio 网关 <code class="docutils literal notranslate"><span class="pre">&lt;istioGateway&gt;</span></code>：</p>
+<ul class="simple">
+<li><p>REST 节点暴露为: <code class="docutils literal notranslate"><span class="pre">http://&lt;istioGateway&gt;/seldon/&lt;namespace&gt;/&lt;deploymentName&gt;/api/v1.0/predictions</span></code></p></li>
+</ul>
+</section>
+<section id="istio-grpc">
+<h4 id="istio-grpc">Istio gRPC<a class="headerlink" href="#istio-grpc" title="Permalink to this heading">¶</a></h4>
+<p>假设名为 <code class="docutils literal notranslate"><span class="pre">&lt;deploymentName&gt;</span></code> 的 Seldon deployment 在命名空间 <code class="docutils literal notranslate"><span class="pre">&lt;namespace&gt;</span></code> 通过 istio 网关 <code class="docutils literal notranslate"><span class="pre">&lt;istioGateway&gt;</span></code> 暴露:</p>
+<ul class="simple">
+<li><p>gRPC 节点暴露为 <code class="docutils literal notranslate"><span class="pre">&lt;istioGateway&gt;</span></code> ，你需要在请求中设置 metadata 头信息</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">seldon</span></code> 参数和 <code class="docutils literal notranslate"><span class="pre">&lt;deploymentName&gt;</span></code> 值</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">namespace</span></code> 参数和 <code class="docutils literal notranslate"><span class="pre">&lt;namespace&gt;</span></code> 值</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="id1">
+<h3 id="id1">客户端实现<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
+<section id="curl">
+<h4 id="curl">Curl 示例<a class="headerlink" href="#curl" title="Permalink to this heading">¶</a></h4>
+<section id="id2">
+<h5 id="id2">Ambassador REST<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h5>
+<p>假设 SeldonDeployment <code class="docutils literal notranslate"><span class="pre">mymodel</span></code> 通过 Ambassador 暴露 0.0.0.0:8003:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-v<span class="w"> </span><span class="m">0</span>.0.0.0:8003/seldon/mymodel/api/v1.0/predictions<span class="w"> </span>-d<span class="w"> </span><span class="s1">'{"data":{"names":["a","b"],"tensor":{"shape":[2,2],"values":[0,0,1,1]}}}'</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="openapi-rest">
+<h4 id="openapi-rest">OpenAPI REST<a class="headerlink" href="#openapi-rest" title="Permalink to this heading">¶</a></h4>
+<p>使用 Swagger 信息请参考 <a class="reference external" href="../reference/apis/openapi.html">OpenAPI 定义</a>.</p>
+</section>
+<section id="grpc">
+<h4 id="grpc">gRPC<a class="headerlink" href="#grpc" title="Permalink to this heading">¶</a></h4>
+<p>使用 <a class="reference external" href="https://grpc.io/">gRPC</a> 工具在你所选的语言中，请参考 <a class="reference external" href="../reference/apis/prediction.xhtml">proto buffer 定义</a></p>
+<section id="id3">
+<h5 id="id3">PYTHON 客户端参考<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h5>
+<p>使用我们的 <a class="reference external" href="../python/python_module.xhtml">python 客户端参考</a>，他是 <code class="docutils literal notranslate"><span class="pre">seldon-core</span></code> 模块的一部分。</p>
+</section>
+</section>
+</section>
+</section>
+</section>
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="../graph/protocols.html" title="协议"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> "Previous" </span> 协议 </span>
+              </div>
+            </a>
+          
+          
+            <a href="../graph/scaling.html" title="扩缩容"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> "Next" </span> 扩缩容 </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2024, Seldon Technologies Ltd.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

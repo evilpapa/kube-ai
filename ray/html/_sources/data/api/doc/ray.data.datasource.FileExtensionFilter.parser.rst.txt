@@ -1,0 +1,6 @@
+ray.data.datasource.FileExtensionFilter.parser
+==============================================
+
+.. currentmodule:: ray.data.datasource
+
+.. autoproperty:: FileExtensionFilter.parser

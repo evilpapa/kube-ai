@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../_static/javascripts/modernizr.js"></script>
+  
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-54780881-2"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-54780881-2');
+</script>
+  
+  
+    <title>Service Orchestrator Benchmark Tests &#8212; seldon-core  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=83e35b93" />
+    <link rel="stylesheet" type="text/css" href="../_static/material.css?v=79c92029" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/rtd_sphinx_search.min.css?v=e72958e9" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+    <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=15a8f09d" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/rtd_search_config.js?v=b0596c34"></script>
+    <script src="../_static/js/rtd_sphinx_search.min.js?v=43f26ba4"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Tensorflow Load and Benchmark Tests" href="bench_tensorflow.html" />
+    <link rel="prev" title="Upgrading from 1.1 to 1.2 Volume Patch" href="patch_1_2.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=indigo data-md-color-accent=teal>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#examples/bench_svcOrch" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../index.html" title="seldon-core  documentation"
+           class="md-header-nav__button md-logo">
+          
+            &nbsp;
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">Seldon Core Documentation</span>
+          <span class="md-header-nav__topic"> Service Orchestrator Benchmark Tests </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder=""Search""
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+            
+            <li class="md-tabs__item"><a href="/" class="md-tabs__link">🚀 Our Other Projects & Products:</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi/en/stable/" class="md-tabs__link">Alibi Explain</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi-detect/en/stable/" class="md-tabs__link">Alibi Detect</a></li>
+            
+            <li class="md-tabs__item"><a href="https://mlserver.readthedocs.io/en/latest/" class="md-tabs__link">MLServer</a></li>
+            
+            <li class="md-tabs__item"><a href="https://tempo.readthedocs.io/en/latest/" class="md-tabs__link">Tempo SDK</a></li>
+            
+            <li class="md-tabs__item"><a href="https://deploy.seldon.io" class="md-tabs__link">Seldon Enterprise Platform</a></li>
+            
+            <li class="md-tabs__item"><a href="https://github.com/SeldonIO/seldon-deploy-sdk#seldon-deploy-sdk" class="md-tabs__link">Seldon Enterprise Platform SDK</a></li>
+          <li class="md-tabs__item"><a href="../nav/tutorials.html" class="md-tabs__link">教程</a></li>
+          <li class="md-tabs__item"><a href="notebooks.html" class="md-tabs__link">笔记本</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../index.html" title="seldon-core documentation" class="md-nav__button md-logo">
+      
+        <img src="../_static/" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../index.html"
+       title="seldon-core documentation">Seldon Core Documentation</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/getting-started.html" class="md-nav__link">开始</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/concepts.html" class="md-nav__link">概念</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/configuration.html" class="md-nav__link">配置</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/tutorials.html" class="md-nav__link">教程</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html" class="md-nav__link">笔记本</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#seldon-core" class="md-nav__link">Seldon Core 设置</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id2" class="md-nav__link">预包装推理服务示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#python" class="md-nav__link">Python 语言封装示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id3" class="md-nav__link">专门的框架示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id4" class="md-nav__link">孵化项目示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id5" class="md-nav__link">基于云的基础示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id6" class="md-nav__link">高级机器学习监控</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id7" class="md-nav__link">Seldon Core 批处理</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#mlops" class="md-nav__link">MLOps: 扩展、监控和可观察性</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id8" class="md-nav__link">生产配置及实现</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#ab" class="md-nav__link">AB 测试及渐进式部署</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id9" class="md-nav__link">复杂图示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id10" class="md-nav__link">入口</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id11" class="md-nav__link">基础设施</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id12" class="md-nav__link">基准测试和负载测试</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id13" class="md-nav__link">升级示例</a>
+      
+    
+    </li></ul>
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/reference.html" class="md-nav__link">参考</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/contributing.html" class="md-nav__link">贡献</a>
+      
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#examples-bench-svcorch--page-root" class="md-nav__link">Service Orchestrator Benchmark Tests</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#Put-Taints-Nodes" class="md-nav__link">Put Taints Nodes</a>
+        </li>
+        <li class="md-nav__item"><a href="#Tensorflow-Flowers-Model---Latency-Test" class="md-nav__link">Tensorflow Flowers Model - Latency Test</a>
+        </li>
+        <li class="md-nav__item"><a href="#Tensorflow-Flowers-Model---No-executor---Latency-Test" class="md-nav__link">Tensorflow Flowers Model - No executor - Latency Test</a>
+        </li>
+        <li class="md-nav__item"><a href="#GRPC-Tensorflow-Flowers-Model---Latency-Test" class="md-nav__link">GRPC Tensorflow Flowers Model - Latency Test</a>
+        </li>
+        <li class="md-nav__item"><a href="#GRPC-Tensorflow-Flowers-Model---No-executor---Latency-Test" class="md-nav__link">GRPC Tensorflow Flowers Model - No executor - Latency Test</a>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/examples/bench_svcOrch.nblink.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <div class="admonition note">
+<p>This page was generated from <a class="reference external" href="https://github.com/SeldonIO/seldon-core/blob/e665e4994eabf83fb43c68a5f85e96d5c45e91b5/testing/benchmarking/svcOrch/svcOrch.ipynb">testing/benchmarking/svcOrch/svcOrch.ipynb</a>.</p>
+</div>
+<section id="Service-Orchestrator-Benchmark-Tests">
+<h1 id="examples-bench-svcorch--page-root">Service Orchestrator Benchmark Tests<a class="headerlink" href="#examples-bench-svcorch--page-root" title="Permalink to this heading">¶</a></h1>
+<p>Using a pretrained model for <a class="reference external" href="https://www.tensorflow.org/datasets/catalog/tf_flowers">Tensorflow flowers dataset</a></p>
+<ul class="simple">
+<li><p>Tests the extra latency added by the svcOrch for a medium size image (224x224) classification model.</p></li>
+</ul>
+<p>## Setup</p>
+<ul class="simple">
+<li><p>Create a 3 node cluster</p></li>
+<li><p>Install Seldon Core</p></li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>create<span class="w"> </span>namespace<span class="w"> </span>seldon
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>config<span class="w"> </span>set-context<span class="w"> </span><span class="k">$(</span>kubectl<span class="w"> </span>config<span class="w"> </span>current-context<span class="k">)</span><span class="w"> </span>--namespace<span class="o">=</span>seldon
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"../"</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">vegeta_utils</span> <span class="kn">import</span> <span class="o">*</span>
+</pre></div>
+</div>
+</div>
+<section id="Put-Taints-Nodes">
+<h2 id="Put-Taints-Nodes">Put Taints Nodes<a class="headerlink" href="#Put-Taints-Nodes" title="Permalink to this heading">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">raw</span> <span class="o">=</span> <span class="o">!</span>kubectl<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.items[0].metadata.name}'</span>
+<span class="n">firstNode</span> <span class="o">=</span> <span class="n">raw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">raw</span> <span class="o">=</span> <span class="o">!</span>kubectl<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.items[1].metadata.name}'</span>
+<span class="n">secondNode</span> <span class="o">=</span> <span class="n">raw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">raw</span> <span class="o">=</span> <span class="o">!</span>kubectl<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.items[2].metadata.name}'</span>
+<span class="n">thirdNode</span> <span class="o">=</span> <span class="n">raw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="o">!</span>kubectl<span class="w"> </span>taint<span class="w"> </span>nodes<span class="w"> </span><span class="s1">'{firstNode}'</span><span class="w"> </span><span class="nv">loadtester</span><span class="o">=</span>active:NoSchedule
+<span class="o">!</span>kubectl<span class="w"> </span>taint<span class="w"> </span>nodes<span class="w"> </span><span class="s1">'{secondNode}'</span><span class="w"> </span><span class="nv">model</span><span class="o">=</span>active:NoSchedule
+<span class="o">!</span>kubectl<span class="w"> </span>taint<span class="w"> </span>nodes<span class="w"> </span><span class="s1">'{thirdNode}'</span><span class="w"> </span><span class="nv">model</span><span class="o">=</span>active:NoSchedule
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+error: Node pool-triv8uq93-3oaz0 already has loadtester taint(s) with same effect(s) and --overwrite is false
+error: Node pool-triv8uq93-3oaz1 already has model taint(s) with same effect(s) and --overwrite is false
+error: Node pool-triv8uq93-3oazd already has model taint(s) with same effect(s) and --overwrite is false
+</pre></div></div>
+</div>
+</section>
+<section id="Tensorflow-Flowers-Model---Latency-Test">
+<h2 id="Tensorflow-Flowers-Model---Latency-Test">Tensorflow Flowers Model - Latency Test<a class="headerlink" href="#Tensorflow-Flowers-Model---Latency-Test" title="Permalink to this heading">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%writefile</span> tf_flowers.yaml
+<span class="n">apiVersion</span><span class="p">:</span> <span class="n">machinelearning</span><span class="o">.</span><span class="n">seldon</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">v1alpha2</span>
+<span class="n">kind</span><span class="p">:</span> <span class="n">SeldonDeployment</span>
+<span class="n">metadata</span><span class="p">:</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">tf</span><span class="o">-</span><span class="n">flowers</span>
+<span class="n">spec</span><span class="p">:</span>
+  <span class="n">protocol</span><span class="p">:</span> <span class="n">tensorflow</span>
+  <span class="n">transport</span><span class="p">:</span> <span class="n">rest</span>
+  <span class="n">predictors</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">graph</span><span class="p">:</span>
+      <span class="n">implementation</span><span class="p">:</span> <span class="n">TENSORFLOW_SERVER</span>
+      <span class="n">modelUri</span><span class="p">:</span> <span class="n">gs</span><span class="p">:</span><span class="o">//</span><span class="n">kfserving</span><span class="o">-</span><span class="n">samples</span><span class="o">/</span><span class="n">models</span><span class="o">/</span><span class="n">tensorflow</span><span class="o">/</span><span class="n">flowers</span>
+      <span class="n">name</span><span class="p">:</span>  <span class="n">flowers</span>
+      <span class="n">parameters</span><span class="p">:</span>
+        <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">model_name</span>
+          <span class="nb">type</span><span class="p">:</span> <span class="n">STRING</span>
+          <span class="n">value</span><span class="p">:</span> <span class="n">flowers</span>
+    <span class="n">componentSpecs</span><span class="p">:</span>
+    <span class="o">-</span> <span class="n">spec</span><span class="p">:</span>
+        <span class="n">containers</span><span class="p">:</span>
+        <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">flowers</span>
+          <span class="n">resources</span><span class="p">:</span>
+            <span class="n">requests</span><span class="p">:</span>
+              <span class="n">cpu</span><span class="p">:</span> <span class="s1">'2'</span>
+        <span class="n">tolerations</span><span class="p">:</span>
+        <span class="o">-</span> <span class="n">key</span><span class="p">:</span> <span class="n">model</span>
+          <span class="n">operator</span><span class="p">:</span> <span class="n">Exists</span>
+          <span class="n">effect</span><span class="p">:</span> <span class="n">NoSchedule</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">default</span>
+    <span class="n">replicas</span><span class="p">:</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Overwriting tf_flowers.yaml
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">run_model</span><span class="p">(</span><span class="s2">"tf_flowers.yaml"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Available with 1 pods
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">run_vegeta_test</span><span class="p">(</span><span class="s2">"tf_vegeta_cfg.yaml"</span><span class="p">,</span> <span class="s2">"vegeta_1worker.yaml"</span><span class="p">,</span> <span class="s2">"60m"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">mean_with_executor</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s2">"latencies"</span><span class="p">][</span><span class="s2">"mean"</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{
+    "latencies": {
+        "total": 1200086051040,
+        "mean": 82639171,
+        "50th": 79832732,
+        "90th": 95849466,
+        "95th": 104009039,
+        "99th": 128516774,
+        "max": 964378237,
+        "min": 58091922
+    },
+    "bytes_in": {
+        "total": 3165796,
+        "mean": 218
+    },
+    "bytes_out": {
+        "total": 234893350,
+        "mean": 16175
+    },
+    "earliest": "2020-07-12T15:59:55.298435559Z",
+    "latest": "2020-07-12T16:19:55.34937906Z",
+    "end": "2020-07-12T16:19:55.42413935Z",
+    "duration": 1200050943501,
+    "wait": 74760290,
+    "requests": 14522,
+    "rate": 12.10115293741936,
+    "throughput": 12.100399111632546,
+    "success": 1,
+    "status_codes": {
+        "200": 14522
+    },
+    "errors": []
+}
+</pre></div></div>
+</div>
+</section>
+<section id="Tensorflow-Flowers-Model---No-executor---Latency-Test">
+<h2 id="Tensorflow-Flowers-Model---No-executor---Latency-Test">Tensorflow Flowers Model - No executor - Latency Test<a class="headerlink" href="#Tensorflow-Flowers-Model---No-executor---Latency-Test" title="Permalink to this heading">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%writefile</span> tf_flowers.yaml
+<span class="n">apiVersion</span><span class="p">:</span> <span class="n">machinelearning</span><span class="o">.</span><span class="n">seldon</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">v1alpha2</span>
+<span class="n">kind</span><span class="p">:</span> <span class="n">SeldonDeployment</span>
+<span class="n">metadata</span><span class="p">:</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">tf</span><span class="o">-</span><span class="n">flowers</span>
+<span class="n">spec</span><span class="p">:</span>
+  <span class="n">protocol</span><span class="p">:</span> <span class="n">tensorflow</span>
+  <span class="n">transport</span><span class="p">:</span> <span class="n">rest</span>
+  <span class="n">predictors</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">graph</span><span class="p">:</span>
+      <span class="n">implementation</span><span class="p">:</span> <span class="n">TENSORFLOW_SERVER</span>
+      <span class="n">modelUri</span><span class="p">:</span> <span class="n">gs</span><span class="p">:</span><span class="o">//</span><span class="n">kfserving</span><span class="o">-</span><span class="n">samples</span><span class="o">/</span><span class="n">models</span><span class="o">/</span><span class="n">tensorflow</span><span class="o">/</span><span class="n">flowers</span>
+      <span class="n">name</span><span class="p">:</span>  <span class="n">flowers</span>
+      <span class="n">parameters</span><span class="p">:</span>
+        <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">model_name</span>
+          <span class="nb">type</span><span class="p">:</span> <span class="n">STRING</span>
+          <span class="n">value</span><span class="p">:</span> <span class="n">flowers</span>
+    <span class="n">annotations</span><span class="p">:</span>
+        <span class="n">seldon</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">no</span><span class="o">-</span><span class="n">engine</span><span class="p">:</span> <span class="s2">"true"</span>
+    <span class="n">componentSpecs</span><span class="p">:</span>
+    <span class="o">-</span> <span class="n">spec</span><span class="p">:</span>
+        <span class="n">containers</span><span class="p">:</span>
+        <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">flowers</span>
+          <span class="n">resources</span><span class="p">:</span>
+            <span class="n">requests</span><span class="p">:</span>
+              <span class="n">cpu</span><span class="p">:</span> <span class="s1">'2'</span>
+        <span class="n">tolerations</span><span class="p">:</span>
+        <span class="o">-</span> <span class="n">key</span><span class="p">:</span> <span class="n">model</span>
+          <span class="n">operator</span><span class="p">:</span> <span class="n">Exists</span>
+          <span class="n">effect</span><span class="p">:</span> <span class="n">NoSchedule</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">default</span>
+    <span class="n">replicas</span><span class="p">:</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Overwriting tf_flowers.yaml
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">run_model</span><span class="p">(</span><span class="s2">"tf_flowers.yaml"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Available with 1 pods
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">run_vegeta_test</span><span class="p">(</span><span class="s2">"tf_standalone_vegeta_cfg.yaml"</span><span class="p">,</span> <span class="s2">"vegeta_1worker.yaml"</span><span class="p">,</span> <span class="s2">"60m"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">mean_no_executor</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s2">"latencies"</span><span class="p">][</span><span class="s2">"mean"</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{
+    "latencies": {
+        "total": 1200089018347,
+        "mean": 73670289,
+        "50th": 73129037,
+        "90th": 81823849,
+        "95th": 84928884,
+        "99th": 93248220,
+        "max": 976431685,
+        "min": 53958421
+    },
+    "bytes_in": {
+        "total": 3551220,
+        "mean": 218
+    },
+    "bytes_out": {
+        "total": 263490750,
+        "mean": 16175
+    },
+    "earliest": "2020-07-12T16:21:00.12358772Z",
+    "latest": "2020-07-12T16:41:00.180620249Z",
+    "end": "2020-07-12T16:41:00.255483814Z",
+    "duration": 1200057032529,
+    "wait": 74863565,
+    "requests": 16290,
+    "rate": 13.574354850177793,
+    "throughput": 13.573508089417606,
+    "success": 1,
+    "status_codes": {
+        "200": 16290
+    },
+    "errors": []
+}
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">diff</span> <span class="o">=</span> <span class="p">(</span><span class="n">mean_with_executor</span> <span class="o">-</span> <span class="n">mean_no_executor</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1e6</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Diff in ms"</span><span class="p">,</span> <span class="n">diff</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Diff in ms 8.968882
+</pre></div></div>
+</div>
+</section>
+<section id="GRPC-Tensorflow-Flowers-Model---Latency-Test">
+<h2 id="GRPC-Tensorflow-Flowers-Model---Latency-Test">GRPC Tensorflow Flowers Model - Latency Test<a class="headerlink" href="#GRPC-Tensorflow-Flowers-Model---Latency-Test" title="Permalink to this heading">¶</a></h2>
+<p>First create the binary proto for the flowers payload</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>python<span class="w"> </span>../tf_proto_save.py<span class="w"> </span>--model<span class="w"> </span>flowers<span class="w"> </span>--input_path<span class="w"> </span>flowers.json<span class="w"> </span>--output_path<span class="w"> </span>flowers.bin
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+/home/clive/anaconda3/envs/seldon-core/lib/python3.6/site-packages/tensorflow/python/framework/dtypes.py:516: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint8 = np.dtype([("qint8", np.int8, 1)])
+/home/clive/anaconda3/envs/seldon-core/lib/python3.6/site-packages/tensorflow/python/framework/dtypes.py:517: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_quint8 = np.dtype([("quint8", np.uint8, 1)])
+/home/clive/anaconda3/envs/seldon-core/lib/python3.6/site-packages/tensorflow/python/framework/dtypes.py:518: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint16 = np.dtype([("qint16", np.int16, 1)])
+/home/clive/anaconda3/envs/seldon-core/lib/python3.6/site-packages/tensorflow/python/framework/dtypes.py:519: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_quint16 = np.dtype([("quint16", np.uint16, 1)])
+/home/clive/anaconda3/envs/seldon-core/lib/python3.6/site-packages/tensorflow/python/framework/dtypes.py:520: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint32 = np.dtype([("qint32", np.int32, 1)])
+/home/clive/anaconda3/envs/seldon-core/lib/python3.6/site-packages/tensorflow/python/framework/dtypes.py:525: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  np_resource = np.dtype([("resource", np.ubyte, 1)])
+/home/clive/anaconda3/envs/seldon-core/lib/python3.6/site-packages/tensorboard/compat/tensorflow_stub/dtypes.py:541: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint8 = np.dtype([("qint8", np.int8, 1)])
+/home/clive/anaconda3/envs/seldon-core/lib/python3.6/site-packages/tensorboard/compat/tensorflow_stub/dtypes.py:542: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_quint8 = np.dtype([("quint8", np.uint8, 1)])
+/home/clive/anaconda3/envs/seldon-core/lib/python3.6/site-packages/tensorboard/compat/tensorflow_stub/dtypes.py:543: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint16 = np.dtype([("qint16", np.int16, 1)])
+/home/clive/anaconda3/envs/seldon-core/lib/python3.6/site-packages/tensorboard/compat/tensorflow_stub/dtypes.py:544: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_quint16 = np.dtype([("quint16", np.uint16, 1)])
+/home/clive/anaconda3/envs/seldon-core/lib/python3.6/site-packages/tensorboard/compat/tensorflow_stub/dtypes.py:545: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint32 = np.dtype([("qint32", np.int32, 1)])
+/home/clive/anaconda3/envs/seldon-core/lib/python3.6/site-packages/tensorboard/compat/tensorflow_stub/dtypes.py:550: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  np_resource = np.dtype([("resource", np.ubyte, 1)])
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%writefile</span> tf_flowers.yaml
+<span class="n">apiVersion</span><span class="p">:</span> <span class="n">machinelearning</span><span class="o">.</span><span class="n">seldon</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">v1alpha2</span>
+<span class="n">kind</span><span class="p">:</span> <span class="n">SeldonDeployment</span>
+<span class="n">metadata</span><span class="p">:</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">tf</span><span class="o">-</span><span class="n">flowers</span>
+<span class="n">spec</span><span class="p">:</span>
+  <span class="n">protocol</span><span class="p">:</span> <span class="n">tensorflow</span>
+  <span class="n">transport</span><span class="p">:</span> <span class="n">grpc</span>
+  <span class="n">predictors</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">graph</span><span class="p">:</span>
+      <span class="n">implementation</span><span class="p">:</span> <span class="n">TENSORFLOW_SERVER</span>
+      <span class="n">modelUri</span><span class="p">:</span> <span class="n">gs</span><span class="p">:</span><span class="o">//</span><span class="n">kfserving</span><span class="o">-</span><span class="n">samples</span><span class="o">/</span><span class="n">models</span><span class="o">/</span><span class="n">tensorflow</span><span class="o">/</span><span class="n">flowers</span>
+      <span class="n">name</span><span class="p">:</span>  <span class="n">flowers</span>
+      <span class="n">parameters</span><span class="p">:</span>
+        <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">model_name</span>
+          <span class="nb">type</span><span class="p">:</span> <span class="n">STRING</span>
+          <span class="n">value</span><span class="p">:</span> <span class="n">flowers</span>
+    <span class="n">componentSpecs</span><span class="p">:</span>
+    <span class="o">-</span> <span class="n">spec</span><span class="p">:</span>
+        <span class="n">containers</span><span class="p">:</span>
+        <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">flowers</span>
+          <span class="n">resources</span><span class="p">:</span>
+            <span class="n">requests</span><span class="p">:</span>
+              <span class="n">cpu</span><span class="p">:</span> <span class="s1">'2'</span>
+        <span class="n">tolerations</span><span class="p">:</span>
+        <span class="o">-</span> <span class="n">key</span><span class="p">:</span> <span class="n">model</span>
+          <span class="n">operator</span><span class="p">:</span> <span class="n">Exists</span>
+          <span class="n">effect</span><span class="p">:</span> <span class="n">NoSchedule</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">default</span>
+    <span class="n">replicas</span><span class="p">:</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Overwriting tf_flowers.yaml
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">run_model</span><span class="p">(</span><span class="s2">"tf_flowers.yaml"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Available with 1 pods
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">run_ghz_test</span><span class="p">(</span><span class="s2">"flowers.bin"</span><span class="p">,</span> <span class="s2">"ghz_1worker.yaml"</span><span class="p">,</span> <span class="s2">"60m"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">mean_with_executor</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s2">"average"</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{
+    "date": "2020-07-12T17:12:04Z",
+    "endReason": "timeout",
+    "options": {
+        "host": "tf-flowers-default.seldon.svc.cluster.local:8000",
+        "proto": "/proto/prediction_service.proto",
+        "import-paths": [
+            "/proto",
+            "."
+        ],
+        "call": "tensorflow.serving.PredictionService/Predict",
+        "insecure": true,
+        "total": 1000000,
+        "concurrency": 1,
+        "connections": 1,
+        "duration": 1800000000000,
+        "timeout": 20000000000,
+        "dial-timeout": 10000000000,
+        "keepalive": 1800000000000,
+        "binary": true,
+        "CPUs": 8
+    },
+    "count": 22978,
+    "total": 1800000675146,
+    "average": 78227435,
+    "fastest": 54712167,
+    "slowest": 938906233,
+    "rps": 12.76555076743859,
+    "errorDistribution": {
+        "rpc error: code = Unavailable desc = transport is closing": 1
+    },
+    "statusCodeDistribution": {
+        "OK": 22977,
+        "Unavailable": 1
+    },
+    "latencyDistribution": [
+        {
+            "percentage": 10,
+            "latency": 68291719
+        },
+        {
+            "percentage": 25,
+            "latency": 71762262
+        },
+        {
+            "percentage": 50,
+            "latency": 75875238
+        },
+        {
+            "percentage": 75,
+            "latency": 81163515
+        },
+        {
+            "percentage": 90,
+            "latency": 89225781
+        },
+        {
+            "percentage": 95,
+            "latency": 97536730
+        },
+        {
+            "percentage": 99,
+            "latency": 128647238
+        }
+    ]
+}
+</pre></div></div>
+</div>
+</section>
+<section id="GRPC-Tensorflow-Flowers-Model---No-executor---Latency-Test">
+<h2 id="GRPC-Tensorflow-Flowers-Model---No-executor---Latency-Test">GRPC Tensorflow Flowers Model - No executor - Latency Test<a class="headerlink" href="#GRPC-Tensorflow-Flowers-Model---No-executor---Latency-Test" title="Permalink to this heading">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%writefile</span> tf_flowers.yaml
+<span class="n">apiVersion</span><span class="p">:</span> <span class="n">machinelearning</span><span class="o">.</span><span class="n">seldon</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">v1alpha2</span>
+<span class="n">kind</span><span class="p">:</span> <span class="n">SeldonDeployment</span>
+<span class="n">metadata</span><span class="p">:</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">tf</span><span class="o">-</span><span class="n">flowers</span>
+<span class="n">spec</span><span class="p">:</span>
+  <span class="n">protocol</span><span class="p">:</span> <span class="n">tensorflow</span>
+  <span class="n">transport</span><span class="p">:</span> <span class="n">grpc</span>
+  <span class="n">predictors</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">graph</span><span class="p">:</span>
+      <span class="n">implementation</span><span class="p">:</span> <span class="n">TENSORFLOW_SERVER</span>
+      <span class="n">modelUri</span><span class="p">:</span> <span class="n">gs</span><span class="p">:</span><span class="o">//</span><span class="n">kfserving</span><span class="o">-</span><span class="n">samples</span><span class="o">/</span><span class="n">models</span><span class="o">/</span><span class="n">tensorflow</span><span class="o">/</span><span class="n">flowers</span>
+      <span class="n">name</span><span class="p">:</span>  <span class="n">flowers</span>
+      <span class="n">parameters</span><span class="p">:</span>
+        <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">model_name</span>
+          <span class="nb">type</span><span class="p">:</span> <span class="n">STRING</span>
+          <span class="n">value</span><span class="p">:</span> <span class="n">flowers</span>
+    <span class="n">annotations</span><span class="p">:</span>
+        <span class="n">seldon</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">no</span><span class="o">-</span><span class="n">engine</span><span class="p">:</span> <span class="s2">"true"</span>
+    <span class="n">componentSpecs</span><span class="p">:</span>
+    <span class="o">-</span> <span class="n">spec</span><span class="p">:</span>
+        <span class="n">containers</span><span class="p">:</span>
+        <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">flowers</span>
+          <span class="n">resources</span><span class="p">:</span>
+            <span class="n">requests</span><span class="p">:</span>
+              <span class="n">cpu</span><span class="p">:</span> <span class="s1">'2'</span>
+        <span class="n">tolerations</span><span class="p">:</span>
+        <span class="o">-</span> <span class="n">key</span><span class="p">:</span> <span class="n">model</span>
+          <span class="n">operator</span><span class="p">:</span> <span class="n">Exists</span>
+          <span class="n">effect</span><span class="p">:</span> <span class="n">NoSchedule</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">default</span>
+    <span class="n">replicas</span><span class="p">:</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Overwriting tf_flowers.yaml
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">run_model</span><span class="p">(</span><span class="s2">"tf_flowers.yaml"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Available with 1 pods
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">run_ghz_test</span><span class="p">(</span><span class="s2">"flowers.bin"</span><span class="p">,</span> <span class="s2">"ghz_standalone_1worker.yaml"</span><span class="p">,</span> <span class="s2">"60m"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">mean_no_executor</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s2">"average"</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{
+    "date": "2020-07-12T18:04:44Z",
+    "endReason": "timeout",
+    "options": {
+        "host": "tf-flowers-default.seldon.svc.cluster.local:9000",
+        "proto": "/proto/prediction_service.proto",
+        "import-paths": [
+            "/proto",
+            "."
+        ],
+        "call": "tensorflow.serving.PredictionService/Predict",
+        "insecure": true,
+        "total": 1000000,
+        "concurrency": 1,
+        "connections": 1,
+        "duration": 1800000000000,
+        "timeout": 20000000000,
+        "dial-timeout": 10000000000,
+        "keepalive": 1800000000000,
+        "binary": true,
+        "CPUs": 8
+    },
+    "count": 24132,
+    "total": 1800013456837,
+    "average": 74479232,
+    "fastest": 53792435,
+    "slowest": 1008191507,
+    "rps": 13.406566438900391,
+    "errorDistribution": {
+        "rpc error: code = Unavailable desc = transport is closing": 1
+    },
+    "statusCodeDistribution": {
+        "OK": 24131,
+        "Unavailable": 1
+    },
+    "latencyDistribution": [
+        {
+            "percentage": 10,
+            "latency": 67087978
+        },
+        {
+            "percentage": 25,
+            "latency": 70242403
+        },
+        {
+            "percentage": 50,
+            "latency": 73838624
+        },
+        {
+            "percentage": 75,
+            "latency": 77894265
+        },
+        {
+            "percentage": 90,
+            "latency": 82282422
+        },
+        {
+            "percentage": 95,
+            "latency": 85533746
+        },
+        {
+            "percentage": 99,
+            "latency": 93875540
+        }
+    ]
+}
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">diff</span> <span class="o">=</span> <span class="p">(</span><span class="n">mean_with_executor</span> <span class="o">-</span> <span class="n">mean_no_executor</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1e6</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Diff in ms"</span><span class="p">,</span> <span class="n">diff</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Diff in ms 3.748203
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="patch_1_2.html" title="Upgrading from 1.1 to 1.2 Volume Patch"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> "Previous" </span> Upgrading from 1.1 to 1.2 Volume Patch </span>
+              </div>
+            </a>
+          
+          
+            <a href="bench_tensorflow.html" title="Tensorflow Load and Benchmark Tests"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> "Next" </span> Tensorflow Load and Benchmark Tests </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2024, Seldon Technologies Ltd.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

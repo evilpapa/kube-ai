@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../_static/javascripts/modernizr.js"></script>
+  
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-54780881-2"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-54780881-2');
+</script>
+  
+  
+    <title>使用 Ingress Ambassador &#8212; seldon-core  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=83e35b93" />
+    <link rel="stylesheet" type="text/css" href="../_static/material.css?v=79c92029" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/rtd_sphinx_search.min.css?v=fb480935" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=15a8f09d" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/rtd_search_config.js"></script>
+    <script src="../_static/js/rtd_sphinx_search.min.js?v=60fbc683"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Openshift" href="openshift.html" />
+    <link rel="prev" title="Istio 入口" href="istio.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=indigo data-md-color-accent=teal>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#ingress/ambassador" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../index.html" title="seldon-core  documentation"
+           class="md-header-nav__button md-logo">
+          
+            &nbsp;
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">Seldon Core Documentation</span>
+          <span class="md-header-nav__topic"> 使用 Ingress Ambassador </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder=""Search""
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+            
+            <li class="md-tabs__item"><a href="/" class="md-tabs__link">🚀 Our Other Projects & Products:</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi/en/stable/" class="md-tabs__link">Alibi Explain</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi-detect/en/stable/" class="md-tabs__link">Alibi Detect</a></li>
+            
+            <li class="md-tabs__item"><a href="https://mlserver.readthedocs.io/en/latest/" class="md-tabs__link">MLServer</a></li>
+            
+            <li class="md-tabs__item"><a href="https://tempo.readthedocs.io/en/latest/" class="md-tabs__link">Tempo SDK</a></li>
+            
+            <li class="md-tabs__item"><a href="https://deploy.seldon.io" class="md-tabs__link">Seldon Enterprise Platform</a></li>
+            
+            <li class="md-tabs__item"><a href="https://github.com/SeldonIO/seldon-deploy-sdk#seldon-deploy-sdk" class="md-tabs__link">Seldon Enterprise Platform SDK</a></li>
+          <li class="md-tabs__item"><a href="../nav/configuration.html" class="md-tabs__link">配置</a></li>
+          <li class="md-tabs__item"><a href="../nav/config/routing.html" class="md-tabs__link">路由</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../index.html" title="seldon-core documentation" class="md-nav__button md-logo">
+      
+        <img src="../_static/" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../index.html"
+       title="seldon-core documentation">Seldon Core Documentation</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/getting-started.html" class="md-nav__link">开始</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/concepts.html" class="md-nav__link">概念</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/configuration.html" class="md-nav__link">配置</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/installation.html" class="md-nav__link">安装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/deployments.html" class="md-nav__link">发布</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/servers.html" class="md-nav__link">服务器</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/routing.html" class="md-nav__link">路由</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="istio.html" class="md-nav__link">Istio 入口</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="istio.html#id5" class="md-nav__link">使用 Istio 服务网格</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> Ambassador 入口 </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">Ambassador 入口</a>
+      
+        
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#ingress-ambassador--page-root" class="md-nav__link">使用 Ingress Ambassador</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#ambassador" class="md-nav__link">安装 Ambassador</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">建议 1：Ambassador 全栈</a>
+        </li>
+        <li class="md-nav__item"><a href="#ambassador-api-emissary-ingress" class="md-nav__link">建议 2: Ambassador API 网关 (现为 Emissary Ingress)</a>
+        </li>
+        <li class="md-nav__item"><a href="#tls" class="md-nav__link">TLS</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#ambassador-rest" class="md-nav__link">Ambassador REST</a>
+        </li>
+        <li class="md-nav__item"><a href="#curl" class="md-nav__link">Curl示例</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id3" class="md-nav__link">Ambassador REST</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">Ambassador 配置注解参考</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id5" class="md-nav__link">金丝雀部署</a>
+        </li>
+        <li class="md-nav__item"><a href="#id6" class="md-nav__link">影子部署</a>
+        </li>
+        <li class="md-nav__item"><a href="#header" class="md-nav__link">基于 Header 头的路由</a>
+        </li>
+        <li class="md-nav__item"><a href="#id7" class="md-nav__link">限流</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id8" class="md-nav__link">同一集群中的多个 Ambassador</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#amabassador" class="md-nav__link">自定义 Amabassador 配置</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/ingress/ambassador.md.txt">Show Source</a> </li>
+
+  </ul>
+</nav>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="openshift.html" class="md-nav__link">OpenShift</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../analytics/routers.html" class="md-nav__link">路由（包含多臂老虎机）</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../graph/inference-graph.html" class="md-nav__link">推理图</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/wrappers.html" class="md-nav__link">语言封装和 SDK</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/integrations.html" class="md-nav__link">集成</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/tutorials.html" class="md-nav__link">教程</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/reference.html" class="md-nav__link">参考</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/contributing.html" class="md-nav__link">贡献</a>
+      
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#ingress-ambassador--page-root" class="md-nav__link">使用 Ingress Ambassador</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#ambassador" class="md-nav__link">安装 Ambassador</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">建议 1：Ambassador 全栈</a>
+        </li>
+        <li class="md-nav__item"><a href="#ambassador-api-emissary-ingress" class="md-nav__link">建议 2: Ambassador API 网关 (现为 Emissary Ingress)</a>
+        </li>
+        <li class="md-nav__item"><a href="#tls" class="md-nav__link">TLS</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#ambassador-rest" class="md-nav__link">Ambassador REST</a>
+        </li>
+        <li class="md-nav__item"><a href="#curl" class="md-nav__link">Curl示例</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id3" class="md-nav__link">Ambassador REST</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">Ambassador 配置注解参考</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id5" class="md-nav__link">金丝雀部署</a>
+        </li>
+        <li class="md-nav__item"><a href="#id6" class="md-nav__link">影子部署</a>
+        </li>
+        <li class="md-nav__item"><a href="#header" class="md-nav__link">基于 Header 头的路由</a>
+        </li>
+        <li class="md-nav__item"><a href="#id7" class="md-nav__link">限流</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id8" class="md-nav__link">同一集群中的多个 Ambassador</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#amabassador" class="md-nav__link">自定义 Amabassador 配置</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/ingress/ambassador.md.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <section id="ingress-ambassador">
+<h1 id="ingress-ambassador--page-root">使用 Ingress Ambassador<a class="headerlink" href="#ingress-ambassador--page-root" title="Permalink to this heading">¶</a></h1>
+<p>Seldon Core 与 <a class="reference external" href="https://www.getambassador.io/">Ambassador</a> 搭配良好，用于通过单入口暴露 Ambassador 以及 通过 Seldon 创建的 Ambassador 配置化的<a class="reference external" href="https://kubernetes.io/blog/2018/06/07/dynamic-ingress-in-kubernetes/">运行中机器学习部署的动态暴露</a>。 Ambassador 是一个建立在 Envoy Proxy 基础上的 Kubernetes 原生 API 网关。完全通过 Kubernetes 自定义资源实现，Ambassador 提供强大的流量分发，身份验证，可观察性的管理能力。Ambassador 具有流行的服务网格原生实现，比如 Consul、Istio 以及 Linkerd。本文档中我们将讨论 Seldon Deployments 如何通过 Ambassador 暴露服务，以及如何同时使用这两种部署执行各种生产部署策略。</p>
+<section id="ambassador">
+<h2 id="ambassador">安装 Ambassador<a class="headerlink" href="#ambassador" title="Permalink to this heading">¶</a></h2>
+<p>安装 Ambassador 有<a class="reference external" href="https://www.getambassador.io/editions/">两部建议</a>：</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Seldon Core 当前只支持 V1 Ambassador APIs. 你 <strong>必须</strong> 使用 <code class="docutils literal notranslate"><span class="pre">datawire/ambassador</span></code> helm chart 而不是使用 <code class="docutils literal notranslate"><span class="pre">datawire/edge-stack</span></code> 或者 V2 <code class="docutils literal notranslate"><span class="pre">datawire/emissary</span></code> charts。跟随 <a class="reference internal" href="../nav/installation.html"><span class="doc">安装指引</span></a> 可以正确工作。</p>
+</div>
+<section id="id2">
+<h3 id="id2">建议 1：Ambassador 全栈<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
+<p><a class="reference external" href="https://www.getambassador.io/products/edge-stack/">Ambassador Edge Stack</a> 时最简单的开始 Ambassador 的方式，提供简单，<a class="reference external" href="https://www.getambassador.io/docs/edge-stack/latest/topics/running/host-crd/#acme-support">自动 TLS 配置</a> 等其他特性，如 <a class="reference external" href="https://www.getambassador.io/docs/edge-stack/latest/topics/using/filters/">身份验证</a>，<a class="reference external" href="https://www.getambassador.io/docs/edge-stack/latest/topics/using/rate-limits/">限流</a>，和高级的路由行为，比如<a class="reference external" href="https://www.getambassador.io/docs/edge-stack/latest/topics/using/intro-mappings/">自定义前缀</a>，<a class="reference external" href="https://www.getambassador.io/docs/edge-stack/latest/topics/using/headers/host/">虚拟主机</a>，<a class="reference external" href="https://www.getambassador.io/docs/edge-stack/latest/topics/using/method/">method</a>/<a class="reference external" href="https://www.getambassador.io/docs/edge-stack/latest/topics/using/query_parameters/">query-parameter</a> 基础的路由等等。
+查看 <a class="reference external" href="https://www.getambassador.io/docs/edge-stack/latest/tutorials/getting-started/">AES 安装说明</a>将其安装到你的 Kubernetes 集群。</p>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">helm</span></code> 步骤可概况为：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>create<span class="w"> </span>namespace<span class="w"> </span>ambassador<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"namespace ambassador exists"</span>
+
+helm<span class="w"> </span>repo<span class="w"> </span>add<span class="w"> </span>datawire<span class="w"> </span>https://www.getambassador.io
+helm<span class="w"> </span>install<span class="w"> </span>ambassador<span class="w"> </span>datawire/ambassador<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--set<span class="w"> </span>image.repository<span class="o">=</span>docker.io/datawire/ambassador<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--set<span class="w"> </span>crds.keep<span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--namespace<span class="w"> </span>ambassador
+</pre></div>
+</div>
+</section>
+<section id="ambassador-api-emissary-ingress">
+<h3 id="ambassador-api-emissary-ingress">建议 2: Ambassador API 网关 (现为 Emissary Ingress)<a class="headerlink" href="#ambassador-api-emissary-ingress" title="Permalink to this heading">¶</a></h3>
+<p><a class="reference external" href="https://www.getambassador.io/products/api-gateway/">Ambassador API Gateway</a> (现在为 Emissary Ingress) 是 Ambassador Edge Stack 的完全开源版本，并且提供传统控制器入口的所有功能。
+查看 <a class="reference external" href="https://www.getambassador.io/docs/latest/topics/install/">Ambassador OSS 说明</a> 将其安装到你的 Kubernetes 集群。</p>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">helm</span></code> 步骤可概况为：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>create<span class="w"> </span>namespace<span class="w"> </span>ambassador<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"namespace ambassador exists"</span>
+
+helm<span class="w"> </span>repo<span class="w"> </span>add<span class="w"> </span>datawire<span class="w"> </span>https://www.getambassador.io
+helm<span class="w"> </span>install<span class="w"> </span>ambassador<span class="w"> </span>datawire/ambassador<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--set<span class="w"> </span>image.repository<span class="o">=</span>docker.io/datawire/ambassador<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--set<span class="w"> </span><span class="nv">enableAES</span><span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--set<span class="w"> </span>crds.keep<span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--namespace<span class="w"> </span>ambassador
+</pre></div>
+</div>
+</section>
+<section id="tls">
+<h3 id="tls">TLS<a class="headerlink" href="#tls" title="Permalink to this heading">¶</a></h3>
+<p>强烈建议使用 TLS 加密控制进入 Ambassador 的流量。默认安装自带自签名证书，并且未使用任何其他 TLS 配置。查看 <a class="reference external" href="https://www.getambassador.io/docs/edge-stack/latest/howtos/tls-termination/">说明</a> 来对集群进行 TLS 配置。</p>
+</section>
+</section>
+<section id="ambassador-rest">
+<h2 id="ambassador-rest">Ambassador REST<a class="headerlink" href="#ambassador-rest" title="Permalink to this heading">¶</a></h2>
+<p>假设 Ambassador 服务暴露于运行在 <code class="docutils literal notranslate"><span class="pre">namespace</span></code> 空间 <code class="docutils literal notranslate"><span class="pre">&lt;deploymentName&gt;</span></code> Seldon deployment 上的 <code class="docutils literal notranslate"><span class="pre">&lt;ambassadorEndpoint&gt;</span></code>：</p>
+<p>注意，如果选择安装的是 Ambassador Edge Stack 需使用 https。即可使用<a class="reference external" href="https://www.getambassador.io/docs/edge-stack/latest/howtos/tls-termination/">TLS 设置</a> 也可传递 <code class="docutils literal notranslate"><span class="pre">-k</span></code> 参数在 <code class="docutils literal notranslate"><span class="pre">curl</span></code> 中允许自签名证书。</p>
+<p>对于限定了命名空间的 Seldon Core，<code class="docutils literal notranslate"><span class="pre">singleNamespace=true</span></code>，节点暴露为：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">http(s)://&lt;ambassadorEndpoint&gt;/seldon/&lt;deploymentName&gt;/api/v1.0/predictions</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">http(s)://&lt;ambassadorEndpoint&gt;/seldon/&lt;namespace&gt;/&lt;deploymentName&gt;/api/v1.0/predictions</span></code></p></li>
+</ul>
+<p>全局运行的 Seldon Core，<code class="docutils literal notranslate"><span class="pre">singleNamespace=false</span></code>，节点暴露为：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">http(s)://&lt;ambassadorEndpoint&gt;/seldon/&lt;namespace&gt;/&lt;deploymentName&gt;/api/v1.0/predictions</span></code></p></li>
+</ul>
+</section>
+<section id="curl">
+<h2 id="curl">Curl示例<a class="headerlink" href="#curl" title="Permalink to this heading">¶</a></h2>
+<section id="id3">
+<h3 id="id3">Ambassador REST<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h3>
+<p>如果安装的是 OSS Ambassador API 网关，假设基于 Ambassador 的 Seldon Deployment <code class="docutils literal notranslate"><span class="pre">mymodel</span></code> 服务暴露为 <code class="docutils literal notranslate"><span class="pre">0.0.0.0:8003</span></code> 可按下面发送请求：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-v<span class="w"> </span><span class="m">0</span>.0.0.0:8003/seldon/mymodel/api/v1.0/predictions<span class="w"> </span>-d<span class="w"> </span><span class="s1">'{"data":{"names":["a","b"],"tensor":{"shape":[2,2],"values":[0,0,1,1]}}}'</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span>
+</pre></div>
+</div>
+<p>或者，安装的是 TLS 配置的 Ambassador Edge Stack，假设基于 Ambassador 的 Seldon Deployment <code class="docutils literal notranslate"><span class="pre">mymodel</span></code> 服务 hostname 为 <code class="docutils literal notranslate"><span class="pre">example-hostname.com</span></code>：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-v<span class="w"> </span>https://example-hostname.com/seldon/mymodel/api/v1.0/predictions<span class="w"> </span>-d<span class="w"> </span><span class="s1">'{"data":{"names":["a","b"],"tensor":{"shape":[2,2],"values":[0,0,1,1]}}}'</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span>
+</pre></div>
+</div>
+<p>如果都不是，可使用 IP 地址代替 <code class="docutils literal notranslate"><span class="pre">example-hostname</span></code> 并传递 -k 选项来方位不安全的 TLS。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-vk<span class="w"> </span>https://0.0.0.0/seldon/mymodel/api/v1.0/predictions<span class="w"> </span>-d<span class="w"> </span><span class="s1">'{"data":{"names":["a","b"],"tensor":{"shape":[2,2],"values":[0,0,1,1]}}}'</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="id4">
+<h2 id="id4">Ambassador 配置注解参考<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h2>
+<table>
+<thead>
+<tr class="row-odd"><th class="head"><p>注解</p></th>
+<th class="head"><p>说明</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">seldon.io/ambassador-config:&lt;configuration&gt;</span></code></p></td>
+<td><p>自定义 Ambassador 配置</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">seldon.io/ambassador-header:&lt;header&gt;</span></code></p></td>
+<td><p>添加到 Ambassador 配置的 Header</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">seldon.io/ambassador-id:&lt;instance</span> <span class="pre">id&gt;</span></code></p></td>
+<td><p>添加到 Ambassador <code class="docutils literal notranslate"><span class="pre">ambassador_id</span></code> 配置的实例 id</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">seldon.io/ambassador-regex-header:&lt;regex&gt;</span></code></p></td>
+<td><p>T用于通过 header 头路由的正则表达式</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">seldon.io/ambassador-retries:&lt;number</span> <span class="pre">of</span> <span class="pre">retries&gt;</span></code></p></td>
+<td><p>Tambassador 将在连接失败时重试请求的次数。默认 0。如果需要更多控制，请使用自定义配置。</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">seldon.io/ambassador-service-name:&lt;existing_deployment_name&gt;</span></code></p></td>
+<td><p>现有 Seldon Deployment 的名称，用于基于 shadow 或 header 的路由</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">seldon.io/grpc-timeout:</span> <span class="pre">&lt;gRPC</span> <span class="pre">read</span> <span class="pre">timeout</span> <span class="pre">(msecs)&gt;</span></code></p></td>
+<td><p>gRPC 读取超时时间</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">seldon.io/rest-timeout:&lt;REST</span> <span class="pre">read</span> <span class="pre">timeout</span> <span class="pre">(msecs)&gt;</span></code></p></td>
+<td><p>REST 读取超时时间</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">seldon.io/ambassador-circuit-breakers-max-connections:&lt;maximum</span> <span class="pre">number</span> <span class="pre">of</span> <span class="pre">connections&gt;</span></code></p></td>
+<td><p>Seldon 部署的最大连接数</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">seldon.io/ambassador-circuit-breakers-max-pending-requests:&lt;maximum</span> <span class="pre">number</span> <span class="pre">of</span> <span class="pre">queued</span> <span class="pre">requests&gt;</span></code></p></td>
+<td><p>等待连接时将排队的最大请求数</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">seldon.io/ambassador-circuit-breakers-max-requests:&lt;maximum</span> <span class="pre">number</span> <span class="pre">of</span> <span class="pre">parallel</span> <span class="pre">outstanding</span> <span class="pre">requests&gt;</span></code></p></td>
+<td><p>Seldon 部署的最大并行未完成请求数</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">seldon.io/ambassador-circuit-breakers-max-retries:&lt;maximum</span> <span class="pre">number</span> <span class="pre">of</span> <span class="pre">parallel</span> <span class="pre">retries&gt;</span></code></p></td>
+<td><p>Seldon 部署允许的最大并行重试次数</p></td>
+</tr>
+</tbody>
+</table>
+<p>所有注解需放在 <code class="docutils literal notranslate"><span class="pre">spec.annotations</span></code>。</p>
+<p>下面查看明细。</p>
+<section id="id5">
+<h3 id="id5">金丝雀部署<a class="headerlink" href="#id5" title="Permalink to this heading">¶</a></h3>
+<p>如果您希望将一定比例的流量推送到新模型以测试它在生产中是否正常工作，则可以使用 Canary 部署。要将金丝雀添加到您的 SeldonDeployment，只需添加一个新的预测器部分并将主要和金丝雀的流量级别设置为所需的级别。例如：</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">machinelearning.seldon.io/v1alpha2</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SeldonDeployment</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">canary-example</span>
+<span class="w">  </span><span class="nt">predictors</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">componentSpecs</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">containers</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">seldonio/mock_classifier_rest:1.2.1</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">classifier</span>
+<span class="w">    </span><span class="nt">graph</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">children</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+<span class="w">      </span><span class="nt">endpoint</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">REST</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">classifier</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MODEL</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">main</span>
+<span class="w">    </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">    </span><span class="nt">traffic</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">75</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">componentSpecs</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">containers</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">seldonio/mock_classifier_rest:1.2.2</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">classifier</span>
+<span class="w">    </span><span class="nt">graph</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">children</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+<span class="w">      </span><span class="nt">endpoint</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">REST</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">classifier</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MODEL</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">canary</span>
+<span class="w">    </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">    </span><span class="nt">traffic</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">25</span>
+</pre></div>
+</div>
+<p>以上示例包含 75% 流量分发到 「main」，25% 流量到 「canary」。</p>
+<p>这里提供了一个<a class="reference external" href="../examples/ambassador_canary.html">canary 发布</a>的示例。</p>
+</section>
+<section id="id6">
+<h3 id="id6">影子部署<a class="headerlink" href="#id6" title="Permalink to this heading">¶</a></h3>
+<p>影子部署允许您向并行部署发送重复请求，但丢弃响应。这允许您在负载下测试机器学习模型并将结果与​​实时部署进行比较。</p>
+<p>只需预测器中设置 <code class="docutils literal notranslate"><span class="pre">shadow</span></code> 布尔值。</p>
+<p>提供了<a class="reference external" href="../examples/ambassador_shadow.html">影子部署</a>工作示例。</p>
+<p>要了解有关 ambassador 配置的更多信息，请参阅<a class="reference external" href="https://www.getambassador.io/reference/shadowing/">他们的影子部署文档</a>.</p>
+</section>
+<section id="header">
+<h3 id="header">基于 Header 头的路由<a class="headerlink" href="#header" title="Permalink to this heading">¶</a></h3>
+<p>基于标头的路由允许您根据传入请求中的标头将请求路由到特定的 Seldon 部署。</p>
+<p>您只需要向您的 Seldon 部署资源添加一些注释。</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">seldon.io/ambassador-header:&lt;header&gt;</span></code> : 加到 Ambassador 配置</p>
+<ul>
+<li><p>例:  <code class="docutils literal notranslate"><span class="pre">"seldon.io/ambassador-header":"location:</span> <span class="pre">london"</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">seldon.io/ambassador-regex-header:&lt;header&gt;</span></code> : 添加到配置的正则表达式标头</p>
+<ul>
+<li><p>例:  <code class="docutils literal notranslate"><span class="pre">"seldon.io/ambassador-header":"location:</span> <span class="pre">lond.*"</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">seldon.io/ambassador-service-name:&lt;existing_deployment_name&gt;</span></code> : 要附加到作为请求的替代映射的现有 Seldon 部署的名称。</p>
+<ul>
+<li><p>例: <code class="docutils literal notranslate"><span class="pre">"seldon.io/ambassador-service-name":"example"</span></code></p></li>
+</ul>
+</li>
+</ul>
+<p>我们提供了一个<a class="reference external" href="../examples/ambassador_headers.html">header头路由</a>工作示例。</p>
+<p>要了解有关 ambassador 配置的更多信息，请参阅 <a class="reference external" href="https://www.getambassador.io/reference/headers">header 头路由</a>文档。</p>
+</section>
+<section id="id7">
+<h3 id="id7">限流<a class="headerlink" href="#id7" title="Permalink to this heading">¶</a></h3>
+<p>通过阻止对过载 Seldon 部署的额外连接或请求，限流器有助于提高系统的弹性。</p>
+<p>您只需要向您的 Seldon 部署资源添加一些注释。</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">seldon.io/ambassador-circuit-breakers-max-connections:&lt;maximum</span> <span class="pre">number</span> <span class="pre">of</span> <span class="pre">connections&gt;</span></code> : Seldon Deployment 的最大连接数</p>
+<ul>
+<li><p>Example:  <code class="docutils literal notranslate"><span class="pre">"seldon.io/ambassador-circuit-breakers-max-connections":"200"</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">seldon.io/ambassador-circuit-breakers-max-pending-requests:&lt;maximum</span> <span class="pre">number</span> <span class="pre">of</span> <span class="pre">queued</span> <span class="pre">requests&gt;</span></code> : 等待连接时排队的最大请求数</p>
+<ul>
+<li><p>Example:  <code class="docutils literal notranslate"><span class="pre">"seldon.io/ambassador-circuit-breakers-max-pending-requests":"100"</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">seldon.io/ambassador-circuit-breakers-max-requests:&lt;maximum</span> <span class="pre">number</span> <span class="pre">of</span> <span class="pre">parallel</span> <span class="pre">outstanding</span> <span class="pre">requests&gt;</span></code> : Seldon 部署的最大并行未完成请求数</p>
+<ul>
+<li><p>Example: <code class="docutils literal notranslate"><span class="pre">"seldon.io/ambassador-circuit-breakers-max-requests":"200"</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">seldon.io/ambassador-circuit-breakers-max-retries:&lt;maximum</span> <span class="pre">number</span> <span class="pre">of</span> <span class="pre">parallel</span> <span class="pre">retries&gt;</span></code> : Seldon Deployment 允许的最大并行重试次数</p>
+<ul>
+<li><p>Example: <code class="docutils literal notranslate"><span class="pre">"seldon.io/ambassador-circuit-breakers-max-retries":"3"</span></code></p></li>
+</ul>
+</li>
+</ul>
+<p>提供了<a class="reference external" href="../examples/ambassador_circuit_breakers.html">限流器</a>的工作示例。</p>
+<p>要了解有关 ambassador 配置的更多信息，请参阅<a class="reference external" href="https://www.getambassador.io/docs/latest/topics/using/circuit-breakers/">限流器]</a>文档。</p>
+</section>
+</section>
+<section id="id8">
+<h2 id="id8">同一集群中的多个 Ambassador<a class="headerlink" href="#id8" title="Permalink to this heading">¶</a></h2>
+<p>为了避免在运行多个 Ambassador 的集群中发生冲突，您可以将以下注释添加到您的 Seldon 部署资源中。</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">seldon.io/ambassador-id:&lt;instance</span> <span class="pre">id&gt;</span></code>: 要添加到 Ambassador 的实例 id <code class="docutils literal notranslate"><span class="pre">ambassador_id</span></code> 配置</p></li>
+</ul>
+<p>例如，</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">machinelearning.seldon.io/v1alpha2</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SeldonDeployment</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">multi-ambassadors</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">seldon.io/ambassador-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my_instance</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ambassadors-example</span>
+</pre></div>
+</div>
+<p>请注意，您的 Ambassador 实例必须配置为匹配的 <code class="docutils literal notranslate"><span class="pre">ambassador_id</span></code>。</p>
+<p>查看 <a class="reference external" href="https://www.getambassador.io/docs/latest/topics/running/running/#ambassador_id">AMBASSADOR_ID</a> 获取更多信息。</p>
+<section id="amabassador">
+<h3 id="amabassador">自定义 Amabassador 配置<a class="headerlink" href="#amabassador" title="Permalink to this heading">¶</a></h3>
+<p>上面讨论的配置应该涵盖大多数情况，但是自定义配置是必要的，以利用 Ambassador Edge Stack 的完整功能集作为流量管理和身份验证工具。根据您希望如何管理配置，有两种配置 Ambassador 的选项：自定义资源定义 (CRD) 和注释。</p>
+<p>Ambassador 主要利用 <a class="reference external" href="https://www.getambassador.io/docs/edge-stack/latest/topics/concepts/gitops-continuous-delivery/#policies-declarative-configuration-and-custom-resource-definitions">自定义资源</a> 来管理配置。这是  Kubernetes API 可读的自定义 <code class="docutils literal notranslate"><span class="pre">kind</span></code> 资源，用于以整个集群可观察的方式更新 Ambassador 的配置（例如，您可以使用 <code class="docutils literal notranslate"><span class="pre">kubectl</span> <span class="pre">get</span></code> 这些资源）。这些 CRD 可以独立于 Seldon Deploy 本身进行管理。</p>
+<p>Ambassador 还支持基于注解的配置，可以使用 <code class="docutils literal notranslate"><span class="pre">seldon.io/ambassador-config</span></code> 注解键将其应用于 Seldon 部署。除了没有 <code class="docutils literal notranslate"><span class="pre">metadata</span></code> 和 <code class="docutils literal notranslate"><span class="pre">spec</span></code> 字段之外，基于注释的配置的整体格式与基于 CRD 的配置相同。以下片段演示了 CRD 和基于注释的配置之间的区别，并且在功能上是相同的。</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">getambassador.io/v2</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Mapping</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">seldon_example_rest_mapping</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">prefix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/mycompany/ml/</span>
+<span class="w">  </span><span class="nt">service</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production-model-example.seldon:8000</span>
+<span class="w">  </span><span class="nt">timeout_ms</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3000</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">seldon.io/ambassador-config:&lt;configuration&gt;</span></code> : 自定义 ambassador 配置</p>
+<ul>
+<li><p>Example: <code class="docutils literal notranslate"><span class="pre">"seldon.io/ambassador-config":"apiVersion:</span> <span class="pre">ambassador/v2\nkind:</span> <span class="pre">Mapping\nname:</span> <span class="pre">seldon_example_rest_mapping\nprefix:</span> <span class="pre">/mycompany/ml/\nservice:</span> <span class="pre">production-model-example.seldon:8000\ntimeout_ms:</span> <span class="pre">3000"</span></code></p></li>
+</ul>
+</li>
+</ul>
+<p>提供了自定义 Ambassador 配置的<a class="reference external" href="../examples/ambassador_custom.html">工作示例</a>。</p>
+</section>
+</section>
+</section>
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="istio.html" title="Istio 入口"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> "Previous" </span> Istio 入口 </span>
+              </div>
+            </a>
+          
+          
+            <a href="openshift.html" title="Openshift"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> "Next" </span> Openshift </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2024, Seldon Technologies Ltd.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

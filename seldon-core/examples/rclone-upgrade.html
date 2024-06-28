@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../_static/javascripts/modernizr.js"></script>
+  
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-54780881-2"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-54780881-2');
+</script>
+  
+  
+    <title>Upgrade to rclone-based Storage Initializer - secret format intuition &#8212; seldon-core  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=83e35b93" />
+    <link rel="stylesheet" type="text/css" href="../_static/material.css?v=79c92029" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/rtd_sphinx_search.min.css?v=e72958e9" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+    <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=15a8f09d" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/rtd_search_config.js?v=b0596c34"></script>
+    <script src="../_static/js/rtd_sphinx_search.min.js?v=43f26ba4"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Upgrade to rclone-based Storage Initializer - automation for AWS S3 / MinIO configuration" href="global-rclone-upgrade.html" />
+    <link rel="prev" title="Kafka Request Logging Tests" href="kafka_logger.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=indigo data-md-color-accent=teal>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#examples/rclone-upgrade" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../index.html" title="seldon-core  documentation"
+           class="md-header-nav__button md-logo">
+          
+            &nbsp;
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">Seldon Core Documentation</span>
+          <span class="md-header-nav__topic"> Upgrade to rclone-based Storage Initializer - secret format intuition </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder=""Search""
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+            
+            <li class="md-tabs__item"><a href="/" class="md-tabs__link">🚀 Our Other Projects & Products:</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi/en/stable/" class="md-tabs__link">Alibi Explain</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi-detect/en/stable/" class="md-tabs__link">Alibi Detect</a></li>
+            
+            <li class="md-tabs__item"><a href="https://mlserver.readthedocs.io/en/latest/" class="md-tabs__link">MLServer</a></li>
+            
+            <li class="md-tabs__item"><a href="https://tempo.readthedocs.io/en/latest/" class="md-tabs__link">Tempo SDK</a></li>
+            
+            <li class="md-tabs__item"><a href="https://deploy.seldon.io" class="md-tabs__link">Seldon Enterprise Platform</a></li>
+            
+            <li class="md-tabs__item"><a href="https://github.com/SeldonIO/seldon-deploy-sdk#seldon-deploy-sdk" class="md-tabs__link">Seldon Enterprise Platform SDK</a></li>
+          <li class="md-tabs__item"><a href="../nav/tutorials.html" class="md-tabs__link">教程</a></li>
+          <li class="md-tabs__item"><a href="notebooks.html" class="md-tabs__link">笔记本</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../index.html" title="seldon-core documentation" class="md-nav__button md-logo">
+      
+        <img src="../_static/" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../index.html"
+       title="seldon-core documentation">Seldon Core Documentation</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/getting-started.html" class="md-nav__link">开始</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/concepts.html" class="md-nav__link">概念</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/configuration.html" class="md-nav__link">配置</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/tutorials.html" class="md-nav__link">教程</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html" class="md-nav__link">笔记本</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#seldon-core" class="md-nav__link">Seldon Core 设置</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id2" class="md-nav__link">预包装推理服务示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#python" class="md-nav__link">Python 语言封装示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id3" class="md-nav__link">专门的框架示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id4" class="md-nav__link">孵化项目示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id5" class="md-nav__link">基于云的基础示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id6" class="md-nav__link">高级机器学习监控</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id7" class="md-nav__link">Seldon Core 批处理</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#mlops" class="md-nav__link">MLOps: 扩展、监控和可观察性</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id8" class="md-nav__link">生产配置及实现</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#ab" class="md-nav__link">AB 测试及渐进式部署</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id9" class="md-nav__link">复杂图示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id10" class="md-nav__link">入口</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id11" class="md-nav__link">基础设施</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id12" class="md-nav__link">基准测试和负载测试</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id13" class="md-nav__link">升级示例</a>
+      
+    
+    </li></ul>
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/reference.html" class="md-nav__link">参考</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/contributing.html" class="md-nav__link">贡献</a>
+      
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#examples-rclone-upgrade--page-root" class="md-nav__link">Upgrade to rclone-based Storage Initializer - secret format intuition</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#Prerequisites" class="md-nav__link">Prerequisites</a>
+        </li>
+        <li class="md-nav__item"><a href="#Steps-in-this-tutorial" class="md-nav__link">Steps in this tutorial</a>
+        </li>
+        <li class="md-nav__item"><a href="#Setup-Seldon-Core" class="md-nav__link">Setup Seldon Core</a>
+        </li>
+        <li class="md-nav__item"><a href="#Setup-MinIO" class="md-nav__link">Setup MinIO</a>
+        </li>
+        <li class="md-nav__item"><a href="#Copy-iris-model-into-local-MinIO" class="md-nav__link">Copy iris model into local MinIO</a>
+        </li>
+        <li class="md-nav__item"><a href="#Deploy-SKLearn-Server-with-kfserving-storage-initializer" class="md-nav__link">Deploy SKLearn Server with kfserving-storage-initializer</a>
+        </li>
+        <li class="md-nav__item"><a href="#Preparing-rclone-compatible-secret" class="md-nav__link">Preparing rclone-compatible secret</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#Preparing-seldon-rclone-secret" class="md-nav__link">Preparing seldon-rclone-secret</a>
+        </li>
+        <li class="md-nav__item"><a href="#Testing-seldon-rclone-secret" class="md-nav__link">Testing seldon-rclone-secret</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#Deploy-SKLearn-Server-with-rclone-storage-initializer" class="md-nav__link">Deploy SKLearn Server with rclone-storage-initializer</a>
+        </li>
+        <li class="md-nav__item"><a href="#Cleanup" class="md-nav__link">Cleanup</a>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/examples/rclone-upgrade.nblink.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <div class="admonition note">
+<p>This page was generated from <a class="reference external" href="https://github.com/SeldonIO/seldon-core/blob/e665e4994eabf83fb43c68a5f85e96d5c45e91b5/examples/upgrade-to-rclone/rclone-upgrade.ipynb">examples/upgrade-to-rclone/rclone-upgrade.ipynb</a>.</p>
+</div>
+<section id="Upgrade-to-rclone-based-Storage-Initializer---secret-format-intuition">
+<h1 id="examples-rclone-upgrade--page-root">Upgrade to rclone-based Storage Initializer - secret format intuition<a class="headerlink" href="#examples-rclone-upgrade--page-root" title="Permalink to this heading">¶</a></h1>
+<p>In this documentation page we provide an example upgrade path from kfserving-based to rclone-based storage initializer. This is required due to the fact that secret format expected by these two storage initializers is different.</p>
+<p>Storage initializers are used by Seldon’s pre-packaged model servers to download models binaries. As it is explained in the <a class="reference external" href="https://docs.seldon.io/projects/seldon-core/en/latest/reference/upgrading.html#upgrading-to-1-8">SC 1.8 upgrading notes</a> the <a class="reference external" href="https://github.com/SeldonIO/seldon-core/tree/master/components/rclone-storage-initializer">seldonio/rclone-storage-initializer</a> became default storage initializer in v1.8.0. However, it is still possible to run with kfserving-based Storage
+Initializer as documented <a class="reference external" href="https://docs.seldon.io/projects/seldon-core/en/latest/servers/kfserving-storage-initializer.html">here</a>.</p>
+<p>In this tutorial we will show how to upgrade your configuration to new Storage Initializer with focus on getting the new format of a required secret right.</p>
+<p>Read more: - <a class="reference external" href="https://docs.seldon.io/projects/seldon-core/en/latest/servers/overview.html">Prepackaged Model Servers documentation page</a> - <a class="reference external" href="https://docs.seldon.io/projects/seldon-core/en/latest/reference/upgrading.html#upgrading-to-1-8">SC 1.8 upgrading notes</a> - <a class="reference external" href="https://docs.seldon.io/projects/seldon-core/en/latest/examples/global-rclone-upgrade.html">Example upgrade path to use rclone-based storage initializer globally</a></p>
+<section id="Prerequisites">
+<h2 id="Prerequisites">Prerequisites<a class="headerlink" href="#Prerequisites" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>A kubernetes cluster with kubectl configured</p></li>
+<li><p>mc client</p></li>
+<li><p>curl</p></li>
+</ul>
+</section>
+<section id="Steps-in-this-tutorial">
+<h2 id="Steps-in-this-tutorial">Steps in this tutorial<a class="headerlink" href="#Steps-in-this-tutorial" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Copy iris model from GCS into in-cluster minio and configure old-style storage initializer secret</p></li>
+<li><p>Deploy SKlearn Pre-Packaged server using kfserving storage initializer</p></li>
+<li><p>Discuss upgrading procedure and tips how to test new secret format</p></li>
+<li><p>Deploy Pre-packaged model server using rclone storage initializer</p></li>
+</ul>
+</section>
+<section id="Setup-Seldon-Core">
+<h2 id="Setup-Seldon-Core">Setup Seldon Core<a class="headerlink" href="#Setup-Seldon-Core" title="Permalink to this heading">¶</a></h2>
+<p>Use the setup notebook to <a class="reference external" href="https://docs.seldon.io/projects/seldon-core/en/latest/examples/seldon_core_setup.html#Setup-Cluster">Setup Cluster</a> with <a class="reference external" href="https://docs.seldon.io/projects/seldon-core/en/latest/examples/seldon_core_setup.html#Ambassador">Ambassador Ingress</a> and <a class="reference external" href="https://docs.seldon.io/projects/seldon-core/en/latest/examples/seldon_core_setup.html#Install-Seldon-Core">Install Seldon Core</a>.</p>
+</section>
+<section id="Setup-MinIO">
+<h2 id="Setup-MinIO">Setup MinIO<a class="headerlink" href="#Setup-MinIO" title="Permalink to this heading">¶</a></h2>
+<p>Use the provided <a class="reference external" href="https://docs.seldon.io/projects/seldon-core/en/latest/examples/minio_setup.html">notebook</a> to install Minio in your cluster and configure <code class="docutils literal notranslate"><span class="pre">mc</span></code> CLI tool.</p>
+</section>
+<section id="Copy-iris-model-into-local-MinIO">
+<h2 id="Copy-iris-model-into-local-MinIO">Copy iris model into local MinIO<a class="headerlink" href="#Copy-iris-model-into-local-MinIO" title="Permalink to this heading">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+mc<span class="w"> </span>config<span class="w"> </span>host<span class="w"> </span>add<span class="w"> </span>gcs<span class="w"> </span>https://storage.googleapis.com<span class="w"> </span><span class="s2">""</span><span class="w"> </span><span class="s2">""</span>
+
+mc<span class="w"> </span>mb<span class="w"> </span>minio-seldon/sklearn/iris/<span class="w"> </span>-p
+mc<span class="w"> </span>cp<span class="w"> </span>gcs/seldon-models/sklearn/iris/model.joblib<span class="w"> </span>minio-seldon/sklearn/iris/
+mc<span class="w"> </span>cp<span class="w"> </span>gcs/seldon-models/sklearn/iris/metadata.yaml<span class="w"> </span>minio-seldon/sklearn/iris/
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+mc<span class="w"> </span>ls<span class="w"> </span>minio-seldon/sklearn/iris/
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Deploy-SKLearn-Server-with-kfserving-storage-initializer">
+<h2 id="Deploy-SKLearn-Server-with-kfserving-storage-initializer">Deploy SKLearn Server with kfserving-storage-initializer<a class="headerlink" href="#Deploy-SKLearn-Server-with-kfserving-storage-initializer" title="Permalink to this heading">¶</a></h2>
+<p>First we deploy the model using kfserving-storage-initializer. This is using the default Storage Initializer for pre Seldon Core v1.8.0.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%writefile</span> sklearn-iris-kfserving.yaml
+
+<span class="n">apiVersion</span><span class="p">:</span> <span class="n">v1</span>
+<span class="n">kind</span><span class="p">:</span> <span class="n">Secret</span>
+<span class="n">metadata</span><span class="p">:</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">seldon</span><span class="o">-</span><span class="n">kfserving</span><span class="o">-</span><span class="n">secret</span>
+<span class="nb">type</span><span class="p">:</span> <span class="n">Opaque</span>
+<span class="n">stringData</span><span class="p">:</span>
+  <span class="n">AWS_ACCESS_KEY_ID</span><span class="p">:</span> <span class="n">minioadmin</span>
+  <span class="n">AWS_SECRET_ACCESS_KEY</span><span class="p">:</span> <span class="n">minioadmin</span>
+  <span class="n">AWS_ENDPOINT_URL</span><span class="p">:</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">minio</span><span class="o">.</span><span class="n">minio</span><span class="o">-</span><span class="n">system</span><span class="o">.</span><span class="n">svc</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">local</span><span class="p">:</span><span class="mi">9000</span>
+  <span class="n">USE_SSL</span><span class="p">:</span> <span class="s2">"false"</span>
+
+<span class="o">---</span>
+
+<span class="n">apiVersion</span><span class="p">:</span> <span class="n">machinelearning</span><span class="o">.</span><span class="n">seldon</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">v1</span>
+<span class="n">kind</span><span class="p">:</span> <span class="n">SeldonDeployment</span>
+<span class="n">metadata</span><span class="p">:</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">sklearn</span><span class="o">-</span><span class="n">iris</span><span class="o">-</span><span class="n">kfserving</span>
+<span class="n">spec</span><span class="p">:</span>
+  <span class="n">predictors</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">default</span>
+    <span class="n">replicas</span><span class="p">:</span> <span class="mi">1</span>
+    <span class="n">graph</span><span class="p">:</span>
+      <span class="n">name</span><span class="p">:</span> <span class="n">classifier</span>
+      <span class="n">implementation</span><span class="p">:</span> <span class="n">SKLEARN_SERVER</span>
+      <span class="n">modelUri</span><span class="p">:</span> <span class="n">s3</span><span class="p">:</span><span class="o">//</span><span class="n">sklearn</span><span class="o">/</span><span class="n">iris</span>
+      <span class="n">envSecretRefName</span><span class="p">:</span> <span class="n">seldon</span><span class="o">-</span><span class="n">kfserving</span><span class="o">-</span><span class="n">secret</span>
+      <span class="n">storageInitializerImage</span><span class="p">:</span> <span class="n">kfserving</span><span class="o">/</span><span class="n">storage</span><span class="o">-</span><span class="n">initializer</span><span class="p">:</span><span class="n">v0</span><span class="mf">.6.1</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Overwriting sklearn-iris-kfserving.yaml
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>sklearn-iris-kfserving.yaml
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+secret/seldon-kfserving-secret configured
+seldondeployment.machinelearning.seldon.io/sklearn-iris-kfserving configured
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deploy/<span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>deploy<span class="w"> </span>-l<span class="w"> </span>seldon-deployment-id<span class="o">=</span>sklearn-iris-kfserving<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.items[0].metadata.name}'</span><span class="k">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s1">'Content-Type: application/json'</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-d<span class="w"> </span><span class="s1">'{"data":{"ndarray":[[5.964, 4.006, 2.081, 1.031]]}}'</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>http://localhost:8003/seldon/seldon/sklearn-iris-kfserving/api/v1.0/predictions<span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Preparing-rclone-compatible-secret">
+<h2 id="Preparing-rclone-compatible-secret">Preparing rclone-compatible secret<a class="headerlink" href="#Preparing-rclone-compatible-secret" title="Permalink to this heading">¶</a></h2>
+<p>The <a class="reference external" href="https://rclone.org/">rclone</a>-based storage initializer expects one to define a new secret. General documentation credentials hadling can be found <a class="reference external" href="https://docs.seldon.io/projects/seldon-core/en/latest/servers/overview.html#handling-credentials">here</a> with constantly updated examples of tested configurations.</p>
+<p>If we do not have yet an example for Cloud Storage solution that you are using, please, consult the relevant page on <a class="reference external" href="https://rclone.org/#providers">RClone documentation</a>.</p>
+<section id="Preparing-seldon-rclone-secret">
+<h3 id="Preparing-seldon-rclone-secret">Preparing seldon-rclone-secret<a class="headerlink" href="#Preparing-seldon-rclone-secret" title="Permalink to this heading">¶</a></h3>
+<p>Knowing format of required format of the secret we can create it now</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%writefile</span> seldon-rclone-secret.yaml
+<span class="n">apiVersion</span><span class="p">:</span> <span class="n">v1</span>
+<span class="n">kind</span><span class="p">:</span> <span class="n">Secret</span>
+<span class="n">metadata</span><span class="p">:</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">seldon</span><span class="o">-</span><span class="n">rclone</span><span class="o">-</span><span class="n">secret</span>
+<span class="nb">type</span><span class="p">:</span> <span class="n">Opaque</span>
+<span class="n">stringData</span><span class="p">:</span>
+  <span class="n">RCLONE_CONFIG_S3_TYPE</span><span class="p">:</span> <span class="n">s3</span>
+  <span class="n">RCLONE_CONFIG_S3_PROVIDER</span><span class="p">:</span> <span class="n">minio</span>
+  <span class="n">RCLONE_CONFIG_S3_ENV_AUTH</span><span class="p">:</span> <span class="s2">"false"</span>
+  <span class="n">RCLONE_CONFIG_S3_ACCESS_KEY_ID</span><span class="p">:</span> <span class="n">minioadmin</span>
+  <span class="n">RCLONE_CONFIG_S3_SECRET_ACCESS_KEY</span><span class="p">:</span> <span class="n">minioadmin</span>
+  <span class="n">RCLONE_CONFIG_S3_ENDPOINT</span><span class="p">:</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">minio</span><span class="o">.</span><span class="n">minio</span><span class="o">-</span><span class="n">system</span><span class="o">.</span><span class="n">svc</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">local</span><span class="p">:</span><span class="mi">9000</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>seldon-rclone-secret.yaml
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Testing-seldon-rclone-secret">
+<h3 id="Testing-seldon-rclone-secret">Testing seldon-rclone-secret<a class="headerlink" href="#Testing-seldon-rclone-secret" title="Permalink to this heading">¶</a></h3>
+<p>Before deploying SKLearn server one can test directly using the rclone-storage-initializer image</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%writefile</span> rclone-pod.yaml
+<span class="n">apiVersion</span><span class="p">:</span> <span class="n">v1</span>
+<span class="n">kind</span><span class="p">:</span> <span class="n">Pod</span>
+<span class="n">metadata</span><span class="p">:</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">rclone</span><span class="o">-</span><span class="n">pod</span>
+<span class="n">spec</span><span class="p">:</span>
+  <span class="n">containers</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">rclone</span>
+    <span class="n">image</span><span class="p">:</span> <span class="n">seldonio</span><span class="o">/</span><span class="n">rclone</span><span class="o">-</span><span class="n">storage</span><span class="o">-</span><span class="n">initializer</span><span class="p">:</span><span class="mf">1.14.0</span>
+    <span class="n">command</span><span class="p">:</span> <span class="p">[</span> <span class="s2">"/bin/sh"</span><span class="p">,</span> <span class="s2">"-c"</span><span class="p">,</span> <span class="s2">"--"</span><span class="p">,</span> <span class="s2">"sleep 3600"</span><span class="p">]</span>
+    <span class="n">envFrom</span><span class="p">:</span>
+    <span class="o">-</span> <span class="n">secretRef</span><span class="p">:</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">seldon</span><span class="o">-</span><span class="n">rclone</span><span class="o">-</span><span class="n">secret</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>rclone-pod.yaml
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>rclone-pod<span class="w"> </span>--<span class="w"> </span>rclone<span class="w"> </span>ls<span class="w"> </span>s3:sklearn
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>rclone-pod<span class="w"> </span>--<span class="w"> </span>rclone<span class="w"> </span>copy<span class="w"> </span>s3:sklearn<span class="w"> </span>.
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>rclone-pod<span class="w"> </span>--<span class="w"> </span>sh<span class="w"> </span>-c<span class="w"> </span><span class="s2">"ls iris/"</span>
+</pre></div>
+</div>
+</div>
+<p>Once we tested that secret format is correct we can delete the pod</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>delete<span class="w"> </span>-f<span class="w"> </span>rclone-pod.yaml
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="Deploy-SKLearn-Server-with-rclone-storage-initializer">
+<h2 id="Deploy-SKLearn-Server-with-rclone-storage-initializer">Deploy SKLearn Server with rclone-storage-initializer<a class="headerlink" href="#Deploy-SKLearn-Server-with-rclone-storage-initializer" title="Permalink to this heading">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%writefile</span> sklearn-iris-rclone.yaml
+
+<span class="n">apiVersion</span><span class="p">:</span> <span class="n">machinelearning</span><span class="o">.</span><span class="n">seldon</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">v1</span>
+<span class="n">kind</span><span class="p">:</span> <span class="n">SeldonDeployment</span>
+<span class="n">metadata</span><span class="p">:</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">sklearn</span><span class="o">-</span><span class="n">iris</span><span class="o">-</span><span class="n">rclone</span>
+<span class="n">spec</span><span class="p">:</span>
+  <span class="n">predictors</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">default</span>
+    <span class="n">replicas</span><span class="p">:</span> <span class="mi">1</span>
+    <span class="n">graph</span><span class="p">:</span>
+      <span class="n">name</span><span class="p">:</span> <span class="n">classifier</span>
+      <span class="n">implementation</span><span class="p">:</span> <span class="n">SKLEARN_SERVER</span>
+      <span class="n">modelUri</span><span class="p">:</span> <span class="n">s3</span><span class="p">:</span><span class="o">//</span><span class="n">sklearn</span><span class="o">/</span><span class="n">iris</span>
+      <span class="n">envSecretRefName</span><span class="p">:</span> <span class="n">seldon</span><span class="o">-</span><span class="n">rclone</span><span class="o">-</span><span class="n">secret</span>
+      <span class="n">storageInitializerImage</span><span class="p">:</span> <span class="n">seldonio</span><span class="o">/</span><span class="n">rclone</span><span class="o">-</span><span class="n">storage</span><span class="o">-</span><span class="n">initializer</span><span class="p">:</span><span class="mf">1.14.0</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>sklearn-iris-rclone.yaml
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deploy/<span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>deploy<span class="w"> </span>-l<span class="w"> </span>seldon-deployment-id<span class="o">=</span>sklearn-iris-rclone<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.items[0].metadata.name}'</span><span class="k">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s1">'Content-Type: application/json'</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-d<span class="w"> </span><span class="s1">'{"data":{"ndarray":[[5.964, 4.006, 2.081, 1.031]]}}'</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>http://localhost:8003/seldon/seldon/sklearn-iris-rclone/api/v1.0/predictions<span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Cleanup">
+<h2 id="Cleanup">Cleanup<a class="headerlink" href="#Cleanup" title="Permalink to this heading">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+kubectl<span class="w"> </span>delete<span class="w"> </span>-f<span class="w"> </span>sklearn-iris-rclone.yaml
+kubectl<span class="w"> </span>delete<span class="w"> </span>-f<span class="w"> </span>sklearn-iris-kfserving.yaml
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="kafka_logger.html" title="Kafka Request Logging Tests"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> "Previous" </span> Kafka Request Logging Tests </span>
+              </div>
+            </a>
+          
+          
+            <a href="global-rclone-upgrade.html" title="Upgrade to rclone-based Storage Initializer - automation for AWS S3 / MinIO configuration"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> "Next" </span> Upgrade to rclone-based Storage Initializer - automation for AWS S3 / MinIO configuration </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2024, Seldon Technologies Ltd.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

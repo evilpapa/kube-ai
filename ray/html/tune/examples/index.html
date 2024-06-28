@@ -1,0 +1,983 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Ray Tune 示例 &#8212; Ray 2.7.2</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/termynal.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/versionwarning.js"></script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+    <script defer="defer" src="../../_static/js/docsearch.js"></script>
+    <script defer="defer" src="../../_static/js/csat.js"></script>
+    <script defer="defer" src="../../_static/js/termynal.js"></script>
+    <script defer="defer" src="../../_static/js/custom.js"></script>
+    <script defer="defer" src="../../_static/js/top-navigation.js"></script>
+    <script src="../../_static/js/tags.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <link rel="canonical" href="https://docs.ray.io/en/latest/tune/examples/index.html" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Examples using Ray Tune with ML Frameworks" href="ml-frameworks.html" />
+    <link rel="prev" title="Scalability and Overhead Benchmarks for Ray Tune" href="../tutorials/tune-scalability.html" />
+
+<!-- Fathom - beautiful, simple website analytics -->
+<script src="https://deer.ray.io/script.js" data-site="WYYANYOS" defer></script>
+<!-- / Fathom -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-110413294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-110413294-1');
+</script>
+
+<script
+  src="https://widget.kapa.ai/kapa-widget.bundle.js"
+  data-website-id="18a8c339-4ec5-43c8-8182-db3f2bc8c6b6"
+  data-project-name="Ray"
+  data-project-color="#2C2C2C"
+  data-project-logo="https://global.discourse-cdn.com/business7/uploads/ray/original/1X/8f4dcb72f7cd34e2a332d548bd65860994bc8ff1.png"
+  data-modal-disclaimer = "Results are automated and may be incorrect or contain inappropriate information. Do not include any personal data or confidential information."
+  data-modal-title = "Ray Docs AI - Ask a Question"
+  data-button-position-bottom = "60px"
+></script>
+
+<script>
+(function(apiKey){
+    (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
+    v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
+        o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
+        y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
+        z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
+
+        pendo.initialize({
+            visitor: {
+                id: 'VISITOR-UNIQUE-ID'
+            },
+            account: {
+                id: 'ACCOUNT-UNIQUE-ID'
+            }
+        });
+})('f89fa48a-6dd7-4d7c-67cf-a8051ed891f2');
+</script>
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"><div class='topnav'></div></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Ray 2.7.2</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main Navigation">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../index.html">
+                    欢迎来到 Ray ！
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Ray
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/index.html">
+   概述「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/getting-started.html">
+   入门「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/installation.html">
+   安装「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/use-cases.html">
+   用例「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/examples.html">
+   示例库「1%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/ray-libraries.html">
+   生态「3%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-core/walkthrough.html">
+   Ray 核心「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../data/data.html">
+   Ray 数据「85%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../train/train.html">
+   Ray 训练「95%」
+  </a>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="../index.html">
+   Ray 调参「0%」
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="../getting-started.html">
+     入门
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../key-concepts.html">
+     关键概念
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorials/overview.html">
+     用户指南
+    </a>
+   </li>
+   <li class="toctree-l2 current active has-children">
+    <a class="current reference internal" href="#">
+     Ray Tune 示例
+    </a>
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+    <label for="toctree-checkbox-2">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="ml-frameworks.html">
+       Examples using Ray Tune with ML Frameworks
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="experiment-tracking.html">
+       Tune Experiment Tracking Examples
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="hpo-frameworks.html">
+       Tune Hyperparameter Optimization Framework Examples
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="other-examples.html">
+       其他示例
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="exercises.html">
+       练习
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../faq.html">
+     Ray Tune 问答
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/api.html">
+     Ray Tune API
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../serve/index.html">
+   Ray Serve「1%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../rllib/index.html">
+   Ray RLlib「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-more-libs/index.html">
+   更多类库「40%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../cluster/getting-started.html">
+   Ray 集群「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-observability/index.html">
+   监控调试「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-references/api.html">
+   参考「20%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-contribute/index.html">
+   开发者指引「30%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-security/index.html">
+   安全「100%」
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/ray-project/ray"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/issues/new?title=Issue%20on%20page%20%2Ftune/examples/index.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/edit/master/doc/source/tune/examples/index.rst"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../_sources/tune/examples/index.rst.txt"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.rst</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#examples-using-ray-tune-with-ml-frameworks">
+   Examples using Ray Tune with ML Frameworks
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tune-experiment-tracking-examples">
+   Tune Experiment Tracking Examples
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tune-hyperparameter-optimization-framework-examples">
+   Tune Hyperparameter Optimization Framework Examples
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#other-examples">
+   Other Examples
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tune-exercises">
+   Tune Exercises
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Ray Tune 示例</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#examples-using-ray-tune-with-ml-frameworks">
+   Examples using Ray Tune with ML Frameworks
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tune-experiment-tracking-examples">
+   Tune Experiment Tracking Examples
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tune-hyperparameter-optimization-framework-examples">
+   Tune Hyperparameter Optimization Framework Examples
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#other-examples">
+   Other Examples
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tune-exercises">
+   Tune Exercises
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section id="ray-tune">
+<span id="tune-examples-ref"></span><h1>Ray Tune 示例<a class="headerlink" href="#ray-tune" title="Permalink to this headline">#</a></h1>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Check out <a class="reference internal" href="../tutorials/overview.html#tune-guides"><span class="std std-ref">the Tune User Guides</span></a> To learn more about Tune’s features in depth.</p>
+</div>
+<section id="examples-using-ray-tune-with-ml-frameworks">
+<span id="tune-ml-framework-examples"></span><span id="tune-recipes"></span><h2>Examples using Ray Tune with ML Frameworks<a class="headerlink" href="#examples-using-ray-tune-with-ml-frameworks" title="Permalink to this headline">#</a></h2>
+<p>Ray Tune integrates with many popular machine learning frameworks.
+Here you find a few practical examples showing you how to tune your models.
+At the end of these guides you will often find links to even more examples.</p>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 container pb-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-3 sd-row-cols-lg-4 sd-g-1 sd-g-xs-1 sd-g-sm-1 sd-g-md-1 sd-g-lg-1 docutils">
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<img alt="" class="sd-card-img-top pt-2 w-75 d-block mx-auto fixed-height-img" src="../../_images/tune-sklearn.png" />
+<div class="sd-card-body docutils">
+<p class="sd-card-text"><a class="sd-sphinx-override sd-btn sd-text-wrap reference internal" href="tune-sklearn.html"><span class="doc">How To Use Tune’s Scikit-Learn Adapters?</span></a></p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<img alt="" class="sd-card-img-top pt-2 w-75 d-block mx-auto fixed-height-img" src="../../_images/keras.png" />
+<div class="sd-card-body docutils">
+<p class="sd-card-text"><a class="sd-sphinx-override sd-btn sd-text-wrap reference internal" href="tune_mnist_keras.html#tune-mnist-keras"><span class="std std-ref">How To Use Tune With Keras &amp; TF Models</span></a></p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<img alt="" class="sd-card-img-top pt-2 w-75 d-block mx-auto fixed-height-img" src="../../_images/pytorch_logo.png" />
+<div class="sd-card-body docutils">
+<p class="sd-card-text"><a class="sd-sphinx-override sd-btn sd-text-wrap reference internal" href="tune-pytorch-cifar.html#tune-pytorch-cifar-ref"><span class="std std-ref">How To Use Tune With PyTorch Models</span></a></p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<img alt="" class="sd-card-img-top pt-2 w-75 d-block mx-auto fixed-height-img" src="../../_images/pytorch_lightning_small.png" />
+<div class="sd-card-body docutils">
+<p class="sd-card-text"><a class="sd-sphinx-override sd-btn sd-text-wrap reference internal" href="tune-pytorch-lightning.html#tune-pytorch-lightning-ref"><span class="std std-ref">How To Tune PyTorch Lightning Models</span></a></p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<img alt="" class="sd-card-img-top pt-2 w-75 d-block mx-auto fixed-height-img" src="../../_images/serve.svg" /><div class="sd-card-body docutils">
+<p class="sd-card-text"><a class="sd-sphinx-override sd-btn sd-text-wrap reference internal" href="tune-serve-integration-mnist.html"><span class="doc">Model Selection &amp; Serving With Ray Serve</span></a></p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<img alt="" class="sd-card-img-top pt-2 w-75 d-block mx-auto fixed-height-img" src="../../_images/rllib-logo.png" />
+<div class="sd-card-body docutils">
+<p class="sd-card-text"><a class="sd-sphinx-override sd-btn sd-text-wrap reference internal" href="pbt_ppo_example.html#tune-rllib-example"><span class="std std-ref">Tuning RL Experiments With Ray Tune &amp; Ray Serve</span></a></p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<img alt="" class="sd-card-img-top pt-2 w-75 d-block mx-auto fixed-height-img" src="../../_images/xgboost_logo.png" />
+<div class="sd-card-body docutils">
+<p class="sd-card-text"><a class="sd-sphinx-override sd-btn sd-text-wrap reference internal" href="tune-xgboost.html#tune-xgboost-ref"><span class="std std-ref">A Guide To Tuning XGBoost Parameters With Tune</span></a></p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<img alt="" class="sd-card-img-top pt-2 w-75 d-block mx-auto fixed-height-img" src="../../_images/lightgbm_logo.png" />
+<div class="sd-card-body docutils">
+<p class="sd-card-text"><a class="sd-sphinx-override sd-btn sd-text-wrap reference internal" href="lightgbm_example.html#tune-lightgbm-example"><span class="std std-ref">A Guide To Tuning LightGBM Parameters With Tune</span></a></p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<img alt="" class="sd-card-img-top pt-2 w-75 d-block mx-auto fixed-height-img" src="../../_images/horovod.png" />
+<div class="sd-card-body docutils">
+<p class="sd-card-text"><a class="sd-sphinx-override sd-btn sd-text-wrap reference internal" href="horovod_simple.html#tune-horovod-example"><span class="std std-ref">A Guide To Tuning Horovod Parameters With Tune</span></a></p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<img alt="" class="sd-card-img-top pt-2 w-75 d-block mx-auto fixed-height-img" src="../../_images/hugging.png" />
+<div class="sd-card-body docutils">
+<p class="sd-card-text"><a class="sd-sphinx-override sd-btn sd-text-wrap reference internal" href="pbt_transformers.html#tune-huggingface-example"><span class="std std-ref">A Guide To Tuning Huggingface Transformers With Tune</span></a></p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<img alt="" class="sd-card-img-top pt-2 w-75 d-block mx-auto fixed-height-img" src="../../_images/tune.png" />
+<div class="sd-card-body docutils">
+<p class="sd-card-text"><a class="sd-sphinx-override sd-btn sd-text-wrap reference internal" href="../../train/examples/tf/tune_tensorflow_mnist_example.html#tune-train-tf-example"><span class="std std-ref">End-to-end Example for Tuning a TensorFlow Model</span></a></p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<img alt="" class="sd-card-img-top pt-2 w-75 d-block mx-auto fixed-height-img" src="../../_images/tune.png" />
+<div class="sd-card-body docutils">
+<p class="sd-card-text"><a class="sd-sphinx-override sd-btn sd-text-wrap reference internal" href="../../train/examples/pytorch/tune_cifar_torch_pbt_example.html#tune-train-torch-example"><span class="std std-ref">End-to-end Example for Tuning a PyTorch Model with PBT</span></a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="tune-experiment-tracking-examples">
+<span id="id1"></span><h2>Tune Experiment Tracking Examples<a class="headerlink" href="#tune-experiment-tracking-examples" title="Permalink to this headline">#</a></h2>
+<p>Ray Tune integrates with some popular Experiment tracking and management tools,
+such as CometML, or Weights &amp; Biases. If you’re interested in learning how
+to use Ray Tune with Tensorboard, you can find more information in our
+<a class="reference internal" href="../tutorials/tune-output.html#tune-logging"><span class="std std-ref">Guide to logging and outputs</span></a>.</p>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 container pb-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-3 sd-row-cols-lg-4 sd-g-1 sd-g-xs-1 sd-g-sm-1 sd-g-md-1 sd-g-lg-1 docutils">
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<img alt="" class="sd-card-img-top pt-2 w-75 d-block mx-auto fixed-height-img" src="../../_images/aim_logo.png" />
+<div class="sd-card-body docutils">
+<p class="sd-card-text"><a class="sd-sphinx-override sd-btn sd-text-wrap reference internal" href="tune-aim.html#tune-aim-ref"><span class="std std-ref">Using Aim with Ray Tune For Experiment Management</span></a></p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<img alt="" class="sd-card-img-top pt-2 w-75 d-block mx-auto fixed-height-img" src="../../_images/comet_logo_full.png" />
+<div class="sd-card-body docutils">
+<p class="sd-card-text"><a class="sd-sphinx-override sd-btn sd-text-wrap reference internal" href="tune-comet.html#tune-comet-ref"><span class="std std-ref">Using Comet with Ray Tune For Experiment Management</span></a></p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<img alt="" class="sd-card-img-top pt-2 w-75 d-block mx-auto fixed-height-img" src="../../_images/wandb_logo.png" />
+<div class="sd-card-body docutils">
+<p class="sd-card-text"><a class="sd-sphinx-override sd-btn sd-text-wrap reference internal" href="tune-wandb.html#tune-wandb-ref"><span class="std std-ref">Tracking Your Experiment Process Weights &amp; Biases</span></a></p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<img alt="" class="sd-card-img-top pt-2 w-75 d-block mx-auto fixed-height-img" src="../../_images/mlflow.png" />
+<div class="sd-card-body docutils">
+<p class="sd-card-text"><a class="sd-sphinx-override sd-btn sd-text-wrap reference internal" href="tune-mlflow.html#tune-mlflow-ref"><span class="std std-ref">Using MLflow Tracking &amp; AutoLogging with Tune</span></a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="tune-hyperparameter-optimization-framework-examples">
+<span id="tune-hpo-framework-examples"></span><h2>Tune Hyperparameter Optimization Framework Examples<a class="headerlink" href="#tune-hyperparameter-optimization-framework-examples" title="Permalink to this headline">#</a></h2>
+<p>Tune integrates with a wide variety of hyperparameter optimization frameworks
+and their respective search algorithms. Here you can find detailed examples
+on each of our integrations:</p>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 container pb-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-3 sd-row-cols-lg-4 sd-g-1 sd-g-xs-1 sd-g-sm-1 sd-g-md-1 sd-g-lg-1 docutils">
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<img alt="" class="sd-card-img-top pt-2 w-75 d-block mx-auto fixed-height-img" src="../../_images/ax.png" />
+<div class="sd-card-body docutils">
+<p class="sd-card-text"><a class="sd-sphinx-override sd-btn sd-text-wrap reference internal" href="ax_example.html"><span class="doc">How To Use Tune With Ax</span></a></p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<img alt="" class="sd-card-img-top pt-2 w-75 d-block mx-auto fixed-height-img" src="../../_images/dragonfly.png" />
+<div class="sd-card-body docutils">
+<p class="sd-card-text"><a class="sd-sphinx-override sd-btn sd-text-wrap reference internal" href="dragonfly_example.html"><span class="doc">How To Use Tune With Dragonfly</span></a></p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<img alt="" class="sd-card-img-top pt-2 w-75 d-block mx-auto fixed-height-img" src="../../_images/hyperopt.png" />
+<div class="sd-card-body docutils">
+<p class="sd-card-text"><a class="sd-sphinx-override sd-btn sd-text-wrap reference internal" href="hyperopt_example.html"><span class="doc">How To Use Tune With HyperOpt</span></a></p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<img alt="" class="sd-card-img-top pt-2 w-75 d-block mx-auto fixed-height-img" src="../../_images/bayesopt.png" />
+<div class="sd-card-body docutils">
+<p class="sd-card-text"><a class="sd-sphinx-override sd-btn sd-text-wrap reference internal" href="bayesopt_example.html"><span class="doc">How To Use Tune With BayesOpt</span></a></p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<img alt="" class="sd-card-img-top pt-2 w-75 d-block mx-auto fixed-height-img" src="../../_images/flaml.png" />
+<div class="sd-card-body docutils">
+<p class="sd-card-text"><a class="sd-sphinx-override sd-btn sd-text-wrap reference internal" href="flaml_example.html"><span class="doc">How To Use Tune With BlendSearch and CFO</span></a></p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<img alt="" class="sd-card-img-top pt-2 w-75 d-block mx-auto fixed-height-img" src="../../_images/bohb.png" />
+<div class="sd-card-body docutils">
+<p class="sd-card-text"><a class="sd-sphinx-override sd-btn sd-text-wrap reference internal" href="bohb_example.html"><span class="doc">How To Use Tune With TuneBOHB</span></a></p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<img alt="" class="sd-card-img-top pt-2 w-75 d-block mx-auto fixed-height-img" src="../../_images/nevergrad.png" />
+<div class="sd-card-body docutils">
+<p class="sd-card-text"><a class="sd-sphinx-override sd-btn sd-text-wrap reference internal" href="nevergrad_example.html"><span class="doc">How To Use Tune With Nevergrad</span></a></p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<img alt="" class="sd-card-img-top pt-2 w-75 d-block mx-auto fixed-height-img" src="../../_images/optuna.png" />
+<div class="sd-card-body docutils">
+<p class="sd-card-text"><a class="sd-sphinx-override sd-btn sd-text-wrap reference internal" href="optuna_example.html"><span class="doc">How To Use Tune With Optuna</span></a></p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<img alt="" class="sd-card-img-top pt-2 w-75 d-block mx-auto fixed-height-img" src="../../_images/sigopt.png" />
+<div class="sd-card-body docutils">
+<p class="sd-card-text"><a class="sd-sphinx-override sd-btn sd-text-wrap reference internal" href="sigopt_example.html"><span class="doc">How To Use Tune With SigOpt</span></a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="other-examples">
+<span id="tune-general-examples"></span><h2>Other Examples<a class="headerlink" href="#other-examples" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="includes/tune_basic_example.html"><span class="doc">tune_basic_example</span></a>: Simple example for doing a basic random and grid search.</p></li>
+<li><p><a class="reference internal" href="includes/async_hyperband_example.html"><span class="doc">Asynchronous HyperBand Example</span></a>: Example of using a simple tuning function with
+AsyncHyperBandScheduler.</p></li>
+<li><p><a class="reference internal" href="includes/hyperband_function_example.html"><span class="doc">HyperBand Function Example</span></a>:
+Example of using a Trainable function with HyperBandScheduler.
+Also uses the AsyncHyperBandScheduler.</p></li>
+<li><p><a class="reference internal" href="pbt_visualization/pbt_visualization.html"><span class="doc">Visualizing Population Based Training (PBT) Hyperparameter Optimization</span></a>:
+Configuring and running (synchronous) PBT and understanding the underlying algorithm behavior with a simple example.</p></li>
+<li><p><a class="reference internal" href="includes/pbt_function.html"><span class="doc">PBT Function Example</span></a>:
+Example of using the function API with a PopulationBasedTraining scheduler.</p></li>
+<li><p><a class="reference internal" href="includes/pb2_example.html"><span class="doc">PB2 Example</span></a>: Example of using the Population-based Bandits (PB2) scheduler.</p></li>
+<li><p><a class="reference internal" href="includes/logging_example.html"><span class="doc">Logging Example</span></a>: Example of custom loggers and custom trial directory naming.</p></li>
+</ul>
+</section>
+<section id="tune-exercises">
+<span id="id2"></span><h2>Tune Exercises<a class="headerlink" href="#tune-exercises" title="Permalink to this headline">#</a></h2>
+<p>Learn how to use Tune in your browser with the following Colab-based exercises.</p>
+<table>
+  <tr>
+    <th class="tune-colab">Exercise Description</th>
+    <th class="tune-colab">Library</th>
+    <th class="tune-colab">Colab Link</th>
+  </tr>
+  <tr>
+    <td class="tune-colab">Basics of using Tune.</td>
+    <td class="tune-colab">TF/Keras</td>
+    <td class="tune-colab">
+      <a href="https://colab.research.google.com/github/ray-project/tutorial/blob/master/tune_exercises/exercise_1_basics.ipynb" target="_parent">
+      <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Tune Tutorial"/>
+      </a>
+    </td>
+  </tr>
+
+  <tr>
+    <td class="tune-colab">Using Search algorithms and Trial Schedulers to optimize your model.</td>
+    <td class="tune-colab">Pytorch</td>
+    <td class="tune-colab">
+      <a href="https://colab.research.google.com/github/ray-project/tutorial/blob/master/tune_exercises/exercise_2_optimize.ipynb" target="_parent">
+      <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Tune Tutorial"/>
+      </a>
+    </td>
+  </tr>
+
+  <tr>
+    <td class="tune-colab">Using Population-Based Training (PBT).</td>
+    <td class="tune-colab">Pytorch</td>
+    <td class="tune-colab">
+      <a href="https://colab.research.google.com/github/ray-project/tutorial/blob/master/tune_exercises/exercise_3_pbt.ipynb" target="_parent">
+      <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Tune Tutorial"/>
+      </a>
+    </td>
+  </tr>
+
+  <tr>
+    <td class="tune-colab">Fine-tuning Huggingface Transformers with PBT.</td>
+    <td class="tune-colab">Huggingface Transformers/Pytorch</td>
+    <td class="tune-colab">
+      <a href="https://colab.research.google.com/drive/1tQgAKgcKQzheoh503OzhS4N9NtfFgmjF?usp=sharing" target="_parent">
+      <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Tune Tutorial"/>
+      </a>
+    </td>
+  </tr>
+
+  <tr>
+    <td class="tune-colab">Logging Tune Runs to Comet ML.</td>
+    <td class="tune-colab">Comet</td>
+    <td class="tune-colab">
+      <a href="https://colab.research.google.com/drive/1dp3VwVoAH1acn_kG7RuT62mICnOqxU1z?usp=sharing" target="_parent">
+      <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Tune Tutorial"/>
+      </a>
+    </td>
+  </tr>
+</table><p>Tutorial source files <a class="reference external" href="https://github.com/ray-project/tutorial">can be found here</a>.</p>
+</section>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="../tutorials/tune-scalability.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Scalability and Overhead Benchmarks for Ray Tune</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="ml-frameworks.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Examples using Ray Tune with ML Frameworks</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><!-- Override the footer area for the sphinx-book-theme to include the CSAT widget -->
+<div id="csat">
+  <div id="csat-feedback-received" class="csat-hidden">
+    <span>谢谢你的反馈！</span>
+  </div>
+  <div id="csat-inputs">
+    <span>是否能帮助到你？</span>
+    <div id="csat-yes" class="csat-button">
+      <svg id="csat-yes-icon" class="csat-hidden csat-icon" width="18" height="13" viewBox="0 0 18 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 10.172L16.1922 0.979004L17.6072 2.393L7.00023 13L0.63623 6.636L2.05023 5.222L7.00023 10.172Z" fill="black"/>
+      </svg>
+      <span>是<span>
+    </div>
+    <div id="csat-no" class="csat-button">
+      <svg id="csat-no-icon" class="csat-hidden csat-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 5.58599L11.9502 0.635986L13.3642 2.04999L8.41423 6.99999L13.3642 11.95L11.9502 13.364L7.00023 8.41399L2.05023 13.364L0.63623 11.95L5.58623 6.99999L0.63623 2.04999L2.05023 0.635986L7.00023 5.58599Z" fill="black"/>
+      </svg>
+      <span>否<span>
+    </div>
+  </div>
+  <div id="csat-textarea-group" class="csat-hidden">
+    <span id="csat-feedback-label">反馈</span>
+    <textarea id="csat-textarea"></textarea>
+    <div id="csat-submit">提交</div>
+  </div>
+</div><p>
+  
+    By The Ray Team<br/>
+  
+      &copy; Copyright 2024, The Ray Team.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../_static/javascripts/modernizr.js"></script>
+  
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-54780881-2"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-54780881-2');
+</script>
+  
+  
+    <title>在 Google Cloud Platform 安装 &#8212; seldon-core  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=83e35b93" />
+    <link rel="stylesheet" type="text/css" href="../_static/material.css?v=79c92029" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/rtd_sphinx_search.min.css?v=fb480935" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=15a8f09d" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/rtd_search_config.js"></script>
+    <script src="../_static/js/rtd_sphinx_search.min.js?v=60fbc683"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="在 Microsoft Azure Cloud 安装" href="azure.html" />
+    <link rel="prev" title="本地安装" href="kind.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=indigo data-md-color-accent=teal>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#install/gcp" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../index.html" title="seldon-core  documentation"
+           class="md-header-nav__button md-logo">
+          
+            &nbsp;
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">Seldon Core Documentation</span>
+          <span class="md-header-nav__topic"> 在 Google Cloud Platform 安装 </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder=""Search""
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+            
+            <li class="md-tabs__item"><a href="/" class="md-tabs__link">🚀 Our Other Projects & Products:</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi/en/stable/" class="md-tabs__link">Alibi Explain</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi-detect/en/stable/" class="md-tabs__link">Alibi Detect</a></li>
+            
+            <li class="md-tabs__item"><a href="https://mlserver.readthedocs.io/en/latest/" class="md-tabs__link">MLServer</a></li>
+            
+            <li class="md-tabs__item"><a href="https://tempo.readthedocs.io/en/latest/" class="md-tabs__link">Tempo SDK</a></li>
+            
+            <li class="md-tabs__item"><a href="https://deploy.seldon.io" class="md-tabs__link">Seldon Enterprise Platform</a></li>
+            
+            <li class="md-tabs__item"><a href="https://github.com/SeldonIO/seldon-deploy-sdk#seldon-deploy-sdk" class="md-tabs__link">Seldon Enterprise Platform SDK</a></li>
+          <li class="md-tabs__item"><a href="../nav/getting-started.html" class="md-tabs__link">开始</a></li>
+          <li class="md-tabs__item"><a href="../nav/installation.html" class="md-tabs__link">安装</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../index.html" title="seldon-core documentation" class="md-nav__button md-logo">
+      
+        <img src="../_static/" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../index.html"
+       title="seldon-core documentation">Seldon Core Documentation</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/getting-started.html" class="md-nav__link">开始</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="../workflow/github-readme.html" class="md-nav__link">快速指引</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/installation.html" class="md-nav__link">安装</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="../workflow/install.html" class="md-nav__link">Kubernetes 安装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="kind.html" class="md-nav__link">本地安装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> Google Cloud 安装 </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">Google Cloud 安装</a>
+      
+        
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#install-gcp--page-root" class="md-nav__link">在 Google Cloud Platform 安装</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id1" class="md-nav__link">要求</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#google-cloud-cli" class="md-nav__link">Google Cloud CLI</a>
+        </li>
+        <li class="md-nav__item"><a href="#google-kubernetes-engine-gke" class="md-nav__link">Google Kubernetes Engine (GKE) 集群</a>
+        </li>
+        <li class="md-nav__item"><a href="#kubectl" class="md-nav__link">Kubectl</a>
+        </li>
+        <li class="md-nav__item"><a href="#helm" class="md-nav__link">Helm</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id5" class="md-nav__link">连接到集群</a>
+        </li>
+        <li class="md-nav__item"><a href="#id6" class="md-nav__link">安装集群入口</a>
+        </li>
+        <li class="md-nav__item"><a href="#seldon-core" class="md-nav__link">安装 Seldon Core</a>
+        </li>
+        <li class="md-nav__item"><a href="#id12" class="md-nav__link">访问您的模型</a>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/install/gcp.rst.txt">Show Source</a> </li>
+
+  </ul>
+</nav>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="azure.html" class="md-nav__link">Azure 安装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="aws.html" class="md-nav__link">AWS 安装</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../developer/community.html" class="md-nav__link">社区</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/concepts.html" class="md-nav__link">概念</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/configuration.html" class="md-nav__link">配置</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/tutorials.html" class="md-nav__link">教程</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/reference.html" class="md-nav__link">参考</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/contributing.html" class="md-nav__link">贡献</a>
+      
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#install-gcp--page-root" class="md-nav__link">在 Google Cloud Platform 安装</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id1" class="md-nav__link">要求</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#google-cloud-cli" class="md-nav__link">Google Cloud CLI</a>
+        </li>
+        <li class="md-nav__item"><a href="#google-kubernetes-engine-gke" class="md-nav__link">Google Kubernetes Engine (GKE) 集群</a>
+        </li>
+        <li class="md-nav__item"><a href="#kubectl" class="md-nav__link">Kubectl</a>
+        </li>
+        <li class="md-nav__item"><a href="#helm" class="md-nav__link">Helm</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id5" class="md-nav__link">连接到集群</a>
+        </li>
+        <li class="md-nav__item"><a href="#id6" class="md-nav__link">安装集群入口</a>
+        </li>
+        <li class="md-nav__item"><a href="#seldon-core" class="md-nav__link">安装 Seldon Core</a>
+        </li>
+        <li class="md-nav__item"><a href="#id12" class="md-nav__link">访问您的模型</a>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/install/gcp.rst.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <section id="google-cloud-platform">
+<h1 id="install-gcp--page-root">在 Google Cloud Platform 安装<a class="headerlink" href="#install-gcp--page-root" title="Permalink to this heading">¶</a></h1>
+<p>本指南介绍了如何在 Google Cloud 上运行的 Kubernetes 集群中设置和安装 Seldon Core。最终，您将能启动并运行 Seldon Core，并准备好部署机器学习模型。</p>
+<section id="id1">
+<h2 id="id1">要求<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h2>
+<section id="google-cloud-cli">
+<h3 id="google-cloud-cli">Google Cloud CLI<a class="headerlink" href="#google-cloud-cli" title="Permalink to this heading">¶</a></h3>
+<p>你需要 Google Cloud SDK 来检索集群验证凭证。它还可用于为您创建集群和其他资源：</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://cloud.google.com/sdk/docs/install">安装 Google Cloud SDK</a></p></li>
+</ul>
+</section>
+<section id="google-kubernetes-engine-gke">
+<h3 id="google-kubernetes-engine-gke">Google Kubernetes Engine (GKE) 集群<a class="headerlink" href="#google-kubernetes-engine-gke" title="Permalink to this heading">¶</a></h3>
+<p>如果您尚未在 GKE 上创建 Kubernetes 集群，则可以按照此快速入门指南设置您的第一个集群。确保创建 3 个节点 (<code class="docutils literal notranslate"><span class="pre">--num-nodes</span></code> 传递给 <code class="docutils literal notranslate"><span class="pre">容器集群来创建</span></code>) 以运行最小示例：</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://cloud.google.com/kubernetes-engine/docs/quickstart">创建 GKE 集群</a></p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>GKE 集群需要一个 <code class="docutils literal notranslate"><span class="pre">标准</span></code> 类型集群。GKE Autopilot 集群现在还不支持安装入口控制器。</p>
+</div>
+</section>
+<section id="kubectl">
+<h3 id="kubectl">Kubectl<a class="headerlink" href="#kubectl" title="Permalink to this heading">¶</a></h3>
+<p><a class="reference external" href="https://kubernetes.io/docs/reference/kubectl/overview/">kubectl</a> 是 Kubernetes 命令行工具。它允许您对 Kubernetes 集群运行命令，这是设置 Seldon Core 的一部分。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://kubernetes.io/docs/tasks/tools/install-kubectl-linux">在 Linux 安装 kubectl</a></p></li>
+<li><p><a class="reference external" href="https://kubernetes.io/docs/tasks/tools/install-kubectl-macos">在 macOS 安装 kubectl</a></p></li>
+<li><p><a class="reference external" href="https://kubernetes.io/docs/tasks/tools/install-kubectl-windows">在 Windows 安装 kubectl</a></p></li>
+</ul>
+</section>
+<section id="helm">
+<h3 id="helm">Helm<a class="headerlink" href="#helm" title="Permalink to this heading">¶</a></h3>
+<p><a class="reference external" href="https://helm.sh/">Helm</a> 是一个包管理工具，可以轻松查找、共享和使用为 Kubernetes 构建的软件。如果你还没有在本地安装 Helm，你可以在这里安装它：</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://helm.sh/docs/intro/install/">安装 Helm</a></p></li>
+</ul>
+</section>
+</section>
+<section id="id5">
+<h2 id="id5">连接到集群<a class="headerlink" href="#id5" title="Permalink to this heading">¶</a></h2>
+<p>运行 <cite>gcloud</cite> 命令连接到集群：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gcloud<span class="w"> </span>container<span class="w"> </span>clusters<span class="w"> </span>get-credentials<span class="w"> </span>CLUSTER_NAME
+</pre></div>
+</div>
+<p>这将配置 <code class="docutils literal notranslate"><span class="pre">kubectl</span></code> 使用 google 云 kubernetes 集群。别忘记替换 <code class="docutils literal notranslate"><span class="pre">CLUSTER_NAME</span></code> 为你自己创建的集群。如果忘记，可以运行 <code class="docutils literal notranslate"><span class="pre">gcloud</span> <span class="pre">container</span> <span class="pre">clusters</span> <span class="pre">list</span></code>。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>如果运行如上命令出现认证错误，尝试运行 <code class="docutils literal notranslate"><span class="pre">gcloud</span> <span class="pre">auth</span> <span class="pre">login</span></code> 来检查是否正确登录。</p>
+</div>
+</section>
+<section id="id6">
+<h2 id="id6">安装集群入口<a class="headerlink" href="#id6" title="Permalink to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">Ingress</span></code> 是为您的集群提供路由规则的 Kubernetes 对象。它管理传入的流量并将其路由到集群内运行的服务。</p>
+<p>Seldon Core 支持使用 <a class="reference external" href="https://istio.io/">Istio</a> 或 <a class="reference external" href="https://www.getambassador.io/">Ambassador</a> 来管理传入流量。Seldon Core 自动创建将流量路由到您部署的机器学习模型所需的对象和规则。</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio"/>
+<label class="sd-tab-label" for="sd-tab-item-0">
+Istio</label><div class="sd-tab-content docutils">
+<p>Istio 是一个开源服务网格。如果您对 <em>service mesh</em> 不熟悉，非常值得去阅读 <a class="reference external" href="https://istio.io/latest/about/service-mesh/">更多关于Istio 的内容</a> 。</p>
+<p><strong>下载 Istio</strong></p>
+<p>对于 Linux 及 macOS，最简单的方式是使用以下命令下载 Istio：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-L<span class="w"> </span>https://istio.io/downloadIstio<span class="w"> </span><span class="p">|</span><span class="w"> </span>sh<span class="w"> </span>-
+</pre></div>
+</div>
+<p>M进入 Istio 包目录。比如，包 <code class="docutils literal notranslate"><span class="pre">istio-1.11.4</span></code>：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>istio-1.11.4
+</pre></div>
+</div>
+<p>添加 istioctl 客户端到 path (Linux or macOS):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$PWD</span>/bin:<span class="nv">$PATH</span>
+</pre></div>
+</div>
+<p><strong>安装 Istio</strong></p>
+<p>Istio 提供了一个命令工具 <code class="docutils literal notranslate"><span class="pre">istioctl</span></code> 来使安装更便捷。<code class="docutils literal notranslate"><span class="pre">示例</span></code> <a class="reference external" href="https://istio.io/latest/docs/setup/additional-setup/config-profiles/">配置项</a> 有一组很好的默认值来运行在你本地集群。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>istioctl<span class="w"> </span>install<span class="w"> </span>--set<span class="w"> </span><span class="nv">profile</span><span class="o">=</span>demo<span class="w"> </span>-y
+</pre></div>
+</div>
+<p>命名空间标签 <code class="docutils literal notranslate"><span class="pre">istio-injection=enabled</span></code> 指示 Istio 注入自动代理我们在该命名空间中部署的任何内容。我们将为我们的 <code class="docutils literal notranslate"><span class="pre">default</span></code> 命名空间设置它：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>label<span class="w"> </span>namespace<span class="w"> </span>default<span class="w"> </span>istio-injection<span class="o">=</span>enabled
+</pre></div>
+</div>
+<p><strong>创建 Istio 网关</strong></p>
+<p>为了让 Seldon Core 使用 Istio 的特性来管理流量，我们使用如下命令来创建一个 <a class="reference external" href="https://istio.io/latest/docs/tasks/traffic-management/ingress/ingress-control/">Istio Gateway</a> ：</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>你需要拷贝下面全部的命令</p>
+</div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">kubectl apply -f - &lt;&lt; END</span>
+<span class="l l-Scalar l-Scalar-Plain">apiVersion</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.istio.io/v1alpha3</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Gateway</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">seldon-gateway</span>
+<span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">istio-system</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="nt">selector</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">istio</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ingressgateway</span><span class="w"> </span><span class="c1"># use istio default controller</span>
+<span class="nt">servers</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">number</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
+<span class="w">    </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HTTP</span>
+<span class="w">    </span><span class="nt">hosts</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"*"</span>
+<span class="l l-Scalar l-Scalar-Plain">END</span>
+</pre></div>
+</div>
+<p>自定义配置及更多 seldon core 集成 Istio 安装的细节请查看 <a class="reference internal" href="../ingress/istio.html"><span class="doc">Istio 入口</span></a> 页。</p>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio"/>
+<label class="sd-tab-label" for="sd-tab-item-1">
+Ambassador</label><div class="sd-tab-content docutils">
+<p><a class="reference external" href="https://www.getambassador.io/">Ambassador</a> 是 Kubernetes 入口控制器及 API 网关。他通过配置路由请求流量到 kubernetes 负载。</p>
+<p><strong>安装 Ambassador</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Seldon Core 现在只支持 Ambassador V1 APIs。以下安装说明将只安装 emissary ingress 最新的 v1 版本。</p>
+</div>
+<p>首先添加 datawire helm 仓库：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>helm<span class="w"> </span>repo<span class="w"> </span>add<span class="w"> </span>datawire<span class="w"> </span>https://www.getambassador.io
+helm<span class="w"> </span>repo<span class="w"> </span>update
+</pre></div>
+</div>
+<p>执行以下 <cite>helm</cite> 命令安装 Ambassador 到 GKE 集群：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>helm<span class="w"> </span>install<span class="w"> </span>ambassador<span class="w"> </span>datawire/ambassador<span class="w"> </span>--set<span class="w"> </span><span class="nv">enableAES</span><span class="o">=</span><span class="nb">false</span><span class="w"> </span>--namespace<span class="w"> </span>ambassador<span class="w"> </span>--create-namespace
+kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>-n<span class="w"> </span>ambassador<span class="w"> </span>deployment/ambassador<span class="w"> </span>-w
+</pre></div>
+</div>
+<p>Ambassador 已就绪。自定义配置及更多集成 Ambassador 安装 seldon core 的细节请查看 <a class="reference internal" href="../ingress/ambassador.html"><span class="doc">Ambassador 入口</span></a> 页。</p>
+</div>
+</div>
+</section>
+<section id="seldon-core">
+<h2 id="seldon-core">安装 Seldon Core<a class="headerlink" href="#seldon-core" title="Permalink to this heading">¶</a></h2>
+<p>在安装 Seldon Core 前，创建一个 operator 运行所在的命名空间 <code class="docutils literal notranslate"><span class="pre">seldon-system</span></code> ：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>create<span class="w"> </span>namespace<span class="w"> </span>seldon-system
+</pre></div>
+</div>
+<p>现在我们已经为在集群安装 Seldon Core 准备就绪。根据选择的入口类型执行如下命令：</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-2" name="sd-tab-set-1" type="radio"/>
+<label class="sd-tab-label" for="sd-tab-item-2">
+Istio</label><div class="sd-tab-content docutils">
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>helm<span class="w"> </span>install<span class="w"> </span>seldon-core<span class="w"> </span>seldon-core-operator<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--repo<span class="w"> </span>https://storage.googleapis.com/seldon-charts<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--set<span class="w"> </span>usageMetrics.enabled<span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--set<span class="w"> </span>istio.enabled<span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--namespace<span class="w"> </span>seldon-system
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-3" name="sd-tab-set-1" type="radio"/>
+<label class="sd-tab-label" for="sd-tab-item-3">
+Ambassador</label><div class="sd-tab-content docutils">
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>helm<span class="w"> </span>install<span class="w"> </span>seldon-core<span class="w"> </span>seldon-core-operator<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--repo<span class="w"> </span>https://storage.googleapis.com/seldon-charts<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--set<span class="w"> </span>usageMetrics.enabled<span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--set<span class="w"> </span>ambassador.enabled<span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--namespace<span class="w"> </span>seldon-system
+</pre></div>
+</div>
+</div>
+</div>
+<p>使用以下命令检查 Seldon Controller 运行状态：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>seldon-system
+</pre></div>
+</div>
+<p>你应当看到 <code class="docutils literal notranslate"><span class="pre">seldon-controller-manager</span></code> pod 的状态 <code class="docutils literal notranslate"><span class="pre">STATUS=Running</span></code>。</p>
+</section>
+<section id="id12">
+<h2 id="id12">访问您的模型<a class="headerlink" href="#id12" title="Permalink to this heading">¶</a></h2>
+<p>恭喜！Seldon Core 现在已完全安装并运行。在继续部署模型之前，请记下您的集群 IP 和端口：</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-4" name="sd-tab-set-2" type="radio"/>
+<label class="sd-tab-label" for="sd-tab-item-4">
+Istio</label><div class="sd-tab-content docutils">
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">INGRESS_HOST</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>-n<span class="w"> </span>istio-system<span class="w"> </span>get<span class="w"> </span>service<span class="w"> </span>istio-ingressgateway<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.status.loadBalancer.ingress[0].ip}'</span><span class="k">)</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">INGRESS_PORT</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>-n<span class="w"> </span>istio-system<span class="w"> </span>get<span class="w"> </span>service<span class="w"> </span>istio-ingressgateway<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.spec.ports[?(@.name=="http2")].port}'</span><span class="k">)</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">INGRESS_URL</span><span class="o">=</span><span class="nv">$INGRESS_HOST</span>:<span class="nv">$INGRESS_PORT</span>
+<span class="nb">echo</span><span class="w"> </span><span class="nv">$INGRESS_URL</span>
+</pre></div>
+</div>
+<p>这是您将用于访问集群中运行的模型的公共地址。</p>
+</div>
+<input id="sd-tab-item-5" name="sd-tab-set-2" type="radio"/>
+<label class="sd-tab-label" for="sd-tab-item-5">
+Ambassador</label><div class="sd-tab-content docutils">
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">INGRESS_HOST</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>-n<span class="w"> </span>ambassador<span class="w"> </span>get<span class="w"> </span>service<span class="w"> </span>ambassador<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.status.loadBalancer.ingress[0].ip}'</span><span class="k">)</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">INGRESS_PORT</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>-n<span class="w"> </span>ambassador<span class="w"> </span>get<span class="w"> </span>service<span class="w"> </span>ambassador<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.spec.ports[?(@.name=="http")].port}'</span><span class="k">)</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">INGRESS_URL</span><span class="o">=</span><span class="nv">$INGRESS_HOST</span>:<span class="nv">$INGRESS_PORT</span>
+<span class="nb">echo</span><span class="w"> </span><span class="nv">$INGRESS_URL</span>
+</pre></div>
+</div>
+<p>这是您将用于访问集群中运行的模型的公共地址。</p>
+</div>
+</div>
+<p>您现在已准备好 <a class="reference internal" href="../workflow/github-readme.html"><span class="doc">将模型部署到您的集群</span></a>。</p>
+</section>
+</section>
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="kind.html" title="本地安装"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> "Previous" </span> 本地安装 </span>
+              </div>
+            </a>
+          
+          
+            <a href="azure.html" title="在 Microsoft Azure Cloud 安装"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> "Next" </span> 在 Microsoft Azure Cloud 安装 </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2024, Seldon Technologies Ltd.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

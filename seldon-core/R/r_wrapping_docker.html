@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../_static/javascripts/modernizr.js"></script>
+  
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-54780881-2"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-54780881-2');
+</script>
+  
+  
+    <title>使用 Docker 为 Seldon Core 打包 R 模型 &#8212; seldon-core  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=83e35b93" />
+    <link rel="stylesheet" type="text/css" href="../_static/material.css?v=79c92029" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/rtd_sphinx_search.min.css?v=fb480935" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=15a8f09d" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/rtd_search_config.js"></script>
+    <script src="../_static/js/rtd_sphinx_search.min.js?v=60fbc683"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="seldon-openvino" href="../charts/seldon-openvino.html" />
+    <link rel="prev" title="供审核的存档文档" href="../nav/archive.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=indigo data-md-color-accent=teal>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#R/r_wrapping_docker" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../index.html" title="seldon-core  documentation"
+           class="md-header-nav__button md-logo">
+          
+            &nbsp;
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">Seldon Core Documentation</span>
+          <span class="md-header-nav__topic"> 使用 Docker 为 Seldon Core 打包 R 模型 </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder=""Search""
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+            
+            <li class="md-tabs__item"><a href="/" class="md-tabs__link">🚀 Our Other Projects & Products:</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi/en/stable/" class="md-tabs__link">Alibi Explain</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi-detect/en/stable/" class="md-tabs__link">Alibi Detect</a></li>
+            
+            <li class="md-tabs__item"><a href="https://mlserver.readthedocs.io/en/latest/" class="md-tabs__link">MLServer</a></li>
+            
+            <li class="md-tabs__item"><a href="https://tempo.readthedocs.io/en/latest/" class="md-tabs__link">Tempo SDK</a></li>
+            
+            <li class="md-tabs__item"><a href="https://deploy.seldon.io" class="md-tabs__link">Seldon Enterprise Platform</a></li>
+            
+            <li class="md-tabs__item"><a href="https://github.com/SeldonIO/seldon-deploy-sdk#seldon-deploy-sdk" class="md-tabs__link">Seldon Enterprise Platform SDK</a></li>
+          <li class="md-tabs__item"><a href="../nav/reference.html" class="md-tabs__link">参考</a></li>
+          <li class="md-tabs__item"><a href="../nav/archive.html" class="md-tabs__link">供审核的存档文档</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../index.html" title="seldon-core documentation" class="md-nav__button md-logo">
+      
+        <img src="../_static/" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../index.html"
+       title="seldon-core documentation">Seldon Core Documentation</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/getting-started.html" class="md-nav__link">开始</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/concepts.html" class="md-nav__link">概念</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/configuration.html" class="md-nav__link">配置</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/tutorials.html" class="md-nav__link">教程</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/reference.html" class="md-nav__link">参考</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="../graph/annotations.html" class="md-nav__link">基于注解的配置</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../reference/benchmarking.html" class="md-nav__link">基准测试</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../reference/ga.html" class="md-nav__link">一般可用性（GA）</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../graph/helm_charts.html" class="md-nav__link">Helm Charts</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../reference/images.html" class="md-nav__link">镜像</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../analytics/log_level.html" class="md-nav__link">日志及等级</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../graph/private_registries.html" class="md-nav__link">私有 Docker 注册中心</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../reference/apis/index.html" class="md-nav__link">预估 APIs</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../python/api/modules.html" class="md-nav__link">Python API 参考</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../reference/release-highlights.html" class="md-nav__link">发布亮点</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../reference/seldon-deployment.html" class="md-nav__link">Seldon Deployment CRD</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../graph/svcorch.html" class="md-nav__link">服务编排器</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../analytics/kubeflow.html" class="md-nav__link">Kubeflow</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/archive.html" class="md-nav__link">归档文档</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> R 语言封装 Docker </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">R 语言封装 Docker</a>
+      
+        
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#r-r-wrapping-docker--page-root" class="md-nav__link">使用 Docker 为 Seldon Core 打包 R 模型</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id1" class="md-nav__link">第 1 步 - 创建源代码</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#r" class="md-nav__link">R 运行时模型文件</a>
+        </li>
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">依赖</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id3" class="md-nav__link">第 2 步 - 构建镜像</a>
+        </li>
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">参考</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id5" class="md-nav__link">环境变量</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#model-name" class="md-nav__link">MODEL_NAME</a>
+        </li>
+        <li class="md-nav__item"><a href="#api-type" class="md-nav__link">API_TYPE</a>
+        </li>
+        <li class="md-nav__item"><a href="#service-type" class="md-nav__link">SERVICE_TYPE</a>
+        </li>
+        <li class="md-nav__item"><a href="#persistence" class="md-nav__link">PERSISTENCE</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#creating-different-service-types" class="md-nav__link">Creating different service types</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#model" class="md-nav__link">MODEL</a>
+        </li>
+        <li class="md-nav__item"><a href="#router" class="md-nav__link">ROUTER</a>
+        </li>
+        <li class="md-nav__item"><a href="#transformer" class="md-nav__link">TRANSFORMER</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/R/r_wrapping_docker.md.txt">Show Source</a> </li>
+
+  </ul>
+</nav>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../charts/seldon-openvino.html" class="md-nav__link">Seldon OpenVino</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/ambassador_circuit_breakers.html" class="md-nav__link">Ambassador 熔断</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/custom_init_container.html" class="md-nav__link">Custom Init Containers with rclone and MinIO</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/custom_init_container.html#Cleanup" class="md-nav__link">Cleanup</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/drift_cifar10.html" class="md-nav__link">Drift CIFAR10</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/dvc.html" class="md-nav__link">DVC</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/graph-metadata.html" class="md-nav__link">图元数据</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/iris_anchor_tabular_explainer_v2.html" class="md-nav__link">Anchor Tabular Explainer</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/iris_explainer_poetry.html" class="md-nav__link">Explainer for Iris model with Poetry-defined Environment</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/iris_explainer_poetry.html#Deploy-Iris-Model" class="md-nav__link">Deploy Iris Model</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/iris_explainer_poetry.html#Train-Explainer" class="md-nav__link">Train Explainer</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/iris_explainer_poetry.html#Save-and-deploy-Explainer" class="md-nav__link">Save and deploy Explainer</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/iris_explainer_poetry.html#Test-Deployed-explainer" class="md-nav__link">Test Deployed explainer</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/istio.html" class="md-nav__link">Istio 示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/metadata.html" class="md-nav__link">元数据示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/metadata_grpc.html" class="md-nav__link">Metadata GRPC API example</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/metadata_grpc.html#Example-description" class="md-nav__link">Example description</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/metadata_schema.html" class="md-nav__link">元数据架构</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/pachyderm-simple.html" class="md-nav__link">Pachyderm 示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/pvc-tfjob.html" class="md-nav__link">PVC TFJob</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/seldon_client.html" class="md-nav__link">Seldon 客户端</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/server_examples.html" class="md-nav__link">Server 示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../examples/triton_mnist_e2e.html" class="md-nav__link">Triton E2E</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../graph/custom_svc_name.html" class="md-nav__link">自定义 Service 名称示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../graph/grpc_load_balancing_ambassador.html" class="md-nav__link">gRPC 负载均衡</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../graph/model_rest_grpc_settings.html" class="md-nav__link">Rest gRPC 设置</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../graph/model_svcorch_sep.html" class="md-nav__link">模型服务编排</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../java-jni/README.html" class="md-nav__link">Java JNI</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../reference/apis/readme.html" class="md-nav__link">APIs 读我</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../reference/concepts.html" class="md-nav__link">概念</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../reference/integration_nvidia_link.html" class="md-nav__link">Nvidia 实现</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../reference/integration_sagemaker_link.html" class="md-nav__link">Sagemaker 实现</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../tutorials/blogs.html" class="md-nav__link">博客</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../tutorials/podcasts.html" class="md-nav__link">播客</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../tutorials/videos.html" class="md-nav__link">视频</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../workflow/quickstart.html" class="md-nav__link">快速开始</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../wrappers/language_wrappers.html" class="md-nav__link">语言封装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../wrappers/s2i.html" class="md-nav__link">S2I</a>
+      
+    
+    </li></ul>
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/contributing.html" class="md-nav__link">贡献</a>
+      
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#r-r-wrapping-docker--page-root" class="md-nav__link">使用 Docker 为 Seldon Core 打包 R 模型</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id1" class="md-nav__link">第 1 步 - 创建源代码</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#r" class="md-nav__link">R 运行时模型文件</a>
+        </li>
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">依赖</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id3" class="md-nav__link">第 2 步 - 构建镜像</a>
+        </li>
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">参考</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id5" class="md-nav__link">环境变量</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#model-name" class="md-nav__link">MODEL_NAME</a>
+        </li>
+        <li class="md-nav__item"><a href="#api-type" class="md-nav__link">API_TYPE</a>
+        </li>
+        <li class="md-nav__item"><a href="#service-type" class="md-nav__link">SERVICE_TYPE</a>
+        </li>
+        <li class="md-nav__item"><a href="#persistence" class="md-nav__link">PERSISTENCE</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#creating-different-service-types" class="md-nav__link">Creating different service types</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#model" class="md-nav__link">MODEL</a>
+        </li>
+        <li class="md-nav__item"><a href="#router" class="md-nav__link">ROUTER</a>
+        </li>
+        <li class="md-nav__item"><a href="#transformer" class="md-nav__link">TRANSFORMER</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/R/r_wrapping_docker.md.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <section id="docker-seldon-core-r">
+<h1 id="r-r-wrapping-docker--page-root">使用 Docker 为 Seldon Core 打包 R 模型<a class="headerlink" href="#r-r-wrapping-docker--page-root" title="Permalink to this heading">¶</a></h1>
+<p>本导航，我们将说明使用 Docker 为 Seldon Core 开发好的 R 模型创建 docker 镜像。</p>
+<section id="id1">
+<h2 id="id1">第 1 步 - 创建源代码<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h2>
+<p>您将需要一个提供 S3 类的 R 文件，该文件通过 <code class="docutils literal notranslate"><span class="pre">initialise_seldon</span></code> 函数为您的模型为您的组件提供适当的泛型，例如预测模型。您还需要声明代码所需的任何依赖项。</p>
+<section id="r">
+<h3 id="r">R 运行时模型文件<a class="headerlink" href="#r" title="Permalink to this heading">¶</a></h3>
+<p>您的源代码应包含一个 R 文件，该文件为您的模型定义了一个 S3 类。例如，查看我们的骨架 R 模型文件 <code class="docutils literal notranslate"><span class="pre">incubating/wrappers/s2i/R/test/model-template-app/MyModel.R</span></code>：</p>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">methods</span><span class="p">)</span>
+
+<span class="n">predict.mymodel</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">function</span><span class="p">(</span><span class="n">mymodel</span><span class="p">,</span><span class="n">newdata</span><span class="o">=</span><span class="nf">list</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nf">write</span><span class="p">(</span><span class="s">"MyModel predict called"</span><span class="p">,</span><span class="w"> </span><span class="nf">stdout</span><span class="p">())</span>
+<span class="w">  </span><span class="n">newdata</span>
+<span class="p">}</span>
+
+
+<span class="n">new_mymodel</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nf">structure</span><span class="p">(</span><span class="nf">list</span><span class="p">(),</span><span class="w"> </span><span class="n">class</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"mymodel"</span><span class="p">)</span>
+<span class="p">}</span>
+
+
+<span class="n">initialise_seldon</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">function</span><span class="p">(</span><span class="n">params</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nf">new_mymodel</span><span class="p">()</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>一个 <code class="docutils literal notranslate"><span class="pre">seldon_initialise</span></code> 函数通过构造函数 <code class="docutils literal notranslate"><span class="pre">new_mymodel</span></code> 为模型创建一个 S3 类。这将在启动时调用，您可以使用它来加载模型所需的任何参数。</p></li>
+<li><p>为模型类创建一个 <code class="docutils literal notranslate"><span class="pre">predict</span></code> 函数。这将使用具有要预测的 <code class="docutils literal notranslate"><span class="pre">newdata</span></code> 字段来调用 <code class="docutils literal notranslate"><span class="pre">data.frame</span></code>。</p></li>
+</ul>
+<p>ROUTERS 和 TRANSFORMERS 有类似的模板。</p>
+</section>
+<section id="id2">
+<h3 id="id2">依赖<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
+<p>若在 docker 之外运行您的代码，您可以任何依赖控制软件填充 <code class="docutils literal notranslate"><span class="pre">install.R</span></code>。例如：</p>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">install.packages</span><span class="p">(</span><span class="s">'rpart'</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>这些相同的依赖项需要安装在 docker 镜像中，如下一节所述。</p>
+</section>
+</section>
+<section id="id3">
+<h2 id="id3">第 2 步 - 构建镜像<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h2>
+<p>如何安装依赖取决于<a class="reference external" href="https://www.r-bloggers.com/2019/01/docker-images-for-r-r-base-versus-r-apt/">你选择的基础镜像</a>，以及依赖的二进制版本是否可用。使用 <code class="docutils literal notranslate"><span class="pre">rocker/r-apt:bionic</span></code> 作为基础镜像，并安装二进制依赖，如果可能，  会生成更快、更小的构建。</p>
+<p>docker file 示例可在 <a class="reference external" href="https://github.com/kubeflow/example-seldon/blob/master/models/r_mnist/runtime/Dockerfile">seldon kubeflow 示例</a>查看：</p>
+<div class="highlight-dockerfile notranslate"><div class="highlight"><pre><span></span><span class="k">FROM</span><span class="w"> </span><span class="s">rocker/r-apt:bionic</span>
+
+<span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>-qq<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>r-cran-plumber<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>r-cran-jsonlite<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>r-cran-optparse<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>r-cran-stringr<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>r-cran-urltools<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>r-cran-caret<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>r-cran-pls<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>curl
+
+<span class="k">ENV</span><span class="w"> </span>MODEL_NAME<span class="w"> </span>mnist.R
+<span class="k">ENV</span><span class="w"> </span>API_TYPE<span class="w"> </span>REST
+<span class="k">ENV</span><span class="w"> </span>SERVICE_TYPE<span class="w"> </span>MODEL
+<span class="k">ENV</span><span class="w"> </span>PERSISTENCE<span class="w"> </span><span class="m">0</span>
+
+<span class="k">RUN</span><span class="w"> </span>mkdir<span class="w"> </span>microservice
+<span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>/microservice
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/microservice</span>
+
+<span class="k">RUN</span><span class="w"> </span>curl<span class="w"> </span>-OL<span class="w"> </span>https://raw.githubusercontent.com/SeldonIO/seldon-core/v0.5.0/incubating/wrappers/s2i/R/microservice.R<span class="w"> </span>&gt;<span class="w"> </span>/microservice/microservice.R
+
+<span class="k">EXPOSE</span><span class="w"> </span><span class="s">5000</span>
+
+<span class="k">CMD</span><span class="w"> </span>Rscript<span class="w"> </span>microservice.R<span class="w"> </span>--model<span class="w"> </span><span class="nv">$MODEL_NAME</span><span class="w"> </span>--api<span class="w"> </span><span class="nv">$API_TYPE</span><span class="w"> </span>--service<span class="w"> </span><span class="nv">$SERVICE_TYPE</span><span class="w"> </span>--persistence<span class="w"> </span><span class="nv">$PERSISTENCE</span>
+</pre></div>
+</div>
+<p>这里二进制版本的库安装在顶部。seldon 封装器所需依赖项 ‘plumber’, ‘jsonlite’, ‘optparse’, ‘stringr’, ‘urltools’ 和 ‘caret’ - 除了这些，你可以添加你自己的依赖项（这里的「pls」是示例，封装器不需要）。</p>
+<p>然后设置环境变量，最后将作为参数传递给 CMD 中的 R 微服务。下面解释环境变量的含义。</p>
+<p>创建一个目录并将本地源代码处理到该目录中，然后将其设置为工作目录。然后将 seldon 微服务封装器文件复制到此目录中。将模型封装为作为微服务运行。暴露命令将 5000 设置为服务的端口。</p>
+<p>然后使用 <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">build</span> <span class="pre">.</span> <span class="pre">-t</span> <span class="pre">$ORG/$MODEL_NAME:$TAG</span></code> 命令从源代码创建 Docker 映像。可以使用一个简单的名称，但约定是使用 ORG/IMAGE:TAG 格式。</p>
+</section>
+<section id="id4">
+<h2 id="id4">参考<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h2>
+<section id="id5">
+<h3 id="id5">环境变量<a class="headerlink" href="#id5" title="Permalink to this heading">¶</a></h3>
+<p>下面解释了构建器映像所需环境变量。您可以在 Dockerfile 中或作为<code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">run</span></code> 的 <code class="docutils literal notranslate"><span class="pre">-e</span></code> 参数提供。</p>
+<section id="model-name">
+<h4 id="model-name">MODEL_NAME<a class="headerlink" href="#model-name" title="Permalink to this heading">¶</a></h4>
+<p>包含模型的 R 文件的名称。</p>
+</section>
+<section id="api-type">
+<h4 id="api-type">API_TYPE<a class="headerlink" href="#api-type" title="Permalink to this heading">¶</a></h4>
+<p>要创建的 API 类型。目前只能是REST。</p>
+</section>
+<section id="service-type">
+<h4 id="service-type">SERVICE_TYPE<a class="headerlink" href="#service-type" title="Permalink to this heading">¶</a></h4>
+<p>创建的服务类型。可用选项有：</p>
+<ul class="simple">
+<li><p>MODEL</p></li>
+<li><p>ROUTER</p></li>
+<li><p>TRANSFORMER</p></li>
+</ul>
+</section>
+<section id="persistence">
+<h4 id="persistence">PERSISTENCE<a class="headerlink" href="#persistence" title="Permalink to this heading">¶</a></h4>
+<p>目前只能是 0。将来，将允许定期保存组件的状态。</p>
+</section>
+</section>
+<section id="creating-different-service-types">
+<h3 id="creating-different-service-types">Creating different service types<a class="headerlink" href="#creating-different-service-types" title="Permalink to this heading">¶</a></h3>
+<section id="model">
+<h4 id="model">MODEL<a class="headerlink" href="#model" title="Permalink to this heading">¶</a></h4>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/SeldonIO/seldon-core/tree/master/incubating/wrappers/s2i/R/test/model-template-app">模型源代码的最小骨架</a></p></li>
+<li><p><a class="reference external" href="../examples/notebooks.html">示例模型</a></p></li>
+</ul>
+</section>
+<section id="router">
+<h4 id="router">ROUTER<a class="headerlink" href="#router" title="Permalink to this heading">¶</a></h4>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/seldonio/seldon-core/tree/master/incubating/wrappers/s2i/R/test/router-template-app">路由器源代码的最小框架</a></p></li>
+</ul>
+</section>
+<section id="transformer">
+<h4 id="transformer">TRANSFORMER<a class="headerlink" href="#transformer" title="Permalink to this heading">¶</a></h4>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/seldonio/seldon-core/tree/master/incubating/wrappers/s2i/R/test/transformer-template-app">转换器源代码的最小骨架</a></p></li>
+</ul>
+</section>
+</section>
+</section>
+</section>
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="../nav/archive.html" title="供审核的存档文档"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> "Previous" </span> 供审核的存档文档 </span>
+              </div>
+            </a>
+          
+          
+            <a href="../charts/seldon-openvino.html" title="seldon-openvino"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> "Next" </span> seldon-openvino </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2024, Seldon Technologies Ltd.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

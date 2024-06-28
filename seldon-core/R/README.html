@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../_static/javascripts/modernizr.js"></script>
+  
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-54780881-2"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-54780881-2');
+</script>
+  
+  
+    <title>使用 s2i 为 Seldon Core 打包 R 模型（孵化） &#8212; seldon-core  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=83e35b93" />
+    <link rel="stylesheet" type="text/css" href="../_static/material.css?v=79c92029" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/rtd_sphinx_search.min.css?v=fb480935" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=15a8f09d" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/rtd_search_config.js"></script>
+    <script src="../_static/js/rtd_sphinx_search.min.js?v=60fbc683"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="集成" href="../nav/config/integrations.html" />
+    <link rel="prev" title="为 Seldon Core 封装 C++ 框架/模型" href="../cpp/README.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=indigo data-md-color-accent=teal>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#R/README" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../index.html" title="seldon-core  documentation"
+           class="md-header-nav__button md-logo">
+          
+            &nbsp;
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">Seldon Core Documentation</span>
+          <span class="md-header-nav__topic"> 使用 s2i 为 Seldon Core 打包 R 模型（孵化） </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder=""Search""
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+            
+            <li class="md-tabs__item"><a href="/" class="md-tabs__link">🚀 Our Other Projects & Products:</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi/en/stable/" class="md-tabs__link">Alibi Explain</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi-detect/en/stable/" class="md-tabs__link">Alibi Detect</a></li>
+            
+            <li class="md-tabs__item"><a href="https://mlserver.readthedocs.io/en/latest/" class="md-tabs__link">MLServer</a></li>
+            
+            <li class="md-tabs__item"><a href="https://tempo.readthedocs.io/en/latest/" class="md-tabs__link">Tempo SDK</a></li>
+            
+            <li class="md-tabs__item"><a href="https://deploy.seldon.io" class="md-tabs__link">Seldon Enterprise Platform</a></li>
+            
+            <li class="md-tabs__item"><a href="https://github.com/SeldonIO/seldon-deploy-sdk#seldon-deploy-sdk" class="md-tabs__link">Seldon Enterprise Platform SDK</a></li>
+          <li class="md-tabs__item"><a href="../nav/configuration.html" class="md-tabs__link">配置</a></li>
+          <li class="md-tabs__item"><a href="../nav/config/wrappers.html" class="md-tabs__link">语言封装和 SDK</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../index.html" title="seldon-core documentation" class="md-nav__button md-logo">
+      
+        <img src="../_static/" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../index.html"
+       title="seldon-core documentation">Seldon Core Documentation</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/getting-started.html" class="md-nav__link">开始</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/concepts.html" class="md-nav__link">概念</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/configuration.html" class="md-nav__link">配置</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/installation.html" class="md-nav__link">安装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/deployments.html" class="md-nav__link">发布</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/servers.html" class="md-nav__link">服务器</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/routing.html" class="md-nav__link">路由</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/wrappers.html" class="md-nav__link">语言封装和 SDK</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="../python/index.html" class="md-nav__link">Python 语言封装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../go/go_wrapper_link.html" class="md-nav__link">Go 语言封装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../java/README.html" class="md-nav__link">Java 语言封装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nodejs/README.html" class="md-nav__link">Nodejs 语言封装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../cpp/README.html" class="md-nav__link">C++ 语言封装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> R 语言封装 </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">R 语言封装</a>
+      
+        
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#r-readme--page-root" class="md-nav__link">使用 s2i 为 Seldon Core 打包 R 模型（孵化）</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#s2i" class="md-nav__link">步骤 1 - 安装 s2i</a>
+        </li>
+        <li class="md-nav__item"><a href="#id1" class="md-nav__link">步骤 2 - 创建源代码</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#r" class="md-nav__link">R 运行时模型文件</a>
+        </li>
+        <li class="md-nav__item"><a href="#install-r" class="md-nav__link">install.R</a>
+        </li>
+        <li class="md-nav__item"><a href="#s2i-environment" class="md-nav__link">.s2i/environment</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">步骤 3 - 构建您的映像</a>
+        </li>
+        <li class="md-nav__item"><a href="#id3" class="md-nav__link">参考</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">环境变量</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#model-name" class="md-nav__link">MODEL_NAME</a>
+        </li>
+        <li class="md-nav__item"><a href="#api-type" class="md-nav__link">API_TYPE</a>
+        </li>
+        <li class="md-nav__item"><a href="#service-type" class="md-nav__link">SERVICE_TYPE</a>
+        </li>
+        <li class="md-nav__item"><a href="#persistence" class="md-nav__link">PERSISTENCE</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id5" class="md-nav__link">创建不同的服务类型</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#model" class="md-nav__link">MODEL</a>
+        </li>
+        <li class="md-nav__item"><a href="#router" class="md-nav__link">ROUTER</a>
+        </li>
+        <li class="md-nav__item"><a href="#transformer" class="md-nav__link">TRANSFORMER</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/R/README.md.txt">Show Source</a> </li>
+
+  </ul>
+</nav>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/integrations.html" class="md-nav__link">集成</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/tutorials.html" class="md-nav__link">教程</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/reference.html" class="md-nav__link">参考</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/contributing.html" class="md-nav__link">贡献</a>
+      
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#r-readme--page-root" class="md-nav__link">使用 s2i 为 Seldon Core 打包 R 模型（孵化）</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#s2i" class="md-nav__link">步骤 1 - 安装 s2i</a>
+        </li>
+        <li class="md-nav__item"><a href="#id1" class="md-nav__link">步骤 2 - 创建源代码</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#r" class="md-nav__link">R 运行时模型文件</a>
+        </li>
+        <li class="md-nav__item"><a href="#install-r" class="md-nav__link">install.R</a>
+        </li>
+        <li class="md-nav__item"><a href="#s2i-environment" class="md-nav__link">.s2i/environment</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">步骤 3 - 构建您的映像</a>
+        </li>
+        <li class="md-nav__item"><a href="#id3" class="md-nav__link">参考</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">环境变量</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#model-name" class="md-nav__link">MODEL_NAME</a>
+        </li>
+        <li class="md-nav__item"><a href="#api-type" class="md-nav__link">API_TYPE</a>
+        </li>
+        <li class="md-nav__item"><a href="#service-type" class="md-nav__link">SERVICE_TYPE</a>
+        </li>
+        <li class="md-nav__item"><a href="#persistence" class="md-nav__link">PERSISTENCE</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id5" class="md-nav__link">创建不同的服务类型</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#model" class="md-nav__link">MODEL</a>
+        </li>
+        <li class="md-nav__item"><a href="#router" class="md-nav__link">ROUTER</a>
+        </li>
+        <li class="md-nav__item"><a href="#transformer" class="md-nav__link">TRANSFORMER</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/R/README.md.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <section id="s2i-seldon-core-r">
+<h1 id="r-readme--page-root">使用 s2i 为 Seldon Core 打包 R 模型（孵化）<a class="headerlink" href="#r-readme--page-root" title="Permalink to this heading">¶</a></h1>
+<p>本章中，我们说名使用 <a class="reference external" href="https://github.com/openshift/source-to-image">source-to-image app s2i</a> 为 R 模型构建使用 Seldon Core 部署的 docker 镜像，如果想要使用原生 Docker，查看<a class="reference internal" href="r_wrapping_docker.html"><span class="doc">Docker 说明</span></a>。</p>
+<p>如果您不熟悉 s2i，您可以阅读 <a class="reference internal" href="../wrappers/s2i.html"><span class="doc">使用 s2i 的一般说明</span></a>，然后按照以下步骤。</p>
+<section id="s2i">
+<h2 id="s2i">步骤 1 - 安装 s2i<a class="headerlink" href="#s2i" title="Permalink to this heading">¶</a></h2>
+<p><a class="reference external" href="https://github.com/openshift/source-to-image#installation">下载安装 s2i</a></p>
+<ul class="simple">
+<li><p>使用 s2i 准备工作</p>
+<ul>
+<li><p>Docker</p></li>
+<li><p>Git（如果使用远程 git 仓库）</p></li>
+</ul>
+</li>
+</ul>
+<p>所有工作就绪，可执行以下</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>s2i<span class="w"> </span>usage<span class="w"> </span>seldonio/seldon-core-s2i-r:0.1
+</pre></div>
+</div>
+</section>
+<section id="id1">
+<h2 id="id1">步骤 2 - 创建源代码<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h2>
+<p>要使用 s2i 构建封装 R 模型的镜像，你需要：</p>
+<ul class="simple">
+<li><p>通过 <code class="docutils literal notranslate"><span class="pre">initialise_seldon</span></code> 方法提供一个 S3 类的 R 文件的模型，并为您的组件提供适当的泛型，例如模型预测。</p></li>
+<li><p>运行的可选 install.R 以安装所需的任何库</p></li>
+<li><p>.s2i/environment - s2i 正确构建模型的配置</p></li>
+</ul>
+<p>我们将详细介绍每个步骤：</p>
+<section id="r">
+<h3 id="r">R 运行时模型文件<a class="headerlink" href="#r" title="Permalink to this heading">¶</a></h3>
+<p>源代码需要包含定义了 S3 类的模型的 R 文件。比如，请查看我们的 skeleton R 模型文件在 <code class="docutils literal notranslate"><span class="pre">incubating/wrappers/s2i/R/test/model-template-app/MyModel.R</span></code>：</p>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">methods</span><span class="p">)</span>
+
+<span class="n">predict.mymodel</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">function</span><span class="p">(</span><span class="n">mymodel</span><span class="p">,</span><span class="n">newdata</span><span class="o">=</span><span class="nf">list</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nf">write</span><span class="p">(</span><span class="s">"MyModel predict called"</span><span class="p">,</span><span class="w"> </span><span class="nf">stdout</span><span class="p">())</span>
+<span class="w">  </span><span class="n">newdata</span>
+<span class="p">}</span>
+
+
+<span class="n">new_mymodel</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nf">structure</span><span class="p">(</span><span class="nf">list</span><span class="p">(),</span><span class="w"> </span><span class="n">class</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"mymodel"</span><span class="p">)</span>
+<span class="p">}</span>
+
+
+<span class="n">initialise_seldon</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">function</span><span class="p">(</span><span class="n">params</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nf">new_mymodel</span><span class="p">()</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">seldon_initialise</span></code> 函数 通过 <code class="docutils literal notranslate"><span class="pre">new_mymodel</span></code> 构造器创建模型 S3 类。这将在启动时调用，您可以使用它来加载模型所需的任何参数。</p></li>
+<li><p>通用 <code class="docutils literal notranslate"><span class="pre">predict</span></code> 函数是为我们的模型类创建。将使用 <code class="docutils literal notranslate"><span class="pre">newdata</span></code> 字段的 <code class="docutils literal notranslate"><span class="pre">data.frame</span></code> 来进行预估。</p></li>
+</ul>
+<p>ROUTERS 和 TRANSFORMERS 有类似的模板。</p>
+</section>
+<section id="install-r">
+<h3 id="install-r">install.R<a class="headerlink" href="#install-r" title="Permalink to this heading">¶</a></h3>
+<p>通过任意软件依赖放置 <code class="docutils literal notranslate"><span class="pre">install.R</span></code> 到你的代码：</p>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="nf">install.packages</span><span class="p">(</span><span class="s">'rpart'</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="s2i-environment">
+<h3 id="s2i-environment">.s2i/environment<a class="headerlink" href="#s2i-environment" title="Permalink to this heading">¶</a></h3>
+<p>定义我们的 R 构建器映像所需的核心参数来封装您的模型。一个例子是：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">MODEL_NAME</span><span class="o">=</span>MyModel.R
+<span class="nv">API_TYPE</span><span class="o">=</span>REST
+<span class="nv">SERVICE_TYPE</span><span class="o">=</span>MODEL
+<span class="nv">PERSISTENCE</span><span class="o">=</span><span class="m">0</span>
+</pre></div>
+</div>
+<p>构建映像时，也可以在命令行上提供或覆盖这些值。</p>
+</section>
+</section>
+<section id="id2">
+<h2 id="id2">步骤 3 - 构建您的映像<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h2>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">s2i</span> <span class="pre">build</span></code> 从代码构建 Docker 镜像。你需要本地安装 Docker，可选的如果时从公共 git 仓库构建需要安装 git。</p>
+<p>使用 s2i 直接从远程仓库或者本地文件夹构建。查看 <a class="reference external" href="https://github.com/openshift/source-to-image/blob/master/docs/cli.md#s2i-build">s2i 文档</a>获取更多信息，一般格式为：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>s2i<span class="w"> </span>build<span class="w"> </span>&lt;git-repo&gt;<span class="w"> </span>seldonio/seldon-core-s2i-r:0.1<span class="w"> </span>&lt;my-image-name&gt;
+s2i<span class="w"> </span>build<span class="w"> </span>&lt;src-folder&gt;<span class="w"> </span>seldonio/seldon-core-s2i-r:0.1<span class="w"> </span>&lt;my-image-name&gt;
+</pre></div>
+</div>
+<p>在 seldon-core 中使用测试模板模型的示例调用：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>s2i<span class="w"> </span>build<span class="w"> </span>https://github.com/seldonio/seldon-core<span class="w"> </span>--context-dir<span class="o">=</span>incubating/wrappers/s2i/R/test/model-template-app<span class="w"> </span>seldonio/seldon-core-s2i-r:0.1<span class="w"> </span>seldon-core-template-model
+</pre></div>
+</div>
+<p>上面的 s2i 构建调用：</p>
+<ul class="simple">
+<li><p>使用 GitHub repo: <a class="reference external" href="https://github.com/seldonio/seldon-core">https://github.com/seldonio/seldon-core</a> 及 repo 中文件夹 <code class="docutils literal notranslate"><span class="pre">incubating/wrappers/s2i/R/test/model-template-app</span></code>。</p></li>
+<li><p>使用构建镜像 <code class="docutils literal notranslate"><span class="pre">seldonio/seldon-core-s2i-r</span></code></p></li>
+<li><p>创建 docker 镜像 <code class="docutils literal notranslate"><span class="pre">seldon-core-template-model</span></code></p></li>
+</ul>
+<p>对于从本地源文件夹构建，我们克隆 seldon-core 存储库的示例：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/seldonio/seldon-core
+<span class="nb">cd</span><span class="w"> </span>seldon-core
+s2i<span class="w"> </span>build<span class="w"> </span>incubating/wrappers/s2i/R/test/model-template-app<span class="w"> </span>seldonio/seldon-core-s2i-r:0.1<span class="w"> </span>seldon-core-template-model
+</pre></div>
+</div>
+<p>如需更多帮助，请参阅：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>s2i<span class="w"> </span>usage<span class="w"> </span>seldonio/seldon-core-s2i-r:0.1
+s2i<span class="w"> </span>build<span class="w"> </span>--help
+</pre></div>
+</div>
+</section>
+<section id="id3">
+<h2 id="id3">参考<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h2>
+<section id="id4">
+<h3 id="id4">环境变量<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h3>
+<p>面解释了构建器映像理解的必需环境变量。您可以在 <code class="docutils literal notranslate"><span class="pre">.s2i/environment</span></code> 文件中或在命令行 <code class="docutils literal notranslate"><span class="pre">s2i</span> <span class="pre">build</span></code> 中查看它们。</p>
+<section id="model-name">
+<h4 id="model-name">MODEL_NAME<a class="headerlink" href="#model-name" title="Permalink to this heading">¶</a></h4>
+<p>包含模型的 R 文件的名称。</p>
+</section>
+<section id="api-type">
+<h4 id="api-type">API_TYPE<a class="headerlink" href="#api-type" title="Permalink to this heading">¶</a></h4>
+<p>要创建的 API 类型。目前只能是REST。</p>
+</section>
+<section id="service-type">
+<h4 id="service-type">SERVICE_TYPE<a class="headerlink" href="#service-type" title="Permalink to this heading">¶</a></h4>
+<p>正在创建的服务类型。可用选项有：</p>
+<ul class="simple">
+<li><p>MODEL</p></li>
+<li><p>ROUTER</p></li>
+<li><p>TRANSFORMER</p></li>
+</ul>
+</section>
+<section id="persistence">
+<h4 id="persistence">PERSISTENCE<a class="headerlink" href="#persistence" title="Permalink to this heading">¶</a></h4>
+<p>目前只能由0。将来，将允许定期保存组件的状态。</p>
+</section>
+</section>
+<section id="id5">
+<h3 id="id5">创建不同的服务类型<a class="headerlink" href="#id5" title="Permalink to this heading">¶</a></h3>
+<section id="model">
+<h4 id="model">MODEL<a class="headerlink" href="#model" title="Permalink to this heading">¶</a></h4>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/SeldonIO/seldon-core/tree/master/incubating/wrappers/s2i/R/test/model-template-app">模型源代码的最小脚手架</a></p></li>
+<li><p><a class="reference external" href="../examples/notebooks.html">models 示例</a></p></li>
+</ul>
+</section>
+<section id="router">
+<h4 id="router">ROUTER<a class="headerlink" href="#router" title="Permalink to this heading">¶</a></h4>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/SeldonIO/seldon-core/tree/master/incubating/wrappers/s2i/R/test/router-template-app">路由器源代码的最小框架</a></p></li>
+</ul>
+</section>
+<section id="transformer">
+<h4 id="transformer">TRANSFORMER<a class="headerlink" href="#transformer" title="Permalink to this heading">¶</a></h4>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/SeldonIO/seldon-core/tree/master/incubating/wrappers/s2i/R/test/transformer-template-app">transformer 源代码的最小骨架</a></p></li>
+</ul>
+</section>
+</section>
+</section>
+</section>
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="../cpp/README.html" title="为 Seldon Core 封装 C++ 框架/模型"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> "Previous" </span> 为 Seldon Core 封装 C++ 框架/模型 </span>
+              </div>
+            </a>
+          
+          
+            <a href="../nav/config/integrations.html" title="集成"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> "Next" </span> 集成 </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2024, Seldon Technologies Ltd.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

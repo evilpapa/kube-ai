@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../_static/javascripts/modernizr.js"></script>
+  
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-54780881-2"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-54780881-2');
+</script>
+  
+  
+    <title>Seldon Kafka Integration Example with SpaCy Reddit Model &#8212; seldon-core  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=83e35b93" />
+    <link rel="stylesheet" type="text/css" href="../_static/material.css?v=79c92029" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/rtd_sphinx_search.min.css?v=e72958e9" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+    <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=15a8f09d" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/rtd_search_config.js?v=b0596c34"></script>
+    <script src="../_static/js/rtd_sphinx_search.min.js?v=43f26ba4"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Seldon Kafka Integration with KEDA scaling over SSL" href="kafka_keda.html" />
+    <link rel="prev" title="Seldon Kafka Integration Example with CIFAR10 Model" href="cifar10_kafka.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=indigo data-md-color-accent=teal>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#examples/kafka_spacy_sklearn" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../index.html" title="seldon-core  documentation"
+           class="md-header-nav__button md-logo">
+          
+            &nbsp;
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">Seldon Core Documentation</span>
+          <span class="md-header-nav__topic"> Seldon Kafka Integration Example with SpaCy Reddit Model </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder=""Search""
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+            
+            <li class="md-tabs__item"><a href="/" class="md-tabs__link">🚀 Our Other Projects & Products:</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi/en/stable/" class="md-tabs__link">Alibi Explain</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi-detect/en/stable/" class="md-tabs__link">Alibi Detect</a></li>
+            
+            <li class="md-tabs__item"><a href="https://mlserver.readthedocs.io/en/latest/" class="md-tabs__link">MLServer</a></li>
+            
+            <li class="md-tabs__item"><a href="https://tempo.readthedocs.io/en/latest/" class="md-tabs__link">Tempo SDK</a></li>
+            
+            <li class="md-tabs__item"><a href="https://deploy.seldon.io" class="md-tabs__link">Seldon Enterprise Platform</a></li>
+            
+            <li class="md-tabs__item"><a href="https://github.com/SeldonIO/seldon-deploy-sdk#seldon-deploy-sdk" class="md-tabs__link">Seldon Enterprise Platform SDK</a></li>
+          <li class="md-tabs__item"><a href="../nav/tutorials.html" class="md-tabs__link">教程</a></li>
+          <li class="md-tabs__item"><a href="notebooks.html" class="md-tabs__link">笔记本</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../index.html" title="seldon-core documentation" class="md-nav__button md-logo">
+      
+        <img src="../_static/" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../index.html"
+       title="seldon-core documentation">Seldon Core Documentation</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/getting-started.html" class="md-nav__link">开始</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/concepts.html" class="md-nav__link">概念</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/configuration.html" class="md-nav__link">配置</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/tutorials.html" class="md-nav__link">教程</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html" class="md-nav__link">笔记本</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#seldon-core" class="md-nav__link">Seldon Core 设置</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id2" class="md-nav__link">预包装推理服务示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#python" class="md-nav__link">Python 语言封装示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id3" class="md-nav__link">专门的框架示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id4" class="md-nav__link">孵化项目示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id5" class="md-nav__link">基于云的基础示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id6" class="md-nav__link">高级机器学习监控</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id7" class="md-nav__link">Seldon Core 批处理</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#mlops" class="md-nav__link">MLOps: 扩展、监控和可观察性</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id8" class="md-nav__link">生产配置及实现</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#ab" class="md-nav__link">AB 测试及渐进式部署</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id9" class="md-nav__link">复杂图示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id10" class="md-nav__link">入口</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id11" class="md-nav__link">基础设施</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id12" class="md-nav__link">基准测试和负载测试</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id13" class="md-nav__link">升级示例</a>
+      
+    
+    </li></ul>
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/reference.html" class="md-nav__link">参考</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/contributing.html" class="md-nav__link">贡献</a>
+      
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#examples-kafka-spacy-sklearn--page-root" class="md-nav__link">Seldon Kafka Integration Example with SpaCy Reddit Model</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#Requirements" class="md-nav__link">Requirements</a>
+        </li>
+        <li class="md-nav__item"><a href="#Setup-Kafka" class="md-nav__link">Setup Kafka</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#Create-topics" class="md-nav__link">Create topics</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#Train-Spacy-Sklearn-Model" class="md-nav__link">Train Spacy Sklearn Model</a>
+        </li>
+        <li class="md-nav__item"><a href="#Deploy-SpaCy-Text-Classifier" class="md-nav__link">Deploy SpaCy Text Classifier</a>
+        </li>
+        <li class="md-nav__item"><a href="#Send-real-time-data-for-stream-processing" class="md-nav__link">Send real time data for stream processing</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#Check-the-data-processed" class="md-nav__link">Check the data processed</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/examples/kafka_spacy_sklearn.nblink.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <div class="admonition note">
+<p>This page was generated from <a class="reference external" href="https://github.com/SeldonIO/seldon-core/blob/e665e4994eabf83fb43c68a5f85e96d5c45e91b5/examples/kafka/sklearn_spacy/README.ipynb">examples/kafka/sklearn_spacy/README.ipynb</a>.</p>
+</div>
+<section id="Seldon-Kafka-Integration-Example-with-SpaCy-Reddit-Model">
+<h1 id="examples-kafka-spacy-sklearn--page-root">Seldon Kafka Integration Example with SpaCy Reddit Model<a class="headerlink" href="#examples-kafka-spacy-sklearn--page-root" title="Permalink to this heading">¶</a></h1>
+<p>In this model we will build upon the code from the Seldon SpaCy NLP example for text classification.</p>
+<p>You will learn how to deploy the model using the Kafka protocol.</p>
+<section id="Requirements">
+<h2 id="Requirements">Requirements<a class="headerlink" href="#Requirements" title="Permalink to this heading">¶</a></h2>
+<p>In your commands: * helm 3.x * kubectl</p>
+<p>In cluster: * <a class="reference external" href="https://docs.seldon.io/projects/seldon-core/en/latest/workflow/install.html">Install Seldon</a> * Install Kafka as per the instructions below</p>
+</section>
+<section id="Setup-Kafka">
+<h2 id="Setup-Kafka">Setup Kafka<a class="headerlink" href="#Setup-Kafka" title="Permalink to this heading">¶</a></h2>
+<p>Ensure your helm repo has access to the strimzi Kafka charts which we’ll use to install.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>helm<span class="w"> </span>repo<span class="w"> </span>add<span class="w"> </span>strimzi<span class="w"> </span>https://strimzi.io/charts/
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+"strimzi" has been added to your repositories
+</pre></div></div>
+</div>
+<p>Install the Kafka operator in your cluster</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>helm<span class="w"> </span>install<span class="w"> </span>my-release<span class="w"> </span>strimzi/strimzi-kafka-operator
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+NAME: my-release
+LAST DEPLOYED: Tue Sep 29 08:31:41 2020
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+Thank you for installing strimzi-kafka-operator-0.19.0
+
+To create a Kafka cluster refer to the following documentation.
+
+https://strimzi.io/docs/operators/0.19.0/using.html#deploying-cluster-operator-helm-chart-str
+</pre></div></div>
+</div>
+<p>We now create a kafka cluster instantiation with a simple setup as outlined below.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%writefile</span> kafka-cluster-config.yaml
+<span class="n">apiVersion</span><span class="p">:</span> <span class="n">kafka</span><span class="o">.</span><span class="n">strimzi</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">v1beta1</span>
+<span class="n">kind</span><span class="p">:</span> <span class="n">Kafka</span>
+<span class="n">metadata</span><span class="p">:</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">my</span><span class="o">-</span><span class="n">cluster</span>
+<span class="n">spec</span><span class="p">:</span>
+  <span class="n">kafka</span><span class="p">:</span>
+    <span class="n">replicas</span><span class="p">:</span> <span class="mi">1</span>
+    <span class="n">listeners</span><span class="p">:</span>
+      <span class="n">plain</span><span class="p">:</span> <span class="p">{}</span>
+      <span class="n">tls</span><span class="p">:</span> <span class="p">{}</span>
+      <span class="n">external</span><span class="p">:</span>
+        <span class="nb">type</span><span class="p">:</span> <span class="n">nodeport</span>
+        <span class="n">tls</span><span class="p">:</span> <span class="n">false</span>
+    <span class="n">storage</span><span class="p">:</span>
+      <span class="nb">type</span><span class="p">:</span> <span class="n">ephemeral</span>
+    <span class="n">config</span><span class="p">:</span>
+      <span class="n">offsets</span><span class="o">.</span><span class="n">topic</span><span class="o">.</span><span class="n">replication</span><span class="o">.</span><span class="n">factor</span><span class="p">:</span> <span class="mi">1</span>
+      <span class="n">transaction</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">replication</span><span class="o">.</span><span class="n">factor</span><span class="p">:</span> <span class="mi">1</span>
+      <span class="n">transaction</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">isr</span><span class="p">:</span> <span class="mi">1</span>
+  <span class="n">zookeeper</span><span class="p">:</span>
+    <span class="n">replicas</span><span class="p">:</span> <span class="mi">1</span>
+    <span class="n">storage</span><span class="p">:</span>
+      <span class="nb">type</span><span class="p">:</span> <span class="n">ephemeral</span>
+  <span class="n">entityOperator</span><span class="p">:</span>
+    <span class="n">topicOperator</span><span class="p">:</span> <span class="p">{}</span>
+    <span class="n">userOperator</span><span class="p">:</span> <span class="p">{}</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Overwriting kafka-cluster-config.yaml
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>kafka-cluster-config.yaml
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+kafka.kafka.strimzi.io/my-cluster created
+</pre></div></div>
+</div>
+<p>We can now check that kafka was installed correctly</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[105]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>my-cluster
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+my-cluster-entity-operator-df58f8b9f-s9wx5               3/3     Running   0          148m
+my-cluster-kafka-0                                       2/2     Running   0          149m
+my-cluster-zookeeper-0                                   1/1     Running   0          149m
+</pre></div></div>
+</div>
+<section id="Create-topics">
+<h3 id="Create-topics">Create topics<a class="headerlink" href="#Create-topics" title="Permalink to this heading">¶</a></h3>
+<p>We now need to create the input and output topics for our reddit classifier</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[49]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%writefile</span> topics.yaml
+<span class="n">apiVersion</span><span class="p">:</span> <span class="n">kafka</span><span class="o">.</span><span class="n">strimzi</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">v1beta1</span>
+<span class="n">kind</span><span class="p">:</span> <span class="n">KafkaTopic</span>
+<span class="n">metadata</span><span class="p">:</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">reddit</span><span class="o">-</span><span class="n">classifier</span><span class="o">-</span><span class="nb">input</span>
+  <span class="n">labels</span><span class="p">:</span>
+    <span class="n">strimzi</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">cluster</span><span class="p">:</span> <span class="s2">"my-cluster"</span>
+<span class="n">spec</span><span class="p">:</span>
+  <span class="n">partitions</span><span class="p">:</span> <span class="mi">2</span>
+  <span class="n">replicas</span><span class="p">:</span> <span class="mi">1</span>
+<span class="o">---</span>
+<span class="n">apiVersion</span><span class="p">:</span> <span class="n">kafka</span><span class="o">.</span><span class="n">strimzi</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">v1beta1</span>
+<span class="n">kind</span><span class="p">:</span> <span class="n">KafkaTopic</span>
+<span class="n">metadata</span><span class="p">:</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">reddit</span><span class="o">-</span><span class="n">classifier</span><span class="o">-</span><span class="n">output</span>
+  <span class="n">labels</span><span class="p">:</span>
+    <span class="n">strimzi</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">cluster</span><span class="p">:</span> <span class="s2">"my-cluster"</span>
+<span class="n">spec</span><span class="p">:</span>
+  <span class="n">partitions</span><span class="p">:</span> <span class="mi">2</span>
+  <span class="n">replicas</span><span class="p">:</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Writing topics.yaml
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[50]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>topics.yaml
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+kafkatopic.kafka.strimzi.io/reddit-classifier-input created
+kafkatopic.kafka.strimzi.io/reddit-classifier-output created
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="Train-Spacy-Sklearn-Model">
+<h2 id="Train-Spacy-Sklearn-Model">Train Spacy Sklearn Model<a class="headerlink" href="#Train-Spacy-Sklearn-Model" title="Permalink to this heading">¶</a></h2>
+<p>To train the spacy sklearn model you can follow the instructions in the SKlearn Spacy Model Example.</p>
+<p>Alternatively you can just use the image that is saved in the seldon dockerhub with the image <code class="docutils literal notranslate"><span class="pre">seldonio/reddit-classifier:0.1</span></code></p>
+</section>
+<section id="Deploy-SpaCy-Text-Classifier">
+<h2 id="Deploy-SpaCy-Text-Classifier">Deploy SpaCy Text Classifier<a class="headerlink" href="#Deploy-SpaCy-Text-Classifier" title="Permalink to this heading">¶</a></h2>
+<p>Now we’re able to define the YAML that will be used to deploy the configuration.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[96]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%writefile</span> sdep_reddit_kafka.yaml
+<span class="n">apiVersion</span><span class="p">:</span> <span class="n">machinelearning</span><span class="o">.</span><span class="n">seldon</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">v1</span>
+<span class="n">kind</span><span class="p">:</span> <span class="n">SeldonDeployment</span>
+<span class="n">metadata</span><span class="p">:</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">reddit</span><span class="o">-</span><span class="n">kafka</span>
+<span class="n">spec</span><span class="p">:</span>
+  <span class="n">serverType</span><span class="p">:</span> <span class="n">kafka</span>
+  <span class="n">predictors</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">componentSpecs</span><span class="p">:</span>
+    <span class="o">-</span> <span class="n">spec</span><span class="p">:</span>
+        <span class="n">containers</span><span class="p">:</span>
+        <span class="o">-</span> <span class="n">image</span><span class="p">:</span> <span class="n">seldonio</span><span class="o">/</span><span class="n">reddit</span><span class="o">-</span><span class="n">classifier</span><span class="p">:</span><span class="mf">0.1</span>
+          <span class="n">name</span><span class="p">:</span> <span class="n">classifier</span>
+    <span class="n">svcOrchSpec</span><span class="p">:</span>
+      <span class="n">env</span><span class="p">:</span>
+      <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">KAFKA_BROKER</span>
+        <span class="n">value</span><span class="p">:</span> <span class="n">my</span><span class="o">-</span><span class="n">cluster</span><span class="o">-</span><span class="n">kafka</span><span class="o">-</span><span class="n">brokers</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">svc</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">local</span><span class="p">:</span><span class="mi">9092</span>
+      <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">KAFKA_INPUT_TOPIC</span>
+        <span class="n">value</span><span class="p">:</span> <span class="n">reddit</span><span class="o">-</span><span class="n">classifier</span><span class="o">-</span><span class="nb">input</span>
+      <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">KAFKA_OUTPUT_TOPIC</span>
+        <span class="n">value</span><span class="p">:</span> <span class="n">reddit</span><span class="o">-</span><span class="n">classifier</span><span class="o">-</span><span class="n">output</span>
+    <span class="n">graph</span><span class="p">:</span>
+      <span class="n">name</span><span class="p">:</span> <span class="n">classifier</span>
+      <span class="nb">type</span><span class="p">:</span> <span class="n">MODEL</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">default</span>
+    <span class="n">replicas</span><span class="p">:</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Overwriting sdep_reddit_kafka.yaml
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[97]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>sdep_reddit_kafka.yaml
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+seldondeployment.machinelearning.seldon.io/reddit-kafka configured
+</pre></div></div>
+</div>
+<p>We can confirm that now the model is running as expected:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[106]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>reddit
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+reddit-kafka-default-0-classifier-c6ccdd66f-vmf4v        2/2     Running   0          45m
+</pre></div></div>
+</div>
+</section>
+<section id="Send-real-time-data-for-stream-processing">
+<h2 id="Send-real-time-data-for-stream-processing">Send real time data for stream processing<a class="headerlink" href="#Send-real-time-data-for-stream-processing" title="Permalink to this heading">¶</a></h2>
+<p>We can now send real time data for stream processing.</p>
+<p>Below we send a single input with the text “This is an input”, which will be consumed from the input topic.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>run<span class="w"> </span>--quiet<span class="o">=</span><span class="nb">true</span><span class="w"> </span>-it<span class="w"> </span>--rm<span class="w"> </span>kafkaconsumer<span class="w"> </span>--image<span class="o">=</span>bitnami/kafka:2.6.0<span class="w"> </span>--restart<span class="o">=</span>Never<span class="w"> </span>--command<span class="w"> </span>--<span class="w"> </span><span class="err">\</span>
+    <span class="n">bash</span> <span class="o">-</span><span class="n">c</span> <span class="s2">"echo '{</span><span class="se">\"</span><span class="s2">data</span><span class="se">\"</span><span class="s2">: {</span><span class="se">\"</span><span class="s2">ndarray</span><span class="se">\"</span><span class="s2">: [</span><span class="se">\"</span><span class="s2">This is an input</span><span class="se">\"</span><span class="s2">]}}' </span><span class="se">\</span>
+<span class="s2">    | kafka-console-producer.sh --broker-list my-cluster-kafka-external-bootstrap.default:9094 --topic reddit-classifier-input"</span>
+</pre></div>
+</div>
+</div>
+<section id="Check-the-data-processed">
+<h3 id="Check-the-data-processed">Check the data processed<a class="headerlink" href="#Check-the-data-processed" title="Permalink to this heading">¶</a></h3>
+<p>We now are able to see all the data that has been pushed to the output topic <code class="docutils literal notranslate"><span class="pre">reddit-classifier-output</span></code>.</p>
+<p>This allows us to see all the inputs that have been processed. We will be listening for 10 seconds to ensure all data is found.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[103]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>run<span class="w"> </span>--quiet<span class="o">=</span><span class="nb">true</span><span class="w"> </span>-it<span class="w"> </span>--rm<span class="w"> </span>kafkaproducer<span class="w"> </span>--image<span class="o">=</span>bitnami/kafka:2.6.0<span class="w"> </span>--restart<span class="o">=</span>Never<span class="w"> </span>--command<span class="w"> </span>--<span class="w"> </span><span class="err">\</span>
+    <span class="n">kafka</span><span class="o">-</span><span class="n">console</span><span class="o">-</span><span class="n">consumer</span><span class="o">.</span><span class="n">sh</span> <span class="o">--</span><span class="n">bootstrap</span><span class="o">-</span><span class="n">server</span> <span class="n">my</span><span class="o">-</span><span class="n">cluster</span><span class="o">-</span><span class="n">kafka</span><span class="o">-</span><span class="n">external</span><span class="o">-</span><span class="n">bootstrap</span><span class="o">.</span><span class="n">default</span><span class="p">:</span><span class="mi">9094</span> <span class="o">--</span><span class="n">topic</span> <span class="n">reddit</span><span class="o">-</span><span class="n">classifier</span><span class="o">-</span><span class="n">output</span> \
+        <span class="o">--</span><span class="n">from</span><span class="o">-</span><span class="n">beginning</span> <span class="o">--</span><span class="n">timeout</span><span class="o">-</span><span class="n">ms</span> <span class="mi">10000</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{"data":{"names":["t:0","t:1"],"ndarray":[[0.6758450844706712,0.32415491552932885]]},"meta":{}}
+
+{"data":{"names":["t:0","t:1"],"ndarray":[[0.6758450844706712,0.32415491552932885]]},"meta":{}}
+
+{"data":{"names":["t:0","t:1"],"ndarray":[[0.6758450844706712,0.32415491552932885]]},"meta":{}}
+
+{"data":{"names":["t:0","t:1"],"ndarray":[[0.6758450844706712,0.32415491552932885]]},"meta":{}}
+
+{"data":{"names":["t:0","t:1"],"ndarray":[[0.6758450844706712,0.32415491552932885]]},"meta":{}}
+
+{"data":{"names":["t:0","t:1"],"ndarray":[[0.6758450844706712,0.32415491552932885]]},"meta":{}}
+
+{"data":{"names":["t:0","t:1"],"ndarray":[[0.6758450844706712,0.32415491552932885]]},"meta":{}}
+
+{"data":{"names":["t:0","t:1"],"ndarray":[[0.6758450844706712,0.32415491552932885]]},"meta":{}}
+
+{"data":{"names":["t:0","t:1"],"ndarray":[[0.6758450844706712,0.32415491552932885]]},"meta":{}}
+
+[2020-09-29 11:45:06,366] ERROR Error processing message, terminating consumer process:  (kafka.tools.ConsoleConsumer$)
+org.apache.kafka.common.errors.TimeoutException
+Processed a total of 9 messages
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+</section>
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="cifar10_kafka.html" title="Seldon Kafka Integration Example with CIFAR10 Model"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> "Previous" </span> Seldon Kafka Integration Example with CIFAR10 Model </span>
+              </div>
+            </a>
+          
+          
+            <a href="kafka_keda.html" title="Seldon Kafka Integration with KEDA scaling over SSL"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> "Next" </span> Seldon Kafka Integration with KEDA scaling over SSL </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2024, Seldon Technologies Ltd.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

@@ -1,0 +1,6 @@
+﻿ray.serve.config.gRPCOptions
+============================
+
+.. currentmodule:: ray.serve.config
+
+.. autopydantic_model:: gRPCOptions

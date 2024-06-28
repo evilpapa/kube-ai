@@ -1,0 +1,3841 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../_static/javascripts/modernizr.js"></script>
+  
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-54780881-2"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-54780881-2');
+</script>
+  
+  
+    <title>AWS Elastic Kubernetes Service (EKS) Deep MNIST &#8212; seldon-core  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=83e35b93" />
+    <link rel="stylesheet" type="text/css" href="../_static/material.css?v=79c92029" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/rtd_sphinx_search.min.css?v=e72958e9" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+    <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=15a8f09d" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/rtd_search_config.js?v=b0596c34"></script>
+    <script src="../_static/js/rtd_sphinx_search.min.js?v=43f26ba4"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Azure Kubernetes Service (AKS) Deep MNIST" href="azure_aks_deep_mnist.html" />
+    <link rel="prev" title="Advanced CPP Buildsystem Override" href="cpp_advanced.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=indigo data-md-color-accent=teal>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#examples/aws_eks_deep_mnist" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../index.html" title="seldon-core  documentation"
+           class="md-header-nav__button md-logo">
+          
+            &nbsp;
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">Seldon Core Documentation</span>
+          <span class="md-header-nav__topic"> AWS Elastic Kubernetes Service (EKS) Deep MNIST </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder=""Search""
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+            
+            <li class="md-tabs__item"><a href="/" class="md-tabs__link">🚀 Our Other Projects & Products:</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi/en/stable/" class="md-tabs__link">Alibi Explain</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi-detect/en/stable/" class="md-tabs__link">Alibi Detect</a></li>
+            
+            <li class="md-tabs__item"><a href="https://mlserver.readthedocs.io/en/latest/" class="md-tabs__link">MLServer</a></li>
+            
+            <li class="md-tabs__item"><a href="https://tempo.readthedocs.io/en/latest/" class="md-tabs__link">Tempo SDK</a></li>
+            
+            <li class="md-tabs__item"><a href="https://deploy.seldon.io" class="md-tabs__link">Seldon Enterprise Platform</a></li>
+            
+            <li class="md-tabs__item"><a href="https://github.com/SeldonIO/seldon-deploy-sdk#seldon-deploy-sdk" class="md-tabs__link">Seldon Enterprise Platform SDK</a></li>
+          <li class="md-tabs__item"><a href="../nav/tutorials.html" class="md-tabs__link">教程</a></li>
+          <li class="md-tabs__item"><a href="notebooks.html" class="md-tabs__link">笔记本</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../index.html" title="seldon-core documentation" class="md-nav__button md-logo">
+      
+        <img src="../_static/" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../index.html"
+       title="seldon-core documentation">Seldon Core Documentation</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/getting-started.html" class="md-nav__link">开始</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/concepts.html" class="md-nav__link">概念</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/configuration.html" class="md-nav__link">配置</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/tutorials.html" class="md-nav__link">教程</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html" class="md-nav__link">笔记本</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#seldon-core" class="md-nav__link">Seldon Core 设置</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id2" class="md-nav__link">预包装推理服务示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#python" class="md-nav__link">Python 语言封装示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id3" class="md-nav__link">专门的框架示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id4" class="md-nav__link">孵化项目示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id5" class="md-nav__link">基于云的基础示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id6" class="md-nav__link">高级机器学习监控</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id7" class="md-nav__link">Seldon Core 批处理</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#mlops" class="md-nav__link">MLOps: 扩展、监控和可观察性</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id8" class="md-nav__link">生产配置及实现</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#ab" class="md-nav__link">AB 测试及渐进式部署</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id9" class="md-nav__link">复杂图示例</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id10" class="md-nav__link">入口</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id11" class="md-nav__link">基础设施</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id12" class="md-nav__link">基准测试和负载测试</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="notebooks.html#id13" class="md-nav__link">升级示例</a>
+      
+    
+    </li></ul>
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/reference.html" class="md-nav__link">参考</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/contributing.html" class="md-nav__link">贡献</a>
+      
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#examples-aws-eks-deep-mnist--page-root" class="md-nav__link">AWS Elastic Kubernetes Service (EKS) Deep MNIST</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#Dependencies:" class="md-nav__link">Dependencies:</a>
+        </li>
+        <li class="md-nav__item"><a href="#1)-Train-a-tensorflow-model-to-predict-mnist-locally" class="md-nav__link">1) Train a tensorflow model to predict mnist locally</a>
+        </li>
+        <li class="md-nav__item"><a href="#2)-Containerise-the-tensorflow-model-with-our-docker-utility" class="md-nav__link">2) Containerise the tensorflow model with our docker utility</a>
+        </li>
+        <li class="md-nav__item"><a href="#3)-Send-some-data-to-the-docker-model-to-test-it" class="md-nav__link">3) Send some data to the docker model to test it</a>
+        </li>
+        <li class="md-nav__item"><a href="#4)-Install-and-configure-AWS-tools-to-interact-with-AWS" class="md-nav__link">4) Install and configure AWS tools to interact with AWS</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#Configure-aws-so-it-can-talk-to-your-server" class="md-nav__link">Configure aws so it can talk to your server</a>
+        </li>
+        <li class="md-nav__item"><a href="#Install-EKCTL" class="md-nav__link">Install EKCTL</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#5)-Use-the-AWS-tools-to-create-and-setup-EKS-cluster-with-Seldon" class="md-nav__link">5) Use the AWS tools to create and setup EKS cluster with Seldon</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#Configure-local-kubectl" class="md-nav__link">Configure local kubectl</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#Setup-Seldon-Core" class="md-nav__link">Setup Seldon Core</a>
+        </li>
+        <li class="md-nav__item"><a href="#Push-docker-image" class="md-nav__link">Push docker image</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#First-we-create-a-registry" class="md-nav__link">First we create a registry</a>
+        </li>
+        <li class="md-nav__item"><a href="#Now-prepare-docker-image" class="md-nav__link">Now prepare docker image</a>
+        </li>
+        <li class="md-nav__item"><a href="#We-now-login-to-aws-through-docker-so-we-can-access-the-repository" class="md-nav__link">We now login to aws through docker so we can access the repository</a>
+        </li>
+        <li class="md-nav__item"><a href="#And-push-the-image" class="md-nav__link">And push the image</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#Running-the-Model" class="md-nav__link">Running the Model</a>
+        </li>
+        <li class="md-nav__item"><a href="#Test-the-model" class="md-nav__link">Test the model</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#Let&#39;s-visualise-the-probability-for-each-label" class="md-nav__link">Let’s visualise the probability for each label</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/examples/aws_eks_deep_mnist.nblink.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <div class="admonition note">
+<p>This page was generated from <a class="reference external" href="https://github.com/SeldonIO/seldon-core/blob/e665e4994eabf83fb43c68a5f85e96d5c45e91b5/examples/models/aws_eks_deep_mnist/aws_eks_deep_mnist.ipynb">examples/models/aws_eks_deep_mnist/aws_eks_deep_mnist.ipynb</a>.</p>
+</div>
+<section id="AWS-Elastic-Kubernetes-Service-(EKS)-Deep-MNIST">
+<h1 id="examples-aws-eks-deep-mnist--page-root">AWS Elastic Kubernetes Service (EKS) Deep MNIST<a class="headerlink" href="#examples-aws-eks-deep-mnist--page-root" title="Permalink to this heading">¶</a></h1>
+<p>In this example we will deploy a tensorflow MNIST model in Amazon Web Services’ Elastic Kubernetes Service (EKS).</p>
+<p>This tutorial will break down in the following sections:</p>
+<ol class="arabic simple">
+<li><p>Train a tensorflow model to predict mnist locally</p></li>
+<li><p>Containerise the tensorflow model with our docker utility</p></li>
+<li><p>Send some data to the docker model to test it</p></li>
+<li><p>Install and configure AWS tools to interact with AWS</p></li>
+<li><p>Use the AWS tools to create and setup EKS cluster with Seldon</p></li>
+<li><p>Push and run docker image through the AWS Container Registry</p></li>
+<li><p>Test our Elastic Kubernetes deployment by sending some data</p></li>
+</ol>
+<p>Let’s get started! 🚀🔥</p>
+<section id="Dependencies:">
+<h2 id="Dependencies:">Dependencies:<a class="headerlink" href="#Dependencies:" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Helm v3.0.0+</p></li>
+<li><p>A Kubernetes cluster running v1.13 or above (minkube / docker-for-windows work well if enough RAM)</p></li>
+<li><p>kubectl v1.14+</p></li>
+<li><p>EKS CLI v0.1.32</p></li>
+<li><p>AWS Cli v1.16.163</p></li>
+<li><p>Python 3.6+</p></li>
+<li><p>Python DEV requirements</p></li>
+</ul>
+</section>
+<section id="1)-Train-a-tensorflow-model-to-predict-mnist-locally">
+<h2 id="1)-Train-a-tensorflow-model-to-predict-mnist-locally">1) Train a tensorflow model to predict mnist locally<a class="headerlink" href="#1)-Train-a-tensorflow-model-to-predict-mnist-locally" title="Permalink to this heading">¶</a></h2>
+<p>We will load the mnist images, together with their labels, and then train a tensorflow model to predict the right labels</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tensorflow.examples.tutorials.mnist</span> <span class="kn">import</span> <span class="n">input_data</span>
+
+<span class="n">mnist</span> <span class="o">=</span> <span class="n">input_data</span><span class="o">.</span><span class="n">read_data_sets</span><span class="p">(</span><span class="s2">"MNIST_data/"</span><span class="p">,</span> <span class="n">one_hot</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">784</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">"x"</span><span class="p">)</span>
+
+    <span class="n">W</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">784</span><span class="p">,</span> <span class="mi">10</span><span class="p">]))</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">10</span><span class="p">]))</span>
+
+    <span class="n">y</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">W</span><span class="p">)</span> <span class="o">+</span> <span class="n">b</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"y"</span><span class="p">)</span>
+
+    <span class="n">y_</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
+
+    <span class="n">cross_entropy</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span>
+        <span class="o">-</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">y_</span> <span class="o">*</span> <span class="n">tf</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">reduction_indices</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="p">)</span>
+
+    <span class="n">train_step</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">GradientDescentOptimizer</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">cross_entropy</span><span class="p">)</span>
+
+    <span class="n">init</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">initialize_all_variables</span><span class="p">()</span>
+
+    <span class="n">sess</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+    <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">init</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
+        <span class="n">batch_xs</span><span class="p">,</span> <span class="n">batch_ys</span> <span class="o">=</span> <span class="n">mnist</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">next_batch</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+        <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">train_step</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">x</span><span class="p">:</span> <span class="n">batch_xs</span><span class="p">,</span> <span class="n">y_</span><span class="p">:</span> <span class="n">batch_ys</span><span class="p">})</span>
+
+    <span class="n">correct_prediction</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">tf</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">y_</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">accuracy</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">correct_prediction</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">accuracy</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">x</span><span class="p">:</span> <span class="n">mnist</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">images</span><span class="p">,</span> <span class="n">y_</span><span class="p">:</span> <span class="n">mnist</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">labels</span><span class="p">}))</span>
+
+    <span class="n">saver</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Saver</span><span class="p">()</span>
+
+    <span class="n">saver</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span> <span class="s2">"model/deep_mnist_model"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Extracting MNIST_data/train-images-idx3-ubyte.gz
+Extracting MNIST_data/train-labels-idx1-ubyte.gz
+Extracting MNIST_data/t10k-images-idx3-ubyte.gz
+Extracting MNIST_data/t10k-labels-idx1-ubyte.gz
+0.9194
+</pre></div></div>
+</div>
+</section>
+<section id="2)-Containerise-the-tensorflow-model-with-our-docker-utility">
+<h2 id="2)-Containerise-the-tensorflow-model-with-our-docker-utility">2) Containerise the tensorflow model with our docker utility<a class="headerlink" href="#2)-Containerise-the-tensorflow-model-with-our-docker-utility" title="Permalink to this heading">¶</a></h2>
+<p>First you need to make sure that you have added the .s2i/environment configuration file in this folder with the following content:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[118]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>cat<span class="w"> </span>.s2i/environment
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+MODEL_NAME=DeepMnist
+API_TYPE=REST
+SERVICE_TYPE=MODEL
+PERSISTENCE=0
+</pre></div></div>
+</div>
+<p>Now we can build a docker image named “deep-mnist” with the tag 0.1</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>s2i<span class="w"> </span>build<span class="w"> </span>.<span class="w"> </span>seldonio/seldon-core-s2i-python36:1.14.0<span class="w"> </span>deep-mnist:0.1
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+---&gt; Installing application source...
+---&gt; Installing dependencies ...
+Looking in links: /whl
+Requirement already satisfied: tensorflow&gt;=1.12.0 in /usr/local/lib/python3.6/site-packages (from -r requirements.txt (line 1)) (1.13.1)
+Requirement already satisfied: keras-preprocessing&gt;=1.0.5 in /usr/local/lib/python3.6/site-packages (from tensorflow&gt;=1.12.0-&gt;-r requirements.txt (line 1)) (1.0.9)
+Requirement already satisfied: gast&gt;=0.2.0 in /usr/local/lib/python3.6/site-packages (from tensorflow&gt;=1.12.0-&gt;-r requirements.txt (line 1)) (0.2.2)
+Requirement already satisfied: absl-py&gt;=0.1.6 in /usr/local/lib/python3.6/site-packages (from tensorflow&gt;=1.12.0-&gt;-r requirements.txt (line 1)) (0.7.1)
+Requirement already satisfied: astor&gt;=0.6.0 in /usr/local/lib/python3.6/site-packages (from tensorflow&gt;=1.12.0-&gt;-r requirements.txt (line 1)) (0.7.1)
+Requirement already satisfied: keras-applications&gt;=1.0.6 in /usr/local/lib/python3.6/site-packages (from tensorflow&gt;=1.12.0-&gt;-r requirements.txt (line 1)) (1.0.7)
+Requirement already satisfied: six&gt;=1.10.0 in /usr/local/lib/python3.6/site-packages (from tensorflow&gt;=1.12.0-&gt;-r requirements.txt (line 1)) (1.12.0)
+Requirement already satisfied: termcolor&gt;=1.1.0 in /usr/local/lib/python3.6/site-packages (from tensorflow&gt;=1.12.0-&gt;-r requirements.txt (line 1)) (1.1.0)
+Requirement already satisfied: grpcio&gt;=1.8.6 in /usr/local/lib/python3.6/site-packages (from tensorflow&gt;=1.12.0-&gt;-r requirements.txt (line 1)) (1.19.0)
+Requirement already satisfied: wheel&gt;=0.26 in /usr/local/lib/python3.6/site-packages (from tensorflow&gt;=1.12.0-&gt;-r requirements.txt (line 1)) (0.33.1)
+Requirement already satisfied: tensorboard&lt;1.14.0,&gt;=1.13.0 in /usr/local/lib/python3.6/site-packages (from tensorflow&gt;=1.12.0-&gt;-r requirements.txt (line 1)) (1.13.1)
+Requirement already satisfied: numpy&gt;=1.13.3 in /usr/local/lib/python3.6/site-packages (from tensorflow&gt;=1.12.0-&gt;-r requirements.txt (line 1)) (1.16.2)
+Requirement already satisfied: protobuf&gt;=3.6.1 in /usr/local/lib/python3.6/site-packages (from tensorflow&gt;=1.12.0-&gt;-r requirements.txt (line 1)) (3.7.0)
+Requirement already satisfied: tensorflow-estimator&lt;1.14.0rc0,&gt;=1.13.0 in /usr/local/lib/python3.6/site-packages (from tensorflow&gt;=1.12.0-&gt;-r requirements.txt (line 1)) (1.13.0)
+Requirement already satisfied: h5py in /usr/local/lib/python3.6/site-packages (from keras-applications&gt;=1.0.6-&gt;tensorflow&gt;=1.12.0-&gt;-r requirements.txt (line 1)) (2.9.0)
+Requirement already satisfied: markdown&gt;=2.6.8 in /usr/local/lib/python3.6/site-packages (from tensorboard&lt;1.14.0,&gt;=1.13.0-&gt;tensorflow&gt;=1.12.0-&gt;-r requirements.txt (line 1)) (3.0.1)
+Requirement already satisfied: werkzeug&gt;=0.11.15 in /usr/local/lib/python3.6/site-packages (from tensorboard&lt;1.14.0,&gt;=1.13.0-&gt;tensorflow&gt;=1.12.0-&gt;-r requirements.txt (line 1)) (0.15.0)
+Requirement already satisfied: setuptools in /usr/local/lib/python3.6/site-packages (from protobuf&gt;=3.6.1-&gt;tensorflow&gt;=1.12.0-&gt;-r requirements.txt (line 1)) (40.8.0)
+Requirement already satisfied: mock&gt;=2.0.0 in /usr/local/lib/python3.6/site-packages (from tensorflow-estimator&lt;1.14.0rc0,&gt;=1.13.0-&gt;tensorflow&gt;=1.12.0-&gt;-r requirements.txt (line 1)) (2.0.0)
+Requirement already satisfied: pbr&gt;=0.11 in /usr/local/lib/python3.6/site-packages (from mock&gt;=2.0.0-&gt;tensorflow-estimator&lt;1.14.0rc0,&gt;=1.13.0-&gt;tensorflow&gt;=1.12.0-&gt;-r requirements.txt (line 1)) (5.1.3)
+Url '/whl' is ignored. It is either a non-existing path or lacks a specific scheme.
+You are using pip version 19.0.3, however version 19.1.1 is available.
+You should consider upgrading via the 'pip install --upgrade pip' command.
+Build completed successfully
+</pre></div></div>
+</div>
+</section>
+<section id="3)-Send-some-data-to-the-docker-model-to-test-it">
+<h2 id="3)-Send-some-data-to-the-docker-model-to-test-it">3) Send some data to the docker model to test it<a class="headerlink" href="#3)-Send-some-data-to-the-docker-model-to-test-it" title="Permalink to this heading">¶</a></h2>
+<p>We first run the docker image we just created as a container called “mnist_predictor”</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[119]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>docker<span class="w"> </span>run<span class="w"> </span>--name<span class="w"> </span><span class="s2">"mnist_predictor"</span><span class="w"> </span>-d<span class="w"> </span>--rm<span class="w"> </span>-p<span class="w"> </span><span class="m">5000</span>:5000<span class="w"> </span>deep-mnist:0.1
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+5157ab4f516bd0dea11b159780f31121e9fb41df6394e0d6d631e6e0d572463b
+</pre></div></div>
+</div>
+<p>Send some random features that conform to the contract</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[120]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="c1"># This is the variable that was initialised at the beginning of the file</span>
+<span class="n">i</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">mnist</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">mnist</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">)),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">"gray"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Expected label: "</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="o">*</span> <span class="n">y</span><span class="p">),</span> <span class="s2">". One hot encoding: "</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_aws_eks_deep_mnist_11_0.png" src="../_images/examples_aws_eks_deep_mnist_11_0.png"/>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Expected label:  7.0 . One hot encoding:  [[0. 0. 0. 0. 0. 0. 0. 1. 0. 0.]]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[144]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">math</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">seldon_core.seldon_client</span> <span class="kn">import</span> <span class="n">SeldonClient</span>
+
+<span class="c1"># We now test the REST endpoint expecting the same result</span>
+<span class="n">endpoint</span> <span class="o">=</span> <span class="s2">"0.0.0.0:5000"</span>
+<span class="n">batch</span> <span class="o">=</span> <span class="n">x</span>
+<span class="n">payload_type</span> <span class="o">=</span> <span class="s2">"ndarray"</span>
+
+<span class="n">sc</span> <span class="o">=</span> <span class="n">SeldonClient</span><span class="p">(</span><span class="n">microservice_endpoint</span><span class="o">=</span><span class="n">endpoint</span><span class="p">)</span>
+
+<span class="c1"># We use the microservice, instead of the "predict" function</span>
+<span class="n">client_prediction</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">microservice</span><span class="p">(</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">batch</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"predict"</span><span class="p">,</span> <span class="n">payload_type</span><span class="o">=</span><span class="n">payload_type</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">"tfidf"</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="k">for</span> <span class="n">proba</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+    <span class="n">client_prediction</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">list_value</span><span class="o">.</span><span class="n">ListFields</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
+    <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+<span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"LABEL </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">:</span><span class="se">\t</span><span class="s2"> </span><span class="si">{</span><span class="n">proba</span><span class="o">.</span><span class="n">number_value</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">6.4f</span><span class="si">}</span><span class="s2"> %"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+LABEL 0:         0.0068 %
+LABEL 1:         0.0000 %
+LABEL 2:         0.0085 %
+LABEL 3:         0.3409 %
+LABEL 4:         0.0002 %
+LABEL 5:         0.0020 %
+LABEL 6:         0.0000 %
+LABEL 7:         99.5371 %
+LABEL 8:         0.0026 %
+LABEL 9:         0.1019 %
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[145]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>docker<span class="w"> </span>rm<span class="w"> </span>mnist_predictor<span class="w"> </span>--force
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+mnist_predictor
+</pre></div></div>
+</div>
+</section>
+<section id="4)-Install-and-configure-AWS-tools-to-interact-with-AWS">
+<h2 id="4)-Install-and-configure-AWS-tools-to-interact-with-AWS">4) Install and configure AWS tools to interact with AWS<a class="headerlink" href="#4)-Install-and-configure-AWS-tools-to-interact-with-AWS" title="Permalink to this heading">¶</a></h2>
+<p>First we install the awscli</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>awscli<span class="w"> </span>--upgrade<span class="w"> </span>--user
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Collecting awscli
+  Using cached https://files.pythonhosted.org/packages/f6/45/259a98719e7c7defc9be4cc00fbfb7ccf699fbd1f74455d8347d0ab0a1df/awscli-1.16.163-py2.py3-none-any.whl
+Collecting colorama&lt;=0.3.9,&gt;=0.2.5 (from awscli)
+  Using cached https://files.pythonhosted.org/packages/db/c8/7dcf9dbcb22429512708fe3a547f8b6101c0d02137acbd892505aee57adf/colorama-0.3.9-py2.py3-none-any.whl
+Collecting PyYAML&lt;=3.13,&gt;=3.10 (from awscli)
+Collecting botocore==1.12.153 (from awscli)
+  Using cached https://files.pythonhosted.org/packages/ec/3b/029218966ce62ae9824a18730de862ac8fc5a0e8083d07d1379815e7cca1/botocore-1.12.153-py2.py3-none-any.whl
+Requirement already satisfied, skipping upgrade: docutils&gt;=0.10 in /home/alejandro/miniconda3/envs/reddit-classification/lib/python3.7/site-packages (from awscli) (0.14)
+Collecting rsa&lt;=3.5.0,&gt;=3.1.2 (from awscli)
+  Using cached https://files.pythonhosted.org/packages/e1/ae/baedc9cb175552e95f3395c43055a6a5e125ae4d48a1d7a924baca83e92e/rsa-3.4.2-py2.py3-none-any.whl
+Requirement already satisfied, skipping upgrade: s3transfer&lt;0.3.0,&gt;=0.2.0 in /home/alejandro/miniconda3/envs/reddit-classification/lib/python3.7/site-packages (from awscli) (0.2.0)
+Requirement already satisfied, skipping upgrade: urllib3&lt;1.25,&gt;=1.20; python_version &gt;= "3.4" in /home/alejandro/miniconda3/envs/reddit-classification/lib/python3.7/site-packages (from botocore==1.12.153-&gt;awscli) (1.24.2)
+Requirement already satisfied, skipping upgrade: python-dateutil&lt;3.0.0,&gt;=2.1; python_version &gt;= "2.7" in /home/alejandro/miniconda3/envs/reddit-classification/lib/python3.7/site-packages (from botocore==1.12.153-&gt;awscli) (2.8.0)
+Requirement already satisfied, skipping upgrade: jmespath&lt;1.0.0,&gt;=0.7.1 in /home/alejandro/miniconda3/envs/reddit-classification/lib/python3.7/site-packages (from botocore==1.12.153-&gt;awscli) (0.9.4)
+Collecting pyasn1&gt;=0.1.3 (from rsa&lt;=3.5.0,&gt;=3.1.2-&gt;awscli)
+  Using cached https://files.pythonhosted.org/packages/7b/7c/c9386b82a25115cccf1903441bba3cbadcfae7b678a20167347fa8ded34c/pyasn1-0.4.5-py2.py3-none-any.whl
+Requirement already satisfied, skipping upgrade: six&gt;=1.5 in /home/alejandro/miniconda3/envs/reddit-classification/lib/python3.7/site-packages (from python-dateutil&lt;3.0.0,&gt;=2.1; python_version &gt;= "2.7"-&gt;botocore==1.12.153-&gt;awscli) (1.12.0)
+Installing collected packages: colorama, PyYAML, botocore, pyasn1, rsa, awscli
+Successfully installed PyYAML-3.13 awscli-1.16.163 botocore-1.12.153 colorama-0.3.9 pyasn1-0.4.5 rsa-3.4.2
+</pre></div></div>
+</div>
+<section id="Configure-aws-so-it-can-talk-to-your-server">
+<h3 id="Configure-aws-so-it-can-talk-to-your-server">Configure aws so it can talk to your server<a class="headerlink" href="#Configure-aws-so-it-can-talk-to-your-server" title="Permalink to this heading">¶</a></h3>
+<p>(if you are getting issues, make sure you have the permmissions to create clusters)</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+<span class="c1"># You must make sure that the access key and secret are changed</span>
+aws<span class="w"> </span>configure<span class="w"> </span><span class="s">&lt;&lt; END_OF_INPUTS</span>
+<span class="s">YOUR_ACCESS_KEY</span>
+<span class="s">YOUR_ACCESS_SECRET</span>
+<span class="s">us-west-2</span>
+<span class="s">json</span>
+<span class="s">END_OF_INPUTS</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+AWS Access Key ID [****************SF4A]: AWS Secret Access Key [****************WLHu]: Default region name [eu-west-1]: Default output format [json]:
+</pre></div></div>
+</div>
+</section>
+<section id="Install-EKCTL">
+<h3 id="Install-EKCTL">Install EKCTL<a class="headerlink" href="#Install-EKCTL" title="Permalink to this heading">¶</a></h3>
+<p><em>IMPORTANT</em>: These instructions are for linux Please follow the official installation of ekctl at: <a class="reference external" href="https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html">https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html</a></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>curl<span class="w"> </span>--silent<span class="w"> </span>--location<span class="w"> </span><span class="s2">"https://github.com/weaveworks/eksctl/releases/download/latest_release/eksctl_</span><span class="k">$(</span>uname<span class="w"> </span>-s<span class="k">)</span><span class="s2">_amd64.tar.gz"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tar<span class="w"> </span>xz
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>chmod<span class="w"> </span><span class="m">755</span><span class="w"> </span>./eksctl
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>./eksctl<span class="w"> </span>version
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-cyan-fg">[ℹ]  version.Info{BuiltAt:"", GitCommit:"", GitTag:"0.1.32"}
+</span>
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="5)-Use-the-AWS-tools-to-create-and-setup-EKS-cluster-with-Seldon">
+<h2 id="5)-Use-the-AWS-tools-to-create-and-setup-EKS-cluster-with-Seldon">5) Use the AWS tools to create and setup EKS cluster with Seldon<a class="headerlink" href="#5)-Use-the-AWS-tools-to-create-and-setup-EKS-cluster-with-Seldon" title="Permalink to this heading">¶</a></h2>
+<p>In this example we will create a cluster with 2 nodes, with a minimum of 1 and a max of 3. You can tweak this accordingly.</p>
+<p>If you want to check the status of the deployment you can go to AWS CloudFormation or to the EKS dashboard.</p>
+<p>It will take 10-15 minutes (so feel free to go grab a ☕).</p>
+<p><em>IMPORTANT</em>: If you get errors in this step it is most probably IAM role access requirements, which requires you to discuss with your administrator.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[107]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+./eksctl<span class="w"> </span>create<span class="w"> </span>cluster<span class="w"> </span><span class="se">\</span>
+--name<span class="w"> </span>demo-eks-cluster<span class="w"> </span><span class="se">\</span>
+--region<span class="w"> </span>us-west-2<span class="w"> </span><span class="se">\</span>
+--nodes<span class="w"> </span><span class="m">2</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Process is interrupted.
+</pre></div></div>
+</div>
+<section id="Configure-local-kubectl">
+<h3 id="Configure-local-kubectl">Configure local kubectl<a class="headerlink" href="#Configure-local-kubectl" title="Permalink to this heading">¶</a></h3>
+<p>We want to now configure our local Kubectl so we can actually reach the cluster we’ve just created</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[108]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>aws<span class="w"> </span>eks<span class="w"> </span>--region<span class="w"> </span>us-west-2<span class="w"> </span>update-kubeconfig<span class="w"> </span>--name<span class="w"> </span>demo-eks-cluster
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Updated context arn:aws:eks:eu-west-1:271049282727:cluster/deepmnist in /home/alejandro/.kube/config
+</pre></div></div>
+</div>
+<p>And we can check if the context has been added to kubectl config (contexts are basically the different k8s cluster connections) You should be able to see the context as “…aws:eks:eu-west-1:27…”. If it’s not activated you can activate that context with kubectlt config set-context</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[109]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>config<span class="w"> </span>get-contexts
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+CURRENT   NAME                                                   CLUSTER                                                AUTHINFO                                               NAMESPACE
+*         arn:aws:eks:eu-west-1:271049282727:cluster/deepmnist   arn:aws:eks:eu-west-1:271049282727:cluster/deepmnist   arn:aws:eks:eu-west-1:271049282727:cluster/deepmnist
+          docker-desktop                                         docker-desktop                                         docker-desktop
+          docker-for-desktop                                     docker-desktop                                         docker-desktop
+          gke_ml-engineer_us-central1-a_security-cluster-1       gke_ml-engineer_us-central1-a_security-cluster-1       gke_ml-engineer_us-central1-a_security-cluster-1
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="Setup-Seldon-Core">
+<h2 id="Setup-Seldon-Core">Setup Seldon Core<a class="headerlink" href="#Setup-Seldon-Core" title="Permalink to this heading">¶</a></h2>
+<p>Use the setup notebook to <a class="reference external" href="https://docs.seldon.io/projects/seldon-core/en/latest/examples/seldon_core_setup.html#Setup-Cluster">Setup Cluster</a> with <a class="reference external" href="https://docs.seldon.io/projects/seldon-core/en/latest/examples/seldon_core_setup.html#Ambassador">Ambassador Ingress</a> and <a class="reference external" href="https://docs.seldon.io/projects/seldon-core/en/latest/examples/seldon_core_setup.html#Install-Seldon-Core">Install Seldon Core</a>. Instructions <a class="reference external" href="https://docs.seldon.io/projects/seldon-core/en/latest/examples/seldon_core_setup.html">also
+online</a>.</p>
+</section>
+<section id="Push-docker-image">
+<h2 id="Push-docker-image">Push docker image<a class="headerlink" href="#Push-docker-image" title="Permalink to this heading">¶</a></h2>
+<p>In order for the EKS seldon deployment to access the image we just built, we need to push it to the Elastic Container Registry (ECR).</p>
+<p>If you have any issues please follow the official AWS documentation: <a class="reference external" href="https://docs.aws.amazon.com/AmazonECR/latest/userguide/what-is-ecr.html">https://docs.aws.amazon.com/AmazonECR/latest/userguide/what-is-ecr.html</a></p>
+<section id="First-we-create-a-registry">
+<h3 id="First-we-create-a-registry">First we create a registry<a class="headerlink" href="#First-we-create-a-registry" title="Permalink to this heading">¶</a></h3>
+<p>You can run the following command, and then see the result at <a class="reference external" href="https://us-west-2.console.aws.amazon.com/ecr/repositories">https://us-west-2.console.aws.amazon.com/ecr/repositories</a>?#</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[110]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>aws<span class="w"> </span>ecr<span class="w"> </span>create-repository<span class="w"> </span>--repository-name<span class="w"> </span>seldon-repository<span class="w"> </span>--region<span class="w"> </span>us-west-2
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{
+    "repository": {
+        "repositoryArn": "arn:aws:ecr:us-west-2:271049282727:repository/seldon-repository",
+        "registryId": "271049282727",
+        "repositoryName": "seldon-repository",
+        "repositoryUri": "271049282727.dkr.ecr.us-west-2.amazonaws.com/seldon-repository",
+        "createdAt": 1558535798.0
+    }
+}
+</pre></div></div>
+</div>
+</section>
+<section id="Now-prepare-docker-image">
+<h3 id="Now-prepare-docker-image">Now prepare docker image<a class="headerlink" href="#Now-prepare-docker-image" title="Permalink to this heading">¶</a></h3>
+<p>We need to first tag the docker image before we can push it</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[111]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+<span class="nb">export</span><span class="w"> </span><span class="nv">AWS_ACCOUNT_ID</span><span class="o">=</span><span class="s2">""</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">AWS_REGION</span><span class="o">=</span><span class="s2">"us-west-2"</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">"</span><span class="nv">$AWS_ACCOUNT_ID</span><span class="s2">"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"ERROR: Please provide a value for the AWS variables"</span>
+<span class="w">    </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<span class="k">fi</span>
+
+docker<span class="w"> </span>tag<span class="w"> </span>deep-mnist:0.1<span class="w"> </span><span class="s2">"</span><span class="nv">$AWS_ACCOUNT_ID</span><span class="s2">.dkr.ecr.</span><span class="nv">$AWS_REGION</span><span class="s2">.amazonaws.com/seldon-repository"</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="We-now-login-to-aws-through-docker-so-we-can-access-the-repository">
+<h3 id="We-now-login-to-aws-through-docker-so-we-can-access-the-repository">We now login to aws through docker so we can access the repository<a class="headerlink" href="#We-now-login-to-aws-through-docker-so-we-can-access-the-repository" title="Permalink to this heading">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[112]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="sb">`</span>aws<span class="w"> </span>ecr<span class="w"> </span>get-login<span class="w"> </span>--no-include-email<span class="w"> </span>--region<span class="w"> </span>us-west-2<span class="sb">`</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING! Using --password via the CLI is insecure. Use --password-stdin.
+WARNING! Your password will be stored unencrypted in /home/alejandro/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+</pre></div></div>
+</div>
+</section>
+<section id="And-push-the-image">
+<h3 id="And-push-the-image">And push the image<a class="headerlink" href="#And-push-the-image" title="Permalink to this heading">¶</a></h3>
+<p>Make sure you add your AWS Account ID</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[113]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+<span class="nb">export</span><span class="w"> </span><span class="nv">AWS_ACCOUNT_ID</span><span class="o">=</span><span class="s2">""</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">AWS_REGION</span><span class="o">=</span><span class="s2">"us-west-2"</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">"</span><span class="nv">$AWS_ACCOUNT_ID</span><span class="s2">"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"ERROR: Please provide a value for the AWS variables"</span>
+<span class="w">    </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<span class="k">fi</span>
+
+docker<span class="w"> </span>push<span class="w"> </span><span class="s2">"</span><span class="nv">$AWS_ACCOUNT_ID</span><span class="s2">.dkr.ecr.</span><span class="nv">$AWS_REGION</span><span class="s2">.amazonaws.com/seldon-repository"</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+The push refers to repository [271049282727.dkr.ecr.us-west-2.amazonaws.com/seldon-repository]
+f7d0d000c138: Preparing
+987f3f1afb00: Preparing
+00d16a381c47: Preparing
+bb01f50d544a: Preparing
+fcb82c6941b5: Preparing
+67290e35c458: Preparing
+b813745f5bb3: Preparing
+ffecb18e9f0b: Preparing
+f50f856f49fa: Preparing
+80b43ad4adf9: Preparing
+14c77983a1cf: Preparing
+a22a5ac18042: Preparing
+6257fa9f9597: Preparing
+578414b395b9: Preparing
+abc3250a6c7f: Preparing
+13d5529fd232: Preparing
+67290e35c458: Waiting
+b813745f5bb3: Waiting
+ffecb18e9f0b: Waiting
+f50f856f49fa: Waiting
+80b43ad4adf9: Waiting
+6257fa9f9597: Waiting
+14c77983a1cf: Waiting
+a22a5ac18042: Waiting
+578414b395b9: Waiting
+abc3250a6c7f: Waiting
+13d5529fd232: Waiting
+987f3f1afb00: Pushed
+fcb82c6941b5: Pushed
+bb01f50d544a: Pushed
+f7d0d000c138: Pushed
+ffecb18e9f0b: Pushed
+b813745f5bb3: Pushed
+f50f856f49fa: Pushed
+67290e35c458: Pushed
+14c77983a1cf: Pushed
+578414b395b9: Pushed
+80b43ad4adf9: Pushed
+13d5529fd232: Pushed
+6257fa9f9597: Pushed
+abc3250a6c7f: Pushed
+00d16a381c47: Pushed
+a22a5ac18042: Pushed
+latest: digest: sha256:19aefaa9d87c1287eb46ec08f5d4f9a689744d9d0d0b75668b7d15e447819d74 size: 3691
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="Running-the-Model">
+<h2 id="Running-the-Model">Running the Model<a class="headerlink" href="#Running-the-Model" title="Permalink to this heading">¶</a></h2>
+<p>We will now run the model.</p>
+<p>Let’s first have a look at the file we’ll be using to trigger the model:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[127]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>cat<span class="w"> </span>deep_mnist.json
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{
+    "apiVersion": "machinelearning.seldon.io/v1alpha2",
+    "kind": "SeldonDeployment",
+    "metadata": {
+        "labels": {
+            "app": "seldon"
+        },
+        "name": "deep-mnist"
+    },
+    "spec": {
+        "annotations": {
+            "project_name": "Tensorflow MNIST",
+            "deployment_version": "v1"
+        },
+        "name": "deep-mnist",
+        "predictors": [
+            {
+                "componentSpecs": [{
+                    "spec": {
+                        "containers": [
+                            {
+                                "image": "271049282727.dkr.ecr.us-west-2.amazonaws.com/seldon-repository:latest",
+                                "imagePullPolicy": "IfNotPresent",
+                                "name": "classifier",
+                                "resources": {
+                                    "requests": {
+                                        "memory": "1Mi"
+                                    }
+                                }
+                            }
+                        ],
+                        "terminationGracePeriodSeconds": 20
+                    }
+                }],
+                "graph": {
+                    "children": [],
+                    "name": "classifier",
+                    "endpoint": {
+                        "type" : "REST"
+                    },
+                    "type": "MODEL"
+                },
+                "name": "single-model",
+                "replicas": 1,
+                "annotations": {
+                    "predictor_version" : "v1"
+                }
+            }
+        ]
+    }
+}
+</pre></div></div>
+</div>
+<p>Now let’s trigger seldon to run the model.</p>
+<p>We basically have a yaml file, where we want to replace the value “REPLACE_FOR_IMAGE_AND_TAG” for the image you pushed</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[165]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+<span class="nb">export</span><span class="w"> </span><span class="nv">AWS_ACCOUNT_ID</span><span class="o">=</span><span class="s2">""</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">AWS_REGION</span><span class="o">=</span><span class="s2">"us-west-2"</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">"</span><span class="nv">$AWS_ACCOUNT_ID</span><span class="s2">"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"ERROR: Please provide a value for the AWS variables"</span>
+<span class="w">    </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<span class="k">fi</span>
+
+sed<span class="w"> </span><span class="s1">'s|REPLACE_FOR_IMAGE_AND_TAG|'</span><span class="s2">"</span><span class="nv">$AWS_ACCOUNT_ID</span><span class="s2">"</span><span class="s1">'.dkr.ecr.'</span><span class="s2">"</span><span class="nv">$AWS_REGION</span><span class="s2">"</span><span class="s1">'.amazonaws.com/seldon-repository|g'</span><span class="w"> </span>deep_mnist.json<span class="w"> </span><span class="p">|</span><span class="w"> </span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>-
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+error: unable to recognize "STDIN": Get https://461835FD3FF52848655C8F09FBF5EEAA.yl4.us-west-2.eks.amazonaws.com/api?timeout=32s: dial tcp: lookup 461835FD3FF52848655C8F09FBF5EEAA.yl4.us-west-2.eks.amazonaws.com on 1.1.1.1:53: no such host
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">CalledProcessError</span>                        Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-165-1129742af2c4&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>get_ipython<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>run_cell_magic<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">'bash'</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">''</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">'export AWS_ACCOUNT_ID="2710"\nexport AWS_REGION="us-west-2"\nif [ -z "$AWS_ACCOUNT_ID" ]; then\n    echo "ERROR: Please provide a value for the AWS variables"\n    exit 1\nfi\n\nsed \'s|REPLACE_FOR_IMAGE_AND_TAG|\'"$AWS_ACCOUNT_ID"\'.dkr.ecr.\'"$AWS_REGION"\'.amazonaws.com/seldon-repository|g\' deep_mnist.json | kubectl apply -f -\n'</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">~/miniconda3/envs/reddit-classification/lib/python3.7/site-packages/IPython/core/interactiveshell.py</span> in <span class="ansi-cyan-fg">run_cell_magic</span><span class="ansi-blue-fg">(self, magic_name, line, cell)</span>
+<span class="ansi-green-intense-fg ansi-bold">   2350</span>             <span class="ansi-green-fg">with</span> self<span class="ansi-blue-fg">.</span>builtin_trap<span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">   2351</span>                 args <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">(</span>magic_arg_s<span class="ansi-blue-fg">,</span> cell<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">-&gt; 2352</span><span class="ansi-red-fg">                 </span>result <span class="ansi-blue-fg">=</span> fn<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>args<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">   2353</span>             <span class="ansi-green-fg">return</span> result
+<span class="ansi-green-intense-fg ansi-bold">   2354</span>
+
+<span class="ansi-green-fg">~/miniconda3/envs/reddit-classification/lib/python3.7/site-packages/IPython/core/magics/script.py</span> in <span class="ansi-cyan-fg">named_script_magic</span><span class="ansi-blue-fg">(line, cell)</span>
+<span class="ansi-green-intense-fg ansi-bold">    140</span>             <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    141</span>                 line <span class="ansi-blue-fg">=</span> script
+<span class="ansi-green-fg">--&gt; 142</span><span class="ansi-red-fg">             </span><span class="ansi-green-fg">return</span> self<span class="ansi-blue-fg">.</span>shebang<span class="ansi-blue-fg">(</span>line<span class="ansi-blue-fg">,</span> cell<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    143</span>
+<span class="ansi-green-intense-fg ansi-bold">    144</span>         <span class="ansi-red-fg"># write a basic docstring:</span>
+
+<span class="ansi-green-fg">&lt;/home/alejandro/miniconda3/envs/reddit-classification/lib/python3.7/site-packages/decorator.py:decorator-gen-110&gt;</span> in <span class="ansi-cyan-fg">shebang</span><span class="ansi-blue-fg">(self, line, cell)</span>
+
+<span class="ansi-green-fg">~/miniconda3/envs/reddit-classification/lib/python3.7/site-packages/IPython/core/magic.py</span> in <span class="ansi-cyan-fg">&lt;lambda&gt;</span><span class="ansi-blue-fg">(f, *a, **k)</span>
+<span class="ansi-green-intense-fg ansi-bold">    185</span>     <span class="ansi-red-fg"># but it's overkill for just that one bit of state.</span>
+<span class="ansi-green-intense-fg ansi-bold">    186</span>     <span class="ansi-green-fg">def</span> magic_deco<span class="ansi-blue-fg">(</span>arg<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 187</span><span class="ansi-red-fg">         </span>call <span class="ansi-blue-fg">=</span> <span class="ansi-green-fg">lambda</span> f<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">*</span>a<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>k<span class="ansi-blue-fg">:</span> f<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>a<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>k<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    188</span>
+<span class="ansi-green-intense-fg ansi-bold">    189</span>         <span class="ansi-green-fg">if</span> callable<span class="ansi-blue-fg">(</span>arg<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+
+<span class="ansi-green-fg">~/miniconda3/envs/reddit-classification/lib/python3.7/site-packages/IPython/core/magics/script.py</span> in <span class="ansi-cyan-fg">shebang</span><span class="ansi-blue-fg">(self, line, cell)</span>
+<span class="ansi-green-intense-fg ansi-bold">    243</span>             sys<span class="ansi-blue-fg">.</span>stderr<span class="ansi-blue-fg">.</span>flush<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    244</span>         <span class="ansi-green-fg">if</span> args<span class="ansi-blue-fg">.</span>raise_error <span class="ansi-green-fg">and</span> p<span class="ansi-blue-fg">.</span>returncode<span class="ansi-blue-fg">!=</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 245</span><span class="ansi-red-fg">             </span><span class="ansi-green-fg">raise</span> CalledProcessError<span class="ansi-blue-fg">(</span>p<span class="ansi-blue-fg">.</span>returncode<span class="ansi-blue-fg">,</span> cell<span class="ansi-blue-fg">,</span> output<span class="ansi-blue-fg">=</span>out<span class="ansi-blue-fg">,</span> stderr<span class="ansi-blue-fg">=</span>err<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    246</span>
+<span class="ansi-green-intense-fg ansi-bold">    247</span>     <span class="ansi-green-fg">def</span> _run_script<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> p<span class="ansi-blue-fg">,</span> cell<span class="ansi-blue-fg">,</span> to_close<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+
+<span class="ansi-red-fg">CalledProcessError</span>: Command 'b'export AWS_ACCOUNT_ID="2710"\nexport AWS_REGION="us-west-2"\nif [ -z "$AWS_ACCOUNT_ID" ]; then\n    echo "ERROR: Please provide a value for the AWS variables"\n    exit 1\nfi\n\nsed \'s|REPLACE_FOR_IMAGE_AND_TAG|\'"$AWS_ACCOUNT_ID"\'.dkr.ecr.\'"$AWS_REGION"\'.amazonaws.com/seldon-repository|g\' deep_mnist.json | kubectl apply -f -\n'' returned non-zero exit status 1.
+</pre></div></div>
+</div>
+<p>And let’s check that it’s been created.</p>
+<p>You should see an image called “deep-mnist-single-model…”.</p>
+<p>We’ll wait until STATUS changes from “ContainerCreating” to “Running”</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>get<span class="w"> </span>pods
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+NAME                                              READY   STATUS    RESTARTS   AGE
+ambassador-5475779f98-7bhcw                       1/1     Running   0          21m
+ambassador-5475779f98-986g5                       1/1     Running   0          21m
+ambassador-5475779f98-zcd28                       1/1     Running   0          21m
+deep-mnist-single-model-42ed9d9-fdb557d6b-6xv2h   2/2     Running   0          18m
+</pre></div></div>
+</div>
+</section>
+<section id="Test-the-model">
+<h2 id="Test-the-model">Test the model<a class="headerlink" href="#Test-the-model" title="Permalink to this heading">¶</a></h2>
+<p>Now we can test the model, let’s first find out what is the URL that we’ll have to use:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>ambassador<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.status.loadBalancer.ingress[0].hostname}'</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+a68bbac487ca611e988060247f81f4c1-707754258.us-west-2.elb.amazonaws.com
+</pre></div></div>
+</div>
+<p>We’ll use a random example from our dataset</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="c1"># This is the variable that was initialised at the beginning of the file</span>
+<span class="n">i</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">mnist</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">mnist</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">)),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">"gray"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Expected label: "</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="o">*</span> <span class="n">y</span><span class="p">),</span> <span class="s2">". One hot encoding: "</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_aws_eks_deep_mnist_48_0.png" src="../_images/examples_aws_eks_deep_mnist_48_0.png"/>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Expected label:  7.0 . One hot encoding:  [[0. 0. 0. 0. 0. 0. 0. 1. 0. 0.]]
+</pre></div></div>
+</div>
+<p>We can now add the URL above to send our request:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[112]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">math</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">seldon_core.seldon_client</span> <span class="kn">import</span> <span class="n">SeldonClient</span>
+
+<span class="n">host</span> <span class="o">=</span> <span class="s2">"a68bbac487ca611e988060247f81f4c1-707754258.us-west-2.elb.amazonaws.com"</span>
+<span class="n">port</span> <span class="o">=</span> <span class="s2">"80"</span>  <span class="c1"># Make sure you use the port above</span>
+<span class="n">batch</span> <span class="o">=</span> <span class="n">x</span>
+<span class="n">payload_type</span> <span class="o">=</span> <span class="s2">"ndarray"</span>
+
+<span class="n">sc</span> <span class="o">=</span> <span class="n">SeldonClient</span><span class="p">(</span>
+    <span class="n">gateway</span><span class="o">=</span><span class="s2">"ambassador"</span><span class="p">,</span> <span class="n">ambassador_endpoint</span><span class="o">=</span><span class="n">host</span> <span class="o">+</span> <span class="s2">":"</span> <span class="o">+</span> <span class="n">port</span><span class="p">,</span> <span class="n">namespace</span><span class="o">=</span><span class="s2">"default"</span>
+<span class="p">)</span>
+
+<span class="n">client_prediction</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">batch</span><span class="p">,</span> <span class="n">deployment_name</span><span class="o">=</span><span class="s2">"deep-mnist"</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">"text"</span><span class="p">],</span> <span class="n">payload_type</span><span class="o">=</span><span class="n">payload_type</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">client_prediction</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Success:True message:
+Request:
+data {
+  names: "text"
+  ndarray {
+    values {
+      list_value {
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.3294117748737335
+        }
+        values {
+          number_value: 0.7254902124404907
+        }
+        values {
+          number_value: 0.6235294342041016
+        }
+        values {
+          number_value: 0.5921568870544434
+        }
+        values {
+          number_value: 0.2352941334247589
+        }
+        values {
+          number_value: 0.1411764770746231
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.8705883026123047
+        }
+        values {
+          number_value: 0.9960784912109375
+        }
+        values {
+          number_value: 0.9960784912109375
+        }
+        values {
+          number_value: 0.9960784912109375
+        }
+        values {
+          number_value: 0.9960784912109375
+        }
+        values {
+          number_value: 0.9450981020927429
+        }
+        values {
+          number_value: 0.7764706611633301
+        }
+        values {
+          number_value: 0.7764706611633301
+        }
+        values {
+          number_value: 0.7764706611633301
+        }
+        values {
+          number_value: 0.7764706611633301
+        }
+        values {
+          number_value: 0.7764706611633301
+        }
+        values {
+          number_value: 0.7764706611633301
+        }
+        values {
+          number_value: 0.7764706611633301
+        }
+        values {
+          number_value: 0.7764706611633301
+        }
+        values {
+          number_value: 0.6666666865348816
+        }
+        values {
+          number_value: 0.2039215862751007
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.26274511218070984
+        }
+        values {
+          number_value: 0.44705885648727417
+        }
+        values {
+          number_value: 0.2823529541492462
+        }
+        values {
+          number_value: 0.44705885648727417
+        }
+        values {
+          number_value: 0.6392157077789307
+        }
+        values {
+          number_value: 0.8901961445808411
+        }
+        values {
+          number_value: 0.9960784912109375
+        }
+        values {
+          number_value: 0.8823530077934265
+        }
+        values {
+          number_value: 0.9960784912109375
+        }
+        values {
+          number_value: 0.9960784912109375
+        }
+        values {
+          number_value: 0.9960784912109375
+        }
+        values {
+          number_value: 0.9803922176361084
+        }
+        values {
+          number_value: 0.8980392813682556
+        }
+        values {
+          number_value: 0.9960784912109375
+        }
+        values {
+          number_value: 0.9960784912109375
+        }
+        values {
+          number_value: 0.5490196347236633
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.06666667014360428
+        }
+        values {
+          number_value: 0.25882354378700256
+        }
+        values {
+          number_value: 0.05490196496248245
+        }
+        values {
+          number_value: 0.26274511218070984
+        }
+        values {
+          number_value: 0.26274511218070984
+        }
+        values {
+          number_value: 0.26274511218070984
+        }
+        values {
+          number_value: 0.23137256503105164
+        }
+        values {
+          number_value: 0.08235294371843338
+        }
+        values {
+          number_value: 0.9254902601242065
+        }
+        values {
+          number_value: 0.9960784912109375
+        }
+        values {
+          number_value: 0.41568630933761597
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.32549020648002625
+        }
+        values {
+          number_value: 0.9921569228172302
+        }
+        values {
+          number_value: 0.8196079134941101
+        }
+        values {
+          number_value: 0.07058823853731155
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.08627451211214066
+        }
+        values {
+          number_value: 0.9137255549430847
+        }
+        values {
+          number_value: 1.0
+        }
+        values {
+          number_value: 0.32549020648002625
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.5058823823928833
+        }
+        values {
+          number_value: 0.9960784912109375
+        }
+        values {
+          number_value: 0.9333333969116211
+        }
+        values {
+          number_value: 0.1725490242242813
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.23137256503105164
+        }
+        values {
+          number_value: 0.9764706492424011
+        }
+        values {
+          number_value: 0.9960784912109375
+        }
+        values {
+          number_value: 0.24313727021217346
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.5215686559677124
+        }
+        values {
+          number_value: 0.9960784912109375
+        }
+        values {
+          number_value: 0.7333333492279053
+        }
+        values {
+          number_value: 0.019607843831181526
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.03529411926865578
+        }
+        values {
+          number_value: 0.803921639919281
+        }
+        values {
+          number_value: 0.9725490808486938
+        }
+        values {
+          number_value: 0.22745099663734436
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.4941176772117615
+        }
+        values {
+          number_value: 0.9960784912109375
+        }
+        values {
+          number_value: 0.7137255072593689
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.29411765933036804
+        }
+        values {
+          number_value: 0.9843137860298157
+        }
+        values {
+          number_value: 0.9411765336990356
+        }
+        values {
+          number_value: 0.22352942824363708
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.07450980693101883
+        }
+        values {
+          number_value: 0.8666667342185974
+        }
+        values {
+          number_value: 0.9960784912109375
+        }
+        values {
+          number_value: 0.6509804129600525
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.011764707043766975
+        }
+        values {
+          number_value: 0.7960785031318665
+        }
+        values {
+          number_value: 0.9960784912109375
+        }
+        values {
+          number_value: 0.8588235974311829
+        }
+        values {
+          number_value: 0.13725490868091583
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.14901961386203766
+        }
+        values {
+          number_value: 0.9960784912109375
+        }
+        values {
+          number_value: 0.9960784912109375
+        }
+        values {
+          number_value: 0.3019607961177826
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.12156863510608673
+        }
+        values {
+          number_value: 0.8784314393997192
+        }
+        values {
+          number_value: 0.9960784912109375
+        }
+        values {
+          number_value: 0.45098042488098145
+        }
+        values {
+          number_value: 0.003921568859368563
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.5215686559677124
+        }
+        values {
+          number_value: 0.9960784912109375
+        }
+        values {
+          number_value: 0.9960784912109375
+        }
+        values {
+          number_value: 0.2039215862751007
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.2392157018184662
+        }
+        values {
+          number_value: 0.9490196704864502
+        }
+        values {
+          number_value: 0.9960784912109375
+        }
+        values {
+          number_value: 0.9960784912109375
+        }
+        values {
+          number_value: 0.2039215862751007
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.4745098352432251
+        }
+        values {
+          number_value: 0.9960784912109375
+        }
+        values {
+          number_value: 0.9960784912109375
+        }
+        values {
+          number_value: 0.8588235974311829
+        }
+        values {
+          number_value: 0.1568627506494522
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.4745098352432251
+        }
+        values {
+          number_value: 0.9960784912109375
+        }
+        values {
+          number_value: 0.8117647767066956
+        }
+        values {
+          number_value: 0.07058823853731155
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+        values {
+          number_value: 0.0
+        }
+      }
+    }
+  }
+}
+
+Response:
+meta {
+  puid: "l6bv1r38mmb32l0hbinln2jjcl"
+  requestPath {
+    key: "classifier"
+    value: "271049282727.dkr.ecr.us-west-2.amazonaws.com/seldon-repository:latest"
+  }
+}
+data {
+  names: "class:0"
+  names: "class:1"
+  names: "class:2"
+  names: "class:3"
+  names: "class:4"
+  names: "class:5"
+  names: "class:6"
+  names: "class:7"
+  names: "class:8"
+  names: "class:9"
+  ndarray {
+    values {
+      list_value {
+        values {
+          number_value: 6.839015986770391e-05
+        }
+        values {
+          number_value: 9.376968534979824e-09
+        }
+        values {
+          number_value: 8.48581112222746e-05
+        }
+        values {
+          number_value: 0.0034086888190358877
+        }
+        values {
+          number_value: 2.3978568606253248e-06
+        }
+        values {
+          number_value: 2.0100669644307345e-05
+        }
+        values {
+          number_value: 3.0251623428512175e-08
+        }
+        values {
+          number_value: 0.9953710436820984
+        }
+        values {
+          number_value: 2.6070511012221687e-05
+        }
+        values {
+          number_value: 0.0010185304563492537
+        }
+      }
+    }
+  }
+}
+
+</pre></div></div>
+</div>
+<section id="Let's-visualise-the-probability-for-each-label">
+<h3 id="Let's-visualise-the-probability-for-each-label">Let’s visualise the probability for each label<a class="headerlink" href="#Let's-visualise-the-probability-for-each-label" title="Permalink to this heading">¶</a></h3>
+<p>It seems that it correctly predicted the number 7</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[117]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">proba</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+    <span class="n">client_prediction</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">list_value</span><span class="o">.</span><span class="n">ListFields</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
+    <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+<span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"LABEL </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">:</span><span class="se">\t</span><span class="s2"> </span><span class="si">{</span><span class="n">proba</span><span class="o">.</span><span class="n">number_value</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">6.4f</span><span class="si">}</span><span class="s2"> %"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+LABEL 0:         0.0068 %
+LABEL 1:         0.0000 %
+LABEL 2:         0.0085 %
+LABEL 3:         0.3409 %
+LABEL 4:         0.0002 %
+LABEL 5:         0.0020 %
+LABEL 6:         0.0000 %
+LABEL 7:         99.5371 %
+LABEL 8:         0.0026 %
+LABEL 9:         0.1019 %
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+</section>
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="cpp_advanced.html" title="Advanced CPP Buildsystem Override"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> "Previous" </span> Advanced CPP Buildsystem Override </span>
+              </div>
+            </a>
+          
+          
+            <a href="azure_aks_deep_mnist.html" title="Azure Kubernetes Service (AKS) Deep MNIST"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> "Next" </span> Azure Kubernetes Service (AKS) Deep MNIST </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2024, Seldon Technologies Ltd.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

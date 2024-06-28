@@ -1,0 +1,968 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>如何为 RLlib 做出贡献 &#8212; Ray 2.7.2</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/termynal.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/js/versionwarning.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+    <script defer="defer" src="../_static/js/docsearch.js"></script>
+    <script defer="defer" src="../_static/js/csat.js"></script>
+    <script defer="defer" src="../_static/js/termynal.js"></script>
+    <script defer="defer" src="../_static/js/custom.js"></script>
+    <script defer="defer" src="../_static/js/top-navigation.js"></script>
+    <script src="../_static/js/tags.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <link rel="canonical" href="https://docs.ray.io/en/latest/rllib/rllib-dev.html" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="使用 RLlib CLI" href="rllib-cli.html" />
+    <link rel="prev" title="容错与弹性训练" href="rllib-fault-tolerance.html" />
+
+<!-- Fathom - beautiful, simple website analytics -->
+<script src="https://deer.ray.io/script.js" data-site="WYYANYOS" defer></script>
+<!-- / Fathom -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-110413294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-110413294-1');
+</script>
+
+<script
+  src="https://widget.kapa.ai/kapa-widget.bundle.js"
+  data-website-id="18a8c339-4ec5-43c8-8182-db3f2bc8c6b6"
+  data-project-name="Ray"
+  data-project-color="#2C2C2C"
+  data-project-logo="https://global.discourse-cdn.com/business7/uploads/ray/original/1X/8f4dcb72f7cd34e2a332d548bd65860994bc8ff1.png"
+  data-modal-disclaimer = "Results are automated and may be incorrect or contain inappropriate information. Do not include any personal data or confidential information."
+  data-modal-title = "Ray Docs AI - Ask a Question"
+  data-button-position-bottom = "60px"
+></script>
+
+<script>
+(function(apiKey){
+    (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
+    v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
+        o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
+        y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
+        z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
+
+        pendo.initialize({
+            visitor: {
+                id: 'VISITOR-UNIQUE-ID'
+            },
+            account: {
+                id: 'ACCOUNT-UNIQUE-ID'
+            }
+        });
+})('f89fa48a-6dd7-4d7c-67cf-a8051ed891f2');
+</script>
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"><div class='topnav'></div></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Ray 2.7.2</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main Navigation">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    欢迎来到 Ray ！
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Ray
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-overview/index.html">
+   概述「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-overview/getting-started.html">
+   入门「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-overview/installation.html">
+   安装「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-overview/use-cases.html">
+   用例「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-overview/examples.html">
+   示例库「1%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-overview/ray-libraries.html">
+   生态「3%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-core/walkthrough.html">
+   Ray 核心「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../data/data.html">
+   Ray 数据「85%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../train/train.html">
+   Ray 训练「95%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../tune/index.html">
+   Ray 调参「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../serve/index.html">
+   Ray Serve「1%」
+  </a>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="index.html">
+   Ray RLlib「0%」
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="rllib-training.html">
+     RLlib 入门
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="key-concepts.html">
+     关键概念
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="rllib-env.html">
+     环境
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="rllib-algorithms.html">
+     算法
+    </a>
+   </li>
+   <li class="toctree-l2 current active has-children">
+    <a class="reference internal" href="user-guides.html">
+     用户指南
+    </a>
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+    <label for="toctree-checkbox-2">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul class="current">
+     <li class="toctree-l3">
+      <a class="reference internal" href="rllib-advanced-api.html">
+       高级 Python API
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="rllib-models.html">
+       模型、预处理器和动作分布
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="rllib-saving-and-loading-algos-and-policies.html">
+       保存和加载您的强化学习算法和策略
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="rllib-concepts.html">
+       How To Customize Policies
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="rllib-sample-collection.html">
+       样本集合和轨迹视图
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="rllib-replay-buffers.html">
+       Replay Buffers
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="rllib-offline.html">
+       使用离线数据
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="rllib-catalogs.html">
+       目录 (Alpha)
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="rllib-connector.html">
+       连接器 (Beta)
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="rllib-rlmodule.html">
+       RL 模块 (Alpha)
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="rllib-learner.html">
+       Learner (Alpha)
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="rllib-torch2x.html">
+       Using RLlib with torch 2.x compile
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="rllib-fault-tolerance.html">
+       容错与弹性训练
+      </a>
+     </li>
+     <li class="toctree-l3 current active">
+      <a class="current reference internal" href="#">
+       如何为 RLlib 做出贡献
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="rllib-cli.html">
+       使用 RLlib CLI
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="rllib-examples.html">
+     示例
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="package_ref/index.html">
+     Ray RLlib API
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-more-libs/index.html">
+   更多类库「40%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cluster/getting-started.html">
+   Ray 集群「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-observability/index.html">
+   监控调试「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-references/api.html">
+   参考「20%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-contribute/index.html">
+   开发者指引「30%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-security/index.html">
+   安全「100%」
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/ray-project/ray"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/issues/new?title=Issue%20on%20page%20%2Frllib/rllib-dev.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/edit/master/doc/source/rllib/rllib-dev.rst"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/rllib/rllib-dev.rst.txt"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.rst</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#development-install">
+   Development Install
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#api-stability">
+   API Stability
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#features">
+   Features
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#benchmarks">
+   Benchmarks
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#contributing-algorithms">
+   Contributing Algorithms
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#how-to-add-an-algorithm-to-rllib-algorithms">
+     How to add an algorithm to
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       rllib/algorithms
+      </span>
+     </code>
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#debugging-your-algorithms">
+   Debugging your Algorithms
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#finding-memory-leaks-in-workers">
+     Finding Memory Leaks In Workers
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#troubleshooting">
+   Troubleshooting
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#tensorflow-2-x">
+     TensorFlow 2.x
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#older-tensorflow-versions">
+     Older TensorFlow versions
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>如何为 RLlib 做出贡献</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#development-install">
+   Development Install
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#api-stability">
+   API Stability
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#features">
+   Features
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#benchmarks">
+   Benchmarks
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#contributing-algorithms">
+   Contributing Algorithms
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#how-to-add-an-algorithm-to-rllib-algorithms">
+     How to add an algorithm to
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       rllib/algorithms
+      </span>
+     </code>
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#debugging-your-algorithms">
+   Debugging your Algorithms
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#finding-memory-leaks-in-workers">
+     Finding Memory Leaks In Workers
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#troubleshooting">
+   Troubleshooting
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#tensorflow-2-x">
+     TensorFlow 2.x
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#older-tensorflow-versions">
+     Older TensorFlow versions
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section id="rllib">
+<h1>如何为 RLlib 做出贡献<a class="headerlink" href="#rllib" title="Permalink to this headline">#</a></h1>
+<section id="development-install">
+<h2>Development Install<a class="headerlink" href="#development-install" title="Permalink to this headline">#</a></h2>
+<p>You can develop RLlib locally without needing to compile Ray by using the <a class="reference external" href="https://github.com/ray-project/ray/blob/master/python/ray/setup-dev.py">setup-dev.py</a> script.
+This sets up symlinks between the <code class="docutils literal notranslate"><span class="pre">ray/rllib</span></code> dir in your local git clone and the respective directory bundled with the pip-installed <code class="docutils literal notranslate"><span class="pre">ray</span></code> package. This way, every change you make in the source files in your local git clone will immediately be reflected in your installed <code class="docutils literal notranslate"><span class="pre">ray</span></code> as well.
+However if you have installed ray from source using <a class="reference external" href="https://docs.ray.io/en/master/ray-overview/installation.html">these instructions</a> then do not use this, as these steps should have already created this symlink.
+When using this script, make sure that your git branch is in sync with the installed Ray binaries (i.e., you are up-to-date on <a class="reference external" href="https://github.com/ray-project/ray">master</a> and have the latest <a class="reference external" href="https://docs.ray.io/en/master/installation.html">wheel</a> installed.)</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Clone your fork onto your local machine, e.g.:</span>
+git clone https://github.com/<span class="o">[</span>your username<span class="o">]</span>/ray.git
+<span class="nb">cd</span> ray
+<span class="c1"># Only enter &#39;Y&#39; at the first question on linking RLlib.</span>
+<span class="c1"># This leads to the most stable behavior and you won&#39;t have to re-install ray as often.</span>
+<span class="c1"># If you anticipate making changes to e.g. tune quite often, consider also symlinking ray tune here</span>
+<span class="c1"># (say &#39;Y&#39; when asked by the script about creating the tune symlink).</span>
+python python/ray/setup-dev.py
+</pre></div>
+</div>
+</section>
+<section id="api-stability">
+<h2>API Stability<a class="headerlink" href="#api-stability" title="Permalink to this headline">#</a></h2>
+<p>Objects and methods annotated with <code class="docutils literal notranslate"><span class="pre">&#64;PublicAPI</span></code>, <code class="docutils literal notranslate"><span class="pre">&#64;DeveloperAPI</span></code>, or <code class="docutils literal notranslate"><span class="pre">&#64;ExperimentalAPI</span></code>
+have the following API compatibility guarantees:</p>
+</section>
+<section id="features">
+<h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">#</a></h2>
+<p>Feature development, discussion, and upcoming priorities are tracked on the <a class="reference external" href="https://github.com/ray-project/ray/issues">GitHub issues page</a> (note that this may not include all development efforts).</p>
+</section>
+<section id="benchmarks">
+<h2>Benchmarks<a class="headerlink" href="#benchmarks" title="Permalink to this headline">#</a></h2>
+<p>A number of training run results are available in the <a class="reference external" href="https://github.com/ray-project/rl-experiments">rl-experiments repo</a>, and there is also a list of working hyperparameter configurations in <a class="reference external" href="https://github.com/ray-project/ray/tree/master/rllib/tuned_examples">tuned_examples</a>, sorted by algorithm. Benchmark results are extremely valuable to the community, so if you happen to have results that may be of interest, consider making a pull request to either repo.</p>
+</section>
+<section id="contributing-algorithms">
+<h2>Contributing Algorithms<a class="headerlink" href="#contributing-algorithms" title="Permalink to this headline">#</a></h2>
+<p>These are the guidelines for merging new algorithms (<a class="reference external" href="https://github.com/ray-project/ray/tree/master/rllib/algorithms">rllib/algorithms</a>) into RLlib:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Contributed algorithms:</dt><dd><ul>
+<li><p>must subclass Algorithm and implement the <code class="docutils literal notranslate"><span class="pre">step()</span></code> method</p></li>
+<li><p>must include a lightweight test (<a class="reference external" href="https://github.com/ray-project/ray/blob/6bb110393008c9800177490688c6ed38b2da52a9/test/jenkins_tests/run_multi_node_tests.sh#L45">example</a>) to ensure the algorithm runs</p></li>
+<li><p>should include tuned hyperparameter examples and documentation</p></li>
+<li><p>should offer functionality not present in existing algorithms</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Fully integrated algorithms have the following additional requirements:</dt><dd><ul>
+<li><p>must fully implement the Algorithm API</p></li>
+<li><p>must offer substantial new functionality not possible to add to other algorithms</p></li>
+<li><p>should support custom models and preprocessors</p></li>
+<li><p>should use RLlib abstractions and support distributed execution</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Both integrated and contributed algorithms ship with the <code class="docutils literal notranslate"><span class="pre">ray</span></code> PyPI package, and are tested as part of Ray’s automated tests. The main difference between contributed and fully integrated algorithms is that the latter will be maintained by the Ray team to a much greater extent with respect to bugs and integration with RLlib features.</p>
+<section id="how-to-add-an-algorithm-to-rllib-algorithms">
+<h3>How to add an algorithm to <code class="docutils literal notranslate"><span class="pre">rllib/algorithms</span></code><a class="headerlink" href="#how-to-add-an-algorithm-to-rllib-algorithms" title="Permalink to this headline">#</a></h3>
+<p>It takes just two changes to add an algorithm to <a class="reference external" href="https://github.com/ray-project/ray/tree/master/rllib/algorithms">algorithms</a>. A minimal example can be found <a class="reference external" href="https://github.com/ray-project/ray/tree/master/rllib/algorithms/random_agent/random_agent.py">here</a>.
+First, subclass <a class="reference external" href="https://github.com/ray-project/ray/commits/master/rllib/algorithms/algorithm.py">Algorithm</a> and implement the <code class="docutils literal notranslate"><span class="pre">_init</span></code> and <code class="docutils literal notranslate"><span class="pre">step</span></code> methods:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@Deprecated</span><span class="p">(</span><span class="n">old</span><span class="o">=</span><span class="s2">&quot;rllib/algorithms/random_agent/&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="n">ALGO_DEPRECATION_WARNING</span><span class="p">,</span>
+            <span class="n">error</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">RandomAgent</span><span class="p">(</span><span class="n">Algorithm</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Algo that produces random actions and never learns.&quot;&quot;&quot;</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="nd">@override</span><span class="p">(</span><span class="n">Algorithm</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">get_default_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AlgorithmConfig</span><span class="p">:</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">AlgorithmConfig</span><span class="p">()</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">rollouts_per_iteration</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="k">return</span> <span class="n">config</span>
+
+    <span class="nd">@override</span><span class="p">(</span><span class="n">Algorithm</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">env_creator</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">env_creator</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;env_config&quot;</span><span class="p">])</span>
+
+    <span class="nd">@override</span><span class="p">(</span><span class="n">Algorithm</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">rewards</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">steps</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">rollouts_per_iteration</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+            <span class="n">terminated</span> <span class="o">=</span> <span class="n">truncated</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">reward</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="k">while</span> <span class="ow">not</span> <span class="n">terminated</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">truncated</span><span class="p">:</span>
+                <span class="n">action</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+                <span class="n">_</span><span class="p">,</span> <span class="n">rew</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+                <span class="n">reward</span> <span class="o">+=</span> <span class="n">rew</span>
+                <span class="n">steps</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">rewards</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">reward</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;episode_reward_mean&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">rewards</span><span class="p">),</span>
+            <span class="s2">&quot;timesteps_this_iter&quot;</span><span class="p">:</span> <span class="n">steps</span><span class="p">,</span>
+        <span class="p">}</span>
+</pre></div>
+</div>
+<p>Second, register the algorithm with a name in <a class="reference external" href="https://github.com/ray-project/ray/blob/master/rllib/algorithms/registry.py">rllib/algorithms/registry.py</a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_import_random_agent</span><span class="p">():</span>
+    <span class="kn">from</span> <span class="nn">ray.rllib.algorithms.random_agent.random_agent</span> <span class="kn">import</span> <span class="n">RandomAgent</span>
+    <span class="k">return</span> <span class="n">RandomAgent</span>
+
+<span class="k">def</span> <span class="nf">_import_random_agent_2</span><span class="p">():</span>
+    <span class="kn">from</span> <span class="nn">ray.rllib.algorithms.random_agent_2.random_agent_2</span> <span class="kn">import</span> <span class="n">RandomAgent2</span>
+    <span class="k">return</span> <span class="n">RandomAgent2</span>
+
+<span class="n">ALGORITHMS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;RandomAgent&quot;</span><span class="p">:</span> <span class="n">_import_random_agent</span><span class="p">,</span>
+    <span class="s2">&quot;RandomAgent2&quot;</span><span class="p">:</span> <span class="n">_import_random_agent_2</span><span class="p">,</span>
+    <span class="c1"># ...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>After registration, you can run and visualize training progress using <code class="docutils literal notranslate"><span class="pre">rllib</span> <span class="pre">train</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rllib train --run<span class="o">=</span>RandomAgent --env<span class="o">=</span>CartPole-v1
+tensorboard --logdir<span class="o">=</span>~/ray_results
+</pre></div>
+</div>
+</section>
+</section>
+<section id="debugging-your-algorithms">
+<h2>Debugging your Algorithms<a class="headerlink" href="#debugging-your-algorithms" title="Permalink to this headline">#</a></h2>
+<section id="finding-memory-leaks-in-workers">
+<h3>Finding Memory Leaks In Workers<a class="headerlink" href="#finding-memory-leaks-in-workers" title="Permalink to this headline">#</a></h3>
+<p>Keeping the memory usage of long running workers stable can be challenging. The <code class="docutils literal notranslate"><span class="pre">MemoryTrackingCallbacks</span></code> class can be used to track memory usage of workers.</p>
+<p>The objects with the top 20 memory usage in the workers will be added as custom metrics. These can then be monitored using tensorboard or other metrics integrations like Weights and Biases:</p>
+<img alt="../_images/MemoryTrackingCallbacks.png" src="../_images/MemoryTrackingCallbacks.png" />
+</section>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">#</a></h2>
+<p>If you encounter errors like
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">blas_thread_init:</span> <span class="pre">pthread_create:</span> <span class="pre">Resource</span> <span class="pre">temporarily</span> <span class="pre">unavailable</span></code> when using many workers,
+try setting <code class="docutils literal notranslate"><span class="pre">OMP_NUM_THREADS=1</span></code>. Similarly, check configured system limits with
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">ulimit</span> <span class="pre">-a</span></code> for other resource limit errors.</p>
+<p>For debugging unexpected hangs or performance problems, you can run <code class="docutils literal notranslate"><span class="pre">ray</span> <span class="pre">stack</span></code> to dump
+the stack traces of all Ray workers on the current node, <code class="docutils literal notranslate"><span class="pre">ray</span> <span class="pre">timeline</span></code> to dump
+a timeline visualization of tasks to a file, and <code class="docutils literal notranslate"><span class="pre">ray</span> <span class="pre">memory</span></code> to list all object
+references in the cluster.</p>
+<section id="tensorflow-2-x">
+<h3>TensorFlow 2.x<a class="headerlink" href="#tensorflow-2-x" title="Permalink to this headline">#</a></h3>
+<p>It is now recommended to use framework=tf2 and eager_tracing=True (in case you are developing with TensorFlow)
+for maximum performance and support.
+We will however continue to support framework=tf (static-graph) for the foreseeable future.</p>
+<p>For debugging purposes, you should use <code class="docutils literal notranslate"><span class="pre">framework=tf2</span></code> with <code class="docutils literal notranslate"><span class="pre">eager_tracing=False</span></code>.
+All <code class="docutils literal notranslate"><span class="pre">tf.Tensor</span></code> values will then be visible and printable when executing your code.
+However, some slowdown is to be expected in this config mode.</p>
+</section>
+<section id="older-tensorflow-versions">
+<h3>Older TensorFlow versions<a class="headerlink" href="#older-tensorflow-versions" title="Permalink to this headline">#</a></h3>
+<p>RLlib supports both TensorFlow 2.x as well as <code class="docutils literal notranslate"><span class="pre">tf.compat.v1</span></code> modes.
+Always use the <code class="docutils literal notranslate"><span class="pre">ray.rllib.utils.framework.try_import_tf()</span></code> utility function to import tensorflow.
+It returns three values:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tf1</span></code>: The <code class="docutils literal notranslate"><span class="pre">tf.compat.v1</span></code> module or the installed tf1.x package (if the version is &lt; 2.0).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tf</span></code>: The installed tensorflow module as-is.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tfv</span></code>: A version integer, whose value is either 1 or 2.</p></li>
+</ul>
+<p><a class="reference external" href="https://github.com/ray-project/ray/blob/master/rllib/examples/eager_execution.py">See here</a> for a detailed example script.</p>
+</section>
+</section>
+</section>
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="rllib-fault-tolerance.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">容错与弹性训练</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="rllib-cli.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">使用 RLlib CLI</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><!-- Override the footer area for the sphinx-book-theme to include the CSAT widget -->
+<div id="csat">
+  <div id="csat-feedback-received" class="csat-hidden">
+    <span>谢谢你的反馈！</span>
+  </div>
+  <div id="csat-inputs">
+    <span>是否能帮助到你？</span>
+    <div id="csat-yes" class="csat-button">
+      <svg id="csat-yes-icon" class="csat-hidden csat-icon" width="18" height="13" viewBox="0 0 18 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 10.172L16.1922 0.979004L17.6072 2.393L7.00023 13L0.63623 6.636L2.05023 5.222L7.00023 10.172Z" fill="black"/>
+      </svg>
+      <span>是<span>
+    </div>
+    <div id="csat-no" class="csat-button">
+      <svg id="csat-no-icon" class="csat-hidden csat-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 5.58599L11.9502 0.635986L13.3642 2.04999L8.41423 6.99999L13.3642 11.95L11.9502 13.364L7.00023 8.41399L2.05023 13.364L0.63623 11.95L5.58623 6.99999L0.63623 2.04999L2.05023 0.635986L7.00023 5.58599Z" fill="black"/>
+      </svg>
+      <span>否<span>
+    </div>
+  </div>
+  <div id="csat-textarea-group" class="csat-hidden">
+    <span id="csat-feedback-label">反馈</span>
+    <textarea id="csat-textarea"></textarea>
+    <div id="csat-submit">提交</div>
+  </div>
+</div><p>
+  
+    By The Ray Team<br/>
+  
+      &copy; Copyright 2024, The Ray Team.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

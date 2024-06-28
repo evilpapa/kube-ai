@@ -1,0 +1,1055 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>使用 GPU &#8212; Ray 2.7.2</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/termynal.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/js/versionwarning.js"></script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+    <script defer="defer" src="../../../_static/js/docsearch.js"></script>
+    <script defer="defer" src="../../../_static/js/csat.js"></script>
+    <script defer="defer" src="../../../_static/js/termynal.js"></script>
+    <script defer="defer" src="../../../_static/js/custom.js"></script>
+    <script defer="defer" src="../../../_static/js/top-navigation.js"></script>
+    <script src="../../../_static/js/tags.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <link rel="canonical" href="https://docs.ray.io/en/latest/cluster/kubernetes/user-guides/gpu.html" />
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="在 RayCluster 上开发 Ray Serve Python 脚本" href="rayserve-dev-doc.html" />
+    <link rel="prev" title="日志持久化" href="logging.html" />
+
+<!-- Fathom - beautiful, simple website analytics -->
+<script src="https://deer.ray.io/script.js" data-site="WYYANYOS" defer></script>
+<!-- / Fathom -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-110413294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-110413294-1');
+</script>
+
+<script
+  src="https://widget.kapa.ai/kapa-widget.bundle.js"
+  data-website-id="18a8c339-4ec5-43c8-8182-db3f2bc8c6b6"
+  data-project-name="Ray"
+  data-project-color="#2C2C2C"
+  data-project-logo="https://global.discourse-cdn.com/business7/uploads/ray/original/1X/8f4dcb72f7cd34e2a332d548bd65860994bc8ff1.png"
+  data-modal-disclaimer = "Results are automated and may be incorrect or contain inappropriate information. Do not include any personal data or confidential information."
+  data-modal-title = "Ray Docs AI - Ask a Question"
+  data-button-position-bottom = "60px"
+></script>
+
+<script>
+(function(apiKey){
+    (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
+    v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
+        o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
+        y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
+        z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
+
+        pendo.initialize({
+            visitor: {
+                id: 'VISITOR-UNIQUE-ID'
+            },
+            account: {
+                id: 'ACCOUNT-UNIQUE-ID'
+            }
+        });
+})('f89fa48a-6dd7-4d7c-67cf-a8051ed891f2');
+</script>
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"><div class='topnav'></div></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Ray 2.7.2</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main Navigation">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../index.html">
+                    欢迎来到 Ray ！
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Ray
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/index.html">
+   概述「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/getting-started.html">
+   入门「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/installation.html">
+   安装「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/use-cases.html">
+   用例「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/examples.html">
+   示例库「1%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/ray-libraries.html">
+   生态「3%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-core/walkthrough.html">
+   Ray 核心「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../data/data.html">
+   Ray 数据「85%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../train/train.html">
+   Ray 训练「95%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../tune/index.html">
+   Ray 调参「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../serve/index.html">
+   Ray Serve「1%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../rllib/index.html">
+   Ray RLlib「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-more-libs/index.html">
+   更多类库「40%」
+  </a>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="../../getting-started.html">
+   Ray 集群「100%」
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../key-concepts.html">
+     关键概念
+    </a>
+   </li>
+   <li class="toctree-l2 current active has-children">
+    <a class="reference internal" href="../index.html">
+     在 Kubernetes 部署
+    </a>
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+    <label for="toctree-checkbox-2">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul class="current">
+     <li class="toctree-l3">
+      <a class="reference internal" href="../getting-started.html">
+       KubeRay 入门
+      </a>
+     </li>
+     <li class="toctree-l3 current active has-children">
+      <a class="reference internal" href="../user-guides.html">
+       用户指引
+      </a>
+      <input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+      <label for="toctree-checkbox-3">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul class="current">
+       <li class="toctree-l4">
+        <a class="reference internal" href="rayservice.html">
+         部署 Ray Serve 应用
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="observability.html">
+         KubeRay 可观测性
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="k8s-cluster-setup.html">
+         托管 Kubernetes 服务
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="storage.html">
+         存储和依赖关系的最佳实践
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="config.html">
+         RayCluster 配置
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="configuring-autoscaling.html">
+         KubeRay 自动缩放
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="kuberay-gcs-ft.html">
+         KubeRay 中的 GCS 容错
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="gke-gcs-bucket.html">
+         配置 KubeRay 以在 GKE 中使用 Google Cloud Storage Bucket
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="logging.html">
+         日志持久化
+        </a>
+       </li>
+       <li class="toctree-l4 current active">
+        <a class="current reference internal" href="#">
+         使用 GPU
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="rayserve-dev-doc.html">
+         在 RayCluster 上开发 Ray Serve Python 脚本
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="pod-command.html">
+         为 Ray head/worker Pod 指定容器命令
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="pod-security.html">
+         Pod 安全
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="tls.html">
+         TLS 身份验证
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="k8s-autoscaler.html">
+         （高级）了解 Kubernetes 背景下的 Ray Autoscaler
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="static-ray-cluster-without-kuberay.html">
+         （高级）在没有 KubeRay 的情况下部署静态 Ray 集群
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples.html">
+       示例
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../k8s-ecosystem.html">
+       KubeRay 生态系统
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../benchmarks.html">
+       KubeRay 基准测试
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../troubleshooting.html">
+       KubeRay 故障排除
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../references.html">
+       API 参考
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../vms/index.html">
+     在虚拟机部署
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../metrics.html">
+     指标收集和监控
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../configure-manage-dashboard.html">
+     配置管理 Ray 仪表盘
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../running-applications/index.html">
+     应用指引
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../faq.html">
+     Ray 集群是否支持多租户？
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../package-overview.html">
+     Ray Cluster 管理 API
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-observability/index.html">
+   监控调试「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-references/api.html">
+   参考「20%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-contribute/index.html">
+   开发者指引「30%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-security/index.html">
+   安全「100%」
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/ray-project/ray"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/issues/new?title=Issue%20on%20page%20%2Fcluster/kubernetes/user-guides/gpu.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/edit/master/doc/source/cluster/kubernetes/user-guides/gpu.rst"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../../_sources/cluster/kubernetes/user-guides/gpu.rst.txt"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.rst</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#gpu-stablediffusion">
+   快速入门：提供基于 GPU 的 StableDiffusion 模型
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id3">
+   基于 GPU 的机器学习的依赖项
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ray-pod-gpu">
+   配置 Ray pod 以使用 GPU
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id4">
+   GPU 多租户
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#gpu-ray">
+   GPU 和 Ray
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id5">
+     GPU 工作负载调度
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id6">
+     GPU 自动缩放
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id7">
+     请求 GPU
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ray-gpu">
+     覆盖 Ray GPU 容量（高级）
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#gpu-pod">
+   GPU Pod 调度（高级）
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id8">
+     GPU 污染和容忍
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id9">
+     节点选择器和节点标签
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id10">
+       进一步参考和讨论
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>使用 GPU</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#gpu-stablediffusion">
+   快速入门：提供基于 GPU 的 StableDiffusion 模型
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id3">
+   基于 GPU 的机器学习的依赖项
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ray-pod-gpu">
+   配置 Ray pod 以使用 GPU
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id4">
+   GPU 多租户
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#gpu-ray">
+   GPU 和 Ray
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id5">
+     GPU 工作负载调度
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id6">
+     GPU 自动缩放
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id7">
+     请求 GPU
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ray-gpu">
+     覆盖 Ray GPU 容量（高级）
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#gpu-pod">
+   GPU Pod 调度（高级）
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id8">
+     GPU 污染和容忍
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id9">
+     节点选择器和节点标签
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id10">
+       进一步参考和讨论
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section id="gpu">
+<span id="kuberay-gpu"></span><h1>使用 GPU<a class="headerlink" href="#gpu" title="Permalink to this headline">#</a></h1>
+<p>本文档提供有关 KubeRay 的 GPU 使用技巧。</p>
+<p>要在 Kubernetes 上使用 GPU，请配置 Kubernetes 设置并向 Ray 集群配置添加其他值。</p>
+<p>要了解不同云上的 GPU 使用情况，请参阅 <a class="reference external" href="https://cloud.google.com/kubernetes-engine/docs/how-to/gpus">GKE</a>、 <a class="reference external" href="https://docs.aws.amazon.com/eks/latest/userguide/eks-optimized-ami.html">EKS</a>、 <a href="#id1"><span class="problematic" id="id2">`</span></a>AKS`_的说明。</p>
+<section id="gpu-stablediffusion">
+<h2>快速入门：提供基于 GPU 的 StableDiffusion 模型<a class="headerlink" href="#gpu-stablediffusion" title="Permalink to this headline">#</a></h2>
+<p>您可以在文档的 <a class="reference internal" href="../examples.html#kuberay-examples"><span class="std std-ref">示例</span></a> 部分找到几个 GPU 工作负载示例。
+<a class="reference internal" href="../examples/stable-diffusion-rayservice.html#kuberay-stable-diffusion-rayservice-example"><span class="std std-ref">StableDiffusion 示例</span></a> 是一个很好的起点。</p>
+</section>
+<section id="id3">
+<h2>基于 GPU 的机器学习的依赖项<a class="headerlink" href="#id3" title="Permalink to this headline">#</a></h2>
+<p><a class="reference external" href="https://hub.docker.com/r/rayproject/">Ray Docker Hub</a> 托管与 Ray 和某些机器学习库打包的基于 CUDA 的容器映像。
+例如，镜像 <code class="docutils literal notranslate"><span class="pre">rayproject/ray-ml:2.6.3-gpu</span></code> 非常适合使用 Ray 2.6.3 运行基于 GPU 的 ML 工作负载。
+Ray ML 镜像与这些文档中使用的 Ray 库所需的依赖项（例如 TensorFlow 和 PyTorch）一起打包。
+要添加自定义依赖项，请使用以下一种或两种方法：</p>
+<ul class="simple">
+<li><p>使用官方 <a class="reference internal" href="../../../ray-overview/installation.html#docker-images"><span class="std std-ref">Ray docker 镜像</span></a> 作为基础构建 docker 镜像。</p></li>
+<li><p>使用 <a class="reference internal" href="../../../ray-core/handling-dependencies.html#runtime-environments"><span class="std std-ref">Ray 运行时环境</span></a>。</p></li>
+</ul>
+</section>
+<section id="ray-pod-gpu">
+<h2>配置 Ray pod 以使用 GPU<a class="headerlink" href="#ray-pod-gpu" title="Permalink to this headline">#</a></h2>
+<p>要使用 Nvidia GPU 需要在 <code class="xref py py-obj docutils literal notranslate"><span class="pre">RayCluster</span></code> 的 <code class="xref py py-obj docutils literal notranslate"><span class="pre">headGroupSpec</span></code> 及 <code class="xref py py-obj docutils literal notranslate"><span class="pre">workerGroupSpecs</span></code> 的容器 <code class="xref py py-obj docutils literal notranslate"><span class="pre">limits</span></code> 和 <code class="xref py py-obj docutils literal notranslate"><span class="pre">requests</span></code> 字段指定 <code class="xref py py-obj docutils literal notranslate"><span class="pre">nvidia.com/gpu</span></code> 资源。</p>
+<p>以下是最多包含 5 个 GPU worker 线程的 RayCluster 工作组的配置片段。</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">groupName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gpu-group</span><span class="w"></span>
+<span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w"></span>
+<span class="nt">minReplicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w"></span>
+<span class="nt">maxReplicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w"></span>
+<span class="nn">...</span><span class="w"></span>
+<span class="nt">template</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">spec</span><span class="p">:</span><span class="w"></span>
+<span class="w">     </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
+<span class="w">     </span><span class="l l-Scalar l-Scalar-Plain">containers</span><span class="p p-Indicator">:</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ray-node</span><span class="w"></span>
+<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rayproject/ray-ml:2.6.3-gpu</span><span class="w"></span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
+<span class="w">        </span><span class="nt">resources</span><span class="p">:</span><span class="w"></span>
+<span class="w">         </span><span class="nt">nvidia.com/gpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"> </span><span class="c1"># Optional, included just for documentation.</span><span class="w"></span>
+<span class="w">         </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w"></span>
+<span class="w">         </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50Gi</span><span class="w"></span>
+<span class="w">        </span><span class="nt">limits</span><span class="p">:</span><span class="w"></span>
+<span class="w">         </span><span class="nt">nvidia.com/gpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"> </span><span class="c1"># Required to use GPU.</span><span class="w"></span>
+<span class="w">         </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w"></span>
+<span class="w">         </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50Gi</span><span class="w"></span>
+<span class="w">         </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
+</pre></div>
+</div>
+<p>组中的每个 Ray Pod 都可以在 AWS <code class="xref py py-obj docutils literal notranslate"><span class="pre">p2.xlarge</span></code> 示例 (1 GPU、4vCPU、61Gi RAM) 上进行调度。</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>GPU 实例非常昂贵 - 请考虑为 GPU Ray 工作线程设置自动缩放，
+如上面的 <code class="xref py py-obj docutils literal notranslate"><span class="pre">minReplicas:0</span></code> 和 <code class="xref py py-obj docutils literal notranslate"><span class="pre">maxReplicas:5</span></code> 。
+要启用自动缩放，还请记住需要为 RayCluster 的 <code class="xref py py-obj docutils literal notranslate"><span class="pre">spec</span></code> 设置 <code class="xref py py-obj docutils literal notranslate"><span class="pre">enableInTreeAutoscaling:True</span></code> 。
+最后，确保将 GPU Kubernetes 节点组或池配置为自动缩放。
+有关自动缩放节点池的详细信息，请参阅 <a class="reference internal" href="k8s-cluster-setup.html#kuberay-k8s-setup"><span class="std std-ref">云提供商的文档</span></a> 。</p>
+</div>
+</section>
+<section id="id4">
+<h2>GPU 多租户<a class="headerlink" href="#id4" title="Permalink to this headline">#</a></h2>
+<p>如果 Pod 在其资源配置中未包含 <code class="xref py py-obj docutils literal notranslate"><span class="pre">nvidia.com/gpu</span></code> ，用户通常会期望 Pod 不知道任何 GPU 设备，即使它调度在 GPU 节点上。
+但是，如果 <code class="xref py py-obj docutils literal notranslate"><span class="pre">nvidia.com/gpu</span></code> 未指定，则默认值 <code class="xref py py-obj docutils literal notranslate"><span class="pre">NVIDIA_VISIBLE_DEVICES</span></code> 为 <code class="xref py py-obj docutils literal notranslate"><span class="pre">all</span></code>，使 Pod 能够感知节点上的所有 GPU 设备。
+这种行为并非 KubeRay 所独有，而是 NVIDIA 的一个已知问题。
+解决方法是在不需要 GPU 设备的 Pod 中设置 <code class="xref py py-obj docutils literal notranslate"><span class="pre">NVIDIA_VISIBLE_DEVICES</span></code> 环境变量为 <code class="xref py py-obj docutils literal notranslate"><span class="pre">void</span></code> 。</p>
+<p>一些有用的链接：</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/NVIDIA/k8s-device-plugin/issues/61">NVIDIA/k8s-device-plugin#61</a></p></li>
+<li><p><a class="reference external" href="https://github.com/NVIDIA/k8s-device-plugin/issues/87">NVIDIA/k8s-device-plugin#87</a></p></li>
+<li><p><a href="#id11"><span class="problematic" id="id12">`[NVIDIA] 防止对 Kubernetes 中的 GPU 进行非特权访问`_</span></a></p></li>
+<li><p><a class="reference external" href="https://github.com/ray-project/ray/issues/29753">ray-project/ray#29753</a></p></li>
+</ul>
+</section>
+<section id="gpu-ray">
+<h2>GPU 和 Ray<a class="headerlink" href="#gpu-ray" title="Permalink to this headline">#</a></h2>
+<p>节讨论在 Kubernetes 上运行的 Ray 应用程序的 GPU 使用情况。
+有关 Ray 的 GPU 使用的一般指南，另请参阅 <a class="reference internal" href="../../../ray-core/tasks/using-ray-with-gpus.html#gpu-support"><span class="std std-ref">GPU 支持</span></a>。</p>
+<p>KubeRay operator 将容器 GPU 资源限制通告给 Ray 调度器和 Ray 自动缩放器。
+通常，Ray 容器的入口点 <code class="xref py py-obj docutils literal notranslate"><span class="pre">ray</span> <span class="pre">start</span></code> 使用 <code class="xref py py-obj docutils literal notranslate"><span class="pre">--num-gpus</span></code> 选项会自动配置。</p>
+<section id="id5">
+<h3>GPU 工作负载调度<a class="headerlink" href="#id5" title="Permalink to this headline">#</a></h3>
+<p>部署可访问 GPU 的 Ray Pod 后，它将能够执行使用 GPU 请求注释的任务和 Actor。
+例如，装饰器 <code class="xref py py-obj docutils literal notranslate"><span class="pre">&#64;ray.remote(num_gpus=1)</span></code> 注释了需要 1 个 GPU 的任务或 Actor。</p>
+</section>
+<section id="id6">
+<h3>GPU 自动缩放<a class="headerlink" href="#id6" title="Permalink to this headline">#</a></h3>
+<p>Ray 自动缩放器知道每个 Ray 工作组的 GPU 容量。
+假设我们配置了一个 RayCluster，如上面的配置片段所示：</p>
+<ul class="simple">
+<li><p>有一个由 Ray pod 组成的工作组，每个工作组有 1 个单位的 GPU 容量。</p></li>
+<li><p>Ray 集群当前没有来自该组的任何 worker。</p></li>
+<li><p>改组的 <code class="xref py py-obj docutils literal notranslate"><span class="pre">maxReplicas</span></code> 至少为 2 。</p></li>
+</ul>
+<p>然后下面的 Ray 程序将触发 2 个 GPU 工作线程的升级。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ray</span>
+
+<span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+
+<span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">num_gpus</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">GPUActor</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">say_hello</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;I live in a pod with GPU access.&quot;</span><span class="p">)</span>
+
+<span class="c1"># Request actor placement.</span>
+<span class="n">gpu_actors</span> <span class="o">=</span> <span class="p">[</span><span class="n">GPUActor</span><span class="o">.</span><span class="n">remote</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span>
+<span class="c1"># The following command will block until two Ray pods with GPU access are scaled</span>
+<span class="c1"># up and the actors are placed.</span>
+<span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">([</span><span class="n">actor</span><span class="o">.</span><span class="n">say_hello</span><span class="o">.</span><span class="n">remote</span><span class="p">()</span> <span class="k">for</span> <span class="n">actor</span> <span class="ow">in</span> <span class="n">gpu_actors</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>程序退出后，actor 将会被垃圾回收。
+GPU Worker Pod 将在空闲超时（默认为 60 秒）后缩容。
+如果 GPU Worker Pod 在 Kubernetes 节点的自动缩放池上运行，则 Kubernetes 节点也将缩小。</p>
+</section>
+<section id="id7">
+<h3>请求 GPU<a class="headerlink" href="#id7" title="Permalink to this headline">#</a></h3>
+<p>您还可以 <a class="reference internal" href="../../running-applications/autoscaling/reference.html#ref-autoscaler-sdk-request-resources"><span class="std std-ref">直接向自动缩放器发出请求</span></a> 以扩展 GPU 资源。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ray</span>
+
+<span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+<span class="n">ray</span><span class="o">.</span><span class="n">autoscaler</span><span class="o">.</span><span class="n">sdk</span><span class="o">.</span><span class="n">request_resources</span><span class="p">(</span><span class="n">bundles</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;GPU&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>节点扩展后，它们将持续存在，直到请求被显式覆盖。
+以下程序将删除资源请求。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ray</span>
+
+<span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+<span class="n">ray</span><span class="o">.</span><span class="n">autoscaler</span><span class="o">.</span><span class="n">sdk</span><span class="o">.</span><span class="n">request_resources</span><span class="p">(</span><span class="n">bundles</span><span class="o">=</span><span class="p">[])</span>
+</pre></div>
+</div>
+<p>然后 GPU 工作线程就可以缩小规模。</p>
+</section>
+<section id="ray-gpu">
+<span id="kuberay-gpu-override"></span><h3>覆盖 Ray GPU 容量（高级）<a class="headerlink" href="#ray-gpu" title="Permalink to this headline">#</a></h3>
+<p>对于专门的用例，可以覆盖向 Ray 公布的 Ray pod GPU 容量。
+为此，请在头或者工作组的 <code class="xref py py-obj docutils literal notranslate"><span class="pre">rayStartParams</span></code> 中设置 <code class="xref py py-obj docutils literal notranslate"><span class="pre">num-gpus</span></code> 键的值。
+如，</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">rayStartParams</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="c1"># Note that all rayStartParam values must be supplied as strings.</span><span class="w"></span>
+<span class="w">    </span><span class="nt">num-gpus</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2&quot;</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Ray 调度器和自动缩放器将为组中的每个 Ray pod 分配 2 个 GPU 容量单位，即使容器限制不指示 GPU 的存在。</p>
+</section>
+</section>
+<section id="gpu-pod">
+<h2>GPU Pod 调度（高级）<a class="headerlink" href="#gpu-pod" title="Permalink to this headline">#</a></h2>
+<section id="id8">
+<h3>GPU 污染和容忍<a class="headerlink" href="#id8" title="Permalink to this headline">#</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>托管 Kubernetes 服务通常会为您处理与 GPU 相关的污染和容忍问题。
+如果您使用的是托管 Kubernetes 服务，则可能不需要担心此部分。</p>
+</div>
+<p>Kubernetes 的 <a class="reference external" href="https://github.com/NVIDIA/k8s-device-plugin">Nvidia gpu plugin</a> 将 <a class="reference external" href="https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/">taints</a> 应用于 GPU 节点；这些污点会阻止非 GPU pod 在 GPU 节点上进行调度。
+GKE、EKS 和 AKS 等托管 Kubernetes 服务会自动将匹配的 <a class="reference external" href="https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/">tolerations</a> 应用于请求 GPU 资源的 Pod。
+容忍是通过 Kubernetes 的 <a class="reference external" href="https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#extendedresourcetoleration">ExtendedResourceToleration</a> <a class="reference external" href="https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/">admission controller</a> 准入控制器来应用的。
+如果您的 Kubernetes 集群未启用此准入控制器，您可能需要手动向每个 GPU Pod 配置添加 GPU 容忍。例如，</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span><span class="w"></span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pod</span><span class="w"></span>
+<span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
+<span class="w"> </span><span class="nt">generateName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example-cluster-ray-worker</span><span class="w"></span>
+<span class="w"> </span><span class="nt">spec</span><span class="p">:</span><span class="w"></span>
+<span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
+<span class="w"> </span><span class="nt">tolerations</span><span class="p">:</span><span class="w"></span>
+<span class="w"> </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">effect</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NoSchedule</span><span class="w"></span>
+<span class="w">   </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nvidia.com/gpu</span><span class="w"></span>
+<span class="w">   </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Exists</span><span class="w"></span>
+<span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
+<span class="w"> </span><span class="nt">containers</span><span class="p">:</span><span class="w"></span>
+<span class="w"> </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ray-node</span><span class="w"></span>
+<span class="w">   </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rayproject/ray:nightly-gpu</span><span class="w"></span>
+<span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
+</pre></div>
+</div>
+</section>
+<section id="id9">
+<h3>节点选择器和节点标签<a class="headerlink" href="#id9" title="Permalink to this headline">#</a></h3>
+<p>为了确保 Ray Pod 绑定到满足特定条件（例如存在 GPU 硬件）的 Kubernetes 节点，您可能希望使用`workerGroup` 的 <code class="xref py py-obj docutils literal notranslate"><span class="pre">pod`</span></code> 模板 <code class="xref py py-obj docutils literal notranslate"><span class="pre">nodeSelector</span></code> 字段。
+有关 Pod 到节点分配的更多信息，请参阅 <a class="reference external" href="https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/">Kubernetes docs</a>。</p>
+<section id="id10">
+<h4>进一步参考和讨论<a class="headerlink" href="#id10" title="Permalink to this headline">#</a></h4>
+<p><a class="reference external" href="https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/device-plugins/">这里</a> 阅读有关 Kubernetes 设备插件的信息，
+<a class="reference external" href="https://kubernetes.io/docs/tasks/manage-gpus/scheduling-gpus">这里</a> 阅读有关 Kubernetes GPU 插件的信息，
+<a class="reference external" href="https://github.com/NVIDIA/k8s-device-plugin">这里</a> 阅读有关 Nvidia 的 Kubernetes GPU 插件的信息。</p>
+</section>
+</section>
+</section>
+</section>
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="logging.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">日志持久化</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="rayserve-dev-doc.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">在 RayCluster 上开发 Ray Serve Python 脚本</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><!-- Override the footer area for the sphinx-book-theme to include the CSAT widget -->
+<div id="csat">
+  <div id="csat-feedback-received" class="csat-hidden">
+    <span>谢谢你的反馈！</span>
+  </div>
+  <div id="csat-inputs">
+    <span>是否能帮助到你？</span>
+    <div id="csat-yes" class="csat-button">
+      <svg id="csat-yes-icon" class="csat-hidden csat-icon" width="18" height="13" viewBox="0 0 18 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 10.172L16.1922 0.979004L17.6072 2.393L7.00023 13L0.63623 6.636L2.05023 5.222L7.00023 10.172Z" fill="black"/>
+      </svg>
+      <span>是<span>
+    </div>
+    <div id="csat-no" class="csat-button">
+      <svg id="csat-no-icon" class="csat-hidden csat-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 5.58599L11.9502 0.635986L13.3642 2.04999L8.41423 6.99999L13.3642 11.95L11.9502 13.364L7.00023 8.41399L2.05023 13.364L0.63623 11.95L5.58623 6.99999L0.63623 2.04999L2.05023 0.635986L7.00023 5.58599Z" fill="black"/>
+      </svg>
+      <span>否<span>
+    </div>
+  </div>
+  <div id="csat-textarea-group" class="csat-hidden">
+    <span id="csat-feedback-label">反馈</span>
+    <textarea id="csat-textarea"></textarea>
+    <div id="csat-submit">提交</div>
+  </div>
+</div><p>
+  
+    By The Ray Team<br/>
+  
+      &copy; Copyright 2024, The Ray Team.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

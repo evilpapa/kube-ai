@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../_static/javascripts/modernizr.js"></script>
+  
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-54780881-2"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-54780881-2');
+</script>
+  
+  
+    <title>预备打包模型服务器 &#8212; seldon-core  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=83e35b93" />
+    <link rel="stylesheet" type="text/css" href="../_static/material.css?v=79c92029" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/rtd_sphinx_search.min.css?v=fb480935" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=15a8f09d" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/rtd_search_config.js"></script>
+    <script src="../_static/js/rtd_sphinx_search.min.js?v=60fbc683"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="KFserving Storage Initializer（已弃用）" href="kfserving-storage-initializer.html" />
+    <link rel="prev" title="预包装模型服务端" href="index.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=indigo data-md-color-accent=teal>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#servers/overview" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../index.html" title="seldon-core  documentation"
+           class="md-header-nav__button md-logo">
+          
+            &nbsp;
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">Seldon Core Documentation</span>
+          <span class="md-header-nav__topic"> 预备打包模型服务器 </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder=""Search""
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+            
+            <li class="md-tabs__item"><a href="/" class="md-tabs__link">🚀 Our Other Projects & Products:</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi/en/stable/" class="md-tabs__link">Alibi Explain</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi-detect/en/stable/" class="md-tabs__link">Alibi Detect</a></li>
+            
+            <li class="md-tabs__item"><a href="https://mlserver.readthedocs.io/en/latest/" class="md-tabs__link">MLServer</a></li>
+            
+            <li class="md-tabs__item"><a href="https://tempo.readthedocs.io/en/latest/" class="md-tabs__link">Tempo SDK</a></li>
+            
+            <li class="md-tabs__item"><a href="https://deploy.seldon.io" class="md-tabs__link">Seldon Enterprise Platform</a></li>
+            
+            <li class="md-tabs__item"><a href="https://github.com/SeldonIO/seldon-deploy-sdk#seldon-deploy-sdk" class="md-tabs__link">Seldon Enterprise Platform SDK</a></li>
+          <li class="md-tabs__item"><a href="../nav/configuration.html" class="md-tabs__link">配置</a></li>
+          <li class="md-tabs__item"><a href="../nav/config/servers.html" class="md-tabs__link">服务端</a></li>
+          <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">预包装模型服务端</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../index.html" title="seldon-core documentation" class="md-nav__button md-logo">
+      
+        <img src="../_static/" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../index.html"
+       title="seldon-core documentation">Seldon Core Documentation</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/getting-started.html" class="md-nav__link">开始</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/concepts.html" class="md-nav__link">概念</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/configuration.html" class="md-nav__link">配置</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/installation.html" class="md-nav__link">安装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/deployments.html" class="md-nav__link">发布</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/servers.html" class="md-nav__link">服务器</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="custom.html" class="md-nav__link">自定义推理服务</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="index.html" class="md-nav__link">存储初始化</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../production/optimization.html" class="md-nav__link">推理优化</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="xgboost.html" class="md-nav__link">XGBoost 服务</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="triton.html" class="md-nav__link">Triton 推理服务</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="sklearn.html" class="md-nav__link">SKLearn 服务</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="tempo.html" class="md-nav__link">Tempo 服务</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="mlflow.html" class="md-nav__link">MLFlow 服务</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="huggingface.html" class="md-nav__link">HuggingFace Server</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="tensorflow.html" class="md-nav__link">TensorFlow 服务</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/routing.html" class="md-nav__link">路由</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/wrappers.html" class="md-nav__link">语言封装和 SDK</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/integrations.html" class="md-nav__link">集成</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/tutorials.html" class="md-nav__link">教程</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/reference.html" class="md-nav__link">参考</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/contributing.html" class="md-nav__link">贡献</a>
+      
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#servers-overview--page-root" class="md-nav__link">预备打包模型服务器</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">初始化容器</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#init-containers" class="md-nav__link">自定义 Init Containers</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id3" class="md-nav__link">预封装模型服务的深度定制</a>
+        </li>
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">处理凭据</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id5" class="md-nav__link">一般说明</a>
+        </li>
+        <li class="md-nav__item"><a href="#gcs" class="md-nav__link">公共 GCS 配置示例</a>
+        </li>
+        <li class="md-nav__item"><a href="#minio" class="md-nav__link">minio 配置示例</a>
+        </li>
+        <li class="md-nav__item"><a href="#iam-aws-s3" class="md-nav__link">基于 IAM 权限的 AWS S3 配置</a>
+        </li>
+        <li class="md-nav__item"><a href="#pvc" class="md-nav__link">PVC 方式示例</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/servers/overview.md.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <section id="id1">
+<h1 id="servers-overview--page-root">预备打包模型服务器<a class="headerlink" href="#servers-overview--page-root" title="Permalink to this heading">¶</a></h1>
+<p>Seldon 提供几个预封装服务器，您可以使用这些服务器部署训练好的模型：</p>
+<ul class="simple">
+<li><p><a class="reference external" href="./sklearn.html">SKLearn 服务</a></p></li>
+<li><p><a class="reference external" href="./xgboost.html">XGBoost 服务</a></p></li>
+<li><p><a class="reference external" href="./tensorflow.html">Tensorflow Serving 服务</a></p></li>
+<li><p><a class="reference external" href="./mlflow.html">MLflow 服务</a></p></li>
+<li><p><a class="reference external" href="./custom.html">自定义服务</a></p></li>
+</ul>
+<p>针对这些打包好的服务只需要定义存储在本地、Google bucket、S3 bucket、azure 或 minio 对象存储的模型文件位置。使用 Sklearn 服务的示例如下：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">machinelearning.seldon.io/v1alpha2</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SeldonDeployment</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sklearn-iris</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">predictors</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="w">      </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">      </span><span class="nt">graph</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">classifier</span>
+<span class="w">        </span><span class="nt">implementation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SKLEARN_SERVER</span>
+<span class="w">        </span><span class="nt">modelUri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gs://seldon-models/v1.14.0/sklearn/iris</span>
+</pre></div>
+</div>
+<p>默认情况下，只有发布到 Google 云存储的公共模型才能访问。
+有关如何配置 AWS S3、Minio 和其他存储解决方案的凭据，请参阅下文。</p>
+<section id="id2">
+<h2 id="id2">初始化容器<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h2>
+<p>Seldon Core 使用 <a class="reference external" href="https://kubernetes.io/docs/concepts/workloads/pods/init-containers/">Init Containers</a> 为预封装服务下载模型二进制文件。
+我们使用 <a class="reference external" href="https://rclone.org/">rclone</a> 实现方式的 <a class="reference external" href="https://github.com/SeldonIO/seldon-core/tree/master/components/rclone-storage-initializer">storage initailizer</a> 来定义 <a class="reference external" href="../charts/seldon-core-operator.html#values">helm values</a> 中的<code class="docutils literal notranslate"><span class="pre">Init</span> <span class="pre">Containers</span></code>。</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">storageInitializer</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">seldonio/rclone-storage-initializer:1.14.0</span>
+</pre></div>
+</div>
+<p>可参考 <a class="reference external" href="https://github.com/SeldonIO/seldon-core/blob/master/components/rclone-storage-initializer/Dockerfile">Dockerfile</a>。修改配置来指定为其他 <code class="docutils literal notranslate"><span class="pre">initContainer</span></code>，查看以下要求明细：</p>
+<p>Kubernetes 将 <code class="docutils literal notranslate"><span class="pre">secrets</span></code> 密钥信息作为环境变量注入到 init 容器。默认的 secret 名称可通过 <a class="reference external" href="../charts/seldon-core-operator.html#values">helm value</a> 设置。</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">predictiveUnit</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">defaultEnvSecretRefName</span><span class="p">:</span><span class="w"> </span><span class="s">""</span>
+</pre></div>
+</div>
+<p>备注：Seldon Core 1.8 之前使用的时 <code class="docutils literal notranslate"><span class="pre">kfserving/storage-initializer</span></code>，想继续使用它，请参考<a class="reference external" href="kfserving-storage-initializer.xhtml">这里</a>。</p>
+<section id="init-containers">
+<h3 id="init-containers">自定义 Init Containers<a class="headerlink" href="#init-containers" title="Permalink to this heading">¶</a></h3>
+<p>通过 helm values 自定义<strong>全局</strong> <code class="docutils literal notranslate"><span class="pre">initContainer</span></code> 镜像和默认 <code class="docutils literal notranslate"><span class="pre">secret</span></code>。</p>
+<p>要明白预封装服务器如何使用 <code class="docutils literal notranslate"><span class="pre">initContainers</span></code>，请参考下面使用 Seldon Deployment 的配置文件，其中<code class="docutils literal notranslate"><span class="pre">volumes</span></code>, <code class="docutils literal notranslate"><span class="pre">volumeMounts</span></code> 和 <code class="docutils literal notranslate"><span class="pre">initContainers</span></code> 会被 <code class="docutils literal notranslate"><span class="pre">Seldon</span> <span class="pre">Core</span> <span class="pre">Operator</span></code> 注入到服务中</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">machinelearning.seldon.io/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SeldonDeployment</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sklearn-iris</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">predictors</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="w">    </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">    </span><span class="nt">graph</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">classifier</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MODEL</span>
+
+<span class="w">    </span><span class="nt">componentSpecs</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">classifier-provision-location</span>
+<span class="w">          </span><span class="nt">emptyDir</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+
+<span class="w">        </span><span class="nt">initContainers</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">classifier-model-initializer</span>
+<span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">seldonio/rclone-storage-initializer:1.14.0</span>
+<span class="w">          </span><span class="nt">imagePullPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IfNotPresent</span>
+<span class="w">          </span><span class="nt">args</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"s3://sklearn/iris"</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"/mnt/models"</span>
+
+<span class="w">          </span><span class="nt">volumeMounts</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/mnt/models</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">classifier-provision-location</span>
+
+<span class="w">          </span><span class="nt">envFrom</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">secretRef</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">seldon-init-container-secret</span>
+
+<span class="w">        </span><span class="nt">containers</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">classifier</span>
+<span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">seldonio/sklearnserver:1.8.0-dev</span>
+
+<span class="w">          </span><span class="nt">volumeMounts</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/mnt/models</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">classifier-provision-location</span>
+<span class="w">            </span><span class="nt">readOnly</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="w">          </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PREDICTIVE_UNIT_PARAMETERS</span>
+<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">'[{"name":"model_uri","value":"/mnt/models","type":"STRING"}]'</span>
+</pre></div>
+</div>
+<p>主要查看：</p>
+<ul class="simple">
+<li><p>预封装计算服务依赖 模型二进制文件存储到 <code class="docutils literal notranslate"><span class="pre">/mnt/models</span></code> 路径</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">initContainers</span></code> 由 <code class="docutils literal notranslate"><span class="pre">{predictiveUnitName}-model-initializer</span></code> 构造</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">container</span></code> 的 <code class="docutils literal notranslate"><span class="pre">entrypoint</span></code> 必须接收两个参数</p>
+<ul>
+<li><p>一个存储模型的 URI</p></li>
+<li><p>一个为模型文件下载后的存储路径</p></li>
+</ul>
+</li>
+<li><p>如果用户要提供自己的名称匹配上述模式，它将按规定使用 initContainer</p></li>
+</ul>
+<p>例如下面 <code class="docutils literal notranslate"><span class="pre">sklearn-iris</span></code> Seldon Deployment 的配置。正如我们所看到的，使用预封装模型服务器可以避免很多自定义模板，使用上更简洁：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">machinelearning.seldon.io/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SeldonDeployment</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iris-sklearn</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">predictors</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="w">    </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">    </span><span class="nt">graph</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">classifier</span>
+<span class="w">      </span><span class="nt">implementation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SKLEARN_SERVER</span>
+<span class="w">      </span><span class="nt">modelUri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s3://sklearn/iris</span>
+<span class="w">      </span><span class="nt">storageInitializerImage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">seldonio/rclone-storage-initializer:1.14.0</span><span class="w">  </span><span class="c1"># 此处定义模型文件下载镜像</span>
+<span class="w">      </span><span class="nt">envSecretRefName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">seldon-init-container-secret</span><span class="w">                       </span><span class="c1"># 自定义密钥信息</span>
+</pre></div>
+</div>
+<p>请注意，Storage Initializer 使用的镜像和秘密可以在每次部署时进行自定义。</p>
+<p>查看<a class="reference external" href="../examples/custom_init_container.html">示例</a> 了解初始化容器如何使用，以及如何自定义使用 <a class="reference external" href="https://rclone.org/">rclone</a> 进行容器的云存储操作。</p>
+</section>
+</section>
+<section id="id3">
+<h2 id="id3">预封装模型服务的深度定制<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h2>
+<p>如果想定义更多资源，可以在你的 podSpecs 中添加 <code class="docutils literal notranslate"><span class="pre">Container</span></code> 设置，如：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">machinelearning.seldon.io/v1alpha2</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SeldonDeployment</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sklearn-iris</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">predictors</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">componentSpecs</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">containers</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">classifier</span>
+<span class="w">          </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">requests</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50Mi</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="w">    </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">    </span><span class="nt">graph</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">classifier</span>
+<span class="w">      </span><span class="nt">implementation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SKLEARN_SERVER</span>
+<span class="w">      </span><span class="nt">modelUri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gs://seldon-models/sklearn/iris</span>
+</pre></div>
+</div>
+<p>发布时，镜像名称和其他配置参数会被自动添加进来。</p>
+<p>后续步骤：</p>
+<ul class="simple">
+<li><p><a class="reference external" href="../examples/server_examples.html">可用示例</a></p></li>
+<li><p><a class="reference external" href="./sklearn.html">SKLearn 服务</a></p></li>
+<li><p><a class="reference external" href="./xgboost.html">XGBoost 服务</a></p></li>
+<li><p><a class="reference external" href="./tensorflow.html">Tensorflow Serving服务</a></p></li>
+<li><p><a class="reference external" href="./mlflow.html">MLflow 服务</a></p></li>
+<li><p><a class="reference external" href="../examples/minio-sklearn.html">基于MinIOn的SKLearn 服务</a></p></li>
+</ul>
+<p>你也可以创建自己的<a class="reference external" href="custom.xhtml">自定义预估服务</a>，它也可以像官方封装的服务一样进行使用。</p>
+<p>如果您的用例时不可重复使用的标准服务器类型，你也可以使用我们的语言封装器来创建自己的组件（相当于以 seldon 的标准开发自己的组件）。</p>
+</section>
+<section id="id4">
+<h2 id="id4">处理凭据<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h2>
+<section id="id5">
+<h3 id="id5">一般说明<a class="headerlink" href="#id5" title="Permalink to this heading">¶</a></h3>
+<p>使用环境变量可配置 Rclone：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">RCLONE_CONFIG_&lt;remote name&gt;_&lt;config variable&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;config value&gt;</span>
+</pre></div>
+</div>
+<p>注意：可以同时配置多个远端</p>
+<p>以上配置等同于 modelUri 与 <code class="docutils literal notranslate"><span class="pre">rclone</span></code> 方式的兼容。</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">modelUri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;remote&gt;:&lt;bucket name&gt;</span>
+</pre></div>
+</div>
+<p>例如 <code class="docutils literal notranslate"><span class="pre">modelUri:</span> <span class="pre">s3:sklearn/iris</span></code>.</p>
+<p>注意: Rclone 将删除双斜杠，它等同于 <code class="docutils literal notranslate"><span class="pre">s3://sklearn/iris</span></code></p>
+<p>如下为一些配置示例，其他云解决方案请参考牛逼哄哄的 <a class="reference external" href="https://rclone.org/">rclone 项目文档</a>。</p>
+</section>
+<section id="gcs">
+<h3 id="gcs">公共 GCS 配置示例<a class="headerlink" href="#gcs" title="Permalink to this heading">¶</a></h3>
+<p>注: 它默认被 <code class="docutils literal notranslate"><span class="pre">seldonio/rclone-storage-initializer</span></code> 镜像使用。</p>
+<p>参考文献: <a class="reference external" href="https://rclone.org/googlecloudstorage/">rclone 文档</a>。</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Secret</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">seldon-rclone-secret</span>
+<span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Opaque</span>
+<span class="nt">stringData</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">RCLONE_CONFIG_GS_TYPE</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">google cloud storage</span>
+<span class="w">  </span><span class="nt">RCLONE_CONFIG_GS_ANONYMOUS</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span>
+</pre></div>
+</div>
+<p>部署</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">machinelearning.seldon.io/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SeldonDeployment</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rclone-sklearn-gs</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">predictors</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="w">    </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">    </span><span class="nt">graph</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">classifier</span>
+<span class="w">      </span><span class="nt">implementation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SKLEARN_SERVER</span>
+<span class="w">      </span><span class="nt">modelUri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gs:seldon-models/sklearn/iris</span>
+<span class="w">      </span><span class="nt">envSecretRefName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">seldon-rclone-secret</span>
+</pre></div>
+</div>
+</section>
+<section id="minio">
+<h3 id="minio">minio 配置示例<a class="headerlink" href="#minio" title="Permalink to this heading">¶</a></h3>
+<p>参考文献: <a class="reference external" href="https://rclone.org/s3/#minio">rclone 文档</a></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Secret</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">seldon-rclone-secret</span>
+<span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Opaque</span>
+<span class="nt">stringData</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">RCLONE_CONFIG_S3_TYPE</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s3</span>
+<span class="w">  </span><span class="nt">RCLONE_CONFIG_S3_PROVIDER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">minio</span>
+<span class="w">  </span><span class="nt">RCLONE_CONFIG_S3_ENV_AUTH</span><span class="p">:</span><span class="w"> </span><span class="s">"false"</span>
+<span class="w">  </span><span class="nt">RCLONE_CONFIG_S3_ACCESS_KEY_ID</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">minioadmin</span>
+<span class="w">  </span><span class="nt">RCLONE_CONFIG_S3_SECRET_ACCESS_KEY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">minioadmin</span>
+<span class="w">  </span><span class="nt">RCLONE_CONFIG_S3_ENDPOINT</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://minio.minio-system.svc.cluster.local:9000</span>
+</pre></div>
+</div>
+</section>
+<section id="iam-aws-s3">
+<h3 id="iam-aws-s3">基于 IAM 权限的 AWS S3 配置<a class="headerlink" href="#iam-aws-s3" title="Permalink to this heading">¶</a></h3>
+<p>参考文献: <a class="reference external" href="https://rclone.org/s3/#amazon-s3">rclone 文档</a></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Secret</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">seldon-rclone-secret</span>
+<span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Opaque</span>
+<span class="nt">stringData</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">RCLONE_CONFIG_S3_TYPE</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s3</span>
+<span class="w">  </span><span class="nt">RCLONE_CONFIG_S3_PROVIDER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aws</span>
+<span class="w">  </span><span class="nt">RCLONE_CONFIG_S3_ACCESS_KEY_ID</span><span class="p">:</span><span class="w"> </span><span class="s">""</span>
+<span class="w">  </span><span class="nt">RCLONE_CONFIG_S3_SECRET_ACCESS_KEY</span><span class="p">:</span><span class="w"> </span><span class="s">""</span>
+<span class="w">  </span><span class="nt">RCLONE_CONFIG_S3_ENV_AUTH</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span>
+</pre></div>
+</div>
+</section>
+<section id="pvc">
+<h3 id="pvc">PVC 方式示例<a class="headerlink" href="#pvc" title="Permalink to this heading">¶</a></h3>
+<p>相较于对象存储，可以直接使用 PVC 方式。如果你有很多非常大文件，又想避免上传/下载，可通过 NFS 驱动器实现。</p>
+<p>使用以下格式 <code class="docutils literal notranslate"><span class="pre">modelUri</span></code> 配置来定义 PVC，唯一需要确认的是，以 <code class="docutils literal notranslate"><span class="pre">runAsUser</span></code> 参数运行的容器是否具备文件读写权限。</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">...</span>
+<span class="w">    </span><span class="nt">modelUri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pvc://&lt;pvc-name&gt;/&lt;path&gt;</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="index.html" title="预包装模型服务端"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> "Previous" </span> 预包装模型服务端 </span>
+              </div>
+            </a>
+          
+          
+            <a href="kfserving-storage-initializer.html" title="KFserving Storage Initializer（已弃用）"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> "Next" </span> KFserving Storage Initializer（已弃用） </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2024, Seldon Technologies Ltd.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

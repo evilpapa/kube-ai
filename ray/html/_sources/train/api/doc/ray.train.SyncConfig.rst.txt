@@ -1,0 +1,42 @@
+﻿
+
+ray.train.SyncConfig
+====================
+
+.. currentmodule:: ray.train
+
+.. autoclass:: SyncConfig
+   :show-inheritance:
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :toctree:
+
+   
+      
+
+   
+   
+
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :toctree:
+
+   
+      ~SyncConfig.sync_artifacts
+      ~SyncConfig.sync_artifacts_on_checkpoint
+      ~SyncConfig.sync_on_checkpoint
+      ~SyncConfig.sync_period
+      ~SyncConfig.sync_timeout
+      ~SyncConfig.syncer
+      ~SyncConfig.upload_dir
+
+   
+   

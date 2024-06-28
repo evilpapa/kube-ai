@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../_static/javascripts/modernizr.js"></script>
+  
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-54780881-2"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-54780881-2');
+</script>
+  
+  
+    <title>为 Seldon Core 封装 C++ 框架/模型 &#8212; seldon-core  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=83e35b93" />
+    <link rel="stylesheet" type="text/css" href="../_static/material.css?v=79c92029" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/rtd_sphinx_search.min.css?v=fb480935" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=15a8f09d" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/rtd_search_config.js"></script>
+    <script src="../_static/js/rtd_sphinx_search.min.js?v=60fbc683"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="使用 s2i 为 Seldon Core 打包 R 模型（孵化）" href="../R/README.html" />
+    <link rel="prev" title="使用 s2i 为 Seldon Core 打包 NodeJS 模型" href="../nodejs/README.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=indigo data-md-color-accent=teal>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#cpp/README" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../index.html" title="seldon-core  documentation"
+           class="md-header-nav__button md-logo">
+          
+            &nbsp;
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">Seldon Core Documentation</span>
+          <span class="md-header-nav__topic"> 为 Seldon Core 封装 C++ 框架/模型 </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder=""Search""
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+            
+            <li class="md-tabs__item"><a href="/" class="md-tabs__link">🚀 Our Other Projects & Products:</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi/en/stable/" class="md-tabs__link">Alibi Explain</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi-detect/en/stable/" class="md-tabs__link">Alibi Detect</a></li>
+            
+            <li class="md-tabs__item"><a href="https://mlserver.readthedocs.io/en/latest/" class="md-tabs__link">MLServer</a></li>
+            
+            <li class="md-tabs__item"><a href="https://tempo.readthedocs.io/en/latest/" class="md-tabs__link">Tempo SDK</a></li>
+            
+            <li class="md-tabs__item"><a href="https://deploy.seldon.io" class="md-tabs__link">Seldon Enterprise Platform</a></li>
+            
+            <li class="md-tabs__item"><a href="https://github.com/SeldonIO/seldon-deploy-sdk#seldon-deploy-sdk" class="md-tabs__link">Seldon Enterprise Platform SDK</a></li>
+          <li class="md-tabs__item"><a href="../nav/configuration.html" class="md-tabs__link">配置</a></li>
+          <li class="md-tabs__item"><a href="../nav/config/wrappers.html" class="md-tabs__link">语言封装和 SDK</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../index.html" title="seldon-core documentation" class="md-nav__button md-logo">
+      
+        <img src="../_static/" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../index.html"
+       title="seldon-core documentation">Seldon Core Documentation</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/getting-started.html" class="md-nav__link">开始</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/concepts.html" class="md-nav__link">概念</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/configuration.html" class="md-nav__link">配置</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/installation.html" class="md-nav__link">安装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/deployments.html" class="md-nav__link">发布</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/servers.html" class="md-nav__link">服务器</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/routing.html" class="md-nav__link">路由</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/wrappers.html" class="md-nav__link">语言封装和 SDK</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="../python/index.html" class="md-nav__link">Python 语言封装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../go/go_wrapper_link.html" class="md-nav__link">Go 语言封装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../java/README.html" class="md-nav__link">Java 语言封装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nodejs/README.html" class="md-nav__link">Nodejs 语言封装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> C++ 语言封装 </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">C++ 语言封装</a>
+      
+        
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#cpp-readme--page-root" class="md-nav__link">为 Seldon Core 封装 C++ 框架/模型</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#s2i" class="md-nav__link">步骤 1 - 安装 s2i</a>
+        </li>
+        <li class="md-nav__item"><a href="#id1" class="md-nav__link">步骤 2（可选） - 安装 Seldon Core C++ 包</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#c" class="md-nav__link">（可选 1） 安装 C++ 包</a>
+        </li>
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">（可选 1）以子目录导入</a>
+        </li>
+        <li class="md-nav__item"><a href="#id3" class="md-nav__link">步骤 3 - 添加源码</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#seldon-c" class="md-nav__link">Seldon C++ 包含模块</a>
+        </li>
+        <li class="md-nav__item"><a href="#seldonmodel" class="md-nav__link">SeldonModel 基础类</a>
+        </li>
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">绑定宏</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id5" class="md-nav__link">可选步骤</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#seldon" class="md-nav__link">步骤 4 (可选) - 指定您的 seldon 环境变量</a>
+        </li>
+        <li class="md-nav__item"><a href="#id6" class="md-nav__link">步骤 5 (可选) - 覆盖构建系统</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/cpp/README.md.txt">Show Source</a> </li>
+
+  </ul>
+</nav>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../R/README.html" class="md-nav__link">R 语言封装</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/integrations.html" class="md-nav__link">集成</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/tutorials.html" class="md-nav__link">教程</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/reference.html" class="md-nav__link">参考</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/contributing.html" class="md-nav__link">贡献</a>
+      
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#cpp-readme--page-root" class="md-nav__link">为 Seldon Core 封装 C++ 框架/模型</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#s2i" class="md-nav__link">步骤 1 - 安装 s2i</a>
+        </li>
+        <li class="md-nav__item"><a href="#id1" class="md-nav__link">步骤 2（可选） - 安装 Seldon Core C++ 包</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#c" class="md-nav__link">（可选 1） 安装 C++ 包</a>
+        </li>
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">（可选 1）以子目录导入</a>
+        </li>
+        <li class="md-nav__item"><a href="#id3" class="md-nav__link">步骤 3 - 添加源码</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#seldon-c" class="md-nav__link">Seldon C++ 包含模块</a>
+        </li>
+        <li class="md-nav__item"><a href="#seldonmodel" class="md-nav__link">SeldonModel 基础类</a>
+        </li>
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">绑定宏</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id5" class="md-nav__link">可选步骤</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#seldon" class="md-nav__link">步骤 4 (可选) - 指定您的 seldon 环境变量</a>
+        </li>
+        <li class="md-nav__item"><a href="#id6" class="md-nav__link">步骤 5 (可选) - 覆盖构建系统</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/cpp/README.md.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <section id="seldon-core-c">
+<h1 id="cpp-readme--page-root">为 Seldon Core 封装 C++ 框架/模型<a class="headerlink" href="#cpp-readme--page-root" title="Permalink to this heading">¶</a></h1>
+<p>本章中，我们使用 Seldon CPP 封装你的 CPP 模型。</p>
+<p>快速开始请参考：</p>
+<ul class="simple">
+<li><p><a class="reference external" href="../examples/cpp_simple">简单的 CPP 单文件示例</a></p></li>
+<li><p><a class="reference external" href="../examples/cpp_advanced">高级 CPP 构建系统示例</a></p></li>
+</ul>
+<p>CPP 封装通过 C++ 打包利用 <a class="reference external" href="../python">Python Inference Server</a> 进行核心 CPP 原生组件通信。</p>
+<p>如果你对 s2i 不熟悉，请参考 <a class="reference internal" href="../wrappers/s2i.html"><span class="doc">s2i 使用说明</span></a> 并跟随下面的步骤。</p>
+<section id="s2i">
+<h2 id="s2i">步骤 1 - 安装 s2i<a class="headerlink" href="#s2i" title="Permalink to this heading">¶</a></h2>
+<p><a class="reference external" href="https://github.com/openshift/source-to-image#installation">下载安装 s2i</a></p>
+<ul class="simple">
+<li><p>使用 s2i 准备工作</p>
+<ul>
+<li><p>Docker</p></li>
+<li><p>Git（如果使用远程 git 仓库）</p></li>
+</ul>
+</li>
+</ul>
+<p>所有工作就绪，可执行以下</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>s2i<span class="w"> </span>usage<span class="w"> </span>seldonio/s2i-cpp-build:0.0.1
+</pre></div>
+</div>
+</section>
+<section id="id1">
+<h2 id="id1">步骤 2（可选） - 安装 Seldon Core C++ 包<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h2>
+<p>本步骤有两点：</p>
+<ul class="simple">
+<li><p>安装 Seldon Core C++ 包便于开发</p></li>
+<li><p>不要安装包，而是通过 CMakeLists.txt 文件导入子目录</p></li>
+</ul>
+<section id="c">
+<h3 id="c">（可选 1） 安装 C++ 包<a class="headerlink" href="#c" title="Permalink to this heading">¶</a></h3>
+<p>针对此可选项，切到 <code class="docutils literal notranslate"><span class="pre">incubating/wrappers/s2i/wrappers/cpp/</span></code> 使用 CMAKE 进行安装。</p>
+<p>与 cmake 一样，您能够为操作系统构建相应的构建组件 - 对于 Linux：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cmake<span class="w"> </span>.<span class="w"> </span>-Bbuild
+
+make
+
+make<span class="w"> </span>install
+</pre></div>
+</div>
+<p>在 CMakeLists.txt 你可以添加</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">find_package</span><span class="p">(</span><span class="n">seldon</span> <span class="n">REQUIRED</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id2">
+<h3 id="id2">（可选 1）以子目录导入<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
+<p>通过 CMAKE 你可以导入子目录作为工程。像这样：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>add_subdirectory(
+    ../../../incubating/wrappers/s2i/cpp/
+    ${CMAKE_CURRENT_BINARY_DIR}/seldon_dir})
+</pre></div>
+</div>
+<p>现在，导入了目录。如果您确实采用此方法，您需要记住，当您运行 s2i 命令时，这将执行图构建，这意味着你仍需要在 if(…) 判断中添加 find_package 命令。</p>
+</section>
+<section id="id3">
+<h3 id="id3">步骤 3 - 添加源码<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h3>
+<p>在 C++ 代码和 Seldon 间的核心接口是一个具有 <code class="docutils literal notranslate"><span class="pre">predict</span></code> 接口功能的封装类。</p>
+<p>为了简化与 Seldon 的交互，我们提供了一个包含相关实用程序的 C++ 模块，例如要继承的父封装类以及 protobuf 类型。</p>
+<p>上面的示例提供了有关可以创建的类的结构的注解。下面是一个包含所有核心元素的示例类。</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"seldon/SeldonModel.hpp"</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ModelClass</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">seldon</span><span class="o">::</span><span class="n">SeldonModelBase</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="n">seldon</span><span class="o">::</span><span class="n">protos</span><span class="o">::</span><span class="n">SeldonMessage</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="n">seldon</span><span class="o">::</span><span class="n">protos</span><span class="o">::</span><span class="n">SeldonMessage</span><span class="w"> </span><span class="o">&amp;</span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">data</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="n">SELDON_DEFAULT_BIND_MODULE</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>我们将分解每个部分，并提供有关可用作替代品的扩展和选项的进一步见解。</p>
+<section id="seldon-c">
+<h4 id="seldon-c">Seldon C++ 包含模块<a class="headerlink" href="#seldon-c" title="Permalink to this heading">¶</a></h4>
+<p>主要包含文件 <code class="docutils literal notranslate"><span class="pre">seldon/SeldonModel.hpp</span></code> 提供了一组核心实用程序。</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"seldon/SeldonModel.hpp"</span>
+</pre></div>
+</div>
+<p>导入的核心组件是：</p>
+<ul class="simple">
+<li><p>SeldonModel<span class="raw-html-m2r"><proto></proto></span> 和 SeldonModelBase 类</p></li>
+<li><p>SELDON_{X}_BIND_MODULE(…) 宏定义</p></li>
+<li><p>seldon::protos::SeldonMessage</p></li>
+</ul>
+</section>
+<section id="seldonmodel">
+<h4 id="seldonmodel">SeldonModel 基础类<a class="headerlink" href="#seldonmodel" title="Permalink to this heading">¶</a></h4>
+<p>下一个组件是 SeldonModel 类。正如你在上面的例子中看到的，我们继承了这个类，如下所示：</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">ModelClass</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">seldon</span><span class="o">::</span><span class="n">SeldonModelBase</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="n">seldon</span><span class="o">::</span><span class="n">protos</span><span class="o">::</span><span class="n">SeldonMessage</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="n">seldon</span><span class="o">::</span><span class="n">protos</span><span class="o">::</span><span class="n">SeldonMessage</span><span class="w"> </span><span class="o">&amp;</span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">data</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>SeldonModel 类提供了两个关键组件：</p>
+<ul class="simple">
+<li><p>它提供了一个 <code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">virtual</span> <span class="pre">abstract</span></code> 方法 <code class="docutils literal notranslate"><span class="pre">predict(proto)</span></code> 用户可以覆盖添加自己的逻辑</p></li>
+<li><p>在幕后，SeldonModel 还实现了一个 <code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">virtual</span></code> 方法<code class="docutils literal notranslate"><span class="pre">predictRaw(py::bytes)</span></code>，该方法基本上接收原始字节，将它们转换为相关的 proto 并将其传递给函数 <code class="docutils literal notranslate"><span class="pre">predict(proto)</span></code>。</p></li>
+</ul>
+<p>值得一提的是， SeldonModel<span class="raw-html-m2r"><proto></proto></span> 实际上提供了一个可以启用任何 protos 的模板类。这当然受到服务编排器的限制，但提供了进一步的灵活性。</p>
+<p>更具体地说，我们上面使用的 SeldonModelBase 类实际上是一个模板实现 <code class="docutils literal notranslate"><span class="pre">using</span> <span class="pre">SeldonModelBase</span> <span class="pre">=</span> <span class="pre">SeldonModel&lt;seldon::protos::SeldonMessage&gt;;</span></code>。</p>
+</section>
+<section id="id4">
+<h4 id="id4">绑定宏<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h4>
+<p>最后我们有最后一步，即我们的绑定宏。这就是告诉 Seldon 使用我们上面提供的类。默认情况下，Selon 需要 <code class="docutils literal notranslate"><span class="pre">ModelClass</span></code> 类名转换和 <code class="docutils literal notranslate"><span class="pre">SeldonPackage</span></code> 包名本身。</p>
+<p>上面我们使用了默认绑定，即以下行：</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">SELDON_DEFAULT_BIND_MODULE</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>上面的宏相当于定义了下面的宏：</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">SELDON_BIND_MODULE</span><span class="p">(</span><span class="n">SeldonPackage</span><span class="p">,</span><span class="w"> </span><span class="n">ModelClass</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>如果更改任何一个名称，则需要确保执行相关覆盖。更具体地说，所需的更改如下。</p>
+<p>如果您更改 ModelClass 的名称：</p>
+<ul class="simple">
+<li><p>使用宏 SELDON_BIND_MODULE 注册它</p></li>
+<li><p>在 MODEL env var 中将其指定为您的 s2i 参数（在下面的可选步骤中有更多相关信息）</p></li>
+</ul>
+<p>如果您更改 SeldonPackage 的名称：</p>
+<ul class="simple">
+<li><p>使用宏 SELDON_BIND_MODULE 注册它</p></li>
+<li><p>在 MODEL env var 中将其指定为您的 s2i 参数（下一步将详细介绍）</p></li>
+<li><p>覆盖构建系统中的包名称（在下面的可选步骤中有更多内容）</p></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="id5">
+<h2 id="id5">可选步骤<a class="headerlink" href="#id5" title="Permalink to this heading">¶</a></h2>
+<p>上述步骤是可选的，仅当您需要更高级的功能或想要更改命名约定时才需要。</p>
+<section id="seldon">
+<h3 id="seldon">步骤 4 (可选) - 指定您的 seldon 环境变量<a class="headerlink" href="#seldon" title="Permalink to this heading">¶</a></h3>
+<p>为了指定您的 seldon 环境变量，您可以通过以下方式之一进行：</p>
+<ul class="simple">
+<li><p>当运行 <code class="docutils literal notranslate"><span class="pre">s2i</span></code> 组件时在 <code class="docutils literal notranslate"><span class="pre">.s2i/environment</span></code> 文件指定</p></li>
+<li><p>通过 <code class="docutils literal notranslate"><span class="pre">-E</span></code> 指定变量值到 <code class="docutils literal notranslate"><span class="pre">s2i</span></code> 命令</p></li>
+</ul>
+<p>您可以覆盖的主要变量是：</p>
+<ul class="simple">
+<li><p>MODEL=SeldonPackage.ModelClass</p></li>
+</ul>
+<p>正如您可以假设的那样，这是确保为 Seldon 封装器正确设置并能相关 C++ 包/类的环境变量。</p>
+</section>
+<section id="id6">
+<h3 id="id6">步骤 5 (可选) - 覆盖构建系统<a class="headerlink" href="#id6" title="Permalink to this heading">¶</a></h3>
+<p>最后，您还可以通过高级配置覆盖构建系统。</p>
+<p>我们使用的构建系统是 CMAKE，主要是因为它支持灵活和模块化的开发。</p>
+<p>这意味着您将能够将 CMakeLists.txt 文件添加到您的项目文件夹中。</p>
+<p>该文件的内容如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cmake_minimum_required</span><span class="p">(</span><span class="n">VERSION</span> <span class="mf">3.4.1</span><span class="p">)</span>
+<span class="n">project</span><span class="p">(</span><span class="n">seldon_custom_model</span> <span class="n">VERSION</span> <span class="mf">0.0.1</span><span class="p">)</span>
+
+<span class="nb">set</span><span class="p">(</span><span class="n">CMAKE_CXX_STANDARD</span> <span class="mi">14</span><span class="p">)</span>
+
+<span class="n">find_package</span><span class="p">(</span><span class="n">seldon</span> <span class="n">REQUIRED</span><span class="p">)</span>
+<span class="n">find_package</span><span class="p">(</span><span class="n">pybind11</span> <span class="n">REQUIRED</span><span class="p">)</span>
+
+<span class="n">pybind11_add_module</span><span class="p">(</span>
+    <span class="n">SeldonPackage</span>
+    <span class="n">ModelClass</span><span class="o">.</span><span class="n">cpp</span><span class="p">)</span>
+
+<span class="n">target_link_libraries</span><span class="p">(</span>
+    <span class="n">CustomSeldonPackage</span> <span class="n">PRIVATE</span>
+    <span class="n">seldon</span><span class="p">::</span><span class="n">seldon</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>上面的大纲是您可以创建的最简单的 cmake 文件。它具有以下组件：</p>
+<ul class="simple">
+<li><p>find_package(seldon,…) - 获取 seldon 包</p></li>
+<li><p>find_package(pybind11, …) - 这会获取所需的绑定</p></li>
+<li><p>pybind11_add_module(SeldonPackage, ModelClass.cpp) - 这将使用所需包名和所有相关的 C++ 源文件创建您的模块。</p></li>
+<li><p>target_link_libraries(CustomSeldonPackage PRIVATE seldon::seldon) 绑定 Seldon 共享/静态库</p></li>
+</ul>
+<p>除此之外，您还可以为您的环境配置任何您想要的东西。</p>
+<p>还可以通过扩展 docker 镜像库来进一步设置，可查看仓库模块 <code class="docutils literal notranslate"><span class="pre">incubating/wrappers/s2i/cpp/</span></code>。</p>
+</section>
+</section>
+</section>
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="../nodejs/README.html" title="使用 s2i 为 Seldon Core 打包 NodeJS 模型"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> "Previous" </span> 使用 s2i 为 Seldon Core 打包 NodeJS 模型 </span>
+              </div>
+            </a>
+          
+          
+            <a href="../R/README.html" title="使用 s2i 为 Seldon Core 打包 R 模型（孵化）"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> "Next" </span> 使用 s2i 为 Seldon Core 打包 R 模型（孵化） </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2024, Seldon Technologies Ltd.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

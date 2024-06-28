@@ -1,0 +1,1361 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>保存加载检查点 &#8212; Ray 2.7.2</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/termynal.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/versionwarning.js"></script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+    <script defer="defer" src="../../_static/js/docsearch.js"></script>
+    <script defer="defer" src="../../_static/js/csat.js"></script>
+    <script defer="defer" src="../../_static/js/termynal.js"></script>
+    <script defer="defer" src="../../_static/js/custom.js"></script>
+    <script defer="defer" src="../../_static/js/top-navigation.js"></script>
+    <script src="../../_static/js/tags.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <link rel="canonical" href="https://docs.ray.io/en/latest/train/user-guides/checkpoints.html" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="实现追踪" href="experiment-tracking.html" />
+    <link rel="prev" title="监控和记录指标" href="monitoring-logging.html" />
+
+<!-- Fathom - beautiful, simple website analytics -->
+<script src="https://deer.ray.io/script.js" data-site="WYYANYOS" defer></script>
+<!-- / Fathom -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-110413294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-110413294-1');
+</script>
+
+<script
+  src="https://widget.kapa.ai/kapa-widget.bundle.js"
+  data-website-id="18a8c339-4ec5-43c8-8182-db3f2bc8c6b6"
+  data-project-name="Ray"
+  data-project-color="#2C2C2C"
+  data-project-logo="https://global.discourse-cdn.com/business7/uploads/ray/original/1X/8f4dcb72f7cd34e2a332d548bd65860994bc8ff1.png"
+  data-modal-disclaimer = "Results are automated and may be incorrect or contain inappropriate information. Do not include any personal data or confidential information."
+  data-modal-title = "Ray Docs AI - Ask a Question"
+  data-button-position-bottom = "60px"
+></script>
+
+<script>
+(function(apiKey){
+    (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
+    v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
+        o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
+        y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
+        z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
+
+        pendo.initialize({
+            visitor: {
+                id: 'VISITOR-UNIQUE-ID'
+            },
+            account: {
+                id: 'ACCOUNT-UNIQUE-ID'
+            }
+        });
+})('f89fa48a-6dd7-4d7c-67cf-a8051ed891f2');
+</script>
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"><div class='topnav'></div></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Ray 2.7.2</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main Navigation">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../index.html">
+                    欢迎来到 Ray ！
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Ray
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/index.html">
+   概述「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/getting-started.html">
+   入门「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/installation.html">
+   安装「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/use-cases.html">
+   用例「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/examples.html">
+   示例库「1%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/ray-libraries.html">
+   生态「3%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-core/walkthrough.html">
+   Ray 核心「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../data/data.html">
+   Ray 数据「85%」
+  </a>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="../train.html">
+   Ray 训练「95%」
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="../overview.html">
+     概述
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../getting-started-pytorch.html">
+     PyTorch 指南
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../getting-started-pytorch-lightning.html">
+     PyTorch Lightning 指南
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../getting-started-transformers.html">
+     Hugging Face Transformers 指南
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../more-frameworks.html">
+     更多框架
+    </a>
+   </li>
+   <li class="toctree-l2 current active has-children">
+    <a class="reference internal" href="../user-guides.html">
+     用户指南
+    </a>
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+    <label for="toctree-checkbox-2">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul class="current">
+     <li class="toctree-l3">
+      <a class="reference internal" href="data-loading-preprocessing.html">
+       数据加载和预处理
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="using-gpus.html">
+       配置 Scale 和 GPU
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="persistent-storage.html">
+       配置持久存储
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="monitoring-logging.html">
+       监控和记录指标
+      </a>
+     </li>
+     <li class="toctree-l3 current active">
+      <a class="current reference internal" href="#">
+       保存加载检查点
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="experiment-tracking.html">
+       实现追踪
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="results.html">
+       检查训练结果
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="fault-tolerance.html">
+       处理故障和节点抢占
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="reproducibility.html">
+       可重复性
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="hyperparameter-optimization.html">
+       Hyperparameter Optimization
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples.html">
+     示例
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../benchmarks.html">
+     基准
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/api.html">
+     Ray 训练 API
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../tune/index.html">
+   Ray 调参「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../serve/index.html">
+   Ray Serve「1%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../rllib/index.html">
+   Ray RLlib「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-more-libs/index.html">
+   更多类库「40%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../cluster/getting-started.html">
+   Ray 集群「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-observability/index.html">
+   监控调试「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-references/api.html">
+   参考「20%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-contribute/index.html">
+   开发者指引「30%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-security/index.html">
+   安全「100%」
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/ray-project/ray"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/issues/new?title=Issue%20on%20page%20%2Ftrain/user-guides/checkpoints.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/edit/master/doc/source/train/user-guides/checkpoints.rst"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../_sources/train/user-guides/checkpoints.rst.txt"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.rst</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#train-dl-saving-checkpoints">
+   训练期间保存检查点
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#worker">
+     保存来自多个 worker 的检查点（分布式检查点）
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#train-dl-configure-checkpoints">
+   配置检查点
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id6">
+   训练后使用检查点
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#train-dl-loading-checkpoints">
+   从检查点恢复训练状态
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>保存加载检查点</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#train-dl-saving-checkpoints">
+   训练期间保存检查点
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#worker">
+     保存来自多个 worker 的检查点（分布式检查点）
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#train-dl-configure-checkpoints">
+   配置检查点
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id6">
+   训练后使用检查点
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#train-dl-loading-checkpoints">
+   从检查点恢复训练状态
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section id="train-checkpointing">
+<span id="id1"></span><h1>保存加载检查点<a class="headerlink" href="#train-checkpointing" title="Permalink to this headline">#</a></h1>
+<p>Ray Train 提供了一种快照训练进度的方法 <a class="reference internal" href="../api/doc/ray.train.Checkpoint.html#ray.train.Checkpoint" title="ray.train.Checkpoint"><code class="xref py py-class docutils literal notranslate"><span class="pre">Checkpoints</span></code></a> 。</p>
+<p>这对于以下情况有用：</p>
+<ol class="arabic simple">
+<li><p><strong>存储性能最佳的模型权重：</strong> 将模型保存到持久存储中，并将其用于下游服务/推理。</p></li>
+<li><p><strong>容错：</strong> 处理在集群上可抢占机器 / pod 上长期运行的训练作业中的节点故障。</p></li>
+<li><p><strong>分布式检查点：</strong> 在进行 <a href="#id2"><span class="problematic" id="id3">*</span></a>模型并行训练*时，Ray Train 检查点提供了一种简单的方法，可以
+<a class="reference internal" href="#train-distributed-checkpointing"><span class="std std-ref">从每个 worker 并行上传模型碎片</span></a>，
+而无需将完整模型收集到单个节点。</p></li>
+<li><p><strong>与 Ray Tune 集成：</strong> 检查点的保存和加载被默写 <a class="reference internal" href="../../tune/api/schedulers.html#tune-schedulers"><span class="std std-ref">Ray Tune 调度程序</span></a> 所需。</p></li>
+</ol>
+<section id="train-dl-saving-checkpoints">
+<span id="id4"></span><h2>训练期间保存检查点<a class="headerlink" href="#train-dl-saving-checkpoints" title="Permalink to this headline">#</a></h2>
+<p><a class="reference internal" href="../api/doc/ray.train.Checkpoint.html#ray.train.Checkpoint" title="ray.train.Checkpoint"><code class="xref py py-class docutils literal notranslate"><span class="pre">Checkpoint</span></code></a> 是 Ray Train 提供的轻量级接口，表示
+存在于本地或远程存储中的 <em>目录</em> 。</p>
+<p>例如，检查点可以指向云存储中的目录：
+<code class="docutils literal notranslate"><span class="pre">s3://my-bucket/my-checkpoint-dir</span></code>。
+本地可用的检查点指向本地文件系统上的位置：
+<code class="docutils literal notranslate"><span class="pre">/tmp/my-checkpoint-dir</span></code>。</p>
+<p>以下是在训练循环中保存检查点的方法：</p>
+<ol class="arabic simple">
+<li><p>将您的模型检查点写入本地目录。</p>
+<ul class="simple">
+<li><p>由于 <a class="reference internal" href="../api/doc/ray.train.Checkpoint.html#ray.train.Checkpoint" title="ray.train.Checkpoint"><code class="xref py py-class docutils literal notranslate"><span class="pre">Checkpoint</span></code></a> 只是指向一个目录，因此其内容完全由您决定。</p></li>
+<li><p>这意味着您可以使用任何您想要的序列化格式。</p></li>
+<li><p>这使得 <strong>使用训练框架提供的熟悉的检查点实用程序变得容易</strong>，例如
+<code class="docutils literal notranslate"><span class="pre">torch.save</span></code>， <code class="docutils literal notranslate"><span class="pre">pl.Trainer.save_checkpoint</span></code>，Accelerate 的 <code class="docutils literal notranslate"><span class="pre">accelerator.save_model</span></code>，
+Transformer 的 <code class="docutils literal notranslate"><span class="pre">save_pretrained</span></code>，<code class="docutils literal notranslate"><span class="pre">tf.keras.Model.save</span></code> 等等。</p></li>
+</ul>
+</li>
+<li><p>使用 <a class="reference internal" href="../api/doc/ray.train.Checkpoint.from_directory.html#ray.train.Checkpoint.from_directory" title="ray.train.Checkpoint.from_directory"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Checkpoint.from_directory</span></code></a> 从目录创建一个 <a class="reference internal" href="../api/doc/ray.train.Checkpoint.html#ray.train.Checkpoint" title="ray.train.Checkpoint"><code class="xref py py-class docutils literal notranslate"><span class="pre">Checkpoint</span></code></a>。</p></li>
+<li><p>使用 <a class="reference internal" href="../api/doc/ray.train.report.html#ray.train.report" title="ray.train.report"><code class="xref py py-func docutils literal notranslate"><span class="pre">ray.train.report(metrics,</span> <span class="pre">checkpoint=...)</span></code></a> 向 Ray Train 报告检查点。</p>
+<ul class="simple">
+<li><p>与检查点一起报告的指标用于 <a class="reference internal" href="#train-dl-configure-checkpoints"><span class="std std-ref">跟踪性能最佳的检查点</span></a>。</p></li>
+<li><p>如果已配置，这会将 <strong>检查点上传到持久存储</strong> 。参阅 <a class="reference internal" href="persistent-storage.html#persistent-storage-guide"><span class="std std-ref">配置持久存储</span></a>。</p></li>
+</ul>
+</li>
+</ol>
+<figure class="align-default" id="id8">
+<img alt="../../_images/checkpoint_lifecycle.png" src="../../_images/checkpoint_lifecycle.png" />
+<figcaption>
+<p><span class="caption-text"><a class="reference internal" href="../api/doc/ray.train.Checkpoint.html#ray.train.Checkpoint" title="ray.train.Checkpoint"><code class="xref py py-class docutils literal notranslate"><span class="pre">Checkpoint</span></code></a> 的声明周期，从本地
+保存到磁盘到通过 <code class="docutils literal notranslate"><span class="pre">train.report</span></code> 上传到持久存储。</span><a class="headerlink" href="#id8" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>如上图所示，保存检查点的最佳实践是首先将检查点转储到本地临时目录。
+然后，调用 <code class="docutils literal notranslate"><span class="pre">train.report</span></code>
+将检查点上传到其最终持久存储位置。
+然后，可以安全地清理本地临时目录以释放磁盘空间
+（例如，从存在的 <code class="docutils literal notranslate"><span class="pre">tempfile.TemporaryDirectory</span></code>）。</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>在标准 DDP 训练中，每个 worker 都有完整模型的副本，您应该
+只保存并报告来自单个 worker 的检查点，以防止重复上传。</p>
+<p>这通常看起来像：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tempfile</span>
+
+<span class="kn">from</span> <span class="nn">ray</span> <span class="kn">import</span> <span class="n">train</span>
+
+
+<span class="k">def</span> <span class="nf">train_fn</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+    <span class="o">...</span>
+
+    <span class="n">metrics</span> <span class="o">=</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span>
+    <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">temp_checkpoint_dir</span><span class="p">:</span>
+        <span class="n">checkpoint</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Only the global rank 0 worker saves and reports the checkpoint</span>
+        <span class="k">if</span> <span class="n">train</span><span class="o">.</span><span class="n">get_context</span><span class="p">()</span><span class="o">.</span><span class="n">get_world_rank</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="o">...</span>  <span class="c1"># Save checkpoint to temp_checkpoint_dir</span>
+
+            <span class="n">checkpoint</span> <span class="o">=</span> <span class="n">Checkpoint</span><span class="o">.</span><span class="n">from_directory</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">)</span>
+
+        <span class="n">train</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="n">metrics</span><span class="p">,</span> <span class="n">checkpoint</span><span class="o">=</span><span class="n">checkpoint</span><span class="p">)</span>
+
+
+</pre></div>
+</div>
+<p>如果使用 DeepSpeed Zero-3 和 FSDP 等并行训练策略，其中
+每个 worker 仅具有完整模型的一个分片，则应保存并报告每个工作器的检查点。
+参阅 <a class="reference internal" href="#train-distributed-checkpointing"><span class="std std-ref">保存来自多个 worker 的检查点（分布式检查点）</span></a> 作为示例。</p>
+</div>
+<p>以下是使用不同训练框架保存检查点的几个示例：</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-0">
+Native PyTorch</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">from</span> <span class="nn">torch.optim</span> <span class="kn">import</span> <span class="n">Adam</span>
+
+<span class="kn">import</span> <span class="nn">ray.train.torch</span>
+<span class="kn">from</span> <span class="nn">ray</span> <span class="kn">import</span> <span class="n">train</span>
+<span class="kn">from</span> <span class="nn">ray.train</span> <span class="kn">import</span> <span class="n">Checkpoint</span><span class="p">,</span> <span class="n">ScalingConfig</span>
+<span class="kn">from</span> <span class="nn">ray.train.torch</span> <span class="kn">import</span> <span class="n">TorchTrainer</span>
+
+
+<span class="k">def</span> <span class="nf">train_func</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="c1"># create a toy dataset</span>
+    <span class="c1"># data   : X - dim = (n, 4)</span>
+    <span class="c1"># target : Y - dim = (n, 1)</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">4</span><span class="p">)))</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
+    <span class="c1"># toy neural network : 1-layer</span>
+    <span class="c1"># Wrap the model in DDP</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">torch</span><span class="o">.</span><span class="n">prepare_model</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">()</span>
+
+    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">3e-4</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;num_epochs&quot;</span><span class="p">]):</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+        <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+        <span class="n">metrics</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;loss&quot;</span><span class="p">:</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()}</span>
+
+        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">temp_checkpoint_dir</span><span class="p">:</span>
+            <span class="n">checkpoint</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="n">should_checkpoint</span> <span class="o">=</span> <span class="n">epoch</span> <span class="o">%</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;checkpoint_freq&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+            <span class="c1"># In standard DDP training, where the model is the same across all ranks,</span>
+            <span class="c1"># only the global rank 0 worker needs to save and report the checkpoint</span>
+            <span class="k">if</span> <span class="n">train</span><span class="o">.</span><span class="n">get_context</span><span class="p">()</span><span class="o">.</span><span class="n">get_world_rank</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">should_checkpoint</span><span class="p">:</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span>
+                    <span class="n">model</span><span class="o">.</span><span class="n">module</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span>  <span class="c1"># NOTE: Unwrap the model.</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">temp_checkpoint_dir</span><span class="p">,</span> <span class="s2">&quot;model.pt&quot;</span><span class="p">),</span>
+                <span class="p">)</span>
+                <span class="n">checkpoint</span> <span class="o">=</span> <span class="n">Checkpoint</span><span class="o">.</span><span class="n">from_directory</span><span class="p">(</span><span class="n">temp_checkpoint_dir</span><span class="p">)</span>
+
+            <span class="n">train</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="n">metrics</span><span class="p">,</span> <span class="n">checkpoint</span><span class="o">=</span><span class="n">checkpoint</span><span class="p">)</span>
+
+
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">TorchTrainer</span><span class="p">(</span>
+    <span class="n">train_func</span><span class="p">,</span>
+    <span class="n">train_loop_config</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;num_epochs&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">},</span>
+    <span class="n">scaling_config</span><span class="o">=</span><span class="n">ScalingConfig</span><span class="p">(</span><span class="n">num_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>您很可能希望在将 DDP 模型保存到检查点之前将其解开。
+<code class="docutils literal notranslate"><span class="pre">model.module.state_dict()</span></code> 是状态字典，其中每个键都没有前缀 <code class="docutils literal notranslate"><span class="pre">&quot;module.&quot;</span></code> 前缀。</p>
+</div>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-1">
+PyTorch Lightning</label><div class="sd-tab-content docutils">
+<p>Ray Train 利用 PyTorch Lightning 的 <code class="docutils literal notranslate"><span class="pre">Callback</span></code> 接口来报告指标和检查点。
+我们提供了一个简单的回调 <code class="docutils literal notranslate"><span class="pre">on_train_epoch_end</span></code> 实现来报告。</p>
+<p>具体来说，在每个训练周期结束时，它</p>
+<ul class="simple">
+<li><p>从 <code class="docutils literal notranslate"><span class="pre">trainer.callback_metrics</span></code> 收集所有记录的指标</p></li>
+<li><p>通过 <code class="docutils literal notranslate"><span class="pre">trainer.save_checkpoint</span></code> 保存检查点</p></li>
+<li><p>通过 <a class="reference internal" href="../api/doc/ray.train.report.html#ray.train.report" title="ray.train.report"><code class="xref py py-func docutils literal notranslate"><span class="pre">ray.train.report(metrics,</span> <span class="pre">checkpoint)</span></code></a> 向 Ray Train 报告</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytorch_lightning</span> <span class="k">as</span> <span class="nn">pl</span>
+
+<span class="kn">from</span> <span class="nn">ray</span> <span class="kn">import</span> <span class="n">train</span>
+<span class="kn">from</span> <span class="nn">ray.train.lightning</span> <span class="kn">import</span> <span class="n">RayTrainReportCallback</span>
+<span class="kn">from</span> <span class="nn">ray.train.torch</span> <span class="kn">import</span> <span class="n">TorchTrainer</span>
+
+
+<span class="k">class</span> <span class="nc">MyLightningModule</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">LightningModule</span><span class="p">):</span>
+    <span class="c1"># ...</span>
+
+    <span class="k">def</span> <span class="nf">on_validation_epoch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="o">...</span>
+        <span class="n">mean_acc</span> <span class="o">=</span> <span class="n">calculate_accuracy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;mean_accuracy&quot;</span><span class="p">,</span> <span class="n">mean_acc</span><span class="p">,</span> <span class="n">sync_dist</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">train_func_per_worker</span><span class="p">():</span>
+    <span class="o">...</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">MyLightningModule</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+    <span class="n">datamodule</span> <span class="o">=</span> <span class="n">MyLightningDataModule</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+
+    <span class="n">trainer</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Trainer</span><span class="p">(</span>
+        <span class="c1"># ...</span>
+        <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">RayTrainReportCallback</span><span class="p">()]</span>
+    <span class="p">)</span>
+    <span class="n">trainer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">datamodule</span><span class="o">=</span><span class="n">datamodule</span><span class="p">)</span>
+
+
+<span class="n">ray_trainer</span> <span class="o">=</span> <span class="n">TorchTrainer</span><span class="p">(</span>
+    <span class="n">train_func_per_worker</span><span class="p">,</span>
+    <span class="n">scaling_config</span><span class="o">=</span><span class="n">train</span><span class="o">.</span><span class="n">ScalingConfig</span><span class="p">(</span><span class="n">num_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+    <span class="n">run_config</span><span class="o">=</span><span class="n">train</span><span class="o">.</span><span class="n">RunConfig</span><span class="p">(</span>
+        <span class="n">checkpoint_config</span><span class="o">=</span><span class="n">train</span><span class="o">.</span><span class="n">CheckpointConfig</span><span class="p">(</span>
+            <span class="n">num_to_keep</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="n">checkpoint_score_attribute</span><span class="o">=</span><span class="s2">&quot;mean_accuracy&quot;</span><span class="p">,</span>
+            <span class="n">checkpoint_score_order</span><span class="o">=</span><span class="s2">&quot;max&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>您始终可以从 <a class="reference internal" href="../api/doc/ray.train.Result.html#ray.train.Result.checkpoint" title="ray.train.Result.checkpoint"><code class="xref py py-attr docutils literal notranslate"><span class="pre">result.checkpoint</span></code></a> 和
+<a class="reference internal" href="../api/doc/ray.train.Result.html#ray.train.Result.best_checkpoints" title="ray.train.Result.best_checkpoints"><code class="xref py py-attr docutils literal notranslate"><span class="pre">result.best_checkpoints</span></code></a> 路径获取检查点。</p>
+<p>对于更高级的用法（例如以不同的频率报告、报告自定义检查点文件），您可以实现自己的自定义回调。
+这是一个每 3 个 epoch 报告一次检查点的简单示例：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">tempfile</span> <span class="kn">import</span> <span class="n">TemporaryDirectory</span>
+
+<span class="kn">from</span> <span class="nn">pytorch_lightning.callbacks</span> <span class="kn">import</span> <span class="n">Callback</span>
+
+<span class="kn">import</span> <span class="nn">ray</span>
+<span class="kn">import</span> <span class="nn">ray.train</span>
+<span class="kn">from</span> <span class="nn">ray.train</span> <span class="kn">import</span> <span class="n">Checkpoint</span>
+
+
+<span class="k">class</span> <span class="nc">CustomRayTrainReportCallback</span><span class="p">(</span><span class="n">Callback</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">on_train_epoch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trainer</span><span class="p">,</span> <span class="n">pl_module</span><span class="p">):</span>
+        <span class="n">should_checkpoint</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">current_epoch</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span>
+
+        <span class="k">with</span> <span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">tmpdir</span><span class="p">:</span>
+            <span class="c1"># Fetch metrics</span>
+            <span class="n">metrics</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">callback_metrics</span>
+            <span class="n">metrics</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">metrics</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+            <span class="c1"># Add customized metrics</span>
+            <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;epoch&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">current_epoch</span>
+            <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;custom_metric&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">123</span>
+
+            <span class="n">checkpoint</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">global_rank</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">get_context</span><span class="p">()</span><span class="o">.</span><span class="n">get_world_rank</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span>
+            <span class="k">if</span> <span class="n">global_rank</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">should_checkpoint</span><span class="p">:</span>
+                <span class="c1"># Save model checkpoint file to tmpdir</span>
+                <span class="n">ckpt_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="s2">&quot;ckpt.pt&quot;</span><span class="p">)</span>
+                <span class="n">trainer</span><span class="o">.</span><span class="n">save_checkpoint</span><span class="p">(</span><span class="n">ckpt_path</span><span class="p">,</span> <span class="n">weights_only</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+                <span class="n">checkpoint</span> <span class="o">=</span> <span class="n">Checkpoint</span><span class="o">.</span><span class="n">from_directory</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">)</span>
+
+            <span class="c1"># Report to train session</span>
+            <span class="n">ray</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="n">metrics</span><span class="o">=</span><span class="n">metrics</span><span class="p">,</span> <span class="n">checkpoint</span><span class="o">=</span><span class="n">checkpoint</span><span class="p">)</span>
+
+
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-2" name="sd-tab-set-0" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-2">
+Hugging Face Transformers</label><div class="sd-tab-content docutils">
+<p>Ray Train 利用 HuggingFace Transformers Trainer 的 <code class="docutils literal notranslate"><span class="pre">Callback</span></code> 接口
+来报告指标和检查点。</p>
+<p><strong>选项 1: 使用 Ray Train 的默认回调报告</strong></p>
+<p>我们提供了一个简单的回调实现 <a class="reference internal" href="../api/doc/ray.train.huggingface.transformers.RayTrainReportCallback.html#ray.train.huggingface.transformers.RayTrainReportCallback" title="ray.train.huggingface.transformers.RayTrainReportCallback"><code class="xref py py-class docutils literal notranslate"><span class="pre">RayTrainReportCallback</span></code></a>
+来报告检查点保存情况。您可以通过 <code class="docutils literal notranslate"><span class="pre">save_strategy</span></code> 和 <code class="docutils literal notranslate"><span class="pre">save_steps</span></code> 更改检查点频率。
+它会收集最新记录的指标并将其与最新保存的检查点一起报告。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">TrainingArguments</span>
+
+<span class="kn">from</span> <span class="nn">ray</span> <span class="kn">import</span> <span class="n">train</span>
+<span class="kn">from</span> <span class="nn">ray.train.huggingface.transformers</span> <span class="kn">import</span> <span class="n">RayTrainReportCallback</span><span class="p">,</span> <span class="n">prepare_trainer</span>
+<span class="kn">from</span> <span class="nn">ray.train.torch</span> <span class="kn">import</span> <span class="n">TorchTrainer</span>
+
+
+<span class="k">def</span> <span class="nf">train_func</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+    <span class="o">...</span>
+
+    <span class="c1"># Configure logging, saving, evaluation strategies as usual.</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">TrainingArguments</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span>
+        <span class="n">evaluation_strategy</span><span class="o">=</span><span class="s2">&quot;epoch&quot;</span><span class="p">,</span>
+        <span class="n">save_strategy</span><span class="o">=</span><span class="s2">&quot;epoch&quot;</span><span class="p">,</span>
+        <span class="n">logging_strategy</span><span class="o">=</span><span class="s2">&quot;step&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">trainer</span> <span class="o">=</span> <span class="n">transformers</span><span class="o">.</span><span class="n">Trainer</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+
+    <span class="c1"># Add a report callback to transformers Trainer</span>
+    <span class="c1"># =============================================</span>
+    <span class="n">trainer</span><span class="o">.</span><span class="n">add_callback</span><span class="p">(</span><span class="n">RayTrainReportCallback</span><span class="p">())</span>
+    <span class="n">trainer</span> <span class="o">=</span> <span class="n">prepare_trainer</span><span class="p">(</span><span class="n">trainer</span><span class="p">)</span>
+
+    <span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+
+
+<span class="n">ray_trainer</span> <span class="o">=</span> <span class="n">TorchTrainer</span><span class="p">(</span>
+    <span class="n">train_func</span><span class="p">,</span>
+    <span class="n">run_config</span><span class="o">=</span><span class="n">train</span><span class="o">.</span><span class="n">RunConfig</span><span class="p">(</span>
+        <span class="n">checkpoint_config</span><span class="o">=</span><span class="n">train</span><span class="o">.</span><span class="n">CheckpointConfig</span><span class="p">(</span>
+            <span class="n">num_to_keep</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+            <span class="n">checkpoint_score_attribute</span><span class="o">=</span><span class="s2">&quot;eval_loss&quot;</span><span class="p">,</span>  <span class="c1"># The monitoring metric</span>
+            <span class="n">checkpoint_score_order</span><span class="o">=</span><span class="s2">&quot;min&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>请注意， <a class="reference internal" href="../api/doc/ray.train.huggingface.transformers.RayTrainReportCallback.html#ray.train.huggingface.transformers.RayTrainReportCallback" title="ray.train.huggingface.transformers.RayTrainReportCallback"><code class="xref py py-class docutils literal notranslate"><span class="pre">RayTrainReportCallback</span></code></a>
+将最新的指标和检查点绑定在一起，
+用户可以正确配置 <code class="docutils literal notranslate"><span class="pre">logging_strategy</span></code>， <code class="docutils literal notranslate"><span class="pre">save_strategy</span></code> 和 <code class="docutils literal notranslate"><span class="pre">evaluation_strategy</span></code>
+来确保监控指标与检查点保存在同一步骤记录。</p>
+<p>例如，评估指标（在本例中的 <code class="docutils literal notranslate"><span class="pre">eval_loss</span></code>）在评估期间被记录。
+如果用户希望根据 <code class="docutils literal notranslate"><span class="pre">eval_loss</span></code> 保留最佳的 3 个检查点，
+他们应该调整保存和评估频率。以下是两个有效配置的示例：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">args</span> <span class="o">=</span> <span class="n">TrainingArguments</span><span class="p">(</span>
+    <span class="o">...</span><span class="p">,</span>
+    <span class="n">evaluation_strategy</span><span class="o">=</span><span class="s2">&quot;epoch&quot;</span><span class="p">,</span>
+    <span class="n">save_strategy</span><span class="o">=</span><span class="s2">&quot;epoch&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">args</span> <span class="o">=</span> <span class="n">TrainingArguments</span><span class="p">(</span>
+    <span class="o">...</span><span class="p">,</span>
+    <span class="n">evaluation_strategy</span><span class="o">=</span><span class="s2">&quot;steps&quot;</span><span class="p">,</span>
+    <span class="n">save_strategy</span><span class="o">=</span><span class="s2">&quot;steps&quot;</span><span class="p">,</span>
+    <span class="n">eval_steps</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+    <span class="n">save_steps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># And more ...</span>
+</pre></div>
+</div>
+<p><strong>选项 2: 实现自定义回调</strong></p>
+<p>如果您觉得 Ray Train 的默认 <a class="reference internal" href="../api/doc/ray.train.huggingface.transformers.RayTrainReportCallback.html#ray.train.huggingface.transformers.RayTrainReportCallback" title="ray.train.huggingface.transformers.RayTrainReportCallback"><code class="xref py py-class docutils literal notranslate"><span class="pre">RayTrainReportCallback</span></code></a>
+不足以满足您的用例，您也可以自己实现回调！
+下面是一个收集最新指标并报告保存检查点的示例实现。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray</span> <span class="kn">import</span> <span class="n">train</span>
+
+<span class="kn">from</span> <span class="nn">transformers.trainer_callback</span> <span class="kn">import</span> <span class="n">TrainerCallback</span>
+
+
+<span class="k">class</span> <span class="nc">MyTrainReportCallback</span><span class="p">(</span><span class="n">TrainerCallback</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="nf">on_log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">control</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">logs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Log is called on evaluation step and logging step.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">logs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">on_save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">control</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Event called after a checkpoint save.&quot;&quot;&quot;</span>
+
+        <span class="n">checkpoint</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">train</span><span class="o">.</span><span class="n">get_context</span><span class="p">()</span><span class="o">.</span><span class="n">get_world_rank</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># Build a Ray Train Checkpoint from the latest checkpoint</span>
+            <span class="n">checkpoint_path</span> <span class="o">=</span> <span class="n">transformers</span><span class="o">.</span><span class="n">trainer</span><span class="o">.</span><span class="n">get_last_checkpoint</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output_dir</span><span class="p">)</span>
+            <span class="n">checkpoint</span> <span class="o">=</span> <span class="n">Checkpoint</span><span class="o">.</span><span class="n">from_directory</span><span class="p">(</span><span class="n">checkpoint_path</span><span class="p">)</span>
+
+        <span class="c1"># Report to Ray Train with up-to-date metrics</span>
+        <span class="n">ray</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="n">metrics</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="p">,</span> <span class="n">checkpoint</span><span class="o">=</span><span class="n">checkpoint</span><span class="p">)</span>
+
+        <span class="c1"># Clear the metrics buffer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span> <span class="o">=</span> <span class="p">{}</span>
+
+
+</pre></div>
+</div>
+<p>您可以通过实现自己的 Transformers Trainer 回调来确定何时报告（<code class="docutils literal notranslate"><span class="pre">on_save</span></code>， <code class="docutils literal notranslate"><span class="pre">on_epoch_end</span></code>， <code class="docutils literal notranslate"><span class="pre">on_evaluate</span></code>）
+以及报告什么（自定义指标和检查点文件）</p>
+</div>
+</div>
+<section id="worker">
+<span id="train-distributed-checkpointing"></span><h3>保存来自多个 worker 的检查点（分布式检查点）<a class="headerlink" href="#worker" title="Permalink to this headline">#</a></h3>
+<p>在每个 worker 仅具有完整模型的一个分片的模型并行训练策略中，
+您可以从每个 worker 并行保存和报告检查点分片。</p>
+<figure class="align-default" id="id9">
+<img alt="../../_images/persistent_storage_checkpoint.png" src="../../_images/persistent_storage_checkpoint.png" />
+<figcaption>
+<p><span class="caption-text">Ray Train 的分布式检查点。每个 worker 将自己的检查点分片独立上传到持久存储。</span><a class="headerlink" href="#id9" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>分布式检查点是进行
+模型并行训练（例如 DeepSpeed、FSDP、Megatron-LM）时保存检查点的最佳实践。</p>
+<p>有两个主要好处：</p>
+<ol class="arabic">
+<li><p><strong>速度更快，从而减少空闲时间。</strong> 更快的检查点会激励更频繁的检查点！</p>
+<p>每个 worker 都可以并行上传其检查点分片，从而最大限度地提高集群的网络带宽。
+集群不再由单个节点上传大小为“M”的完整模型，
+而是将负载分散到“N”个节点上，
+每个节点上传大小为“M / N”的分片。</p>
+</li>
+<li><p><strong>分布式检查点避免需要将完整模型收集到单个工作者的 CPU 内存上。</strong></p>
+<p>此收集操作对执行检查点的 worker 提出了很大的 CPU 内存要求，并且是 OOM 错误的常见来源。</p>
+</li>
+</ol>
+<p>以下是使用 PyTorch 进行分布式检查点的示例：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray</span> <span class="kn">import</span> <span class="n">train</span>
+<span class="kn">from</span> <span class="nn">ray.train</span> <span class="kn">import</span> <span class="n">Checkpoint</span>
+<span class="kn">from</span> <span class="nn">ray.train.torch</span> <span class="kn">import</span> <span class="n">TorchTrainer</span>
+
+
+<span class="k">def</span> <span class="nf">train_func</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+    <span class="o">...</span>
+
+    <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">temp_checkpoint_dir</span><span class="p">:</span>
+        <span class="n">rank</span> <span class="o">=</span> <span class="n">train</span><span class="o">.</span><span class="n">get_context</span><span class="p">()</span><span class="o">.</span><span class="n">get_world_rank</span><span class="p">()</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span>
+            <span class="o">...</span><span class="p">,</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">temp_checkpoint_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;model-rank=</span><span class="si">{</span><span class="n">rank</span><span class="si">}</span><span class="s2">.pt&quot;</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">checkpoint</span> <span class="o">=</span> <span class="n">Checkpoint</span><span class="o">.</span><span class="n">from_directory</span><span class="p">(</span><span class="n">temp_checkpoint_dir</span><span class="p">)</span>
+
+        <span class="n">train</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="n">metrics</span><span class="p">,</span> <span class="n">checkpoint</span><span class="o">=</span><span class="n">checkpoint</span><span class="p">)</span>
+
+
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">TorchTrainer</span><span class="p">(</span>
+    <span class="n">train_func</span><span class="p">,</span>
+    <span class="n">scaling_config</span><span class="o">=</span><span class="n">train</span><span class="o">.</span><span class="n">ScalingConfig</span><span class="p">(</span><span class="n">num_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+    <span class="n">run_config</span><span class="o">=</span><span class="n">train</span><span class="o">.</span><span class="n">RunConfig</span><span class="p">(</span><span class="n">storage_path</span><span class="o">=</span><span class="s2">&quot;s3://bucket/&quot;</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="c1"># The checkpoint in cloud storage will contain: model-rank=0.pt, model-rank=1.pt</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>具有相同名称的检查点文件将在 worker 之间发生冲突。
+您可以通过向检查点文件添加特定于等级的后缀来解决此问题。</p>
+<p>请注意，文件名冲突不会出错，
+但会导致最后上传的版本被保留。
+如果文件内容在所有 Worker 中都相同，则这没有问题。</p>
+<p>DeepSpeed 等框架提供的模型分片保存实用程序将创建
+特定于等级的文件名，因此您通常不需要担心这一点。</p>
+</div>
+</section>
+</section>
+<section id="train-dl-configure-checkpoints">
+<span id="id5"></span><h2>配置检查点<a class="headerlink" href="#train-dl-configure-checkpoints" title="Permalink to this headline">#</a></h2>
+<p>Ray Train 通过 <a class="reference internal" href="../api/doc/ray.train.CheckpointConfig.html#ray.train.CheckpointConfig" title="ray.train.CheckpointConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">CheckpointConfig</span></code></a> 提供了一些检查点配置选项。
+主要配置是仅保留 top <code class="docutils literal notranslate"><span class="pre">K</span></code> 与指标相关的顶级检查点。
+性能较差的检查点将被删除以节省存储空间。默认情况下，所有检查点都会保留。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray.train</span> <span class="kn">import</span> <span class="n">RunConfig</span><span class="p">,</span> <span class="n">CheckpointConfig</span>
+
+<span class="c1"># Example 1: Only keep the 2 *most recent* checkpoints and delete the others.</span>
+<span class="n">run_config</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span><span class="n">checkpoint_config</span><span class="o">=</span><span class="n">CheckpointConfig</span><span class="p">(</span><span class="n">num_to_keep</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+
+
+<span class="c1"># Example 2: Only keep the 2 *best* checkpoints and delete the others.</span>
+<span class="n">run_config</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span>
+    <span class="n">checkpoint_config</span><span class="o">=</span><span class="n">CheckpointConfig</span><span class="p">(</span>
+        <span class="n">num_to_keep</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="c1"># *Best* checkpoints are determined by these params:</span>
+        <span class="n">checkpoint_score_attribute</span><span class="o">=</span><span class="s2">&quot;mean_accuracy&quot;</span><span class="p">,</span>
+        <span class="n">checkpoint_score_order</span><span class="o">=</span><span class="s2">&quot;max&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="c1"># This will store checkpoints on S3.</span>
+    <span class="n">storage_path</span><span class="o">=</span><span class="s2">&quot;s3://remote-bucket/location&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>如果您想通过 <a class="reference internal" href="../api/doc/ray.train.CheckpointConfig.html#ray.train.CheckpointConfig" title="ray.train.CheckpointConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">CheckpointConfig</span></code></a> 保存与某个指标相关的 top <code class="docutils literal notranslate"><span class="pre">num_to_keep</span></code> 检查点，
+请确保该指标始终与检查点一起报告。</p>
+</div>
+</section>
+<section id="id6">
+<h2>训练后使用检查点<a class="headerlink" href="#id6" title="Permalink to this headline">#</a></h2>
+<p>最近的检查点可通过 <a class="reference internal" href="../api/doc/ray.train.Result.html#ray.train.Result.checkpoint" title="ray.train.Result.checkpoint"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Result.checkpoint</span></code></a> 访问。</p>
+<p>完成的持久化检查点列表可通过 <a class="reference internal" href="../api/doc/ray.train.Result.html#ray.train.Result.best_checkpoints" title="ray.train.Result.best_checkpoints"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Result.best_checkpoints</span></code></a> 访问。
+如果设置了 <a class="reference internal" href="../api/doc/ray.train.CheckpointConfig.html#ray.train.CheckpointConfig" title="ray.train.CheckpointConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">CheckpointConfig(num_to_keep)</span></code></a>， 此列表将包含最佳的 <code class="docutils literal notranslate"><span class="pre">num_to_keep</span></code> 个保存点。</p>
+<p>参阅 <a class="reference internal" href="results.html#train-inspect-results"><span class="std std-ref">检查训练结果</span></a> ，了解检查训练结果的完整指南。</p>
+<p><a class="reference internal" href="../api/doc/ray.train.Checkpoint.as_directory.html#ray.train.Checkpoint.as_directory" title="ray.train.Checkpoint.as_directory"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Checkpoint.as_directory</span></code></a>
+和 <a class="reference internal" href="../api/doc/ray.train.Checkpoint.to_directory.html#ray.train.Checkpoint.to_directory" title="ray.train.Checkpoint.to_directory"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Checkpoint.to_directory</span></code></a>
+是与 Train 检查点交互的两个主要 API：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span> <span class="nn">ray.train</span> <span class="kn">import</span> <span class="n">Checkpoint</span>
+
+<span class="c1"># Create a sample locally available checkpoint</span>
+<span class="n">example_checkpoint_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;/tmp/test-checkpoint&quot;</span><span class="p">)</span>
+<span class="n">example_checkpoint_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">()</span>
+<span class="n">example_checkpoint_dir</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;model.pt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">touch</span><span class="p">()</span>
+<span class="n">checkpoint</span> <span class="o">=</span> <span class="n">Checkpoint</span><span class="o">.</span><span class="n">from_directory</span><span class="p">(</span><span class="n">example_checkpoint_dir</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">checkpoint</span><span class="o">.</span><span class="n">as_directory</span><span class="p">()</span> <span class="k">as</span> <span class="n">checkpoint_dir</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">Path</span><span class="p">(</span><span class="n">checkpoint_dir</span><span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;model.pt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+
+<span class="n">checkpoint_dir</span> <span class="o">=</span> <span class="n">checkpoint</span><span class="o">.</span><span class="n">to_directory</span><span class="p">()</span>
+<span class="k">assert</span> <span class="n">Path</span><span class="p">(</span><span class="n">checkpoint_dir</span><span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;model.pt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="train-dl-loading-checkpoints">
+<span id="id7"></span><h2>从检查点恢复训练状态<a class="headerlink" href="#train-dl-loading-checkpoints" title="Permalink to this headline">#</a></h2>
+<p>为了实现容错功能，您应该修改训练循环以从 <a class="reference internal" href="../api/doc/ray.train.Checkpoint.html#ray.train.Checkpoint" title="ray.train.Checkpoint"><code class="xref py py-class docutils literal notranslate"><span class="pre">Checkpoint</span></code></a> 中恢复训练状态。</p>
+<p>可以使用 <a class="reference internal" href="../api/doc/ray.train.get_checkpoint.html#ray.train.get_checkpoint" title="ray.train.get_checkpoint"><code class="xref py py-func docutils literal notranslate"><span class="pre">ray.train.get_checkpoint</span></code></a> 来在训练功能中
+访问要恢复的 <a class="reference internal" href="../api/doc/ray.train.Checkpoint.html#ray.train.Checkpoint" title="ray.train.Checkpoint"><code class="xref py py-class docutils literal notranslate"><span class="pre">Checkpoint</span></code></a>。</p>
+<p><a class="reference internal" href="../api/doc/ray.train.get_checkpoint.html#ray.train.get_checkpoint" title="ray.train.get_checkpoint"><code class="xref py py-func docutils literal notranslate"><span class="pre">ray.train.get_checkpoint</span></code></a> 返回的检查点以两种方式填充：</p>
+<ol class="arabic simple">
+<li><p>它可以自动填充为最新报告的检查点，例如在 <a class="reference internal" href="fault-tolerance.html#train-fault-tolerance"><span class="std std-ref">自动错误恢复</span></a> 或 <a class="reference internal" href="fault-tolerance.html#train-restore-guide"><span class="std std-ref">手动恢复</span></a>。</p></li>
+<li><p>可以通过将检查点传递给 Ray <a class="reference internal" href="../api/doc/ray.train.trainer.BaseTrainer.html#ray.train.trainer.BaseTrainer" title="ray.train.trainer.BaseTrainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Trainer</span></code></a> 的参数 <code class="docutils literal notranslate"><span class="pre">resume_from_checkpoint</span></code> 来手动填充它。
+这对于使用上一次运行的检查点初始化新的训练运行很有用。</p></li>
+</ol>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-3" name="sd-tab-set-1" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-3">
+Native PyTorch</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">from</span> <span class="nn">torch.optim</span> <span class="kn">import</span> <span class="n">Adam</span>
+
+<span class="kn">import</span> <span class="nn">ray.train.torch</span>
+<span class="kn">from</span> <span class="nn">ray</span> <span class="kn">import</span> <span class="n">train</span>
+<span class="kn">from</span> <span class="nn">ray.train</span> <span class="kn">import</span> <span class="n">Checkpoint</span><span class="p">,</span> <span class="n">ScalingConfig</span>
+<span class="kn">from</span> <span class="nn">ray.train.torch</span> <span class="kn">import</span> <span class="n">TorchTrainer</span>
+
+
+<span class="k">def</span> <span class="nf">train_func</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="c1"># create a toy dataset</span>
+    <span class="c1"># data   : X - dim = (n, 4)</span>
+    <span class="c1"># target : Y - dim = (n, 1)</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">4</span><span class="p">)))</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
+    <span class="c1"># toy neural network : 1-layer</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">3e-4</span><span class="p">)</span>
+    <span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">()</span>
+
+    <span class="c1"># ====== Resume training state from the checkpoint. ======</span>
+    <span class="n">start_epoch</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">checkpoint</span> <span class="o">=</span> <span class="n">train</span><span class="o">.</span><span class="n">get_checkpoint</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">checkpoint</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">checkpoint</span><span class="o">.</span><span class="n">as_directory</span><span class="p">()</span> <span class="k">as</span> <span class="n">checkpoint_dir</span><span class="p">:</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">checkpoint_dir</span><span class="p">,</span> <span class="s2">&quot;model.pt&quot;</span><span class="p">)))</span>
+            <span class="n">optimizer</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">checkpoint_dir</span><span class="p">,</span> <span class="s2">&quot;optimizer.pt&quot;</span><span class="p">))</span>
+            <span class="p">)</span>
+            <span class="n">start_epoch</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">checkpoint_dir</span><span class="p">,</span> <span class="s2">&quot;extra_state.pt&quot;</span><span class="p">))[</span><span class="s2">&quot;epoch&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="p">)</span>
+    <span class="c1"># ========================================================</span>
+
+    <span class="c1"># Wrap the model in DDP</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">torch</span><span class="o">.</span><span class="n">prepare_model</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start_epoch</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;num_epochs&quot;</span><span class="p">]):</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+        <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+        <span class="n">metrics</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;loss&quot;</span><span class="p">:</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()}</span>
+
+        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">temp_checkpoint_dir</span><span class="p">:</span>
+            <span class="n">checkpoint</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="n">should_checkpoint</span> <span class="o">=</span> <span class="n">epoch</span> <span class="o">%</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;checkpoint_freq&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+            <span class="c1"># In standard DDP training, where the model is the same across all ranks,</span>
+            <span class="c1"># only the global rank 0 worker needs to save and report the checkpoint</span>
+            <span class="k">if</span> <span class="n">train</span><span class="o">.</span><span class="n">get_context</span><span class="p">()</span><span class="o">.</span><span class="n">get_world_rank</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">should_checkpoint</span><span class="p">:</span>
+                <span class="c1"># === Make sure to save all state needed for resuming training ===</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span>
+                    <span class="n">model</span><span class="o">.</span><span class="n">module</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span>  <span class="c1"># NOTE: Unwrap the model.</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">temp_checkpoint_dir</span><span class="p">,</span> <span class="s2">&quot;model.pt&quot;</span><span class="p">),</span>
+                <span class="p">)</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span>
+                    <span class="n">optimizer</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">temp_checkpoint_dir</span><span class="p">,</span> <span class="s2">&quot;optimizer.pt&quot;</span><span class="p">),</span>
+                <span class="p">)</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span>
+                    <span class="p">{</span><span class="s2">&quot;epoch&quot;</span><span class="p">:</span> <span class="n">epoch</span><span class="p">},</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">temp_checkpoint_dir</span><span class="p">,</span> <span class="s2">&quot;extra_state.pt&quot;</span><span class="p">),</span>
+                <span class="p">)</span>
+                <span class="c1"># ================================================================</span>
+                <span class="n">checkpoint</span> <span class="o">=</span> <span class="n">Checkpoint</span><span class="o">.</span><span class="n">from_directory</span><span class="p">(</span><span class="n">temp_checkpoint_dir</span><span class="p">)</span>
+
+            <span class="n">train</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="n">metrics</span><span class="p">,</span> <span class="n">checkpoint</span><span class="o">=</span><span class="n">checkpoint</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">epoch</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Intentional error to showcase restoration!&quot;</span><span class="p">)</span>
+
+
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">TorchTrainer</span><span class="p">(</span>
+    <span class="n">train_func</span><span class="p">,</span>
+    <span class="n">train_loop_config</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;num_epochs&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">},</span>
+    <span class="n">scaling_config</span><span class="o">=</span><span class="n">ScalingConfig</span><span class="p">(</span><span class="n">num_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+    <span class="n">run_config</span><span class="o">=</span><span class="n">train</span><span class="o">.</span><span class="n">RunConfig</span><span class="p">(</span><span class="n">failure_config</span><span class="o">=</span><span class="n">train</span><span class="o">.</span><span class="n">FailureConfig</span><span class="p">(</span><span class="n">max_failures</span><span class="o">=</span><span class="mi">1</span><span class="p">)),</span>
+<span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+<span class="c1"># Seed a training run with a checkpoint using `resume_from_checkpoint`</span>
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">TorchTrainer</span><span class="p">(</span>
+    <span class="n">train_func</span><span class="p">,</span>
+    <span class="n">train_loop_config</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;num_epochs&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">},</span>
+    <span class="n">scaling_config</span><span class="o">=</span><span class="n">ScalingConfig</span><span class="p">(</span><span class="n">num_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+    <span class="n">resume_from_checkpoint</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">checkpoint</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-4" name="sd-tab-set-1" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-4">
+PyTorch Lightning</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">ray</span> <span class="kn">import</span> <span class="n">train</span>
+<span class="kn">from</span> <span class="nn">ray.train</span> <span class="kn">import</span> <span class="n">Checkpoint</span>
+<span class="kn">from</span> <span class="nn">ray.train.torch</span> <span class="kn">import</span> <span class="n">TorchTrainer</span>
+<span class="kn">from</span> <span class="nn">ray.train.lightning</span> <span class="kn">import</span> <span class="n">RayTrainReportCallback</span>
+
+
+<span class="k">def</span> <span class="nf">train_func_per_worker</span><span class="p">():</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">MyLightningModule</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+    <span class="n">datamodule</span> <span class="o">=</span> <span class="n">MyLightningDataModule</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+    <span class="n">trainer</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Trainer</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">RayTrainReportCallback</span><span class="p">()])</span>
+
+    <span class="n">checkpoint</span> <span class="o">=</span> <span class="n">train</span><span class="o">.</span><span class="n">get_checkpoint</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">checkpoint</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">checkpoint</span><span class="o">.</span><span class="n">as_directory</span><span class="p">()</span> <span class="k">as</span> <span class="n">ckpt_dir</span><span class="p">:</span>
+            <span class="n">ckpt_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ckpt_dir</span><span class="p">,</span> <span class="s2">&quot;checkpoint.ckpt&quot;</span><span class="p">)</span>
+            <span class="n">trainer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">datamodule</span><span class="o">=</span><span class="n">datamodule</span><span class="p">,</span> <span class="n">ckpt_path</span><span class="o">=</span><span class="n">ckpt_path</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">trainer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">datamodule</span><span class="o">=</span><span class="n">datamodule</span><span class="p">)</span>
+
+
+<span class="c1"># Build a Ray Train Checkpoint</span>
+<span class="c1"># Suppose we have a Lightning checkpoint at `s3://bucket/ckpt_dir/checkpoint.ckpt`</span>
+<span class="n">checkpoint</span> <span class="o">=</span> <span class="n">Checkpoint</span><span class="p">(</span><span class="s2">&quot;s3://bucket/ckpt_dir&quot;</span><span class="p">)</span>
+
+<span class="c1"># Resume training from checkpoint file</span>
+<span class="n">ray_trainer</span> <span class="o">=</span> <span class="n">TorchTrainer</span><span class="p">(</span>
+    <span class="n">train_func_per_worker</span><span class="p">,</span>
+    <span class="n">scaling_config</span><span class="o">=</span><span class="n">train</span><span class="o">.</span><span class="n">ScalingConfig</span><span class="p">(</span><span class="n">num_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+    <span class="n">resume_from_checkpoint</span><span class="o">=</span><span class="n">checkpoint</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>在这些示例中，<a class="reference internal" href="../api/doc/ray.train.Checkpoint.as_directory.html#ray.train.Checkpoint.as_directory" title="ray.train.Checkpoint.as_directory"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Checkpoint.as_directory</span></code></a>
+用于将检查点内容作为本地目录查看。</p>
+<p><em>如果检查点指向本地目录</em> ，则此方法仅返回本地目录路径而不进行复制。</p>
+<p><em>如果检查点指向远程目录</em>，此方法将检查点下载
+到本地临时目录并返回临时目录的路径。</p>
+<p><strong>如果同一节点上的多个进程同时调用此方法，</strong>
+则只有一个进程会执行下载，而其他进程则等待下载完成。
+下载完成后，所有进程都会收到相同的本地（临时）目录以供读取。</p>
+<p>一旦所有进程完成检查点工作，临时目录就会被清理。</p>
+</div>
+</section>
+</section>
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="monitoring-logging.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">监控和记录指标</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="experiment-tracking.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">实现追踪</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><!-- Override the footer area for the sphinx-book-theme to include the CSAT widget -->
+<div id="csat">
+  <div id="csat-feedback-received" class="csat-hidden">
+    <span>谢谢你的反馈！</span>
+  </div>
+  <div id="csat-inputs">
+    <span>是否能帮助到你？</span>
+    <div id="csat-yes" class="csat-button">
+      <svg id="csat-yes-icon" class="csat-hidden csat-icon" width="18" height="13" viewBox="0 0 18 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 10.172L16.1922 0.979004L17.6072 2.393L7.00023 13L0.63623 6.636L2.05023 5.222L7.00023 10.172Z" fill="black"/>
+      </svg>
+      <span>是<span>
+    </div>
+    <div id="csat-no" class="csat-button">
+      <svg id="csat-no-icon" class="csat-hidden csat-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 5.58599L11.9502 0.635986L13.3642 2.04999L8.41423 6.99999L13.3642 11.95L11.9502 13.364L7.00023 8.41399L2.05023 13.364L0.63623 11.95L5.58623 6.99999L0.63623 2.04999L2.05023 0.635986L7.00023 5.58599Z" fill="black"/>
+      </svg>
+      <span>否<span>
+    </div>
+  </div>
+  <div id="csat-textarea-group" class="csat-hidden">
+    <span id="csat-feedback-label">反馈</span>
+    <textarea id="csat-textarea"></textarea>
+    <div id="csat-submit">提交</div>
+  </div>
+</div><p>
+  
+    By The Ray Team<br/>
+  
+      &copy; Copyright 2024, The Ray Team.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

@@ -1,0 +1,1038 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Kubernetes 上的 Ray Train XGBoostTrainer &#8212; Ray 2.7.2</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/termynal.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/js/versionwarning.js"></script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+    <script defer="defer" src="../../../_static/js/docsearch.js"></script>
+    <script defer="defer" src="../../../_static/js/csat.js"></script>
+    <script defer="defer" src="../../../_static/js/termynal.js"></script>
+    <script defer="defer" src="../../../_static/js/custom.js"></script>
+    <script defer="defer" src="../../../_static/js/top-navigation.js"></script>
+    <script src="../../../_static/js/tags.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <link rel="canonical" href="https://docs.ray.io/en/latest/cluster/kubernetes/examples/ml-example.html" />
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="在 Kubernetes 上使用 GPU 训练 PyTorch ResNet 模型" href="gpu-training-example.html" />
+    <link rel="prev" title="示例" href="../examples.html" />
+
+<!-- Fathom - beautiful, simple website analytics -->
+<script src="https://deer.ray.io/script.js" data-site="WYYANYOS" defer></script>
+<!-- / Fathom -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-110413294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-110413294-1');
+</script>
+
+<script
+  src="https://widget.kapa.ai/kapa-widget.bundle.js"
+  data-website-id="18a8c339-4ec5-43c8-8182-db3f2bc8c6b6"
+  data-project-name="Ray"
+  data-project-color="#2C2C2C"
+  data-project-logo="https://global.discourse-cdn.com/business7/uploads/ray/original/1X/8f4dcb72f7cd34e2a332d548bd65860994bc8ff1.png"
+  data-modal-disclaimer = "Results are automated and may be incorrect or contain inappropriate information. Do not include any personal data or confidential information."
+  data-modal-title = "Ray Docs AI - Ask a Question"
+  data-button-position-bottom = "60px"
+></script>
+
+<script>
+(function(apiKey){
+    (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
+    v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
+        o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
+        y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
+        z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
+
+        pendo.initialize({
+            visitor: {
+                id: 'VISITOR-UNIQUE-ID'
+            },
+            account: {
+                id: 'ACCOUNT-UNIQUE-ID'
+            }
+        });
+})('f89fa48a-6dd7-4d7c-67cf-a8051ed891f2');
+</script>
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"><div class='topnav'></div></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Ray 2.7.2</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main Navigation">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../index.html">
+                    欢迎来到 Ray ！
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Ray
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/index.html">
+   概述「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/getting-started.html">
+   入门「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/installation.html">
+   安装「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/use-cases.html">
+   用例「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/examples.html">
+   示例库「1%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/ray-libraries.html">
+   生态「3%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-core/walkthrough.html">
+   Ray 核心「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../data/data.html">
+   Ray 数据「85%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../train/train.html">
+   Ray 训练「95%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../tune/index.html">
+   Ray 调参「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../serve/index.html">
+   Ray Serve「1%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../rllib/index.html">
+   Ray RLlib「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-more-libs/index.html">
+   更多类库「40%」
+  </a>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="../../getting-started.html">
+   Ray 集群「100%」
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../key-concepts.html">
+     关键概念
+    </a>
+   </li>
+   <li class="toctree-l2 current active has-children">
+    <a class="reference internal" href="../index.html">
+     在 Kubernetes 部署
+    </a>
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+    <label for="toctree-checkbox-2">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul class="current">
+     <li class="toctree-l3">
+      <a class="reference internal" href="../getting-started.html">
+       KubeRay 入门
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../user-guides.html">
+       用户指引
+      </a>
+     </li>
+     <li class="toctree-l3 current active has-children">
+      <a class="reference internal" href="../examples.html">
+       示例
+      </a>
+      <input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+      <label for="toctree-checkbox-3">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul class="current">
+       <li class="toctree-l4 current active">
+        <a class="current reference internal" href="#">
+         Kubernetes 上的 Ray Train XGBoostTrainer
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="gpu-training-example.html">
+         在 Kubernetes 上使用 GPU 训练 PyTorch ResNet 模型
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="stable-diffusion-rayservice.html">
+         在 Kubernetes 上提供 StableDiffusion text-to-image 模型服务
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="mobilenet-rayservice.html">
+         在 Kubernetes 上提供 MobileNet 图像分类器
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="text-summarizer-rayservice.html">
+         Kubernetes 上提供文本摘要模型服务
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="rayjob-batch-inference-example.html">
+         RayJob 批量推理示例
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../k8s-ecosystem.html">
+       KubeRay 生态系统
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../benchmarks.html">
+       KubeRay 基准测试
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../troubleshooting.html">
+       KubeRay 故障排除
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../references.html">
+       API 参考
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../vms/index.html">
+     在虚拟机部署
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../metrics.html">
+     指标收集和监控
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../configure-manage-dashboard.html">
+     配置管理 Ray 仪表盘
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../running-applications/index.html">
+     应用指引
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../faq.html">
+     Ray 集群是否支持多租户？
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../package-overview.html">
+     Ray Cluster 管理 API
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-observability/index.html">
+   监控调试「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-references/api.html">
+   参考「20%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-contribute/index.html">
+   开发者指引「30%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-security/index.html">
+   安全「100%」
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/ray-project/ray"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/issues/new?title=Issue%20on%20page%20%2Fcluster/kubernetes/examples/ml-example.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/edit/master/doc/source/cluster/kubernetes/examples/ml-example.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../../_sources/cluster/kubernetes/examples/ml-example.md.txt"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#gcp-kubernetes">
+   GCP 上的 Kubernetes 基础设施设置
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#kuberay-operator">
+   部署 KubeRay operator
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ray-cluster">
+   部署 Ray cluster
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   运行工作负载
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id2">
+     连接到集群。
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id3">
+     提交工作负载。
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id4">
+     观察进度。
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#job">
+       Job 日志
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#kubectl">
+       Kubectl
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#ray">
+       Ray 仪表盘
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id5">
+       Ray 状态
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id6">
+     Job 完成
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id7">
+       基准测试结果
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id8">
+       模型参数
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id9">
+       清理
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Kubernetes 上的 Ray Train XGBoostTrainer</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#gcp-kubernetes">
+   GCP 上的 Kubernetes 基础设施设置
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#kuberay-operator">
+   部署 KubeRay operator
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ray-cluster">
+   部署 Ray cluster
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   运行工作负载
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id2">
+     连接到集群。
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id3">
+     提交工作负载。
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id4">
+     观察进度。
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#job">
+       Job 日志
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#kubectl">
+       Kubectl
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#ray">
+       Ray 仪表盘
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id5">
+       Ray 状态
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id6">
+     Job 完成
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id7">
+       基准测试结果
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id8">
+       模型参数
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id9">
+       清理
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="kubernetes-ray-train-xgboosttrainer">
+<span id="kuberay-ml-example"></span><h1>Kubernetes 上的 Ray Train XGBoostTrainer<a class="headerlink" href="#kubernetes-ray-train-xgboosttrainer" title="Permalink to this headline">#</a></h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>要了解 Kubernetes 上 Ray 的基础知识，我们建议先查看
+<a class="reference internal" href="../getting-started.html#kuberay-quickstart"><span class="std std-ref">入门指南</span></a>。</p>
+</div>
+<p>在本指南中，我们向您展示如何在 Kubernetes 基础架构上运行 Ray 机器学习工作负载示例。</p>
+<p>我们将使用 100 GB 的训练集运行 Ray 的 <a class="reference internal" href="../../../train/benchmarks.html#xgboost-benchmark"><span class="std std-ref">XGBoost 训练基准</span></a> 。
+要了解有关使用 Ray 的 XGBoostTrainer 的更多信息，请查看 <a class="reference internal" href="../../../train/distributed-xgboost-lightgbm.html#train-gbdt-guide"><span class="std std-ref">the XGBoostTrainer 文档</span></a>。</p>
+<section id="gcp-kubernetes">
+<h2>GCP 上的 Kubernetes 基础设施设置<a class="headerlink" href="#gcp-kubernetes" title="Permalink to this headline">#</a></h2>
+<p>本文档提供了 GCP 创建 Kubernetes 集群的说明，但任何主要云提供商都可以使用类似的设置。
+如果您想在其他云提供商上设置 Kubernetes 集群，请查看 <a class="reference internal" href="../user-guides/k8s-cluster-setup.html#kuberay-k8s-setup"><span class="std std-ref">入门指南</span></a> 。
+如果您有现有的 Kubernetes 集群，则可以忽略此步骤。</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set up a cluster on Google Kubernetes Engine (GKE)</span>
+gcloud container clusters create autoscaler-ray-cluster <span class="se">\</span>
+    --num-nodes<span class="o">=</span><span class="m">10</span> --zone<span class="o">=</span>us-central1-c --machine-type e2-standard-16 --disk-size 1000GB
+
+<span class="c1"># (Optional) Set up a cluster with autopilot on Google Kubernetes Engine (GKE).</span>
+<span class="c1"># The following command creates an autoscaling node pool with a 1 node minimum and a 10 node maximum.</span>
+<span class="c1"># The 1 static node will be used to run the Ray head pod. This node may also host the KubeRay</span>
+<span class="c1"># operator and Kubernetes system components. After the workload is submitted, 9 additional nodes will</span>
+<span class="c1"># scale up to accommodate Ray worker pods. These nodes will scale back down after the workload is complete.</span>
+gcloud container clusters create autoscaler-ray-cluster <span class="se">\</span>
+    --num-nodes<span class="o">=</span><span class="m">1</span> --min-nodes <span class="m">1</span> --max-nodes <span class="m">10</span> --enable-autoscaling <span class="se">\</span>
+    --zone<span class="o">=</span>us-central1-c --machine-type e2-standard-16 --disk-size 1000GB
+</pre></div>
+</div>
+<p>确保已连接到 Kubernetes 集群。对于 GCP，您可以通过以下方式执行此操作：</p>
+<ul class="simple">
+<li><p>导航到您的 GKE 集群页面，然后单击“连接”按钮。然后复制“命令行访问”。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gcloud</span> <span class="pre">container</span> <span class="pre">clusters</span> <span class="pre">get-credentials</span> <span class="pre">&lt;your-cluster-name&gt;</span> <span class="pre">--region</span> <span class="pre">&lt;your-region&gt;</span> <span class="pre">--project</span> <span class="pre">&lt;your-project&gt;</span></code> (<a class="reference external" href="https://cloud.google.com/sdk/gcloud/reference/container/clusters/get-credentials">链接</a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">kubectl</span> <span class="pre">config</span> <span class="pre">use-context</span></code> (<a class="reference external" href="https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/">链接</a>)</p></li>
+</ul>
+<p>对于本指南中的工作负载，建议使用具有以下属性的
+Kubernetes 节点池或节点组：</p>
+<ul class="simple">
+<li><p>共 10 个节点</p></li>
+<li><p>每个节点容量为 16 个 CPU 和 64 Gi 内存。对于主要的云提供商，合适的实例类型包括</p>
+<ul>
+<li><p>m5.4xlarge（亚马逊网络服务）</p></li>
+<li><p>Standard_D5_v2 (Azure)</p></li>
+<li><p>e2-standard-16 (Google Cloud)</p></li>
+</ul>
+</li>
+<li><p>每个节点应配置1000 GB的磁盘空间（用于存储训练集）。</p></li>
+</ul>
+</section>
+<section id="kuberay-operator">
+<h2>部署 KubeRay operator<a class="headerlink" href="#kuberay-operator" title="Permalink to this headline">#</a></h2>
+<p>设置 Kubernetes 集群后，部署 KubeRay 控制器。
+有关此步骤的说明，请参阅 <a class="reference internal" href="../getting-started/raycluster-quick-start.html#kuberay-operator-deploy"><span class="std std-ref">入门指南</span></a> 。</p>
+</section>
+<section id="ray-cluster">
+<h2>部署 Ray cluster<a class="headerlink" href="#ray-cluster" title="Permalink to this headline">#</a></h2>
+<p>现在我们准备部署将执行工作负载的 Ray 集群。</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>我们将部署的 Ray 集群配置为每个 16-CPU Kubernetes 节点安排一个 Ray pod。
+鼓励但不强制要求每个 Kubernetes 节点安排一个 Ray pod。
+从广义上讲，使用几个大型 Ray pod 比使用多个小型 pod 更有效率。</p>
+</div>
+<p>我们建议查看以下命令中应用的 <a class="reference external" href="https://raw.githubusercontent.com/ray-project/ray/releases/2.0.0/doc/source/cluster/kubernetes/configs/xgboost-benchmark.yaml">配置文件</a> 。</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>kubectl apply -f https://raw.githubusercontent.com/ray-project/ray/releases/2.0.0/doc/source/cluster/kubernetes/configs/xgboost-benchmark.yaml
+</pre></div>
+</div>
+<p>将创建一个 Ray head pod 和 9 个 Ray worker pod。</p>
+<div class="admonition-ray admonition">
+<p class="admonition-title">可选：部署自动扩展 Ray 集群</p>
+<p>如果您已设置自动缩放节点组或池，
+您可能希望通过应用配置 <a class="reference external" href="https://raw.githubusercontent.com/ray-project/ray/releases/2.0.0/doc/source/cluster/kubernetes/configs/xgboost-benchmark-autoscaler.yaml">xgboost-benchmark-autoscaler.yaml</a> 来部署自动缩放集群。
+将创建一个 Ray head pod。一旦工作负载启动，Ray 自动缩放器将触发 Ray worker pod 的创建。
+然后，Kubernetes 自动缩放将创建节点来放置 Ray pod。</p>
+</div>
+</section>
+<section id="id1">
+<h2>运行工作负载<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h2>
+<p>要观察 Ray 头 pod 的启动进度，请运行以下命令。</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># If you&#39;re on MacOS, first `brew install watch`.</span>
+watch -n <span class="m">1</span> kubectl get pod
+</pre></div>
+</div>
+<p>一旦 Ray head pod 进入 <code class="docutils literal notranslate"><span class="pre">Running</span></code> 状态，我们就可以执行 XGBoost 工作负载了。
+我们将使用 <a class="reference internal" href="../../running-applications/job-submission/index.html#jobs-overview"><span class="std std-ref">Ray Job Submission</span></a> 来启动工作负载。</p>
+<section id="id2">
+<h3>连接到集群。<a class="headerlink" href="#id2" title="Permalink to this headline">#</a></h3>
+<p>在本指南中，我们使用端口转发作为试验 Ray 集群服务的简单方法。
+请参阅 <a class="reference internal" href="../user-guides/config.html#kuberay-networking"><span class="std std-ref">网络说明</span></a> 以了解生产用例。</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run the following blocking command in a separate shell.</span>
+kubectl port-forward --address <span class="m">0</span>.0.0.0 service/raycluster-xgboost-benchmark-head-svc <span class="m">8265</span>:8265
+</pre></div>
+</div>
+</section>
+<section id="id3">
+<h3>提交工作负载。<a class="headerlink" href="#id3" title="Permalink to this headline">#</a></h3>
+<p>我们将使用 <a class="reference internal" href="../../running-applications/job-submission/sdk.html#ray-job-sdk"><span class="std std-ref">Ray Job Python SDK</span></a> 提交 XGBoost 工作负载。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray.job_submission</span> <span class="kn">import</span> <span class="n">JobSubmissionClient</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">JobSubmissionClient</span><span class="p">(</span><span class="s2">&quot;http://127.0.0.1:8265&quot;</span><span class="p">)</span>
+
+<span class="n">kick_off_xgboost_benchmark</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="c1"># Clone ray. If ray is already present, don&#39;t clone again.</span>
+    <span class="s2">&quot;git clone https://github.com/ray-project/ray || true;&quot;</span>
+    <span class="c1"># Run the benchmark.</span>
+    <span class="s2">&quot; python ray/release/air_tests/air_benchmarks/workloads/xgboost_benchmark.py&quot;</span>
+    <span class="s2">&quot; --size 100G --disable-check&quot;</span>
+<span class="p">)</span>
+
+
+<span class="n">submission_id</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">submit_job</span><span class="p">(</span>
+    <span class="n">entrypoint</span><span class="o">=</span><span class="n">kick_off_xgboost_benchmark</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Use the following command to follow this Job&#39;s logs:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ray job logs &#39;</span><span class="si">{</span><span class="n">submission_id</span><span class="si">}</span><span class="s2">&#39; --follow&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>要提交工作负载，请运行上述 Python 脚本。
+该脚本在 <a class="reference external" href="https://github.com/ray-project/ray/blob/releases/2.0.0/doc/source/cluster/doc_code/xgboost_submit.py">Ray 存储卡</a>。</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># Download the above script.</span>
+curl https://raw.githubusercontent.com/ray-project/ray/releases/2.0.0/doc/source/cluster/doc_code/xgboost_submit.py -o xgboost_submit.py
+<span class="c1"># Run the script.</span>
+python xgboost_submit.py
+</pre></div>
+</div>
+</section>
+<section id="id4">
+<h3>观察进度。<a class="headerlink" href="#id4" title="Permalink to this headline">#</a></h3>
+<p>基准测试可能需要长达 60 分钟才能运行。
+使用以下工具观察其进度。</p>
+<section id="job">
+<h4>Job 日志<a class="headerlink" href="#job" title="Permalink to this headline">#</a></h4>
+<p>要跟踪作业的日志，请使用上述提交脚本打印的命令。</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># Substitute the Ray Job&#39;s submission id.</span>
+ray job logs <span class="s1">&#39;raysubmit_xxxxxxxxxxxxxxxx&#39;</span> --follow --address http://127.0.0.1:8265
+</pre></div>
+</div>
+</section>
+<section id="kubectl">
+<h4>Kubectl<a class="headerlink" href="#kubectl" title="Permalink to this headline">#</a></h4>
+<p>使用以下命令观察集群中的 Pod</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># If you&#39;re on MacOS, first `brew install watch`.</span>
+watch -n <span class="m">1</span> kubectl get pod
+</pre></div>
+</div>
+</section>
+<section id="ray">
+<h4>Ray 仪表盘<a class="headerlink" href="#ray" title="Permalink to this headline">#</a></h4>
+<p>在浏览器中查看 <code class="docutils literal notranslate"><span class="pre">localhost:8265</span></code> 以访问 Ray Dashboard。</p>
+</section>
+<section id="id5">
+<h4>Ray 状态<a class="headerlink" href="#id5" title="Permalink to this headline">#</a></h4>
+<p>使用以下工具观察自动缩放状态和 Ray 资源使用情况</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># Substitute the name of your Ray cluster&#39;s head pod.</span>
+watch -n <span class="m">1</span> kubectl <span class="nb">exec</span> -it raycluster-xgboost-benchmark-head-xxxxx -- ray status
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>在某些情况下，对于某些云提供商，
+K8s API 服务器可能会在 Kubernetes 集群
+调整大小事件期间短暂不可用。</p>
+<p>如果发生这种情况，请不要担心 - Ray 工作负载应该不会中断。
+对于本指南中的示例，请等到 API 服务器恢复，重新启动端口转发过程，
+然后重新运行作业日志命令。</p>
+</div>
+</section>
+</section>
+<section id="id6">
+<h3>Job 完成<a class="headerlink" href="#id6" title="Permalink to this headline">#</a></h3>
+<section id="id7">
+<h4>基准测试结果<a class="headerlink" href="#id7" title="Permalink to this headline">#</a></h4>
+<p>基准测试完成后，作业日志将显示结果：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Results</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;training_time&#39;</span><span class="p">:</span> <span class="mf">1338.488839321999</span><span class="p">,</span> <span class="s1">&#39;prediction_time&#39;</span><span class="p">:</span> <span class="mf">403.36653568099973</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>基准测试的性能对底层云基础设施很敏感——您可能无法匹配
+<a class="reference internal" href="../../../train/benchmarks.html#xgboost-benchmark"><span class="std std-ref">基准测试文档中引用的数字</span></a>。</p>
+</section>
+<section id="id8">
+<h4>模型参数<a class="headerlink" href="#id8" title="Permalink to this headline">#</a></h4>
+<p>Ray head pod 中的 <code class="docutils literal notranslate"><span class="pre">model.json</span></code> 文件包含训练模型的参数。
+其他结果数据将在head pod 中的 <code class="docutils literal notranslate"><span class="pre">ray_results</span></code> 目录中提供。
+有关详细信息，请参阅 <a class="reference internal" href="../../../train/distributed-xgboost-lightgbm.html#train-gbdt-guide"><span class="std std-ref">the XGBoostTrainer 文档</span></a> 。</p>
+<div class="admonition-scale-down admonition">
+<p class="admonition-title">Scale-down</p>
+<p>如果启用了自动缩放功能，Ray 工作线程 Pod 将在 60 秒后缩小。
+Ray 工作线程 Pod 消失后，您的 Kubernetes 基础架构应缩小托管这些 Pod 的节点。</p>
+</div>
+</section>
+<section id="id9">
+<h4>清理<a class="headerlink" href="#id9" title="Permalink to this headline">#</a></h4>
+<p>使用以下命令删除您的 Ray 集群：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>kubectl delete raycluster raycluster-xgboost-benchmark
+</pre></div>
+</div>
+<p>如果您使用公共云，请不要忘记清理底层节点组和/或 Kubernetes 集群。</p>
+</section>
+</section>
+</section>
+</section>
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="../examples.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">示例</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="gpu-training-example.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">在 Kubernetes 上使用 GPU 训练 PyTorch ResNet 模型</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><!-- Override the footer area for the sphinx-book-theme to include the CSAT widget -->
+<div id="csat">
+  <div id="csat-feedback-received" class="csat-hidden">
+    <span>谢谢你的反馈！</span>
+  </div>
+  <div id="csat-inputs">
+    <span>是否能帮助到你？</span>
+    <div id="csat-yes" class="csat-button">
+      <svg id="csat-yes-icon" class="csat-hidden csat-icon" width="18" height="13" viewBox="0 0 18 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 10.172L16.1922 0.979004L17.6072 2.393L7.00023 13L0.63623 6.636L2.05023 5.222L7.00023 10.172Z" fill="black"/>
+      </svg>
+      <span>是<span>
+    </div>
+    <div id="csat-no" class="csat-button">
+      <svg id="csat-no-icon" class="csat-hidden csat-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 5.58599L11.9502 0.635986L13.3642 2.04999L8.41423 6.99999L13.3642 11.95L11.9502 13.364L7.00023 8.41399L2.05023 13.364L0.63623 11.95L5.58623 6.99999L0.63623 2.04999L2.05023 0.635986L7.00023 5.58599Z" fill="black"/>
+      </svg>
+      <span>否<span>
+    </div>
+  </div>
+  <div id="csat-textarea-group" class="csat-hidden">
+    <span id="csat-feedback-label">反馈</span>
+    <textarea id="csat-textarea"></textarea>
+    <div id="csat-submit">提交</div>
+  </div>
+</div><p>
+  
+    By The Ray Team<br/>
+  
+      &copy; Copyright 2024, The Ray Team.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

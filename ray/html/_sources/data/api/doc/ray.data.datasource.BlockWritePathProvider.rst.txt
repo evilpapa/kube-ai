@@ -1,0 +1,27 @@
+﻿
+
+ray.data.datasource.BlockWritePathProvider
+==========================================
+
+.. currentmodule:: ray.data.datasource
+
+.. autoclass:: BlockWritePathProvider
+   :show-inheritance:
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :toctree:
+
+   
+      ~BlockWritePathProvider.__init__
+
+   
+   
+
+
+   
+   
+   

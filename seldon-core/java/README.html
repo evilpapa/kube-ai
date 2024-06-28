@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../_static/javascripts/modernizr.js"></script>
+  
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-54780881-2"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-54780881-2');
+</script>
+  
+  
+    <title>使用 s2i 为 Seldon Core 打包 Java 模型 &#8212; seldon-core  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=83e35b93" />
+    <link rel="stylesheet" type="text/css" href="../_static/material.css?v=79c92029" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/rtd_sphinx_search.min.css?v=fb480935" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=15a8f09d" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/rtd_search_config.js"></script>
+    <script src="../_static/js/rtd_sphinx_search.min.js?v=60fbc683"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="使用 s2i 为 Seldon Core 打包 NodeJS 模型" href="../nodejs/README.html" />
+    <link rel="prev" title="GO 包装器示例 (ALPHA)" href="../go/go_wrapper_link.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=indigo data-md-color-accent=teal>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#java/README" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../index.html" title="seldon-core  documentation"
+           class="md-header-nav__button md-logo">
+          
+            &nbsp;
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">Seldon Core Documentation</span>
+          <span class="md-header-nav__topic"> 使用 s2i 为 Seldon Core 打包 Java 模型 </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder=""Search""
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+            
+            <li class="md-tabs__item"><a href="/" class="md-tabs__link">🚀 Our Other Projects & Products:</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi/en/stable/" class="md-tabs__link">Alibi Explain</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi-detect/en/stable/" class="md-tabs__link">Alibi Detect</a></li>
+            
+            <li class="md-tabs__item"><a href="https://mlserver.readthedocs.io/en/latest/" class="md-tabs__link">MLServer</a></li>
+            
+            <li class="md-tabs__item"><a href="https://tempo.readthedocs.io/en/latest/" class="md-tabs__link">Tempo SDK</a></li>
+            
+            <li class="md-tabs__item"><a href="https://deploy.seldon.io" class="md-tabs__link">Seldon Enterprise Platform</a></li>
+            
+            <li class="md-tabs__item"><a href="https://github.com/SeldonIO/seldon-deploy-sdk#seldon-deploy-sdk" class="md-tabs__link">Seldon Enterprise Platform SDK</a></li>
+          <li class="md-tabs__item"><a href="../nav/configuration.html" class="md-tabs__link">配置</a></li>
+          <li class="md-tabs__item"><a href="../nav/config/wrappers.html" class="md-tabs__link">语言封装和 SDK</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../index.html" title="seldon-core documentation" class="md-nav__button md-logo">
+      
+        <img src="../_static/" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../index.html"
+       title="seldon-core documentation">Seldon Core Documentation</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/getting-started.html" class="md-nav__link">开始</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/concepts.html" class="md-nav__link">概念</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/configuration.html" class="md-nav__link">配置</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/installation.html" class="md-nav__link">安装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/deployments.html" class="md-nav__link">发布</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/servers.html" class="md-nav__link">服务器</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/routing.html" class="md-nav__link">路由</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/wrappers.html" class="md-nav__link">语言封装和 SDK</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="../python/index.html" class="md-nav__link">Python 语言封装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../go/go_wrapper_link.html" class="md-nav__link">Go 语言封装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> Java 语言封装 </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">Java 语言封装</a>
+      
+        
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#java-readme--page-root" class="md-nav__link">使用 s2i 为 Seldon Core 打包 Java 模型</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#s2i" class="md-nav__link">步骤 1 - 安装 s2i</a>
+        </li>
+        <li class="md-nav__item"><a href="#id1" class="md-nav__link">步骤 2 - 创建源代码</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#maven" class="md-nav__link">Maven 项目</a>
+        </li>
+        <li class="md-nav__item"><a href="#spring-boot" class="md-nav__link">Spring Boot 初始化</a>
+        </li>
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">预估类</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#h2o" class="md-nav__link">H2O 工具类</a>
+        </li>
+        <li class="md-nav__item"><a href="#dl4j" class="md-nav__link">DL4J 工具类</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#s2i-environment" class="md-nav__link">.s2i/environment</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id3" class="md-nav__link">步骤 3 - 构建你自己的镜像</a>
+        </li>
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">参考</a>
+        </li>
+        <li class="md-nav__item"><a href="#id5" class="md-nav__link">环境变量</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#api-type" class="md-nav__link">API_TYPE</a>
+        </li>
+        <li class="md-nav__item"><a href="#service-type" class="md-nav__link">SERVICE_TYPE</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#service-types" class="md-nav__link">创建不同的 service types</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#model" class="md-nav__link">MODEL</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/java/README.md.txt">Show Source</a> </li>
+
+  </ul>
+</nav>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nodejs/README.html" class="md-nav__link">Nodejs 语言封装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../cpp/README.html" class="md-nav__link">C++ 语言封装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../R/README.html" class="md-nav__link">R 语言封装</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/integrations.html" class="md-nav__link">集成</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/tutorials.html" class="md-nav__link">教程</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/reference.html" class="md-nav__link">参考</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/contributing.html" class="md-nav__link">贡献</a>
+      
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#java-readme--page-root" class="md-nav__link">使用 s2i 为 Seldon Core 打包 Java 模型</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#s2i" class="md-nav__link">步骤 1 - 安装 s2i</a>
+        </li>
+        <li class="md-nav__item"><a href="#id1" class="md-nav__link">步骤 2 - 创建源代码</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#maven" class="md-nav__link">Maven 项目</a>
+        </li>
+        <li class="md-nav__item"><a href="#spring-boot" class="md-nav__link">Spring Boot 初始化</a>
+        </li>
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">预估类</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#h2o" class="md-nav__link">H2O 工具类</a>
+        </li>
+        <li class="md-nav__item"><a href="#dl4j" class="md-nav__link">DL4J 工具类</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#s2i-environment" class="md-nav__link">.s2i/environment</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#id3" class="md-nav__link">步骤 3 - 构建你自己的镜像</a>
+        </li>
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">参考</a>
+        </li>
+        <li class="md-nav__item"><a href="#id5" class="md-nav__link">环境变量</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#api-type" class="md-nav__link">API_TYPE</a>
+        </li>
+        <li class="md-nav__item"><a href="#service-type" class="md-nav__link">SERVICE_TYPE</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#service-types" class="md-nav__link">创建不同的 service types</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#model" class="md-nav__link">MODEL</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/java/README.md.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <section id="s2i-seldon-core-java">
+<h1 id="java-readme--page-root">使用 s2i 为 Seldon Core 打包 Java 模型<a class="headerlink" href="#java-readme--page-root" title="Permalink to this heading">¶</a></h1>
+<p>在此指南中，我们说明了使用 docker 镜像工具 <a class="reference external" href="https://github.com/openshift/source-to-image">source-to-image app s2i</a> 来为 Seldon Core 封装 Java 模型所需的操作。</p>
+<p>如果你对 s2i 不熟悉，请参考 <a class="reference internal" href="../wrappers/s2i.html"><span class="doc">s2i 使用说明</span></a>并跟随下面的步骤。</p>
+<section id="s2i">
+<h2 id="s2i">步骤 1 - 安装 s2i<a class="headerlink" href="#s2i" title="Permalink to this heading">¶</a></h2>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/openshift/source-to-image#installation">下载安装 s2i</a></p>
+</div></blockquote>
+<ul class="simple">
+<li><p>使用 s2i 准备工作</p>
+<ul>
+<li><p>Docker</p></li>
+<li><p>Git（如果使用远程 git 仓库）</p></li>
+</ul>
+</li>
+</ul>
+<p>所有工作就绪，可执行以下</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>s2i<span class="w"> </span>usage<span class="w"> </span>seldonio/seldon-core-s2i-java-build:0.1
+</pre></div>
+</div>
+</section>
+<section id="id1">
+<h2 id="id1">步骤 2 - 创建源代码<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h2>
+<p>要使用 s2i 构建封装 Java 模型的镜像，你需要：</p>
+<ul class="simple">
+<li><p>依赖 <code class="docutils literal notranslate"><span class="pre">io.seldon.wrapper</span></code> 库的 Maven 仓库</p></li>
+<li><p>Spring Boot 配置类</p></li>
+<li><p>创建为你组件所实现的 <code class="docutils literal notranslate"><span class="pre">io.seldon.wrapper.api.SeldonPredictionService</span></code> 的类</p></li>
+<li><p>.s2i/environment - 构建器用于正确封装模型的模型定义</p></li>
+</ul>
+<p>我们将详细介绍以下每个步骤：</p>
+<section id="maven">
+<h3 id="maven">Maven 项目<a class="headerlink" href="#maven" title="Permalink to this heading">¶</a></h3>
+<p>创建 Spring Boot Maven 项目并包含以下依赖：</p>
+<div class="highlight-XML notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>io.seldon.wrapper<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>seldon-core-wrapper<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;version&gt;</span>0.2.0<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</pre></div>
+</div>
+<p>完成的示例可查看 <code class="docutils literal notranslate"><span class="pre">incubating/wrappers/s2i/java/test/model-template-app/pom.xml</span></code>。</p>
+</section>
+<section id="spring-boot">
+<h3 id="spring-boot">Spring Boot 初始化<a class="headerlink" href="#spring-boot" title="Permalink to this heading">¶</a></h3>
+<p>创建一个主 App 类：</p>
+<ul class="simple">
+<li><p>添加 @EnableAsync 注解（允许嵌入式 gRPC 服务器从 Spring Boot 启动）</p></li>
+<li><p>在你的 App 基础扫描包中包含 <code class="docutils literal notranslate"><span class="pre">io.seldon.wrapper</span></code>，下面应用包的示例中是 <code class="docutils literal notranslate"><span class="pre">io.seldon.example</span></code>。</p></li>
+<li><p>导入 <code class="docutils literal notranslate"><span class="pre">io.seldon.wrapper.config.AppConfig.class</span></code> 配置类。</p></li>
+</ul>
+<p>示例：</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nd">@EnableAsync</span>
+<span class="nd">@SpringBootApplication</span><span class="p">(</span><span class="n">scanBasePackages</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s">"io.seldon.wrapper"</span><span class="p">,</span><span class="s">"io.seldon.example"</span><span class="p">})</span>
+<span class="nd">@Import</span><span class="p">({</span><span class="w"> </span><span class="n">io</span><span class="p">.</span><span class="na">seldon</span><span class="p">.</span><span class="na">wrapper</span><span class="p">.</span><span class="na">config</span><span class="p">.</span><span class="na">AppConfig</span><span class="p">.</span><span class="na">class</span><span class="w"> </span><span class="p">})</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">App</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">SpringApplication</span><span class="p">.</span><span class="na">run</span><span class="p">(</span><span class="n">App</span><span class="p">.</span><span class="na">class</span><span class="p">,</span><span class="w"> </span><span class="n">args</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="id2">
+<h3 id="id2">预估类<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
+<p>为了处理模型或者其他组件的请求，你需要在 <code class="docutils literal notranslate"><span class="pre">io.seldon.wrapper.api.SeldonPredictionService</span></code> 实现以下一个或多个方法，特别的：</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="k">default</span><span class="w"> </span><span class="kd">public</span><span class="w"> </span><span class="n">SeldonMessage</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="n">SeldonMessage</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
+<span class="k">default</span><span class="w"> </span><span class="kd">public</span><span class="w"> </span><span class="n">SeldonMessage</span><span class="w"> </span><span class="nf">route</span><span class="p">(</span><span class="n">SeldonMessage</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
+<span class="k">default</span><span class="w"> </span><span class="kd">public</span><span class="w"> </span><span class="n">SeldonMessage</span><span class="w"> </span><span class="nf">sendFeedback</span><span class="p">(</span><span class="n">Feedback</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
+<span class="k">default</span><span class="w"> </span><span class="kd">public</span><span class="w"> </span><span class="n">SeldonMessage</span><span class="w"> </span><span class="nf">transformInput</span><span class="p">(</span><span class="n">SeldonMessage</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
+<span class="k">default</span><span class="w"> </span><span class="kd">public</span><span class="w"> </span><span class="n">SeldonMessage</span><span class="w"> </span><span class="nf">transformOutput</span><span class="p">(</span><span class="n">SeldonMessage</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
+<span class="k">default</span><span class="w"> </span><span class="kd">public</span><span class="w"> </span><span class="n">SeldonMessage</span><span class="w"> </span><span class="nf">aggregate</span><span class="p">(</span><span class="n">SeldonMessageList</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>你的类需要以 Spring 组件实现，以便它能被 Spring 管理。这是一个完整的 H2O 示例 <code class="docutils literal notranslate"><span class="pre">examples/models/h2o_mojo/src/main/java/io/seldon/example/h2o/model</span></code>，整个实现如下：</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nd">@Component</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">H2OModelHandler</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">SeldonPredictionService</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">Logger</span><span class="w"> </span><span class="n">logger</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LoggerFactory</span><span class="p">.</span><span class="na">getLogger</span><span class="p">(</span><span class="n">H2OModelHandler</span><span class="p">.</span><span class="na">class</span><span class="p">.</span><span class="na">getName</span><span class="p">());</span>
+<span class="w">    </span><span class="n">EasyPredictModelWrapper</span><span class="w"> </span><span class="n">model</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">H2OModelHandler</span><span class="p">()</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">IOException</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">MojoReaderBackend</span><span class="w"> </span><span class="n">reader</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                </span><span class="n">MojoReaderBackendFactory</span><span class="p">.</span><span class="na">createReaderBackend</span><span class="p">(</span>
+<span class="w">                  </span><span class="n">getClass</span><span class="p">().</span><span class="na">getClassLoader</span><span class="p">().</span><span class="na">getResourceAsStream</span><span class="p">(</span>
+<span class="w">                     </span><span class="s">"model.zip"</span><span class="p">),</span>
+<span class="w">                      </span><span class="n">MojoReaderBackendFactory</span><span class="p">.</span><span class="na">CachingStrategy</span><span class="p">.</span><span class="na">MEMORY</span><span class="p">);</span>
+<span class="w">        </span><span class="n">MojoModel</span><span class="w"> </span><span class="n">modelMojo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ModelMojoReader</span><span class="p">.</span><span class="na">readFrom</span><span class="p">(</span><span class="n">reader</span><span class="p">);</span>
+<span class="w">        </span><span class="n">model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">EasyPredictModelWrapper</span><span class="p">(</span><span class="n">modelMojo</span><span class="p">);</span>
+<span class="w">        </span><span class="n">logger</span><span class="p">.</span><span class="na">info</span><span class="p">(</span><span class="s">"Loaded model"</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">SeldonMessage</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="n">SeldonMessage</span><span class="w"> </span><span class="n">payload</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="n">RowData</span><span class="o">&gt;</span><span class="w"> </span><span class="n">rows</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">H2OUtils</span><span class="p">.</span><span class="na">convertSeldonMessage</span><span class="p">(</span><span class="n">payload</span><span class="p">.</span><span class="na">getData</span><span class="p">());</span>
+<span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="n">AbstractPrediction</span><span class="o">&gt;</span><span class="w"> </span><span class="n">predictions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="n">RowData</span><span class="w"> </span><span class="n">row</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">rows</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">try</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">BinomialModelPrediction</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">model</span><span class="p">.</span><span class="na">predictBinomial</span><span class="p">(</span><span class="n">row</span><span class="p">);</span>
+<span class="w">                </span><span class="n">predictions</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">PredictException</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">logger</span><span class="p">.</span><span class="na">info</span><span class="p">(</span><span class="s">"Error in prediction "</span><span class="p">,</span><span class="n">e</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">DefaultData</span><span class="w"> </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">H2OUtils</span><span class="p">.</span><span class="na">convertH2OPrediction</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span><span class="w"> </span><span class="n">payload</span><span class="p">.</span><span class="na">getData</span><span class="p">());</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">SeldonMessage</span><span class="p">.</span><span class="na">newBuilder</span><span class="p">().</span><span class="na">setData</span><span class="p">(</span><span class="n">res</span><span class="p">).</span><span class="na">build</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>以上代码：</p>
+<ul class="simple">
+<li><p>在启动时加载本地文件夹模型资源</p></li>
+<li><p>使用提供的工具类转换 proto buffer 消息为 H2O RowData</p></li>
+<li><p>运行 BionomialModel 预估，转换并返回 <code class="docutils literal notranslate"><span class="pre">SeldonMessage</span></code> 结果</p></li>
+</ul>
+<section id="h2o">
+<h4 id="h2o">H2O 工具类<a class="headerlink" href="#h2o" title="Permalink to this heading">¶</a></h4>
+<p>我们在 seldon-core-wrapper 提供 H2O 工具类 <code class="docutils literal notranslate"><span class="pre">io.seldon.wrapper.utils.H2OUtils</span></code> 用于转换 seldon-core proto buffer 类型消息。</p>
+</section>
+<section id="dl4j">
+<h4 id="dl4j">DL4J 工具类<a class="headerlink" href="#dl4j" title="Permalink to this heading">¶</a></h4>
+<p>我们在 seldon-core-wrapper 提供 DL4J 工具类 <code class="docutils literal notranslate"><span class="pre">io.seldon.wrapper.utils.DL4JUtils</span></code> 用于转换 seldon-core proto buffer 类型消息。</p>
+</section>
+</section>
+<section id="s2i-environment">
+<h3 id="s2i-environment">.s2i/environment<a class="headerlink" href="#s2i-environment" title="Permalink to this heading">¶</a></h3>
+<p>在 JAVA 镜像构建中需要定义核心参数，如：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">API_TYPE</span><span class="o">=</span>REST
+<span class="nv">SERVICE_TYPE</span><span class="o">=</span>MODEL
+</pre></div>
+</div>
+<p>他们的值可以在命令行构建镜像参数中被覆盖。</p>
+</section>
+</section>
+<section id="id3">
+<h2 id="id3">步骤 3 - 构建你自己的镜像<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h2>
+<p>从源码中使用 <code class="docutils literal notranslate"><span class="pre">s2i</span> <span class="pre">build</span></code> 创建 Docker 镜像。你需要将 Docker 安装在本机，可选的如果代码在公有仓库需要安装 git。</p>
+<p>使用 s2i 可以从本地文件夹或者 git 仓库直接构建。参考 <a class="reference external" href="https://github.com/openshift/source-to-image/blob/master/docs/cli.md#s2i-build">s2i 文档</a>获取更多信息。通常格式为：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>s2i<span class="w"> </span>build<span class="w"> </span>&lt;git-repo&gt;<span class="w"> </span>seldonio/seldon-core-s2i-java-build:0.1<span class="w"> </span>&lt;my-image-name&gt;<span class="w"> </span>--runtime-image<span class="w"> </span>seldonio/seldon-core-s2i-java-runtime:0.1
+s2i<span class="w"> </span>build<span class="w"> </span>&lt;src-folder&gt;<span class="w"> </span>seldonio/seldon-core-s2i-java-build:0.1<span class="w"> </span>&lt;my-image-name&gt;<span class="w"> </span>--runtime-image<span class="w"> </span>seldonio/seldon-core-s2i-java-runtime:0.1
+</pre></div>
+</div>
+<p>使用 seldon-core 内部的测试模板模型调用的示例：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>s2i<span class="w"> </span>build<span class="w"> </span>https://github.com/seldonio/seldon-core.git<span class="w"> </span>--context-dir<span class="o">=</span>incubating/wrappers/s2i/java/test/model-template-app<span class="w"> </span>seldonio/seldon-core-s2i-java-build:0.1<span class="w"> </span>h2o-test:0.1<span class="w"> </span>--runtime-image<span class="w"> </span>seldonio/seldon-core-s2i-java-runtime:0.1
+</pre></div>
+</div>
+<p>以上 s2i 生成调用：</p>
+<ul class="simple">
+<li><p>使用 GitHub 仓库：<a class="reference external" href="https://github.com/seldonio/seldon-core.git">https://github.com/seldonio/seldon-core.git</a> 和仓库中的 <code class="docutils literal notranslate"><span class="pre">incubating/wrappers/s2i/java/test/model-template-app</span></code> 文件夹</p></li>
+<li><p>使用构建镜像 <code class="docutils literal notranslate"><span class="pre">seldonio/seldon-core-s2i-java-build</span></code></p></li>
+<li><p>使用运行时镜像 <code class="docutils literal notranslate"><span class="pre">seldonio/seldon-core-s2i-java-runtime</span></code></p></li>
+<li><p>创建 docker 镜像 <code class="docutils literal notranslate"><span class="pre">seldon-core-template-model</span></code></p></li>
+</ul>
+<p>从本地文件夹构建镜像，可在本 seldon-core 仓库中查看示例</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/seldonio/seldon-core.git
+<span class="nb">cd</span><span class="w"> </span>seldon-core
+s2i<span class="w"> </span>build<span class="w"> </span>incubating/wrappers/s2i/java/test/model-template-app<span class="w"> </span>seldonio/seldon-core-s2i-java-build:0.1<span class="w"> </span>h2o-test:0.1<span class="w"> </span>--runtime-image<span class="w"> </span>seldonio/seldon-core-s2i-java-runtime:0.1
+</pre></div>
+</div>
+<p>更多请查看：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>s2i<span class="w"> </span>usage<span class="w"> </span>seldonio/seldon-core-s2i-java-build:0.1
+s2i<span class="w"> </span>build<span class="w"> </span>--help
+</pre></div>
+</div>
+</section>
+<section id="id4">
+<h2 id="id4">参考<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="id5">
+<h2 id="id5">环境变量<a class="headerlink" href="#id5" title="Permalink to this heading">¶</a></h2>
+<p>镜像构建下所需的环境变量如下。可在 <code class="docutils literal notranslate"><span class="pre">.s2i/environment</span></code> 文件或者 <code class="docutils literal notranslate"><span class="pre">s2i</span> <span class="pre">build</span></code> 命令行提供。</p>
+<section id="api-type">
+<h3 id="api-type">API_TYPE<a class="headerlink" href="#api-type" title="Permalink to this heading">¶</a></h3>
+<p>创建的 API 类型，可以是 REST 或 GRPC。</p>
+</section>
+<section id="service-type">
+<h3 id="service-type">SERVICE_TYPE<a class="headerlink" href="#service-type" title="Permalink to this heading">¶</a></h3>
+<p>创建的 service 类型，可用值为：</p>
+<ul class="simple">
+<li><p>MODEL</p></li>
+<li><p>ROUTER</p></li>
+<li><p>TRANSFORMER</p></li>
+<li><p>COMBINER</p></li>
+</ul>
+</section>
+</section>
+<section id="service-types">
+<h2 id="service-types">创建不同的 service types<a class="headerlink" href="#service-types" title="Permalink to this heading">¶</a></h2>
+<section id="model">
+<h3 id="model">MODEL<a class="headerlink" href="#model" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/SeldonIO/seldon-core/tree/master/incubating/wrappers/s2i/java/test/model-template-app">一个最小的模型源码脚手架</a></p></li>
+<li><p><a class="reference external" href="../examples/h2o_mojo.html">H2O MOJO 示例</a></p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="../go/go_wrapper_link.html" title="GO 包装器示例 (ALPHA)"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> "Previous" </span> GO 包装器示例 (ALPHA) </span>
+              </div>
+            </a>
+          
+          
+            <a href="../nodejs/README.html" title="使用 s2i 为 Seldon Core 打包 NodeJS 模型"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> "Next" </span> 使用 s2i 为 Seldon Core 打包 NodeJS 模型 </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2024, Seldon Technologies Ltd.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

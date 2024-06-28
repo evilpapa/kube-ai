@@ -1,0 +1,6 @@
+ray.data.Datasource.on\_write\_start
+====================================
+
+.. currentmodule:: ray.data
+
+.. automethod:: Datasource.on_write_start

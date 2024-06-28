@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../_static/javascripts/modernizr.js"></script>
+  
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-54780881-2"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-54780881-2');
+</script>
+  
+  
+    <title>Seldon Core 组件概览 &#8212; seldon-core  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=83e35b93" />
+    <link rel="stylesheet" type="text/css" href="../_static/material.css?v=79c92029" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/rtd_sphinx_search.min.css?v=e72958e9" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=15a8f09d" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/rtd_search_config.js?v=b0596c34"></script>
+    <script src="../_static/js/rtd_sphinx_search.min.js?v=43f26ba4"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="配置" href="../nav/configuration.html" />
+    <link rel="prev" title="概念" href="../nav/concepts.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=indigo data-md-color-accent=teal>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#workflow/overview" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../index.html" title="seldon-core  documentation"
+           class="md-header-nav__button md-logo">
+          
+            &nbsp;
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">Seldon Core Documentation</span>
+          <span class="md-header-nav__topic"> Seldon Core 组件概览 </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder=""Search""
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+            
+            <li class="md-tabs__item"><a href="/" class="md-tabs__link">🚀 Our Other Projects & Products:</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi/en/stable/" class="md-tabs__link">Alibi Explain</a></li>
+            
+            <li class="md-tabs__item"><a href="https://docs.seldon.io/projects/alibi-detect/en/stable/" class="md-tabs__link">Alibi Detect</a></li>
+            
+            <li class="md-tabs__item"><a href="https://mlserver.readthedocs.io/en/latest/" class="md-tabs__link">MLServer</a></li>
+            
+            <li class="md-tabs__item"><a href="https://tempo.readthedocs.io/en/latest/" class="md-tabs__link">Tempo SDK</a></li>
+            
+            <li class="md-tabs__item"><a href="https://deploy.seldon.io" class="md-tabs__link">Seldon Enterprise Platform</a></li>
+            
+            <li class="md-tabs__item"><a href="https://github.com/SeldonIO/seldon-deploy-sdk#seldon-deploy-sdk" class="md-tabs__link">Seldon Enterprise Platform SDK</a></li>
+          <li class="md-tabs__item"><a href="../nav/concepts.html" class="md-tabs__link">概念</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../index.html" title="seldon-core documentation" class="md-nav__button md-logo">
+      
+        <img src="../_static/" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../index.html"
+       title="seldon-core documentation">Seldon Core Documentation</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/SeldonIO/seldon-core/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Seldon Core
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/getting-started.html" class="md-nav__link">开始</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/concepts.html" class="md-nav__link">概念</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> 组件概述 </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">组件概述</a>
+      
+        
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#workflow-overview--page-root" class="md-nav__link">Seldon Core 组件概览</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#e2e-serving" class="md-nav__link">E2E Serving 模型服务器</a>
+        </li>
+        <li class="md-nav__item"><a href="#id1" class="md-nav__link">2 种类型的模型服务器</a>
+        </li>
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">语言封装</a>
+        </li>
+        <li class="md-nav__item"><a href="#seldon-deployment-crd" class="md-nav__link">Seldon Deployment CRD</a>
+        </li>
+        <li class="md-nav__item"><a href="#seldon-core-operator" class="md-nav__link">Seldon Core Operator</a>
+        </li>
+        <li class="md-nav__item"><a href="#id3" class="md-nav__link">服务编排</a>
+        </li>
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">元数据来源</a>
+        </li>
+        <li class="md-nav__item"><a href="#prometheus" class="md-nav__link">Prometheus指标</a>
+        </li>
+        <li class="md-nav__item"><a href="#jaeger" class="md-nav__link">使用 Jaeger 进行分布式跟踪</a>
+        </li>
+        <li class="md-nav__item"><a href="#flask" class="md-nav__link">所以，为什么不要 Flask 封装我的模型？</a>
+        </li>
+        <li class="md-nav__item"><a href="#id5" class="md-nav__link">Seldon Core 的其他特性？</a>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/workflow/overview.md.txt">Show Source</a> </li>
+
+  </ul>
+</nav>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="#e2e-serving" class="md-nav__link">E2E Serving 模型服务器</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id1" class="md-nav__link">2 种类型的模型服务器</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id2" class="md-nav__link">语言封装</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#seldon-deployment-crd" class="md-nav__link">Seldon Deployment CRD</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#seldon-core-operator" class="md-nav__link">Seldon Core Operator</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id3" class="md-nav__link">服务编排</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id4" class="md-nav__link">元数据来源</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#prometheus" class="md-nav__link">Prometheus指标</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#jaeger" class="md-nav__link">使用 Jaeger 进行分布式跟踪</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#flask" class="md-nav__link">所以，为什么不要 Flask 封装我的模型？</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="#id5" class="md-nav__link">Seldon Core 的其他特性？</a>
+      
+    
+    </li></ul>
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/configuration.html" class="md-nav__link">配置</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/tutorials.html" class="md-nav__link">教程</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/reference.html" class="md-nav__link">参考</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/contributing.html" class="md-nav__link">贡献</a>
+      
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#workflow-overview--page-root" class="md-nav__link">Seldon Core 组件概览</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#e2e-serving" class="md-nav__link">E2E Serving 模型服务器</a>
+        </li>
+        <li class="md-nav__item"><a href="#id1" class="md-nav__link">2 种类型的模型服务器</a>
+        </li>
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">语言封装</a>
+        </li>
+        <li class="md-nav__item"><a href="#seldon-deployment-crd" class="md-nav__link">Seldon Deployment CRD</a>
+        </li>
+        <li class="md-nav__item"><a href="#seldon-core-operator" class="md-nav__link">Seldon Core Operator</a>
+        </li>
+        <li class="md-nav__item"><a href="#id3" class="md-nav__link">服务编排</a>
+        </li>
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">元数据来源</a>
+        </li>
+        <li class="md-nav__item"><a href="#prometheus" class="md-nav__link">Prometheus指标</a>
+        </li>
+        <li class="md-nav__item"><a href="#jaeger" class="md-nav__link">使用 Jaeger 进行分布式跟踪</a>
+        </li>
+        <li class="md-nav__item"><a href="#flask" class="md-nav__link">所以，为什么不要 Flask 封装我的模型？</a>
+        </li>
+        <li class="md-nav__item"><a href="#id5" class="md-nav__link">Seldon Core 的其他特性？</a>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/workflow/overview.md.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <section id="seldon-core">
+<h1 id="workflow-overview--page-root">Seldon Core 组件概览<a class="headerlink" href="#workflow-overview--page-root" title="Permalink to this heading">¶</a></h1>
+<p>Seldon 将您的机器学习模型转换为 REST/gRPC 微服务。</p>
+<p>以下为 seldon 主要组件：</p>
+<ul class="simple">
+<li><p>可复用、不可复用 <a class="reference external" href="./overview.html#model-servers">模型服务</a></p></li>
+<li><p><a class="reference external" href="./overview.html#language-wrappers">语言封装</a> 容器化模型</p></li>
+<li><p><a class="reference external" href="./overview.html#seldondeployment-crd">SeldonDeployment</a> CRD 以及 <a class="reference external" href="./overview.html#seldon-core-operator">Seldon Core Operator</a></p></li>
+<li><p>高级推理图 <a class="reference external" href="./overview.html#service-orchestrator">服务治理</a></p></li>
+</ul>
+<p>以及三方系统实现：</p>
+<ul class="simple">
+<li><p>基于 <a class="reference external" href="https://www.getambassador.io/">Ambassador</a> 和 <a class="reference external" href="https://istio.io/">Istio</a> 实现的 Kubernetes Ingress</p></li>
+<li><p>基于 <a class="reference external" href="https://prometheus.io/">Prometheus</a> 的 <a class="reference external" href="./overview.html#metrics-with-prometheus">指标</a></p></li>
+<li><p>基于 <a class="reference external" href="https://www.jaegertracing.io/">Jaeger</a> 的 <a class="reference external" href="./overview.html#distributed-tracing-with-jaeger">链路追踪</a></p></li>
+<li><p>基于 <a class="reference external" href="https://swagger.io/docs/specification/about/">OpenApi</a> 的 <a class="reference external" href="./overview.html#endpoint-documentation">Endpoint 文档</a></p></li>
+</ul>
+<p>保持阅读以学习更多内容</p>
+<section id="e2e-serving">
+<h2 id="e2e-serving">E2E Serving 模型服务器<a class="headerlink" href="#e2e-serving" title="Permalink to this heading">¶</a></h2>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">Seldon</span> <span class="pre">Core</span></code> 你可以非常灵活的将 <code class="docutils literal notranslate"><span class="pre">Model</span> <span class="pre">Servers</span></code> 直接用于生产环境。</p>
+<a class="reference external image-reference" href="../images/e2e-model-serving.svg"><img alt="" src="../_images/e2e-model-serving.svg"/></a>
+<p>使用所谓的 <code class="docutils literal notranslate"><span class="pre">Reusable</span> <span class="pre">Model</span> <span class="pre">Servers</span></code> 你可以在短短几步将模型部署到 Kubernetes 集群：</p>
+<ol class="arabic simple">
+<li><p><em>数据科学家</em> 使用先进的类库如（mlflow, dvc, xgboost, scikit-learn 等）准备机器学习 <code class="docutils literal notranslate"><span class="pre">model</span></code> 。</p></li>
+<li><p>训练后的模型上传到中心化的存储库（比如 S3 存储）。</p></li>
+<li><p><em>软件工程师</em> 使用上传到镜像仓库的使用 <code class="docutils literal notranslate"><span class="pre">Seldon</span> <span class="pre">Core</span></code> 的 <code class="docutils literal notranslate"><span class="pre">Reusable</span> <span class="pre">Model</span> <span class="pre">Server</span></code>。</p></li>
+<li><p>使用发布单（<code class="docutils literal notranslate"><span class="pre">Seldon</span> <span class="pre">Deployment</span></code> CRD）创建并应用到 k8s 集群。</p></li>
+<li><p>Seldon Core <code class="docutils literal notranslate"><span class="pre">Operator</span></code> 创建所有依赖的 Kubernetes 资源。</p></li>
+<li><p>发送到 <code class="docutils literal notranslate"><span class="pre">Seldon</span> <span class="pre">Deployment</span></code> 的所有推理请求会通过 <code class="docutils literal notranslate"><span class="pre">Service</span> <span class="pre">Orchestrator</span></code> 转发到内部模型。</p></li>
+<li><p>以通过利用我们与第三方框架的集成来收集指标和跟踪数据。</p></li>
+</ol>
+<p>如果在步骤 2 和 3 中使用了 <code class="docutils literal notranslate"><span class="pre">Non-Reusable</span> <span class="pre">Model</span> <span class="pre">Servers</span></code>，你需要准备一个 Docker 镜像来实现机器学习模型的嵌入，我们将在后续章节进行讨论两种方法的区别。</p>
+</section>
+<section id="id1">
+<h2 id="id1">2 种类型的模型服务器<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h2>
+<p>使用 Seldon Core，您可以构建两种类型的服务器：可复用和不可复用的服务器。
+根据上下文和实际使用案例，每一个都很有用。</p>
+<ul class="simple">
+<li><p><strong>可复用模型服务</strong>: 通常称为预封装模型服务器。
+允许部署每次无需重新打包新服务器的相似模型。
+他们经常从中心化仓库存储获取模型（比容公司的 s3 存储）。</p></li>
+<li><p><strong>不可复用模型服务</strong>: 专用服务，旨在为单一特殊模型服务。
+不需要中央存储库，但需要为每个模型构建新镜像。</p></li>
+</ul>
+<a class="reference external image-reference" href="../images/model-servers.svg"><img alt="" src="../_images/model-servers.svg"/></a>
+<p>在相关文档页阅读更多关于预封装 <code class="docutils literal notranslate"><span class="pre">Model</span> <span class="pre">Servers</span></code>：</p>
+<ul class="simple">
+<li><p><a class="reference external" href="../servers/mlflow.html">MLflow 服务</a></p></li>
+<li><p><a class="reference external" href="../servers/sklearn.html">SKLearn 服务</a></p></li>
+<li><p><a class="reference external" href="../servers/tensorflow.html">Tensorflow 服务</a></p></li>
+<li><p><a class="reference external" href="../servers/xgboost.html">XGBoost 服务</a></p></li>
+</ul>
+<p>从 <a class="reference external" href="../servers/custom.html">这里</a> 阅读如何创建自己的预封装模型服务。</p>
+</section>
+<section id="id2">
+<h2 id="id2">语言封装<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h2>
+<p>语言封装允许 Seldon 用户创建构建 <code class="docutils literal notranslate"><span class="pre">Reusable</span></code> 和 <code class="docutils literal notranslate"><span class="pre">Non-Reusable</span></code> 模型服务。
+如你所见，整个过程非常简单，
+仅要求用户定义模型加载逻辑和推理预测的执行以来。</p>
+<a class="reference external image-reference" href="../images/language-wrappers-1.svg"><img alt="" src="../_images/language-wrappers-1.svg"/></a>
+<p>模型加载和推理逻辑在 <code class="docutils literal notranslate"><span class="pre">Model.py</span></code> 文件进行定义：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Model</span><span class="p">:</span>
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">...</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Custom logic that prepares model.</span>
+
+<span class="sd">    - Reusable servers: your_loader 从远程仓库加载模型</span>
+<span class="sd">    - Non-Reusable servers: your_loader loads model from a file embedded in the image.</span>
+<span class="sd">    """</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="n">your_loader</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">features</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[],</span> <span class="n">meta</span><span class="o">=</span><span class="p">[]):</span>
+<span class="w">    </span><span class="sd">"""Custom inference logic."""</span><span class="s2">"</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Reusable</span></code> 和 <code class="docutils literal notranslate"><span class="pre">Non-Reusable</span></code> 模型服务的主要区别在于
+模型是否动态加载或者内嵌于镜像。</p>
+<p><code class="docutils literal notranslate"><span class="pre">seldon-core-microservice</span></code> Python 封装器可将 <code class="docutils literal notranslate"><span class="pre">Model.py</span></code> 转成完全可操作的微服务：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>seldon-core-microservice<span class="w"> </span>Model<span class="w"> </span>--service-type<span class="w"> </span>MODEL
+</pre></div>
+</div>
+<p>这将在节点中启动服务（默认: 9000）:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>curl<span class="w"> </span>http://localhost:9000/api/v1.0/predictions<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-H<span class="w"> </span><span class="s1">'Content-Type: application/json'</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-d<span class="w"> </span><span class="s1">'{"data": {"names": ..., "ndarray": ...}}'</span>
+
+<span class="o">{</span>
+<span class="w">   </span><span class="s2">"meta"</span><span class="w"> </span>:<span class="w"> </span><span class="o">{</span>...<span class="o">}</span>,
+<span class="w">   </span><span class="s2">"data"</span><span class="w"> </span>:<span class="w"> </span><span class="o">{</span><span class="s2">"names"</span>:<span class="w"> </span>...,<span class="w"> </span><span class="s2">"ndarray"</span><span class="w"> </span>:<span class="w"> </span>...<span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<a class="reference external image-reference" href="../images/language-wrappers-2.svg"><img alt="" src="../_images/language-wrappers-2.svg"/></a>
+<p>要实现完全的容器化处理仍需两步：</p>
+<ul class="simple">
+<li><p>描述运行时依赖的 <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code></p></li>
+<li><p>描述微服务的 <code class="docutils literal notranslate"><span class="pre">.s2/environment</span></code> （接口和模型类型）</p></li>
+</ul>
+<p>一旦这些就位，您可以使用一个简单的 s2i 命令</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>s2i<span class="w"> </span>build<span class="w"> </span>.<span class="w"> </span>seldonio/seldon-core-s2i-python3:1.9.1<span class="w"> </span>model:0.1
+</pre></div>
+</div>
+<p>来准备创建 Docker 镜像。</p>
+<p>请在专门的文档页阅读 Python <a class="reference external" href="../python/index.html">语言封装资料</a>。</p>
+</section>
+<section id="seldon-deployment-crd">
+<h2 id="seldon-deployment-crd">Seldon Deployment CRD<a class="headerlink" href="#seldon-deployment-crd" title="Permalink to this heading">¶</a></h2>
+<p>Seldon Deployment CRD （自定义资源）是 Seldon Core 的真正优势所在。
+它允许您轻松地将推理模型部署到 Kubernetes 集群并处理一些真正的生产流量！</p>
+<p><a class="reference external" href="https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/">自定义资源</a> 是 Kubernetes API 的基础扩展。
+它们允许你创建基本的 Kubernetes 对象的自定义组合并协同工作。
+在 Seldon Core 我们通过 yaml 清单文件使用 CRDs 来定义推理图。</p>
+<p>你编写的清单文件非常强大但简单。
+您可以轻松地定义部署中所需的模型以及它们在推理图中的连接方式。</p>
+<a class="reference external image-reference" href="../images/seldondeployment-crd.svg"><img alt="" src="../_images/seldondeployment-crd.svg"/></a>
+<p>您可以将 CRD 视为围绕集群中创建的实际部署和服务的抽象。
+一旦将清单应用于集群，Seldon Core <code class="docutils literal notranslate"><span class="pre">Operator</span></code> 将创建所有为推理请求服务所需的 Kubernetes 对象。</p>
+<p>阅读更多 <a class="reference external" href="../reference/seldon-deployment.html">Seldon Deployment CRD 资料文档</a>.</p>
+</section>
+<section id="seldon-core-operator">
+<h2 id="seldon-core-operator">Seldon Core Operator<a class="headerlink" href="#seldon-core-operator" title="Permalink to this heading">¶</a></h2>
+<p>Seldon Core <code class="docutils literal notranslate"><span class="pre">Operator</span></code> 通过 <a class="reference external" href="https://github.com/kubernetes-sigs/kubebuilder">Kubebuilder</a> 创建，
+他将在 <code class="docutils literal notranslate"><span class="pre">Kubernetes</span></code> 集群控制 <code class="docutils literal notranslate"><span class="pre">Seldon</span> <span class="pre">Deployments</span></code>。
+它会读取 <code class="docutils literal notranslate"><span class="pre">Seldon</span> <span class="pre">Deployment</span></code> CRD 资源定义并应用于集群，并自动创建所需 <code class="docutils literal notranslate"><span class="pre">Pods</span></code> 和 <code class="docutils literal notranslate"><span class="pre">Services</span></code> 组建。</p>
+<p>它根据常见的 Kubernetes operator 模式运行 - 循环模式：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">observe</span></code> 当前集群的状态</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">diff</span></code> 分配的状态</p></li>
+<li><p>如果有必要，应用状态到 <code class="docutils literal notranslate"><span class="pre">act</span></code></p></li>
+</ul>
+<a class="reference external image-reference" href="../images/operator.svg"><img alt="" src="../_images/operator.svg"/></a>
+</section>
+<section id="id3">
+<h2 id="id3">服务编排<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">Service</span> <span class="pre">Orchestrator</span></code> 负责管理图内流量。
+当推理请求到达时，它从 <code class="docutils literal notranslate"><span class="pre">CRD</span></code> 中读取推理图结构，并保以正确的顺序将其传递到图的每个节点。</p>
+<p><code class="docutils literal notranslate"><span class="pre">Service</span> <span class="pre">Orchestrator</span></code> 因 <code class="docutils literal notranslate"><span class="pre">Seldon</span></code> 体系负责的图组件如：<code class="docutils literal notranslate"><span class="pre">routers</span></code>, <code class="docutils literal notranslate"><span class="pre">combiners</span></code> 以及输入输出 <code class="docutils literal notranslate"><span class="pre">transformers</span></code> 的可用性而存在。</p>
+<a class="reference external image-reference" href="../images/orchestrator.svg"><img alt="" src="../_images/orchestrator.svg"/></a>
+<p><code class="docutils literal notranslate"><span class="pre">Service</span> <span class="pre">Orchestrator</span></code> 还负责提供许多开箱即用的高级特性：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Jaeger</span></code> 追踪</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Prometheus</span></code> 指标</p></li>
+<li><p>请求负载日志</p></li>
+</ul>
+<p>仅举几例。</p>
+<p>阅读更多 <a class="reference external" href="../graph/svcorch.html">Service Orchestrator 文档资料</a>.</p>
+</section>
+<section id="id4">
+<h2 id="id4">元数据来源<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h2>
+<p>在 <code class="docutils literal notranslate"><span class="pre">Seldon</span></code> 我们了解模型元数据的重要性。
+您可以轻松地管理您的模型版本，并确定其输入和输出预期。</p>
+<p>这些允许您通过 （DVC, Pachyderm 等）连接到您训练模型的平台，并确切的知道从推理图中得到预期的输入输出结果。</p>
+<a class="reference external image-reference" href="../images/metadata.svg"><img alt="" src="../_images/metadata1.svg"/></a>
+<p>阅读更多有关 <a class="reference external" href="../reference/apis/metadata.html">元数据来源的资料</a>。</p>
+</section>
+<section id="prometheus">
+<h2 id="prometheus">Prometheus指标<a class="headerlink" href="#prometheus" title="Permalink to this heading">¶</a></h2>
+<p>指标是生产中 ML 推理模型的重要一面。
+Seldon Core 通过 <code class="docutils literal notranslate"><span class="pre">Service</span> <span class="pre">Orchestrator</span></code> 暴露标准的指标给 <a class="reference external" href="https://prometheus.io/">Prometheus</a>。</p>
+<a class="reference external image-reference" href="images/metrics.svg"><img alt="" src="workflow/images/metrics.svg"/></a>
+<p>阅读更多有关 <a class="reference external" href="../analytics/analytics.html">指标资料</a>。</p>
+</section>
+<section id="jaeger">
+<h2 id="jaeger">使用 Jaeger 进行分布式跟踪<a class="headerlink" href="#jaeger" title="Permalink to this heading">¶</a></h2>
+<p>您可以使用 Open Tracing 来跟踪对 Seldon Core 的 API 调用。默认我们使用 <a class="reference external" href="https://www.jaegertracing.io/">Jaeger</a> 进行分布式跟踪，这将允许您深入了解 Seldon 部署中每个微服务跃点的延迟和性能。</p>
+<a class="reference external image-reference" href="../images/tracing.svg"><img alt="" src="../_images/tracing.svg"/></a>
+<p>阅读更多有关 <a class="reference external" href="../graph/distributed-tracing.html">追踪资料文档</a>。</p>
+</section>
+<section id="flask">
+<h2 id="flask">所以，为什么不要 Flask 封装我的模型？<a class="headerlink" href="#flask" title="Permalink to this heading">¶</a></h2>
+<p>你可能会问：为什么我不简单地用 <a class="reference external" href="https://flask.palletsprojects.com/">Flask</a> 封装我们的模型？</p>
+<p>以下是选择 Seldon Core 的一些好处：</p>
+<ul class="simple">
+<li><p>所有艰苦的工作都已经完成</p></li>
+<li><p>开箱即用的复杂推理图</p></li>
+<li><p>可重用的模型服务器（一次构建，多次部署）</p></li>
+<li><p>与指标和跟踪解决方案的集成</p></li>
+<li><p>自动配置入口</p></li>
+<li><p>Seldon Core 经过广泛的开源和商业用户社区的考验</p></li>
+</ul>
+</section>
+<section id="id5">
+<h2 id="id5">Seldon Core 的其他特性？<a class="headerlink" href="#id5" title="Permalink to this heading">¶</a></h2>
+<p>Seldon Core 的安装量超过 2M，跨组织用于管理机器学习模型的大规模部署，主要优势包括：</p>
+<ul class="simple">
+<li><p>使用我们的语言封装或预封装推理服务器将ML模型容器化部署简单化</p></li>
+<li><p>开箱即用，通过 Swagger UI, Seldon Python 客户端或 Curl / GRPCurl 进行测试</p></li>
+<li><p>云存储并通过 AWS EKS, Azure AKS, Google GKE, Alicloud, Digital Ocean 与 Openshift 测试</p></li>
+<li><p>由预测器、变压器、路由器、组合器等组成的强大而丰富的推理图。</p></li>
+<li><p>跨异构工具包和语言的模型的标准化服务层。</p></li>
+<li><p>与 Prometheus 和 Grafana 集成的高级和可自定义指标。</p></li>
+<li><p>通过模型输入-输出请求日志记录与 Elasticsearch 集成实现完全可审计性。</p></li>
+<li><p>通过与 Jaeger 集成进行微服务跟踪，以深入了解微服务节点之间的延迟。</p></li>
+</ul>
+</section>
+</section>
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="../nav/concepts.html" title="概念"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> "Previous" </span> 概念 </span>
+              </div>
+            </a>
+          
+          
+            <a href="../nav/configuration.html" title="配置"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> "Next" </span> 配置 </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2024, Seldon Technologies Ltd.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>
