@@ -1,0 +1,1248 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>日志配置 &#8212; Ray 2.7.2</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/termynal.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/versionwarning.js"></script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+    <script defer="defer" src="../../_static/js/docsearch.js"></script>
+    <script defer="defer" src="../../_static/js/csat.js"></script>
+    <script defer="defer" src="../../_static/js/termynal.js"></script>
+    <script defer="defer" src="../../_static/js/custom.js"></script>
+    <script defer="defer" src="../../_static/js/top-navigation.js"></script>
+    <script src="../../_static/js/tags.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <link rel="canonical" href="https://docs.ray.io/en/latest/ray-observability/user-guides/configure-logging.html" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="分析" href="profiling.html" />
+    <link rel="prev" title="使用 CLI 或 SDK 进行监控" href="cli-sdk.html" />
+
+<!-- Fathom - beautiful, simple website analytics -->
+<script src="https://deer.ray.io/script.js" data-site="WYYANYOS" defer></script>
+<!-- / Fathom -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-110413294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-110413294-1');
+</script>
+
+<script
+  src="https://widget.kapa.ai/kapa-widget.bundle.js"
+  data-website-id="18a8c339-4ec5-43c8-8182-db3f2bc8c6b6"
+  data-project-name="Ray"
+  data-project-color="#2C2C2C"
+  data-project-logo="https://global.discourse-cdn.com/business7/uploads/ray/original/1X/8f4dcb72f7cd34e2a332d548bd65860994bc8ff1.png"
+  data-modal-disclaimer = "Results are automated and may be incorrect or contain inappropriate information. Do not include any personal data or confidential information."
+  data-modal-title = "Ray Docs AI - Ask a Question"
+  data-button-position-bottom = "60px"
+></script>
+
+<script>
+(function(apiKey){
+    (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
+    v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
+        o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
+        y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
+        z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
+
+        pendo.initialize({
+            visitor: {
+                id: 'VISITOR-UNIQUE-ID'
+            },
+            account: {
+                id: 'ACCOUNT-UNIQUE-ID'
+            }
+        });
+})('f89fa48a-6dd7-4d7c-67cf-a8051ed891f2');
+</script>
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"><div class='topnav'></div></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Ray 2.7.2</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main Navigation">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../index.html">
+                    欢迎来到 Ray ！
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Ray
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/index.html">
+   概述「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/getting-started.html">
+   入门
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/installation.html">
+   安装「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/use-cases.html">
+   用例「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/examples.html">
+   示例库「1%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/ray-libraries.html">
+   生态「3%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-core/walkthrough.html">
+   Ray 核心「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../data/data.html">
+   Ray 数据「75%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../train/train.html">
+   Ray 训练「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../tune/index.html">
+   Ray 调参「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../serve/index.html">
+   Ray Serve
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../rllib/index.html">
+   Ray RLlib
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-more-libs/index.html">
+   更多类库「40%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../cluster/getting-started.html">
+   Ray 集群「100%」
+  </a>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="../index.html">
+   监控调试「100%」
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="../getting-started.html">
+     Ray 仪表盘
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../key-concepts.html">
+     关键概念
+    </a>
+   </li>
+   <li class="toctree-l2 current active has-children">
+    <a class="reference internal" href="index.html">
+     用户指南
+    </a>
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+    <label for="toctree-checkbox-2">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul class="current">
+     <li class="toctree-l3">
+      <a class="reference internal" href="debug-apps/index.html">
+       调试应用
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="cli-sdk.html">
+       使用 CLI 或 SDK 进行监控
+      </a>
+     </li>
+     <li class="toctree-l3 current active">
+      <a class="current reference internal" href="#">
+       日志配置
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="profiling.html">
+       分析
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="add-app-metrics.html">
+       添加应用级指标
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="ray-tracing.html">
+       追踪
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../reference/index.html">
+     参考
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-references/api.html">
+   参考「20%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-contribute/index.html">
+   开发者指引「30%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-security/index.html">
+   安全「100%」
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/ray-project/ray"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/issues/new?title=Issue%20on%20page%20%2Fray-observability/user-guides/configure-logging.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/edit/master/doc/source/ray-observability/user-guides/configure-logging.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../_sources/ray-observability/user-guides/configure-logging.md.txt"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#logging-directory">
+   日志目录
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#logging-directory-structure">
+   日志目录中的日志文件
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id4">
+     应用程序日志
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id5">
+     系统（组件）日志
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#log-redirection-to-driver">
+   将工作日志重定向到驱动程序
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#actor">
+     自定义 Actor 日志的前缀
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id7">
+     着色 Actor 日志前缀
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id8">
+     禁用记录到驱动程序
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id9">
+   日志去重
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tqdm">
+   分布式进度条（tqdm）
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ray-logging">
+   使用 Ray 的 logging
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#structured-logging">
+   结构化日志
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id11">
+     应用程序日志
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id12">
+     系统日志
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id13">
+     将元数据添加到结构化日志
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id14">
+   自定义工作进程日志
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#log">
+   Log 切割
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id15">
+   日志持久化
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>日志配置</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#logging-directory">
+   日志目录
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#logging-directory-structure">
+   日志目录中的日志文件
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id4">
+     应用程序日志
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id5">
+     系统（组件）日志
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#log-redirection-to-driver">
+   将工作日志重定向到驱动程序
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#actor">
+     自定义 Actor 日志的前缀
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id7">
+     着色 Actor 日志前缀
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id8">
+     禁用记录到驱动程序
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id9">
+   日志去重
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tqdm">
+   分布式进度条（tqdm）
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ray-logging">
+   使用 Ray 的 logging
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#structured-logging">
+   结构化日志
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id11">
+     应用程序日志
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id12">
+     系统日志
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id13">
+     将元数据添加到结构化日志
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id14">
+   自定义工作进程日志
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#log">
+   Log 切割
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id15">
+   日志持久化
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="configure-logging">
+<span id="id1"></span><h1>日志配置<a class="headerlink" href="#configure-logging" title="Permalink to this headline">#</a></h1>
+<p>本指南帮助您了解和修改 Ray 日志系统的配置。</p>
+<section id="logging-directory">
+<span id="id2"></span><h2>日志目录<a class="headerlink" href="#logging-directory" title="Permalink to this headline">#</a></h2>
+<p>默认情况下，Ray 日志文件存储在 <code class="docutils literal notranslate"><span class="pre">/tmp/ray/session_*/logs</span></code> 目录中。参阅下面的 <a class="reference internal" href="#logging-directory-structure"><span class="std std-ref">日志目录中的日志文件</span></a> 以了解它们在日志文件夹中的组织方式。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Ray 使用 <code class="docutils literal notranslate"><span class="pre">/tmp/ray</span></code> （对于 Linux 和 macOS）作为默认临时目录。要更改临时目录和日志记录目录，请在调用 <code class="docutils literal notranslate"><span class="pre">ray</span> <span class="pre">start</span></code> 或 <code class="docutils literal notranslate"><span class="pre">ray.init()</span></code> 时指定它。</p>
+</div>
+<p>新的 Ray 会话会在临时目录中创建一个新文件夹。最新的会话文件夹符号链接到 <code class="docutils literal notranslate"><span class="pre">/tmp/ray/session_latest</span></code>。这是一个临时目录示例：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>├── tmp/ray
+│   ├── session_latest
+│   │   ├── logs
+│   │   ├── ...
+│   ├── session_2023-05-14_21-19-58_128000_45083
+│   │   ├── logs
+│   │   ├── ...
+│   ├── session_2023-05-15_21-54-19_361265_24281
+│   ├── ...
+</pre></div>
+</div>
+<p>通常，每当机器重新启动时，临时目录就会被清除。因此，每当您的集群或某些节点停止或终止时，日志文件都可能会丢失。</p>
+<p>如果您需要在集群停止或终止后检查日志，则需要存储并持久化日志。查看有关如何处理和导出 <a class="reference internal" href="../../cluster/vms/user-guides/logging.html#vm-logging"><span class="std std-ref">虚拟机集群</span></a> 和 <a class="reference internal" href="../../cluster/kubernetes/user-guides/logging.html#kuberay-logging"><span class="std std-ref">KubeRay 集群</span></a> 的说明。</p>
+</section>
+<section id="logging-directory-structure">
+<span id="id3"></span><h2>日志目录中的日志文件<a class="headerlink" href="#logging-directory-structure" title="Permalink to this headline">#</a></h2>
+<p>以下是日志目录中的日志文件。一般来说，存在两种类型的日志文件：系统日志文件和应用程序日志文件。
+请注意， <code class="docutils literal notranslate"><span class="pre">.out</span></code> 日志来自 stdout/stderr ， <code class="docutils literal notranslate"><span class="pre">.err</span></code> 日志来自 stderr。不保证日志目录的向后兼容性。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>系统日志可能包含有关您的应用程序的信息。例如，<code class="docutils literal notranslate"><span class="pre">runtime_env_setup-[job_id].log</span></code> 可能包括有关应用程序环境和依赖性的信息。</p>
+</div>
+<section id="id4">
+<h3>应用程序日志<a class="headerlink" href="#id4" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">job-driver-[submission_id].log</span></code>: 使用 <a class="reference internal" href="../../cluster/running-applications/job-submission/index.html#jobs-overview"><span class="std std-ref">Ray Jobs API</span></a> 提交的作业的标准输出。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">worker-[worker_id]-[job_id]-[pid].[out|err]</span></code>: Ray driver 和 worker 的 Python 或 Java 部分。来自任务或 actor 的所有 stdout 和 stderr 都会流式传输到这些文件。请注意，job_id 是驱动程序的 ID。</p></li>
+</ul>
+</section>
+<section id="id5">
+<h3>系统（组件）日志<a class="headerlink" href="#id5" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">dashboard.[log|err]</span></code>: Ray Dashboard 的日志文件。 <code class="docutils literal notranslate"><span class="pre">.log</span></code> 文件包含从仪表板记录器生成的日志。 <code class="docutils literal notranslate"><span class="pre">.err</span></code> 件包含从仪表板打印的 stdout 和 stderr。它们通常是空的，除非仪表板意外崩溃。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dashboard_agent.log</span></code>: 每个 Ray 节点都有一个仪表板代理。这是代理的日志文件。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gcs_server.[out|err]</span></code>: GCS 服务器是管理 Ray 集群元数据的无状态服务器。它只存在于头节点中。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">io-worker-[worker_id]-[pid].[out|err]</span></code>: 从 Ray 1.3+ 开始，Ray 默认创建 IO 工作线程以将对象溢出/恢复到外部存储。这是 IO 工作线程的日志文件。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">log_monitor.[log|err]</span></code>: 日志监视器负责将日志流式传输到驱动程序。 <code class="docutils literal notranslate"><span class="pre">.log</span></code> 文件包含从日志监视器的记录器生成的日志。 <code class="docutils literal notranslate"><span class="pre">.err</span></code> 文件包含从日志监视器打印的 stdout 和 stderr。它们通常是空的，除非日志监视器意外崩溃。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">monitor.[out|err]</span></code>: 集群启动器的标准输出和标准错误。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">monitor.log</span></code>: Ray 的集群启动器通过监控进程运行。它还管理自动缩放器。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plasma_store.[out|err]</span></code>: 弃用。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">python-core-driver-[worker_id]_[pid].log</span></code>: Ray 驱动程序由 CPP 核心和 Python 或 Java 前端组成。 CPP 代码生成此日志文件。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">python-core-worker-[worker_id]_[pid].log</span></code>: Ray Workers 由 CPP 核心和 Python 或 Java 前端组成。 CPP 代码生成此日志文件。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">raylet.[out|err]</span></code>: raylet 的日志文件。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">redis-shard_[shard_index].[out|err]</span></code>: Redis 分片日志文件。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">redis.[out|err]</span></code>: Redis 日志文件。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">runtime_env_agent.log</span></code>: 每个 Ray 节点都有一个代理来管理 <a class="reference internal" href="../../ray-core/handling-dependencies.html#runtime-environments"><span class="std std-ref">运行时环境</span></a> 的创建、删除和缓存。
+这是代理的日志文件，包含创建或删除请求以及缓存命中和未命中的日志。
+有关实际安装的日志（例如 <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span></code> 日志），请参阅该文件 <code class="docutils literal notranslate"><span class="pre">runtime_env_setup-[job_id].log</span></code>（见下文）。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">runtime_env_setup-ray_client_server_[port].log</span></code>:  <a class="reference internal" href="../../cluster/running-applications/job-submission/ray-client.html#ray-client-ref"><span class="std std-ref">Ray Client</span></a> 连接 job 的 <a class="reference internal" href="../../ray-core/handling-dependencies.html#runtime-environments"><span class="std std-ref">运行时环境</span></a> 安装日志。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">runtime_env_setup-[job_id].log</span></code>: 任务，actor，job 的 <a class="reference internal" href="../../ray-core/handling-dependencies.html#runtime-environments"><span class="std std-ref">运行时环境</span></a> 安装日志。仅当安装了运行时环境时此文件才存在。</p></li>
+</ul>
+</section>
+</section>
+<section id="log-redirection-to-driver">
+<span id="id6"></span><h2>将工作日志重定向到驱动程序<a class="headerlink" href="#log-redirection-to-driver" title="Permalink to this headline">#</a></h2>
+<p>默认情况下，任务和 Actor 的 Worker 标准输出和标准错误流到 Ray 驱动程序（调用 <code class="docutils literal notranslate"><span class="pre">ray.init</span></code> 的入口点脚本）。它帮助用户将分布式 Ray 应用程序的日志聚合在一个位置。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ray</span>
+
+<span class="c1"># Initiate a driver.</span>
+<span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+
+
+<span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span>
+<span class="k">def</span> <span class="nf">task</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;task&quot;</span><span class="p">)</span>
+
+
+<span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">task</span><span class="o">.</span><span class="n">remote</span><span class="p">())</span>
+
+
+<span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span>
+<span class="k">class</span> <span class="nc">Actor</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">ready</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;actor&quot;</span><span class="p">)</span>
+
+
+<span class="n">actor</span> <span class="o">=</span> <span class="n">Actor</span><span class="o">.</span><span class="n">remote</span><span class="p">()</span>
+<span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">actor</span><span class="o">.</span><span class="n">ready</span><span class="o">.</span><span class="n">remote</span><span class="p">())</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">print</span></code> 方法发出的带有 <code class="docutils literal notranslate"><span class="pre">(Task</span> <span class="pre">或</span> <span class="pre">Actor</span> <span class="pre">repr,</span> <span class="pre">process</span> <span class="pre">ID,</span> <span class="pre">IP</span> <span class="pre">address)</span></code>。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span><span class="nv">pid</span><span class="o">=</span><span class="m">45601</span><span class="o">)</span> task
+<span class="o">(</span>Actor <span class="nv">pid</span><span class="o">=</span><span class="m">480956</span><span class="o">)</span> actor
+</pre></div>
+</div>
+<section id="actor">
+<h3>自定义 Actor 日志的前缀<a class="headerlink" href="#actor" title="Permalink to this headline">#</a></h3>
+<p>区分来自不同 Actor 的日志消息通常很有用。例如，如果您有大量工作 Actor，您可能希望轻松查看记录特定消息的 Actor 的索引。为 Actor 类定义 <code class="docutils literal notranslate"><span class="pre">__repr__</span> <span class="pre">&lt;https://docs.python.org/3/library/functions.html#repr&gt;</span></code>__ 以将 Actor 名称替换为 Actor repr。例如：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ray</span>
+
+
+<span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span>
+<span class="k">class</span> <span class="nc">MyActor</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">index</span>
+
+    <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;hello there&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;MyActor(index=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+
+<span class="n">a</span> <span class="o">=</span> <span class="n">MyActor</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">MyActor</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">foo</span><span class="o">.</span><span class="n">remote</span><span class="p">())</span>
+<span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">foo</span><span class="o">.</span><span class="n">remote</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>结果输出如下：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>MyActor<span class="o">(</span><span class="nv">index</span><span class="o">=</span><span class="m">2</span><span class="o">)</span> <span class="nv">pid</span><span class="o">=</span><span class="m">482120</span><span class="o">)</span> hello there
+<span class="o">(</span>MyActor<span class="o">(</span><span class="nv">index</span><span class="o">=</span><span class="m">1</span><span class="o">)</span> <span class="nv">pid</span><span class="o">=</span><span class="m">482119</span><span class="o">)</span> hello there
+</pre></div>
+</div>
+</section>
+<section id="id7">
+<h3>着色 Actor 日志前缀<a class="headerlink" href="#id7" title="Permalink to this headline">#</a></h3>
+<p>默认情况下，Ray 以浅蓝色打印 Actor 日志前缀。通过设置环境变量 <code class="docutils literal notranslate"><span class="pre">RAY_COLOR_PREFIX=1</span></code> 激活多颜色前缀。
+这会索引到以每个进程的 PID 为模的颜色数组。</p>
+<p><img alt="coloring-actor-log-prefixes" src="../../_images/coloring-actor-log-prefixes.png" /></p>
+</section>
+<section id="id8">
+<h3>禁用记录到驱动程序<a class="headerlink" href="#id8" title="Permalink to this headline">#</a></h3>
+<p>在大规模运行中，将所有工作日志路由到驱动程序可能是不需要的。通过在 <code class="docutils literal notranslate"><span class="pre">ray.init</span></code> 中设置 <code class="docutils literal notranslate"><span class="pre">log_to_driver=False</span></code> 禁用功能：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ray</span>
+
+<span class="c1"># Task and Actor logs are not copied to the driver stdout.</span>
+<span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">log_to_driver</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="id9">
+<h2>日志去重<a class="headerlink" href="#id9" title="Permalink to this headline">#</a></h2>
+<p>默认情况下，Ray 会删除跨多个进程冗余出现的日志。每条日志消息的第一个实例总是立即打印。但是，相同模式的后续日志消息（忽略带有数字成分的单词）将被缓冲最多五秒并批量打印。例如，对于以下代码片段：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ray</span>
+<span class="kn">import</span> <span class="nn">random</span>
+
+<span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span>
+<span class="k">def</span> <span class="nf">task</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hello there, I am a task&quot;</span><span class="p">,</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">())</span>
+
+<span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">([</span><span class="n">task</span><span class="o">.</span><span class="n">remote</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">)])</span>
+</pre></div>
+</div>
+<p>输出如下：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="m">2023</span>-03-27 <span class="m">15</span>:08:34,195	INFO worker.py:1603 -- Started a <span class="nb">local</span> Ray instance. View the dashboard at http://127.0.0.1:8265 
+<span class="o">(</span>task <span class="nv">pid</span><span class="o">=</span><span class="m">534172</span><span class="o">)</span> Hello there, I am a task <span class="m">0</span>.20583517821231412
+<span class="o">(</span>task <span class="nv">pid</span><span class="o">=</span><span class="m">534174</span><span class="o">)</span> Hello there, I am a task <span class="m">0</span>.17536720316370757 <span class="o">[</span>repeated 99x across cluster<span class="o">]</span> <span class="o">(</span>Ray deduplicates logs by default. Set <span class="nv">RAY_DEDUP_LOGS</span><span class="o">=</span><span class="m">0</span> to disable log deduplication<span class="o">)</span>
+</pre></div>
+</div>
+<p>此功能在导入诸如 <code class="docutils literal notranslate"><span class="pre">tensorflow</span></code> 或 <code class="docutils literal notranslate"><span class="pre">numpy</span></code> 时特别有用，这些库在导入时可能会发出许多详细的警告消息。配置此功能如下：</p>
+<ol class="simple">
+<li><p>设置 <code class="docutils literal notranslate"><span class="pre">RAY_DEDUP_LOGS=0</span></code> 为完全禁用此功能。</p></li>
+<li><p>设置 <code class="docutils literal notranslate"><span class="pre">RAY_DEDUP_LOGS_AGG_WINDOW_S=&lt;int&gt;</span></code> 更改聚合窗口。</p></li>
+<li><p>设置 <code class="docutils literal notranslate"><span class="pre">RAY_DEDUP_LOGS_ALLOW_REGEX=&lt;string&gt;</span></code> 为指定日志消息从不进行重复数据删除。</p></li>
+<li><p>设置 <code class="docutils literal notranslate"><span class="pre">RAY_DEDUP_LOGS_SKIP_REGEX=&lt;string&gt;</span></code> 指定日志消息以跳过打印。</p></li>
+</ol>
+</section>
+<section id="tqdm">
+<h2>分布式进度条（tqdm）<a class="headerlink" href="#tqdm" title="Permalink to this headline">#</a></h2>
+<p>在 Ray 远程任务或 Actor 中使用 <a class="reference external" href="https://tqdm.github.io">tqdm</a>时，您可能会注意到进度条输出已损坏。为了避免此问题，请使用 Ray 分布式 tqdm <code class="docutils literal notranslate"><span class="pre">ray.experimental.tqdm_ray</span></code> 实现:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">ray</span>
+
+<span class="c1"># Instead of &quot;from tqdm import tqdm&quot;, use:</span>
+<span class="kn">from</span> <span class="nn">ray.experimental.tqdm_ray</span> <span class="kn">import</span> <span class="n">tqdm</span>
+
+
+<span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">desc</span><span class="o">=</span><span class="n">name</span><span class="p">):</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+
+
+<span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">([</span><span class="n">f</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="s2">&quot;task 1&quot;</span><span class="p">),</span> <span class="n">f</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="s2">&quot;task 2&quot;</span><span class="p">)])</span>
+</pre></div>
+</div>
+<p>该 tqdm 实现的工作原理如下：</p>
+<ol class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tqdm_ray</span></code> 模块将 TQDM 调用转换为写入工作程序标准输出的特殊 JSON 日志消息。</p></li>
+<li><p>Ray 日志监视器将这些日志消息路由到 tqdm 单例，而不是将它们直接复制到驱动程序标准输出。</p></li>
+<li><p>tqdm 单例确定来自各种 Ray 任务或 Actor 的进度条的位置，确保它们不会相互碰撞或冲突。</p></li>
+</ol>
+<p>限制：</p>
+<ul class="simple">
+<li><p>仅支持 tqdm 功能的子集。有关更多详细信息，请参阅 ray_tqdm <a class="reference external" href="https://github.com/ray-project/ray/blob/master/python/ray/experimental/tqdm_ray.py">实现</a> 。</p></li>
+<li><p>如果每秒更新次数超过几千次（更新不是批量的），性能可能会很差。</p></li>
+</ul>
+<p>默认的，当使用 <code class="docutils literal notranslate"><span class="pre">tqdm_ray</span></code> 时，自带 print 会使用 <code class="docutils literal notranslate"><span class="pre">ray.experimental.tqdm_ray.safe_print</span></code> 补丁。
+这可以避免驱动程序打印语句上的进度条损坏。要禁用此功能，请设置 <code class="docutils literal notranslate"><span class="pre">RAY_TQDM_PATCH_PRINT=0</span></code> 。</p>
+</section>
+<section id="ray-logging">
+<h2>使用 Ray 的 logging<a class="headerlink" href="#ray-logging" title="Permalink to this headline">#</a></h2>
+<p>当执行 <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">ray</span></code> ，ay 的记录器被初始化，生成在 <code class="docutils literal notranslate"><span class="pre">python/ray/_private/log.py</span></code> 中给出的默认配置。默认日志等级是 <code class="docutils literal notranslate"><span class="pre">logging.INFO</span></code>。</p>
+<p>所有 Ray 日志自动配置在 <code class="docutils literal notranslate"><span class="pre">ray._private.ray_logging</span></code>。修改 Ray logger:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;ray&quot;</span><span class="p">)</span>
+<span class="n">logger</span> <span class="c1"># Modify the Ray logging config</span>
+</pre></div>
+</div>
+<p>同样，要修改 Ray 库的日志记录配置，请指定适当的记录器名称：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="c1"># First, get the handle for the logger you want to modify</span>
+<span class="n">ray_data_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;ray.data&quot;</span><span class="p">)</span>
+<span class="n">ray_tune_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;ray.tune&quot;</span><span class="p">)</span>
+<span class="n">ray_rllib_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;ray.rllib&quot;</span><span class="p">)</span>
+<span class="n">ray_train_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;ray.train&quot;</span><span class="p">)</span>
+<span class="n">ray_serve_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;ray.serve&quot;</span><span class="p">)</span>
+
+<span class="c1"># Modify the ray.data logging level</span>
+<span class="n">ray_data_logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">)</span>
+
+<span class="c1"># Other loggers can be modified similarly.</span>
+<span class="c1"># Here&#39;s how to add an aditional file handler for Ray Tune:</span>
+<span class="n">ray_tune_logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">FileHandler</span><span class="p">(</span><span class="s2">&quot;extra_ray_tune_log.log&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="structured-logging">
+<span id="id10"></span><h2>结构化日志<a class="headerlink" href="#structured-logging" title="Permalink to this headline">#</a></h2>
+<p>实施结构化日志记录，使下游用户和应用程序能够有效地使用日志。</p>
+<section id="id11">
+<h3>应用程序日志<a class="headerlink" href="#id11" title="Permalink to this headline">#</a></h3>
+<p>Ray 应用程序包括驱动程序和 worker 进程。对于 Python 应用程序，使用 Python 记录器来格式化和构建日志。
+因此，需要为驱动程序和工作进程设置 Python 记录器。</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-0">
+Ray Core</label><div class="sd-tab-content docutils">
+<div class="caution admonition">
+<p class="admonition-title">Caution</p>
+<p>这是一个实验性功能。目前尚不支持 <a class="reference internal" href="../../cluster/running-applications/job-submission/ray-client.html#ray-client-ref"><span class="std std-ref">Ray Client</span></a>。</p>
+</div>
+<p>分别为驱动程序和工作进程设置 Python 记录器：</p>
+<ol class="simple">
+<li><p>导入 <code class="docutils literal notranslate"><span class="pre">ray</span></code> 后为驱动程序进程设置记录器。</p></li>
+<li><p>使用 <code class="docutils literal notranslate"><span class="pre">worker_process_setup_hook</span></code> 为所有工作进程配置 Python 记录器。</p></li>
+</ol>
+<p><img alt="Set up python loggers" src="../../_images/setup-logger-application.png" /></p>
+<p>如果您想控制特定 actor 或任务的记录器，请查看 <a class="reference external" href="#customizing-worker-process-loggers">单个工作进程的自定义记录器</a></p>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-1">
+Ray libraries</label><div class="sd-tab-content docutils">
+<p>如果您正在使用任何 Ray 库，请按照该库文档中提供的说明进行操作。</p>
+</div>
+</div>
+</section>
+<section id="id12">
+<h3>系统日志<a class="headerlink" href="#id12" title="Permalink to this headline">#</a></h3>
+<p>Ray 的大多数系统或组件日志都是默认结构化的。 <br /></p>
+<p>Python 日志的记录格式 <br /></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>%<span class="o">(</span>asctime<span class="o">)</span>s<span class="se">\t</span>%<span class="o">(</span>levelname<span class="o">)</span>s %<span class="o">(</span>filename<span class="o">)</span>s:%<span class="o">(</span>lineno<span class="o">)</span>s -- %<span class="o">(</span>message<span class="o">)</span>s
+</pre></div>
+</div>
+<p>示例: <br /></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">2023</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">01</span> <span class="mi">09</span><span class="p">:</span><span class="mi">15</span><span class="p">:</span><span class="mi">34</span><span class="p">,</span><span class="mi">601</span>	<span class="n">INFO</span> <span class="n">job_manager</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">408</span> <span class="o">--</span> <span class="n">Submitting</span> <span class="n">job</span> <span class="k">with</span> <span class="n">RAY_ADDRESS</span> <span class="o">=</span> <span class="mf">10.0.24.73</span><span class="p">:</span><span class="mi">6379</span>
+</pre></div>
+</div>
+<p>CPP 日志的记录格式 <br /></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">[</span>year-month-day, time, pid, thread_id<span class="o">]</span> <span class="o">(</span>component<span class="o">)</span> <span class="o">[</span>file<span class="o">]</span>:<span class="o">[</span>line<span class="o">]</span> <span class="o">[</span>message<span class="o">]</span>
+</pre></div>
+</div>
+<p>例子: <br /></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">[</span><span class="m">2023</span>-06-01 <span class="m">08</span>:47:47,457 I <span class="m">31009</span> <span class="m">225171</span><span class="o">]</span> <span class="o">(</span>gcs_server<span class="o">)</span> gcs_node_manager.cc:42: Registering node info, node <span class="nv">id</span> <span class="o">=</span> 8cc65840f0a332f4f2d59c9814416db9c36f04ac1a29ac816ad8ca1e, <span class="nv">address</span> <span class="o">=</span> <span class="m">127</span>.0.0.1, node <span class="nv">name</span> <span class="o">=</span> <span class="m">127</span>.0.0.1
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>从 2.5 开始，某些系统组件日志的结构不符合上述建议。系统日志向结构化日志的迁移正在进行中。</p>
+</div>
+</section>
+<section id="id13">
+<h3>将元数据添加到结构化日志<a class="headerlink" href="#id13" title="Permalink to this headline">#</a></h3>
+<p>如果您需要额外的元数据来使日志更加结构化，请使用 Ray 的 <a class="reference internal" href="../../ray-core/api/doc/ray.runtime_context.get_runtime_context.html#ray.runtime_context.get_runtime_context" title="ray.runtime_context.get_runtime_context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ray.runtime_context.get_runtime_context</span></code></a> API 获取作业、任务或 actor 的元数据。</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-2" name="sd-tab-set-1" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-2">
+Ray Job</label><div class="sd-tab-content docutils">
+<p>获取 job ID。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ray</span>
+<span class="c1"># Initiate a driver.</span>
+<span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+
+<span class="n">job_id</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">get_runtime_context</span><span class="p">()</span><span class="o">.</span><span class="n">get_job_id</span>
+</pre></div>
+</div>
+<div class="note admonition">
+<p class="admonition-title">Note</p>
+<p>尚不支持作业提交 ID。此 <a class="reference external" href="https://github.com/ray-project/ray/issues/28089#issuecomment-1557891407">GitHub 问题</a> 跟踪支持它的工作。</p>
+</div>
+</div>
+<input id="sd-tab-item-3" name="sd-tab-set-1" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-3">
+Ray Actor</label><div class="sd-tab-content docutils">
+<p>获取 actor ID.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ray</span>
+<span class="c1"># Initiate a driver.</span>
+<span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+<span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span>
+<span class="k">class</span> <span class="nc">actor</span><span class="p">():</span>
+    <span class="n">actor_id</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">get_runtime_context</span><span class="p">()</span><span class="o">.</span><span class="n">get_actor_id</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-4" name="sd-tab-set-1" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-4">
+Ray Task</label><div class="sd-tab-content docutils">
+<p>获取 task ID.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ray</span>
+<span class="c1"># Initiate a driver.</span>
+<span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+<span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span>
+<span class="k">def</span> <span class="nf">task</span><span class="p">():</span>
+    <span class="n">task_id</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">get_runtime_context</span><span class="p">()</span><span class="o">.</span><span class="n">get_task_id</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-5" name="sd-tab-set-1" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-5">
+Node</label><div class="sd-tab-content docutils">
+<p>获取 node ID.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ray</span>
+<span class="c1"># Initiate a driver.</span>
+<span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+
+<span class="c1"># Get the ID of the node where the driver process is running</span>
+<span class="n">driver_process_node_id</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">get_runtime_context</span><span class="p">()</span><span class="o">.</span><span class="n">get_node_id</span>
+
+<span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span>
+<span class="k">def</span> <span class="nf">task</span><span class="p">():</span>
+    <span class="c1"># Get the ID of the node where the worker process is running</span>
+    <span class="n">worker_process_node_id</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">get_runtime_context</span><span class="p">()</span><span class="o">.</span><span class="n">get_node_id</span>
+</pre></div>
+</div>
+<div class="tip admonition">
+<p class="admonition-title">Tip</p>
+<p>如果需要节点IP，则使用 <a class="reference internal" href="../../ray-core/api/doc/ray.nodes.html#ray.nodes" title="ray.nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ray.nodes</span></code></a> API​ ​获取所有节点并将节点 ID 映射到相应的 IP。</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="id14">
+<h2>自定义工作进程日志<a class="headerlink" href="#id14" title="Permalink to this headline">#</a></h2>
+<p>使用 Ray 时，任务和 Actor 在 Ray 的工作进程中远程执行。要为工作进程提供您自己的日志记录配置，请按照以下说明自定义工作记录器：</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-6" name="sd-tab-set-2" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-6">
+Ray Core: 单个 worker 进程</label><div class="sd-tab-content docutils">
+<p>在定义任务或参与者时自定义记录器配置。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ray</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="c1"># Initiate a driver.</span>
+<span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+
+<span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span>
+<span class="k">class</span> <span class="nc">Actor</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Basic config automatically configures logs to</span>
+        <span class="c1"># stream to stdout and stderr.</span>
+        <span class="c1"># Set the severity to INFO so that info logs are printed to stdout.</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+<span class="n">actor</span> <span class="o">=</span> <span class="n">Actor</span><span class="o">.</span><span class="n">remote</span><span class="p">()</span>
+<span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">actor</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="s2">&quot;A log message for an actor.&quot;</span><span class="p">))</span>
+
+<span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+<span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="s2">&quot;A log message for a task.&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>Actor <span class="nv">pid</span><span class="o">=</span><span class="m">179641</span><span class="o">)</span> INFO:__main__:A log message <span class="k">for</span> an actor.
+<span class="o">(</span>f <span class="nv">pid</span><span class="o">=</span><span class="m">177572</span><span class="o">)</span> INFO:__main__:A log message <span class="k">for</span> a task.
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-7" name="sd-tab-set-2" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-7">
+Ray Core: job 的所有 worker 进程</label><div class="sd-tab-content docutils">
+<div class="caution admonition">
+<p class="admonition-title">Caution</p>
+<p>这是一个实验性功能。 API 的语义可能会发生变化。
+目前尚不支持 <a class="reference internal" href="../../cluster/running-applications/job-submission/ray-client.html#ray-client-ref"><span class="std std-ref">Ray Client</span></a> 。</p>
+<p>目前，通过 <a class="reference internal" href="../../cluster/running-applications/job-submission/quickstart.html#jobs-quickstart"><span class="std std-ref">Ray Job Submission</span></a> API (<code class="docutils literal notranslate"><span class="pre">ray</span> <span class="pre">job</span> <span class="pre">submit</span> <span class="pre">--working-dir</span></code> or <code class="docutils literal notranslate"><span class="pre">ray</span> <span class="pre">job</span> <span class="pre">submit</span> <span class="pre">--runtime-env</span></code>) 传入的所有运行时环境 (<code class="docutils literal notranslate"><span class="pre">ray.init(runtime_env={...})</span></code>) 都会被忽略。</p>
+</div>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">worker_process_setup_hook</span></code> 将新的日志记录配置应用于作业中的所有工作进程。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># driver.py</span>
+<span class="k">def</span> <span class="nf">logging_setup_func</span><span class="p">():</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;ray&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;always&quot;</span><span class="p">)</span>
+
+<span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">runtime_env</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;worker_process_setup_hook&quot;</span><span class="p">:</span> <span class="n">logging_setup_func</span><span class="p">})</span>
+
+<span class="n">logging_setup_func</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-8" name="sd-tab-set-2" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-8">
+Ray 类库</label><div class="sd-tab-content docutils">
+<p>如果您正在使用任何 Ray 库，请按照该库文档中提供的说明进行操作。</p>
+</div>
+</div>
+</section>
+<section id="log">
+<span id="log-rotation"></span><h2>Log 切割<a class="headerlink" href="#log" title="Permalink to this headline">#</a></h2>
+<p>Ray 支持日志文件的日志轮转。请注意，并非所有组件都支持日志轮换。 （Raylet、Python 和 Java 工作日志不切割）。</p>
+<p>默认情况下，日志在达到 512MB (maxBytes) 时轮换，并且最多有五个备份文件 (backupCount)。索引附加到所有备份文件中（例如， <code class="docutils literal notranslate"><span class="pre">raylet.out.1</span></code>）
+要更改日志轮换配置，请指定环境变量。例如，</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">RAY_ROTATION_MAX_BYTES</span><span class="o">=</span><span class="m">1024</span><span class="p">;</span> ray start --head <span class="c1"># Start a ray instance with maxBytes 1KB.</span>
+<span class="nv">RAY_ROTATION_BACKUP_COUNT</span><span class="o">=</span><span class="m">1</span><span class="p">;</span> ray start --head <span class="c1"># Start a ray instance with backupCount 1.</span>
+</pre></div>
+</div>
+<p>日志文件（包括其备份）的最大大小为 <code class="docutils literal notranslate"><span class="pre">RAY_ROTATION_MAX_BYTES</span> <span class="pre">*</span> <span class="pre">RAY_ROTATION_BACKUP_COUNT</span> <span class="pre">+</span> <span class="pre">RAY_ROTATION_MAX_BYTES</span></code></p>
+</section>
+<section id="id15">
+<h2>日志持久化<a class="headerlink" href="#id15" title="Permalink to this headline">#</a></h2>
+<p>要处理和导出日志到外部存储或者管理系统，参阅 <a class="reference internal" href="../../cluster/kubernetes/user-guides/logging.html#kuberay-logging"><span class="std std-ref"> Kubernetes 日志持久化</span></a> and <a class="reference internal" href="../../cluster/vms/user-guides/logging.html#vm-logging"><span class="std std-ref">虚拟机日志持久化</span></a> 了解更多信息。</p>
+</section>
+</section>
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="cli-sdk.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">使用 CLI 或 SDK 进行监控</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="profiling.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">分析</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><!-- Override the footer area for the sphinx-book-theme to include the CSAT widget -->
+<div id="csat">
+  <div id="csat-feedback-received" class="csat-hidden">
+    <span>谢谢你的反馈！</span>
+  </div>
+  <div id="csat-inputs">
+    <span>是否能帮助到你？</span>
+    <div id="csat-yes" class="csat-button">
+      <svg id="csat-yes-icon" class="csat-hidden csat-icon" width="18" height="13" viewBox="0 0 18 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 10.172L16.1922 0.979004L17.6072 2.393L7.00023 13L0.63623 6.636L2.05023 5.222L7.00023 10.172Z" fill="black"/>
+      </svg>
+      <span>是<span>
+    </div>
+    <div id="csat-no" class="csat-button">
+      <svg id="csat-no-icon" class="csat-hidden csat-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 5.58599L11.9502 0.635986L13.3642 2.04999L8.41423 6.99999L13.3642 11.95L11.9502 13.364L7.00023 8.41399L2.05023 13.364L0.63623 11.95L5.58623 6.99999L0.63623 2.04999L2.05023 0.635986L7.00023 5.58599Z" fill="black"/>
+      </svg>
+      <span>否<span>
+    </div>
+  </div>
+  <div id="csat-textarea-group" class="csat-hidden">
+    <span id="csat-feedback-label">反馈</span>
+    <textarea id="csat-textarea"></textarea>
+    <div id="csat-submit">提交</div>
+  </div>
+</div><p>
+  
+    By The Ray Team<br/>
+  
+      &copy; Copyright 2024, The Ray Team.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

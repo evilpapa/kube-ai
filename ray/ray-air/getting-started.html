@@ -1,0 +1,723 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Ray 作为 ML 基础设施 &#8212; Ray 2.7.2</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/termynal.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/js/versionwarning.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+    <script defer="defer" src="../_static/js/docsearch.js"></script>
+    <script defer="defer" src="../_static/js/csat.js"></script>
+    <script defer="defer" src="../_static/js/termynal.js"></script>
+    <script defer="defer" src="../_static/js/custom.js"></script>
+    <script defer="defer" src="../_static/js/top-navigation.js"></script>
+    <script src="../_static/js/tags.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <link rel="canonical" href="https://docs.ray.io/en/latest/ray-air/getting-started.html" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Ray 示例" href="../ray-overview/examples.html" />
+    <link rel="prev" title="Ray 用例" href="../ray-overview/use-cases.html" />
+
+<!-- Fathom - beautiful, simple website analytics -->
+<script src="https://deer.ray.io/script.js" data-site="WYYANYOS" defer></script>
+<!-- / Fathom -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-110413294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-110413294-1');
+</script>
+
+<script
+  src="https://widget.kapa.ai/kapa-widget.bundle.js"
+  data-website-id="18a8c339-4ec5-43c8-8182-db3f2bc8c6b6"
+  data-project-name="Ray"
+  data-project-color="#2C2C2C"
+  data-project-logo="https://global.discourse-cdn.com/business7/uploads/ray/original/1X/8f4dcb72f7cd34e2a332d548bd65860994bc8ff1.png"
+  data-modal-disclaimer = "Results are automated and may be incorrect or contain inappropriate information. Do not include any personal data or confidential information."
+  data-modal-title = "Ray Docs AI - Ask a Question"
+  data-button-position-bottom = "60px"
+></script>
+
+<script>
+(function(apiKey){
+    (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
+    v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
+        o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
+        y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
+        z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
+
+        pendo.initialize({
+            visitor: {
+                id: 'VISITOR-UNIQUE-ID'
+            },
+            account: {
+                id: 'ACCOUNT-UNIQUE-ID'
+            }
+        });
+})('f89fa48a-6dd7-4d7c-67cf-a8051ed891f2');
+</script>
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"><div class='topnav'></div></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Ray 2.7.2</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main Navigation">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    欢迎来到 Ray ！
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Ray
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-overview/index.html">
+   概述「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-overview/getting-started.html">
+   入门
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-overview/installation.html">
+   安装「100%」
+  </a>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="../ray-overview/use-cases.html">
+   用例「100%」
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     Ray 作为 ML 基础设施
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-overview/examples.html">
+   示例库「1%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-overview/ray-libraries.html">
+   生态「3%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-core/walkthrough.html">
+   Ray 核心「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../data/data.html">
+   Ray 数据「75%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../train/train.html">
+   Ray 训练「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../tune/index.html">
+   Ray 调参「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../serve/index.html">
+   Ray Serve
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../rllib/index.html">
+   Ray RLlib
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-more-libs/index.html">
+   更多类库「40%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cluster/getting-started.html">
+   Ray 集群「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-observability/index.html">
+   监控调试「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-references/api.html">
+   参考「20%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-contribute/index.html">
+   开发者指引「30%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-security/index.html">
+   安全「100%」
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/ray-project/ray"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/issues/new?title=Issue%20on%20page%20%2Fray-air/getting-started.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/edit/master/doc/source/ray-air/getting-started.rst"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/ray-air/getting-started.rst.txt"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.rst</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   Ray 作为 ML 基础设施
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id1">
+     为什么 Ray 可以作为 ML 基础设施？
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id2">
+     基于 Ray 的 ML 平台示例
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id4">
+   机器学习平台部署 Ray
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id5">
+     设计理念
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id6">
+     选择你自己的类库
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ml">
+     集成现有 ML 平台
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Ray 作为 ML 基础设施</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   Ray 作为 ML 基础设施
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id1">
+     为什么 Ray 可以作为 ML 基础设施？
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id2">
+     基于 Ray 的 ML 平台示例
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id4">
+   机器学习平台部署 Ray
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id5">
+     设计理念
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id6">
+     选择你自己的类库
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ml">
+     集成现有 ML 平台
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section id="ray-ml">
+<span id="ray-for-ml-infra"></span><h1>Ray 作为 ML 基础设施<a class="headerlink" href="#ray-ml" title="Permalink to this headline">#</a></h1>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>如果您正在使用 Ray 构建 ML 平台，我们很乐意听取您的意见！填些 <a class="reference external" href="https://forms.gle/wCCdbaQDtgErYycT6">此简短表格</a> 以参与其中。</p>
+</div>
+<p>Ray 及其人工智能库为希望简化 ML 平台的团队提供了统一的计算运行时。
+Ray 的库（如Ray Train、Ray Data 和 Ray Serve）可用于组成端到端 ML 工作流，为数据预处理提供功能和API，
+作为训练的一部分，并从训练过渡到服务。</p>
+<img alt="../_images/ray-air.svg" src="../_images/ray-air.svg" /><section id="id1">
+<h2>为什么 Ray 可以作为 ML 基础设施？<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h2>
+<p>Ray 的人工智能库通过为可扩展 ML 提供无缝、统一和开放的体验，简化了机器学习框架、平台和工具的生态系统：</p>
+<img alt="../_images/why-air-2.svg" src="../_images/why-air-2.svg" /><p><strong>1. 无缝开发到生产</strong>: Ray 的人工智能库减少了从开发到生产的摩擦。使用 Ray 及其库，相同的 Python 代码可以从笔记本电脑无缝扩展到大型集群。</p>
+<p><strong>2. 统一的 ML API 和运行时</strong>: Ray 的 API 允许在 XGBoost、PyTorch 和 Hugging Face 等流行框架之间进行交换，只需最少的代码更改。从训练到服务的一切都在一个运行时（Ray+KubeRay）上运行。</p>
+<p><strong>3. 开放且可扩展</strong>: Ray 是完全开源的，可以在任何集群、云或 Kubernetes 上运行。在可扩展的开发人员 API 之上构建自定义组件和集成。</p>
+</section>
+<section id="id2">
+<h2>基于 Ray 的 ML 平台示例<a class="headerlink" href="#id2" title="Permalink to this headline">#</a></h2>
+<p><a class="reference external" href="https://shopify.engineering/merlin-shopify-machine-learning-platform">Merlin</a> 是 Shopify 基于 Ray 的 ML 平台。它实现了 <a class="reference external" href="https://www.youtube.com/watch?v=kbvzvdKH7bc">分布式应用程序</a> （如产品分类和推荐）的快速迭代和扩展。</p>
+<figure class="align-default" id="id7">
+<img alt="../_images/shopify-workload.png" src="../_images/shopify-workload.png" />
+<figcaption>
+<p><span class="caption-text">Shopify 基于 Ray 的 Merlin 架构。</span><a class="headerlink" href="#id7" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>Spotify <a class="reference external" href="https://www.anyscale.com/ray-summit-2022/agenda/sessions/180">使用 Ray 进行高级应用</a> 其中包括对家庭播客的内容推荐进行个性化设置，以及对 Spotify Radio 曲目排序进行个性化设置。</p>
+<figure class="align-default" id="id8">
+<img alt="../_images/spotify.png" src="../_images/spotify.png" />
+<figcaption>
+<p><span class="caption-text">Ray 生态系统如何为 Spotify 的 ML 科学家和工程师赋能。。</span><a class="headerlink" href="#id8" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>以下重点介绍了利用 Ray 的统一 API 构建更简单、更灵活的ML平台的功能公司。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://shopify.engineering/merlin-shopify-machine-learning-platform">[博客] 魔性 Merlin - Shopify 的新 ML 平台</a></p></li>
+<li><p><a class="reference external" href="https://drive.google.com/file/d/1BS5lfXfuG5bnI8UM6FdUrR7CiSuWqdLn/view">[演示] Large Scale Deep Learning Training and Tuning with Ray</a></p></li>
+<li><p><a class="reference external" href="https://www.instacart.com/company/how-its-made/griffin-how-instacarts-ml-platform-tripled-ml-applications-in-a-year/">[博客] Griffin: How Instacart’s ML Platform Tripled in a year</a></p></li>
+<li><p><a class="reference external" href="https://www.youtube.com/watch?v=B5v9B5VSI7Q">[讨论] Predibase - 针对规模构建的低代码深度学习平台</a></p></li>
+<li><p><a class="reference external" href="https://cloud.google.com/blog/products/ai-machine-learning/build-a-ml-platform-with-kubeflow-and-ray-on-gke">[博客] 在 GKE 上用 Kubeflow 和 Ray 构建 ML 平台</a></p></li>
+<li><p><a class="reference external" href="https://www.youtube.com/watch?v=_L0lsShbKaY">[讨论] Ray Summit Panel - ML Platform on Ray</a></p></li>
+</ul>
+</section>
+</section>
+<section id="id4">
+<h1>机器学习平台部署 Ray<a class="headerlink" href="#id4" title="Permalink to this headline">#</a></h1>
+<p>在这里，我们将介绍如何在基础设施中使用或部署 Ray。有两种主要的部署模式 –pick 和在现有平台内部署。</p>
+<p>核心思想是 Ray 可以 <strong>补充</strong> 您现有的基础设施和集成工具。</p>
+<section id="id5">
+<h2>设计理念<a class="headerlink" href="#id5" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Ray 及其库处理了人工智能应用程序和服务的计算较重的方面。</p></li>
+<li><p>Ray依靠外部集成（例如Tecton、MLFlow、W&amp;B）进行存储和跟踪。</p></li>
+<li><p>工作流编排器（例如，AirFlow）是一个可选组件，可用于调度重复作业、为作业启动新的 Ray 集群以及运行非 Ray 计算步骤。</p></li>
+<li><p>可以使用 Ray 任务处理单个 Ray 应用程序中任务图的轻量级编排。</p></li>
+<li><p>Ray 库可以在现有的 ML 平台中独立使用，也可以构建 Ray 原生 ML 平台。</p></li>
+</ul>
+</section>
+<section id="id6">
+<h2>选择你自己的类库<a class="headerlink" href="#id6" title="Permalink to this headline">#</a></h2>
+<p>您可以选择要使用的 Ray AI 库。</p>
+<p>如果您是一名 ML 工程师，希望为特定的人工智能应用程序或服务用例独立使用 Ray 库，并且不需要与现有 ML 平台集成，则这一点适用。</p>
+<p>例如，Alice 希望使用 RLli b为她的工作项目训练模型。Bob 希望使用 Ray Serve 来部署他的模型管道。在这两种情况下，Alice 和 Bob 都可以独立地利用这些库，而无需任何协调。</p>
+<p>此场景描述了当今 Ray 库的大多数用法。</p>
+<img alt="../_images/air_arch_1.svg" src="../_images/air_arch_1.svg" /><p>在上图中：</p>
+<ul class="simple">
+<li><p>只使用了一个库 – 这表明您可以进行挑选，而不需要替换所有ML基础结构即可使用Ray。</p></li>
+<li><p>你可以使用 <a class="reference internal" href="../cluster/running-applications/job-submission/index.html#jobs-overview"><span class="std std-ref">Ray 的多种部署模式</span></a> 的一种来启动和管理 Ray 集群和 Ray 应用程序。</p></li>
+<li><p>Ray AI 库可以从外部存储系统（如 Amazon S3 /谷歌云存储）读取数据，并将结果存储在那里。</p></li>
+</ul>
+</section>
+<section id="ml">
+<h2>集成现有 ML 平台<a class="headerlink" href="#ml" title="Permalink to this headline">#</a></h2>
+<p>您可能已经有了一个现有的机器学习平台，但希望使用 Ray 的 ML 库的一些子集。例如，ML 工程师希望在其组织购买的ML平台（例如，SageMaker、Vertex）中使用 Ray。</p>
+<p>Ray 可以通过与现有的管道 / 工作流协调器、存储和跟踪服务集成来补充现有的机器学习平台，而不需要更换整个 ML 平台。</p>
+<img alt="../_images/air_arch_2.png" src="../_images/air_arch_2.png" />
+<p>在上图中：</p>
+<ol class="arabic simple">
+<li><p>工作流协调器，如 AirFlow、Oozie、SageMaker Pipelines 等，负责调度和创建 Ray 集群以及运行 Ray 应用程序和服务。Ray 应用程序可能是更大的编排工作流的一部分（例如，Spark ETL，然后是在 Ray 上训练）。</p></li>
+<li><p>任务图的轻量级编排可以完全在 Ray 中处理。外部工作流协调器将很好地集成，但只有在运行非 Ray 步骤时才需要。</p></li>
+<li><p>Ray 集群也可以创建用于交互使用（例如，Jupyter笔记本电脑、Google Colab、Databricks笔记本电脑等）。</p></li>
+<li><p>Ray Train、Data 和 Serve 提供与特征存储（如 Feast for Training and Serving）的集成。</p></li>
+<li><p>Ray Train 和 Tune 提供与 MLFlow 和 Weights&amp;Biases 等跟踪服务的集成。</p></li>
+</ol>
+</section>
+</section>
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="../ray-overview/use-cases.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Ray 用例</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="../ray-overview/examples.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Ray 示例</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><!-- Override the footer area for the sphinx-book-theme to include the CSAT widget -->
+<div id="csat">
+  <div id="csat-feedback-received" class="csat-hidden">
+    <span>谢谢你的反馈！</span>
+  </div>
+  <div id="csat-inputs">
+    <span>是否能帮助到你？</span>
+    <div id="csat-yes" class="csat-button">
+      <svg id="csat-yes-icon" class="csat-hidden csat-icon" width="18" height="13" viewBox="0 0 18 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 10.172L16.1922 0.979004L17.6072 2.393L7.00023 13L0.63623 6.636L2.05023 5.222L7.00023 10.172Z" fill="black"/>
+      </svg>
+      <span>是<span>
+    </div>
+    <div id="csat-no" class="csat-button">
+      <svg id="csat-no-icon" class="csat-hidden csat-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 5.58599L11.9502 0.635986L13.3642 2.04999L8.41423 6.99999L13.3642 11.95L11.9502 13.364L7.00023 8.41399L2.05023 13.364L0.63623 11.95L5.58623 6.99999L0.63623 2.04999L2.05023 0.635986L7.00023 5.58599Z" fill="black"/>
+      </svg>
+      <span>否<span>
+    </div>
+  </div>
+  <div id="csat-textarea-group" class="csat-hidden">
+    <span id="csat-feedback-label">反馈</span>
+    <textarea id="csat-textarea"></textarea>
+    <div id="csat-submit">提交</div>
+  </div>
+</div><p>
+  
+    By The Ray Team<br/>
+  
+      &copy; Copyright 2024, The Ray Team.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

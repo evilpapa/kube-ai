@@ -1,0 +1,1200 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ray.serve.deployment &#8212; Ray 2.7.2</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/termynal.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/js/versionwarning.js"></script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+    <script defer="defer" src="../../../_static/js/docsearch.js"></script>
+    <script defer="defer" src="../../../_static/js/csat.js"></script>
+    <script defer="defer" src="../../../_static/js/termynal.js"></script>
+    <script defer="defer" src="../../../_static/js/custom.js"></script>
+    <script defer="defer" src="../../../_static/js/top-navigation.js"></script>
+    <script src="../../../_static/js/tags.js"></script>
+    <script src="../../../_static/tabs.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <link rel="canonical" href="https://docs.ray.io/en/latest/_modules/ray/serve/deployment.html" />
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+
+<!-- Fathom - beautiful, simple website analytics -->
+<script src="https://deer.ray.io/script.js" data-site="WYYANYOS" defer></script>
+<!-- / Fathom -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-110413294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-110413294-1');
+</script>
+
+<script
+  src="https://widget.kapa.ai/kapa-widget.bundle.js"
+  data-website-id="18a8c339-4ec5-43c8-8182-db3f2bc8c6b6"
+  data-project-name="Ray"
+  data-project-color="#2C2C2C"
+  data-project-logo="https://global.discourse-cdn.com/business7/uploads/ray/original/1X/8f4dcb72f7cd34e2a332d548bd65860994bc8ff1.png"
+  data-modal-disclaimer = "Results are automated and may be incorrect or contain inappropriate information. Do not include any personal data or confidential information."
+  data-modal-title = "Ray Docs AI - Ask a Question"
+  data-button-position-bottom = "60px"
+></script>
+
+<script>
+(function(apiKey){
+    (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
+    v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
+        o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
+        y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
+        z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
+
+        pendo.initialize({
+            visitor: {
+                id: 'VISITOR-UNIQUE-ID'
+            },
+            account: {
+                id: 'ACCOUNT-UNIQUE-ID'
+            }
+        });
+})('f89fa48a-6dd7-4d7c-67cf-a8051ed891f2');
+</script>
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"><div class='topnav'></div></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Ray 2.7.2</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main Navigation">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../index.html">
+                    欢迎来到 Ray ！
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Ray
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/index.html">
+   概述
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/getting-started.html">
+   入门
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/installation.html">
+   安装
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/use-cases.html">
+   用例
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/examples.html">
+   示例库
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/ray-libraries.html">
+   生态
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-core/walkthrough.html">
+   Ray 核心
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../data/data.html">
+   Ray 数据
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../train/train.html">
+   Ray 训练
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../tune/index.html">
+   Ray 调参
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../serve/index.html">
+   Ray Serve
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../rllib/index.html">
+   Ray RLlib
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-more-libs/index.html">
+   更多类库
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../cluster/getting-started.html">
+   Ray 集群
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-observability/index.html">
+   监控调试
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-references/api.html">
+   参考
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-contribute/index.html">
+   开发者指引
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-security/index.html">
+   安全
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/ray-project/ray"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/issues/new?title=Issue%20on%20page%20%2F_modules/ray/serve/deployment.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1></h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <h1>Source code for ray.serve.deployment</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Any</span><span class="p">,</span>
+    <span class="n">Callable</span><span class="p">,</span>
+    <span class="n">Dict</span><span class="p">,</span>
+    <span class="n">List</span><span class="p">,</span>
+    <span class="n">Optional</span><span class="p">,</span>
+    <span class="n">Tuple</span><span class="p">,</span>
+    <span class="n">Union</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">from</span> <span class="nn">ray.dag.dag_node</span> <span class="kn">import</span> <span class="n">DAGNodeBase</span>
+<span class="kn">from</span> <span class="nn">ray.dag.class_node</span> <span class="kn">import</span> <span class="n">ClassNode</span>
+<span class="kn">from</span> <span class="nn">ray.dag.function_node</span> <span class="kn">import</span> <span class="n">FunctionNode</span>
+<span class="kn">from</span> <span class="nn">ray.util.annotations</span> <span class="kn">import</span> <span class="n">Deprecated</span><span class="p">,</span> <span class="n">PublicAPI</span>
+
+<span class="kn">from</span> <span class="nn">ray.serve._private.config</span> <span class="kn">import</span> <span class="n">DeploymentConfig</span><span class="p">,</span> <span class="n">ReplicaConfig</span>
+<span class="kn">from</span> <span class="nn">ray.serve.config</span> <span class="kn">import</span> <span class="n">AutoscalingConfig</span>
+<span class="kn">from</span> <span class="nn">ray.serve.context</span> <span class="kn">import</span> <span class="n">_get_global_client</span>
+<span class="kn">from</span> <span class="nn">ray.serve.handle</span> <span class="kn">import</span> <span class="n">RayServeHandle</span><span class="p">,</span> <span class="n">RayServeSyncHandle</span>
+<span class="kn">from</span> <span class="nn">ray.serve.schema</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">RayActorOptionsSchema</span><span class="p">,</span>
+    <span class="n">DeploymentSchema</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">ray.serve._private.constants</span> <span class="kn">import</span> <span class="n">SERVE_LOGGER_NAME</span><span class="p">,</span> <span class="n">MIGRATION_MESSAGE</span>
+<span class="kn">from</span> <span class="nn">ray.serve._private.usage</span> <span class="kn">import</span> <span class="n">ServeUsageTag</span>
+<span class="kn">from</span> <span class="nn">ray.serve._private.utils</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">DEFAULT</span><span class="p">,</span>
+    <span class="n">Default</span><span class="p">,</span>
+    <span class="n">guarded_deprecation_warning</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">SERVE_LOGGER_NAME</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Application"><a class="viewcode-back" href="../../../serve/api/doc/ray.serve.Application.html#ray.serve.Application">[docs]</a><span class="nd">@PublicAPI</span><span class="p">(</span><span class="n">stability</span><span class="o">=</span><span class="s2">&quot;stable&quot;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Application</span><span class="p">(</span><span class="n">DAGNodeBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;One or more deployments bound with arguments that can be deployed together.</span>
+
+<span class="sd">    Can be passed into another `Deployment.bind()` to compose multiple deployments in a</span>
+<span class="sd">    single application, passed to `serve.run`, or deployed via a Serve config file.</span>
+
+<span class="sd">    For example, to define an Application and run it in Python:</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            from ray import serve</span>
+<span class="sd">            from ray.serve import Application</span>
+
+<span class="sd">            @serve.deployment</span>
+<span class="sd">            class MyDeployment:</span>
+<span class="sd">                pass</span>
+
+<span class="sd">            app: Application = MyDeployment.bind(OtherDeployment.bind())</span>
+<span class="sd">            serve.run(app)</span>
+
+<span class="sd">    To run the same app using the command line interface (CLI):</span>
+
+<span class="sd">        .. code-block:: bash</span>
+
+<span class="sd">            serve run python_file:app</span>
+
+<span class="sd">    To deploy the same app via a config file:</span>
+
+<span class="sd">        .. code-block:: yaml</span>
+
+<span class="sd">            applications:</span>
+<span class="sd">                my_app:</span>
+<span class="sd">                    import_path: python_file:app</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">_internal_dag_node</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">ClassNode</span><span class="p">,</span> <span class="n">FunctionNode</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="n">_internal_dag_node</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;This class should not be constructed directly.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_internal_dag_node</span> <span class="o">=</span> <span class="n">_internal_dag_node</span>
+
+    <span class="k">def</span> <span class="nf">_get_internal_dag_node</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">ClassNode</span><span class="p">,</span> <span class="n">FunctionNode</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_internal_dag_node</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Application object should not be constructed directly.&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_internal_dag_node</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_from_internal_dag_node</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">dag_node</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ClassNode</span><span class="p">,</span> <span class="n">FunctionNode</span><span class="p">]):</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">_internal_dag_node</span><span class="o">=</span><span class="n">dag_node</span><span class="p">)</span>
+
+    <span class="c1"># Proxy all method calls to the underlying DAG node. This allows this class to be</span>
+    <span class="c1"># passed in place of the ClassNode or FunctionNode in the DAG building code.</span>
+    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_internal_dag_node</span><span class="p">(),</span> <span class="n">name</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Deployment"><a class="viewcode-back" href="../../../serve/api/doc/ray.serve.Deployment.html#ray.serve.Deployment">[docs]</a><span class="nd">@PublicAPI</span><span class="p">(</span><span class="n">stability</span><span class="o">=</span><span class="s2">&quot;stable&quot;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Deployment</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Class (or function) decorated with the `@serve.deployment` decorator.</span>
+
+<span class="sd">    This is run on a number of replica actors. Requests to those replicas call</span>
+<span class="sd">    this class.</span>
+
+<span class="sd">    One or more deployments can be composed together into an `Application` which is</span>
+<span class="sd">    then run via `serve.run` or a config file.</span>
+
+<span class="sd">    Example:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        @serve.deployment</span>
+<span class="sd">        class MyDeployment:</span>
+<span class="sd">            def __init__(self, name: str):</span>
+<span class="sd">                self._name = name</span>
+
+<span class="sd">            def __call__(self, request):</span>
+<span class="sd">                return &quot;Hello world!&quot;</span>
+
+<span class="sd">            app = MyDeployment.bind()</span>
+<span class="sd">            # Run via `serve.run` or the `serve run` CLI command.</span>
+<span class="sd">            serve.run(app)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">deployment_config</span><span class="p">:</span> <span class="n">DeploymentConfig</span><span class="p">,</span>
+        <span class="n">replica_config</span><span class="p">:</span> <span class="n">ReplicaConfig</span><span class="p">,</span>
+        <span class="n">version</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">route_prefix</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">DEFAULT</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">,</span>
+        <span class="n">is_driver_deployment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">_internal</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">_internal</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="s2">&quot;The Deployment constructor should not be called &quot;</span>
+                <span class="s2">&quot;directly. Use `@serve.deployment` instead.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;name must be a string.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">version</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">version</span><span class="p">,</span> <span class="nb">str</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;version must be a string.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">route_prefix</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span> <span class="ow">and</span> <span class="n">route_prefix</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">route_prefix</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;route_prefix must be a string.&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">route_prefix</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;route_prefix must start with &#39;/&#39;.&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">route_prefix</span> <span class="o">!=</span> <span class="s2">&quot;/&quot;</span> <span class="ow">and</span> <span class="n">route_prefix</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;route_prefix must not end with &#39;/&#39; unless it&#39;s the root.&quot;</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;{&quot;</span> <span class="ow">in</span> <span class="n">route_prefix</span> <span class="ow">or</span> <span class="s2">&quot;}&quot;</span> <span class="ow">in</span> <span class="n">route_prefix</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;route_prefix may not contain wildcards.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">is_driver_deployment</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">deployment_config</span><span class="o">.</span><span class="n">num_replicas</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;num_replicas should not be set for driver deployment&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">deployment_config</span><span class="o">.</span><span class="n">autoscaling_config</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;autoscaling should not be set for driver deployment&quot;</span><span class="p">)</span>
+
+        <span class="n">docs_path</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="n">replica_config</span><span class="o">.</span><span class="n">deployment_def</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">replica_config</span><span class="o">.</span><span class="n">deployment_def</span><span class="p">,</span> <span class="s2">&quot;__module__&quot;</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="n">replica_config</span><span class="o">.</span><span class="n">deployment_def</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">==</span> <span class="s2">&quot;ray.serve.api&quot;</span>
+            <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">replica_config</span><span class="o">.</span><span class="n">deployment_def</span><span class="p">,</span> <span class="s2">&quot;__fastapi_docs_path__&quot;</span><span class="p">)</span>
+        <span class="p">):</span>
+            <span class="n">docs_path</span> <span class="o">=</span> <span class="n">replica_config</span><span class="o">.</span><span class="n">deployment_def</span><span class="o">.</span><span class="n">__fastapi_docs_path__</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_version</span> <span class="o">=</span> <span class="n">version</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_deployment_config</span> <span class="o">=</span> <span class="n">deployment_config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_replica_config</span> <span class="o">=</span> <span class="n">replica_config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_route_prefix</span> <span class="o">=</span> <span class="n">route_prefix</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_is_driver_deployment</span> <span class="o">=</span> <span class="n">is_driver_deployment</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_docs_path</span> <span class="o">=</span> <span class="n">docs_path</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Unique name of this deployment.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">version</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_version</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">func_or_class</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Callable</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Underlying class or function that this deployment wraps.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_replica_config</span><span class="o">.</span><span class="n">deployment_def</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">num_replicas</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Current target number of replicas.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deployment_config</span><span class="o">.</span><span class="n">num_replicas</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">user_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Current dynamic user-provided config options.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deployment_config</span><span class="o">.</span><span class="n">user_config</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">max_concurrent_queries</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Current max outstanding queries from each handle.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deployment_config</span><span class="o">.</span><span class="n">max_concurrent_queries</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">route_prefix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;HTTP route prefix that this deployment is exposed under.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_route_prefix</span> <span class="ow">is</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_route_prefix</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">ray_actor_options</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Actor options such as resources required for each replica.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_replica_config</span><span class="o">.</span><span class="n">ray_actor_options</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">init_args</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_replica_config</span><span class="o">.</span><span class="n">init_args</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">init_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_replica_config</span><span class="o">.</span><span class="n">init_kwargs</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_route_prefix</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_driver_deployment</span><span class="p">:</span>
+            <span class="c1"># this deployment is not exposed over HTTP</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">return</span> <span class="n">_get_global_client</span><span class="p">()</span><span class="o">.</span><span class="n">root_url</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">route_prefix</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+            <span class="s2">&quot;Deployments cannot be constructed directly. &quot;</span>
+            <span class="s2">&quot;Use `deployment.deploy() instead.`&quot;</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="Deployment.bind"><a class="viewcode-back" href="../../../serve/api/doc/ray.serve.Deployment.html#ray.serve.Deployment.bind">[docs]</a>    <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Application</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Bind the arguments to the deployment and return an Application.</span>
+
+<span class="sd">        The returned Application can be deployed using `serve.run` (or via</span>
+<span class="sd">        config file) or bound to another deployment for composition.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">schema_shell</span> <span class="o">=</span> <span class="n">deployment_to_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isfunction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func_or_class</span><span class="p">):</span>
+            <span class="n">dag_node</span> <span class="o">=</span> <span class="n">FunctionNode</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">func_or_class</span><span class="p">,</span>
+                <span class="n">args</span><span class="p">,</span>  <span class="c1"># Used to bind and resolve DAG only, can take user input</span>
+                <span class="n">kwargs</span><span class="p">,</span>  <span class="c1"># Used to bind and resolve DAG only, can take user input</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_replica_config</span><span class="o">.</span><span class="n">ray_actor_options</span> <span class="ow">or</span> <span class="nb">dict</span><span class="p">(),</span>
+                <span class="n">other_args_to_resolve</span><span class="o">=</span><span class="p">{</span>
+                    <span class="s2">&quot;deployment_schema&quot;</span><span class="p">:</span> <span class="n">schema_shell</span><span class="p">,</span>
+                    <span class="s2">&quot;is_from_serve_deployment&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="p">},</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dag_node</span> <span class="o">=</span> <span class="n">ClassNode</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">func_or_class</span><span class="p">,</span>
+                <span class="n">args</span><span class="p">,</span>
+                <span class="n">kwargs</span><span class="p">,</span>
+                <span class="n">cls_options</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_replica_config</span><span class="o">.</span><span class="n">ray_actor_options</span> <span class="ow">or</span> <span class="nb">dict</span><span class="p">(),</span>
+                <span class="n">other_args_to_resolve</span><span class="o">=</span><span class="p">{</span>
+                    <span class="s2">&quot;deployment_schema&quot;</span><span class="p">:</span> <span class="n">schema_shell</span><span class="p">,</span>
+                    <span class="s2">&quot;is_from_serve_deployment&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="p">},</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">Application</span><span class="o">.</span><span class="n">_from_internal_dag_node</span><span class="p">(</span><span class="n">dag_node</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Deployment.deploy"><a class="viewcode-back" href="../../../serve/api/doc/ray.serve.Deployment.html#ray.serve.Deployment.deploy">[docs]</a>    <span class="nd">@guarded_deprecation_warning</span><span class="p">(</span><span class="n">instructions</span><span class="o">=</span><span class="n">MIGRATION_MESSAGE</span><span class="p">)</span>
+    <span class="nd">@Deprecated</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">MIGRATION_MESSAGE</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">deploy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">init_args</span><span class="p">,</span> <span class="n">_blocking</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">init_kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Deploy or update this deployment.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            init_args: args to pass to the class __init__</span>
+<span class="sd">                method. Not valid if this deployment wraps a function.</span>
+<span class="sd">            init_kwargs: kwargs to pass to the class __init__</span>
+<span class="sd">                method. Not valid if this deployment wraps a function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ServeUsageTag</span><span class="o">.</span><span class="n">API_VERSION</span><span class="o">.</span><span class="n">record</span><span class="p">(</span><span class="s2">&quot;v1&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_deploy</span><span class="p">(</span><span class="o">*</span><span class="n">init_args</span><span class="p">,</span> <span class="n">_blocking</span><span class="o">=</span><span class="n">_blocking</span><span class="p">,</span> <span class="o">**</span><span class="n">init_kwargs</span><span class="p">)</span></div>
+
+    <span class="c1"># TODO(Sihan) Promote the _deploy to deploy after we fully deprecate the API</span>
+    <span class="k">def</span> <span class="nf">_deploy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">init_args</span><span class="p">,</span> <span class="n">_blocking</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">init_kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Deploy or update this deployment.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            init_args: args to pass to the class __init__</span>
+<span class="sd">                method. Not valid if this deployment wraps a function.</span>
+<span class="sd">            init_kwargs: kwargs to pass to the class __init__</span>
+<span class="sd">                method. Not valid if this deployment wraps a function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">init_args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_replica_config</span><span class="o">.</span><span class="n">init_args</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">init_args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_replica_config</span><span class="o">.</span><span class="n">init_args</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">init_kwargs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_replica_config</span><span class="o">.</span><span class="n">init_kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">init_kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_replica_config</span><span class="o">.</span><span class="n">init_kwargs</span>
+
+        <span class="n">replica_config</span> <span class="o">=</span> <span class="n">ReplicaConfig</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_replica_config</span><span class="o">.</span><span class="n">deployment_def</span><span class="p">,</span>
+            <span class="n">init_args</span><span class="o">=</span><span class="n">init_args</span><span class="p">,</span>
+            <span class="n">init_kwargs</span><span class="o">=</span><span class="n">init_kwargs</span><span class="p">,</span>
+            <span class="n">ray_actor_options</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_replica_config</span><span class="o">.</span><span class="n">ray_actor_options</span><span class="p">,</span>
+            <span class="n">placement_group_bundles</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_replica_config</span><span class="o">.</span><span class="n">placement_group_bundles</span><span class="p">,</span>
+            <span class="n">placement_group_strategy</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_replica_config</span><span class="o">.</span><span class="n">placement_group_strategy</span><span class="p">,</span>
+            <span class="n">max_replicas_per_node</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_replica_config</span><span class="o">.</span><span class="n">max_replicas_per_node</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">_get_global_client</span><span class="p">()</span><span class="o">.</span><span class="n">deploy</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span>
+            <span class="n">replica_config</span><span class="o">=</span><span class="n">replica_config</span><span class="p">,</span>
+            <span class="n">deployment_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_deployment_config</span><span class="p">,</span>
+            <span class="n">version</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_version</span><span class="p">,</span>
+            <span class="n">route_prefix</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">route_prefix</span><span class="p">,</span>
+            <span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span>
+            <span class="n">_blocking</span><span class="o">=</span><span class="n">_blocking</span><span class="p">,</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="Deployment.delete"><a class="viewcode-back" href="../../../serve/api/doc/ray.serve.Deployment.html#ray.serve.Deployment.delete">[docs]</a>    <span class="nd">@guarded_deprecation_warning</span><span class="p">(</span><span class="n">instructions</span><span class="o">=</span><span class="n">MIGRATION_MESSAGE</span><span class="p">)</span>
+    <span class="nd">@Deprecated</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">MIGRATION_MESSAGE</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Delete this deployment.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_delete</span><span class="p">()</span></div>
+
+    <span class="c1"># TODO(Sihan) Promote the _delete to delete after we fully deprecate the API</span>
+    <span class="k">def</span> <span class="nf">_delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Delete this deployment.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">_get_global_client</span><span class="p">()</span><span class="o">.</span><span class="n">delete_deployments</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">])</span>
+
+<div class="viewcode-block" id="Deployment.get_handle"><a class="viewcode-back" href="../../../serve/api/doc/ray.serve.Deployment.html#ray.serve.Deployment.get_handle">[docs]</a>    <span class="nd">@guarded_deprecation_warning</span><span class="p">(</span><span class="n">instructions</span><span class="o">=</span><span class="n">MIGRATION_MESSAGE</span><span class="p">)</span>
+    <span class="nd">@Deprecated</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">MIGRATION_MESSAGE</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">get_handle</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">sync</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">RayServeHandle</span><span class="p">,</span> <span class="n">RayServeSyncHandle</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Get a ServeHandle to this deployment to invoke it from Python.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            sync: If true, then Serve will return a ServeHandle that</span>
+<span class="sd">                works everywhere. Otherwise, Serve will return an</span>
+<span class="sd">                asyncio-optimized ServeHandle that&#39;s only usable in an asyncio</span>
+<span class="sd">                loop.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            ServeHandle</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_handle</span><span class="p">(</span><span class="n">sync</span><span class="p">)</span></div>
+
+    <span class="c1"># TODO(Sihan) Promote the _get_handle to get_handle after we fully deprecate the API</span>
+    <span class="k">def</span> <span class="nf">_get_handle</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sync</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">RayServeHandle</span><span class="p">,</span> <span class="n">RayServeSyncHandle</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Get a ServeHandle to this deployment to invoke it from Python.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            sync: If true, then Serve will return a ServeHandle that</span>
+<span class="sd">                works everywhere. Otherwise, Serve will return an</span>
+<span class="sd">                asyncio-optimized ServeHandle that&#39;s only usable in an asyncio</span>
+<span class="sd">                loop.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            ServeHandle</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">_get_global_client</span><span class="p">()</span><span class="o">.</span><span class="n">get_handle</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span>
+            <span class="n">app_name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="n">missing_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">sync</span><span class="o">=</span><span class="n">sync</span><span class="p">,</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="Deployment.options"><a class="viewcode-back" href="../../../serve/api/doc/ray.serve.Deployment.html#ray.serve.Deployment.options">[docs]</a>    <span class="k">def</span> <span class="nf">options</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">func_or_class</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">Default</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">,</span>
+        <span class="n">version</span><span class="p">:</span> <span class="n">Default</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">,</span>
+        <span class="n">num_replicas</span><span class="p">:</span> <span class="n">Default</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">,</span>
+        <span class="n">init_args</span><span class="p">:</span> <span class="n">Default</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">,</span>
+        <span class="n">init_kwargs</span><span class="p">:</span> <span class="n">Default</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">,</span>
+        <span class="n">route_prefix</span><span class="p">:</span> <span class="n">Default</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]]</span> <span class="o">=</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">,</span>
+        <span class="n">ray_actor_options</span><span class="p">:</span> <span class="n">Default</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]]</span> <span class="o">=</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">,</span>
+        <span class="n">placement_group_bundles</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]]</span> <span class="o">=</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">,</span>
+        <span class="n">placement_group_strategy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">,</span>
+        <span class="n">max_replicas_per_node</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">,</span>
+        <span class="n">user_config</span><span class="p">:</span> <span class="n">Default</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">,</span>
+        <span class="n">max_concurrent_queries</span><span class="p">:</span> <span class="n">Default</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">,</span>
+        <span class="n">autoscaling_config</span><span class="p">:</span> <span class="n">Default</span><span class="p">[</span>
+            <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">,</span> <span class="n">AutoscalingConfig</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">,</span>
+        <span class="n">graceful_shutdown_wait_loop_s</span><span class="p">:</span> <span class="n">Default</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">,</span>
+        <span class="n">graceful_shutdown_timeout_s</span><span class="p">:</span> <span class="n">Default</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">,</span>
+        <span class="n">health_check_period_s</span><span class="p">:</span> <span class="n">Default</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">,</span>
+        <span class="n">health_check_timeout_s</span><span class="p">:</span> <span class="n">Default</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">,</span>
+        <span class="n">is_driver_deployment</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">,</span>
+        <span class="n">_internal</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Deployment&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Return a copy of this deployment with updated options.</span>
+
+<span class="sd">        Only those options passed in will be updated, all others will remain</span>
+<span class="sd">        unchanged from the existing deployment.</span>
+
+<span class="sd">        Refer to the `@serve.deployment` decorator docs for available arguments.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># NOTE: The user_configured_option_names should be the first thing that&#39;s</span>
+        <span class="c1"># defined in this method. It depends on the locals() dictionary storing</span>
+        <span class="c1"># only the function args/kwargs.</span>
+        <span class="c1"># Create list of all user-configured options from keyword args</span>
+        <span class="n">user_configured_option_names</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">option</span>
+            <span class="k">for</span> <span class="n">option</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">locals</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">option</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;self&quot;</span><span class="p">,</span> <span class="s2">&quot;func_or_class&quot;</span><span class="p">,</span> <span class="s2">&quot;_internal&quot;</span><span class="p">}</span>
+            <span class="ow">and</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span>
+        <span class="p">]</span>
+
+        <span class="n">new_deployment_config</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_deployment_config</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">_internal</span><span class="p">:</span>
+            <span class="n">new_deployment_config</span><span class="o">.</span><span class="n">user_configured_option_names</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                <span class="n">user_configured_option_names</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">num_replicas</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="ow">and</span> <span class="n">autoscaling_config</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">,</span>
+            <span class="kc">None</span><span class="p">,</span>
+        <span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Manually setting num_replicas is not allowed when &quot;</span>
+                <span class="s2">&quot;autoscaling_config is provided.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">num_replicas</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;num_replicas is expected to larger than 0&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">_internal</span> <span class="ow">and</span> <span class="n">version</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;DeprecationWarning: `version` in `Deployment.options()` has been &quot;</span>
+                <span class="s2">&quot;deprecated. Explicitly specifying version will raise an error in the &quot;</span>
+                <span class="s2">&quot;future!&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">_internal</span> <span class="ow">and</span> <span class="n">route_prefix</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;DeprecationWarning: `route_prefix` in `@serve.deployment` has been &quot;</span>
+                <span class="s2">&quot;deprecated. To specify a route prefix for an application, pass it &quot;</span>
+                <span class="s2">&quot;into `serve.run` instead.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">num_replicas</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+            <span class="n">new_deployment_config</span><span class="o">.</span><span class="n">num_replicas</span> <span class="o">=</span> <span class="n">num_replicas</span>
+        <span class="k">if</span> <span class="n">user_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">:</span>
+            <span class="n">new_deployment_config</span><span class="o">.</span><span class="n">user_config</span> <span class="o">=</span> <span class="n">user_config</span>
+        <span class="k">if</span> <span class="n">max_concurrent_queries</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">:</span>
+            <span class="n">new_deployment_config</span><span class="o">.</span><span class="n">max_concurrent_queries</span> <span class="o">=</span> <span class="n">max_concurrent_queries</span>
+
+        <span class="k">if</span> <span class="n">func_or_class</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">func_or_class</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_replica_config</span><span class="o">.</span><span class="n">deployment_def</span>
+
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
+
+        <span class="k">if</span> <span class="n">version</span> <span class="ow">is</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">:</span>
+            <span class="n">version</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_version</span>
+
+        <span class="k">if</span> <span class="n">init_args</span> <span class="ow">is</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">:</span>
+            <span class="n">init_args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_replica_config</span><span class="o">.</span><span class="n">init_args</span>
+
+        <span class="k">if</span> <span class="n">init_kwargs</span> <span class="ow">is</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">:</span>
+            <span class="n">init_kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_replica_config</span><span class="o">.</span><span class="n">init_kwargs</span>
+
+        <span class="k">if</span> <span class="n">route_prefix</span> <span class="ow">is</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">:</span>
+            <span class="c1"># Default is to keep the previous value</span>
+            <span class="n">route_prefix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_route_prefix</span>
+
+        <span class="k">if</span> <span class="n">ray_actor_options</span> <span class="ow">is</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">:</span>
+            <span class="n">ray_actor_options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_replica_config</span><span class="o">.</span><span class="n">ray_actor_options</span>
+
+        <span class="k">if</span> <span class="n">placement_group_bundles</span> <span class="ow">is</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">:</span>
+            <span class="n">placement_group_bundles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_replica_config</span><span class="o">.</span><span class="n">placement_group_bundles</span>
+
+        <span class="k">if</span> <span class="n">placement_group_strategy</span> <span class="ow">is</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">:</span>
+            <span class="n">placement_group_strategy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_replica_config</span><span class="o">.</span><span class="n">placement_group_strategy</span>
+
+        <span class="k">if</span> <span class="n">max_replicas_per_node</span> <span class="ow">is</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">:</span>
+            <span class="n">max_replicas_per_node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_replica_config</span><span class="o">.</span><span class="n">max_replicas_per_node</span>
+
+        <span class="k">if</span> <span class="n">autoscaling_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">:</span>
+            <span class="n">new_deployment_config</span><span class="o">.</span><span class="n">autoscaling_config</span> <span class="o">=</span> <span class="n">autoscaling_config</span>
+
+        <span class="k">if</span> <span class="n">graceful_shutdown_wait_loop_s</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">:</span>
+            <span class="n">new_deployment_config</span><span class="o">.</span><span class="n">graceful_shutdown_wait_loop_s</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">graceful_shutdown_wait_loop_s</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">graceful_shutdown_timeout_s</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">:</span>
+            <span class="n">new_deployment_config</span><span class="o">.</span><span class="n">graceful_shutdown_timeout_s</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">graceful_shutdown_timeout_s</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">health_check_period_s</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">:</span>
+            <span class="n">new_deployment_config</span><span class="o">.</span><span class="n">health_check_period_s</span> <span class="o">=</span> <span class="n">health_check_period_s</span>
+
+        <span class="k">if</span> <span class="n">health_check_timeout_s</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">:</span>
+            <span class="n">new_deployment_config</span><span class="o">.</span><span class="n">health_check_timeout_s</span> <span class="o">=</span> <span class="n">health_check_timeout_s</span>
+
+        <span class="k">if</span> <span class="n">is_driver_deployment</span> <span class="ow">is</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">:</span>
+            <span class="n">is_driver_deployment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_driver_deployment</span>
+
+        <span class="n">new_replica_config</span> <span class="o">=</span> <span class="n">ReplicaConfig</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">func_or_class</span><span class="p">,</span>
+            <span class="n">init_args</span><span class="o">=</span><span class="n">init_args</span><span class="p">,</span>
+            <span class="n">init_kwargs</span><span class="o">=</span><span class="n">init_kwargs</span><span class="p">,</span>
+            <span class="n">ray_actor_options</span><span class="o">=</span><span class="n">ray_actor_options</span><span class="p">,</span>
+            <span class="n">placement_group_bundles</span><span class="o">=</span><span class="n">placement_group_bundles</span><span class="p">,</span>
+            <span class="n">placement_group_strategy</span><span class="o">=</span><span class="n">placement_group_strategy</span><span class="p">,</span>
+            <span class="n">max_replicas_per_node</span><span class="o">=</span><span class="n">max_replicas_per_node</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">Deployment</span><span class="p">(</span>
+            <span class="n">name</span><span class="p">,</span>
+            <span class="n">new_deployment_config</span><span class="p">,</span>
+            <span class="n">new_replica_config</span><span class="p">,</span>
+            <span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">,</span>
+            <span class="n">route_prefix</span><span class="o">=</span><span class="n">route_prefix</span><span class="p">,</span>
+            <span class="n">_internal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">is_driver_deployment</span><span class="o">=</span><span class="n">is_driver_deployment</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Deployment.set_options"><a class="viewcode-back" href="../../../serve/api/doc/ray.serve.Deployment.html#ray.serve.Deployment.set_options">[docs]</a>    <span class="nd">@Deprecated</span><span class="p">(</span>
+        <span class="n">message</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;This was intended for use with the `serve.build` Python API &quot;</span>
+            <span class="s2">&quot;(which has been deprecated). Use `.options()` instead.&quot;</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">def</span> <span class="nf">set_options</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">func_or_class</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">Default</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">,</span>
+        <span class="n">version</span><span class="p">:</span> <span class="n">Default</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">,</span>
+        <span class="n">num_replicas</span><span class="p">:</span> <span class="n">Default</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">,</span>
+        <span class="n">init_args</span><span class="p">:</span> <span class="n">Default</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">,</span>
+        <span class="n">init_kwargs</span><span class="p">:</span> <span class="n">Default</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">,</span>
+        <span class="n">route_prefix</span><span class="p">:</span> <span class="n">Default</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]]</span> <span class="o">=</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">,</span>
+        <span class="n">ray_actor_options</span><span class="p">:</span> <span class="n">Default</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]]</span> <span class="o">=</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">,</span>
+        <span class="n">user_config</span><span class="p">:</span> <span class="n">Default</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">,</span>
+        <span class="n">max_concurrent_queries</span><span class="p">:</span> <span class="n">Default</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">,</span>
+        <span class="n">autoscaling_config</span><span class="p">:</span> <span class="n">Default</span><span class="p">[</span>
+            <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">,</span> <span class="n">AutoscalingConfig</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">,</span>
+        <span class="n">graceful_shutdown_wait_loop_s</span><span class="p">:</span> <span class="n">Default</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">,</span>
+        <span class="n">graceful_shutdown_timeout_s</span><span class="p">:</span> <span class="n">Default</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">,</span>
+        <span class="n">health_check_period_s</span><span class="p">:</span> <span class="n">Default</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">,</span>
+        <span class="n">health_check_timeout_s</span><span class="p">:</span> <span class="n">Default</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">,</span>
+        <span class="n">is_driver_deployment</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">,</span>
+        <span class="n">_internal</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Overwrite this deployment&#39;s options in-place.</span>
+
+<span class="sd">        Only those options passed in will be updated, all others will remain</span>
+<span class="sd">        unchanged.</span>
+
+<span class="sd">        Refer to the @serve.deployment decorator docstring for all non-private</span>
+<span class="sd">        arguments.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">_internal</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;`.set_options()` is deprecated. &quot;</span>
+                <span class="s2">&quot;Use `.options()` or an application builder function instead.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">validated</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">(</span>
+            <span class="n">func_or_class</span><span class="o">=</span><span class="n">func_or_class</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">,</span>
+            <span class="n">init_args</span><span class="o">=</span><span class="n">init_args</span><span class="p">,</span>
+            <span class="n">init_kwargs</span><span class="o">=</span><span class="n">init_kwargs</span><span class="p">,</span>
+            <span class="n">route_prefix</span><span class="o">=</span><span class="n">route_prefix</span><span class="p">,</span>
+            <span class="n">num_replicas</span><span class="o">=</span><span class="n">num_replicas</span><span class="p">,</span>
+            <span class="n">ray_actor_options</span><span class="o">=</span><span class="n">ray_actor_options</span><span class="p">,</span>
+            <span class="n">user_config</span><span class="o">=</span><span class="n">user_config</span><span class="p">,</span>
+            <span class="n">max_concurrent_queries</span><span class="o">=</span><span class="n">max_concurrent_queries</span><span class="p">,</span>
+            <span class="n">autoscaling_config</span><span class="o">=</span><span class="n">autoscaling_config</span><span class="p">,</span>
+            <span class="n">graceful_shutdown_wait_loop_s</span><span class="o">=</span><span class="n">graceful_shutdown_wait_loop_s</span><span class="p">,</span>
+            <span class="n">graceful_shutdown_timeout_s</span><span class="o">=</span><span class="n">graceful_shutdown_timeout_s</span><span class="p">,</span>
+            <span class="n">health_check_period_s</span><span class="o">=</span><span class="n">health_check_period_s</span><span class="p">,</span>
+            <span class="n">health_check_timeout_s</span><span class="o">=</span><span class="n">health_check_timeout_s</span><span class="p">,</span>
+            <span class="n">_internal</span><span class="o">=</span><span class="n">_internal</span><span class="p">,</span>
+            <span class="n">is_driver_deployment</span><span class="o">=</span><span class="n">is_driver_deployment</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">validated</span><span class="o">.</span><span class="n">_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_version</span> <span class="o">=</span> <span class="n">validated</span><span class="o">.</span><span class="n">_version</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_route_prefix</span> <span class="o">=</span> <span class="n">validated</span><span class="o">.</span><span class="n">_route_prefix</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_deployment_config</span> <span class="o">=</span> <span class="n">validated</span><span class="o">.</span><span class="n">_deployment_config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_replica_config</span> <span class="o">=</span> <span class="n">validated</span><span class="o">.</span><span class="n">_replica_config</span></div>
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">all</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_version</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_version</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_deployment_config</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_deployment_config</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_replica_config</span><span class="o">.</span><span class="n">init_args</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_replica_config</span><span class="o">.</span><span class="n">init_args</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_replica_config</span><span class="o">.</span><span class="n">init_kwargs</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_replica_config</span><span class="o">.</span><span class="n">init_kwargs</span><span class="p">,</span>
+                <span class="c1"># compare route prefix with default value resolved</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">route_prefix</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">route_prefix</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_replica_config</span><span class="o">.</span><span class="n">ray_actor_options</span>
+                <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_replica_config</span><span class="o">.</span><span class="n">ray_actor_options</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Deployment(name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s2">,&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;version=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_version</span><span class="si">}</span><span class="s2">,&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;route_prefix=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">route_prefix</span><span class="si">}</span><span class="s2">)&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">deployment_to_schema</span><span class="p">(</span>
+    <span class="n">d</span><span class="p">:</span> <span class="n">Deployment</span><span class="p">,</span> <span class="n">include_route_prefix</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DeploymentSchema</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Converts a live deployment object to a corresponding structured schema.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        d: Deployment object to convert</span>
+<span class="sd">        include_route_prefix: Whether to include the route_prefix in the returned</span>
+<span class="sd">            schema. This should be set to False if the schema will be included in a</span>
+<span class="sd">            higher-level object describing an application, and you want to place</span>
+<span class="sd">            route_prefix at the application level.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">ray_actor_options</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ray_actor_options_schema</span> <span class="o">=</span> <span class="n">RayActorOptionsSchema</span><span class="o">.</span><span class="n">parse_obj</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">ray_actor_options</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ray_actor_options_schema</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">deployment_options</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+        <span class="s2">&quot;num_replicas&quot;</span><span class="p">:</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">_deployment_config</span><span class="o">.</span><span class="n">autoscaling_config</span>
+        <span class="k">else</span> <span class="n">d</span><span class="o">.</span><span class="n">num_replicas</span><span class="p">,</span>
+        <span class="s2">&quot;max_concurrent_queries&quot;</span><span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">max_concurrent_queries</span><span class="p">,</span>
+        <span class="s2">&quot;user_config&quot;</span><span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">user_config</span><span class="p">,</span>
+        <span class="s2">&quot;autoscaling_config&quot;</span><span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">_deployment_config</span><span class="o">.</span><span class="n">autoscaling_config</span><span class="p">,</span>
+        <span class="s2">&quot;graceful_shutdown_wait_loop_s&quot;</span><span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">_deployment_config</span><span class="o">.</span><span class="n">graceful_shutdown_wait_loop_s</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+        <span class="s2">&quot;graceful_shutdown_timeout_s&quot;</span><span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">_deployment_config</span><span class="o">.</span><span class="n">graceful_shutdown_timeout_s</span><span class="p">,</span>
+        <span class="s2">&quot;health_check_period_s&quot;</span><span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">_deployment_config</span><span class="o">.</span><span class="n">health_check_period_s</span><span class="p">,</span>
+        <span class="s2">&quot;health_check_timeout_s&quot;</span><span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">_deployment_config</span><span class="o">.</span><span class="n">health_check_timeout_s</span><span class="p">,</span>
+        <span class="s2">&quot;ray_actor_options&quot;</span><span class="p">:</span> <span class="n">ray_actor_options_schema</span><span class="p">,</span>
+        <span class="s2">&quot;placement_group_strategy&quot;</span><span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">_replica_config</span><span class="o">.</span><span class="n">placement_group_strategy</span><span class="p">,</span>
+        <span class="s2">&quot;placement_group_bundles&quot;</span><span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">_replica_config</span><span class="o">.</span><span class="n">placement_group_bundles</span><span class="p">,</span>
+        <span class="s2">&quot;max_replicas_per_node&quot;</span><span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">_replica_config</span><span class="o">.</span><span class="n">max_replicas_per_node</span><span class="p">,</span>
+        <span class="s2">&quot;is_driver_deployment&quot;</span><span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">_is_driver_deployment</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">include_route_prefix</span><span class="p">:</span>
+        <span class="n">deployment_options</span><span class="p">[</span><span class="s2">&quot;route_prefix&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">route_prefix</span>
+
+    <span class="c1"># Let non-user-configured options be set to defaults. If the schema</span>
+    <span class="c1"># is converted back to a deployment, this lets Serve continue tracking</span>
+    <span class="c1"># which options were set by the user. Name is a required field in the</span>
+    <span class="c1"># schema, so it should be passed in explicitly.</span>
+    <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">deployment_options</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">option</span> <span class="o">!=</span> <span class="s2">&quot;name&quot;</span>
+            <span class="ow">and</span> <span class="n">option</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">_deployment_config</span><span class="o">.</span><span class="n">user_configured_option_names</span>
+        <span class="p">):</span>
+            <span class="k">del</span> <span class="n">deployment_options</span><span class="p">[</span><span class="n">option</span><span class="p">]</span>
+
+    <span class="c1"># TODO(Sihan) DeploymentConfig num_replicas and auto_config can be set together</span>
+    <span class="c1"># because internally we use these two field for autoscale and deploy.</span>
+    <span class="c1"># We can improve the code after we separate the user faced deployment config and</span>
+    <span class="c1"># internal deployment config.</span>
+    <span class="k">return</span> <span class="n">DeploymentSchema</span><span class="p">(</span><span class="o">**</span><span class="n">deployment_options</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">schema_to_deployment</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">DeploymentSchema</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Deployment</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Creates a deployment with parameters specified in schema.</span>
+
+<span class="sd">    The returned deployment CANNOT be deployed immediately. It&#39;s func_or_class</span>
+<span class="sd">    value is an empty string (&quot;&quot;), which is not a valid import path. The</span>
+<span class="sd">    func_or_class value must be overwritten with a valid function or class</span>
+<span class="sd">    before the deployment can be deployed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">ray_actor_options</span> <span class="ow">is</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">:</span>
+        <span class="n">ray_actor_options</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ray_actor_options</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">ray_actor_options</span><span class="o">.</span><span class="n">dict</span><span class="p">(</span><span class="n">exclude_unset</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">placement_group_bundles</span> <span class="ow">is</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">:</span>
+        <span class="n">placement_group_bundles</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">placement_group_bundles</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">placement_group_bundles</span>
+
+    <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">placement_group_strategy</span> <span class="ow">is</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">:</span>
+        <span class="n">placement_group_strategy</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">placement_group_strategy</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">placement_group_strategy</span>
+
+    <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">max_replicas_per_node</span> <span class="ow">is</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">:</span>
+        <span class="n">max_replicas_per_node</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">max_replicas_per_node</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">max_replicas_per_node</span>
+
+    <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">is_driver_deployment</span> <span class="ow">is</span> <span class="n">DEFAULT</span><span class="o">.</span><span class="n">VALUE</span><span class="p">:</span>
+        <span class="n">is_driver_deployment</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">is_driver_deployment</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">is_driver_deployment</span>
+
+    <span class="n">deployment_config</span> <span class="o">=</span> <span class="n">DeploymentConfig</span><span class="o">.</span><span class="n">from_default</span><span class="p">(</span>
+        <span class="n">num_replicas</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">num_replicas</span><span class="p">,</span>
+        <span class="n">user_config</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">user_config</span><span class="p">,</span>
+        <span class="n">max_concurrent_queries</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">max_concurrent_queries</span><span class="p">,</span>
+        <span class="n">autoscaling_config</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">autoscaling_config</span><span class="p">,</span>
+        <span class="n">graceful_shutdown_wait_loop_s</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">graceful_shutdown_wait_loop_s</span><span class="p">,</span>
+        <span class="n">graceful_shutdown_timeout_s</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">graceful_shutdown_timeout_s</span><span class="p">,</span>
+        <span class="n">health_check_period_s</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">health_check_period_s</span><span class="p">,</span>
+        <span class="n">health_check_timeout_s</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">health_check_timeout_s</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">deployment_config</span><span class="o">.</span><span class="n">user_configured_option_names</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">get_user_configured_option_names</span><span class="p">()</span>
+    <span class="p">)</span>
+
+    <span class="n">replica_config</span> <span class="o">=</span> <span class="n">ReplicaConfig</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+        <span class="n">deployment_def</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">init_args</span><span class="o">=</span><span class="p">(),</span>
+        <span class="n">init_kwargs</span><span class="o">=</span><span class="p">{},</span>
+        <span class="n">ray_actor_options</span><span class="o">=</span><span class="n">ray_actor_options</span><span class="p">,</span>
+        <span class="n">placement_group_bundles</span><span class="o">=</span><span class="n">placement_group_bundles</span><span class="p">,</span>
+        <span class="n">placement_group_strategy</span><span class="o">=</span><span class="n">placement_group_strategy</span><span class="p">,</span>
+        <span class="n">max_replicas_per_node</span><span class="o">=</span><span class="n">max_replicas_per_node</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">Deployment</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+        <span class="n">deployment_config</span><span class="o">=</span><span class="n">deployment_config</span><span class="p">,</span>
+        <span class="n">replica_config</span><span class="o">=</span><span class="n">replica_config</span><span class="p">,</span>
+        <span class="n">route_prefix</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">route_prefix</span><span class="p">,</span>
+        <span class="n">_internal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">is_driver_deployment</span><span class="o">=</span><span class="n">is_driver_deployment</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><!-- Override the footer area for the sphinx-book-theme to include the CSAT widget -->
+<div id="csat">
+  <div id="csat-feedback-received" class="csat-hidden">
+    <span>谢谢你的反馈！</span>
+  </div>
+  <div id="csat-inputs">
+    <span>是否能帮助到你？</span>
+    <div id="csat-yes" class="csat-button">
+      <svg id="csat-yes-icon" class="csat-hidden csat-icon" width="18" height="13" viewBox="0 0 18 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 10.172L16.1922 0.979004L17.6072 2.393L7.00023 13L0.63623 6.636L2.05023 5.222L7.00023 10.172Z" fill="black"/>
+      </svg>
+      <span>是<span>
+    </div>
+    <div id="csat-no" class="csat-button">
+      <svg id="csat-no-icon" class="csat-hidden csat-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 5.58599L11.9502 0.635986L13.3642 2.04999L8.41423 6.99999L13.3642 11.95L11.9502 13.364L7.00023 8.41399L2.05023 13.364L0.63623 11.95L5.58623 6.99999L0.63623 2.04999L2.05023 0.635986L7.00023 5.58599Z" fill="black"/>
+      </svg>
+      <span>否<span>
+    </div>
+  </div>
+  <div id="csat-textarea-group" class="csat-hidden">
+    <span id="csat-feedback-label">反馈</span>
+    <textarea id="csat-textarea"></textarea>
+    <div id="csat-submit">提交</div>
+  </div>
+</div><p>
+  
+    By The Ray Team<br/>
+  
+      &copy; Copyright 2024, The Ray Team.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

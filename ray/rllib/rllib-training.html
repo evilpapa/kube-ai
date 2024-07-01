@@ -1,0 +1,1567 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>RLlib 入门 &#8212; Ray 2.7.2</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/termynal.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/js/versionwarning.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+    <script defer="defer" src="../_static/js/docsearch.js"></script>
+    <script defer="defer" src="../_static/js/csat.js"></script>
+    <script defer="defer" src="../_static/js/termynal.js"></script>
+    <script defer="defer" src="../_static/js/custom.js"></script>
+    <script defer="defer" src="../_static/js/top-navigation.js"></script>
+    <script src="../_static/js/tags.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <link rel="canonical" href="https://docs.ray.io/en/latest/rllib/rllib-training.html" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="关键概念" href="key-concepts.html" />
+    <link rel="prev" title="RLlib: 工业级强化学习" href="index.html" />
+
+<!-- Fathom - beautiful, simple website analytics -->
+<script src="https://deer.ray.io/script.js" data-site="WYYANYOS" defer></script>
+<!-- / Fathom -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-110413294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-110413294-1');
+</script>
+
+<script
+  src="https://widget.kapa.ai/kapa-widget.bundle.js"
+  data-website-id="18a8c339-4ec5-43c8-8182-db3f2bc8c6b6"
+  data-project-name="Ray"
+  data-project-color="#2C2C2C"
+  data-project-logo="https://global.discourse-cdn.com/business7/uploads/ray/original/1X/8f4dcb72f7cd34e2a332d548bd65860994bc8ff1.png"
+  data-modal-disclaimer = "Results are automated and may be incorrect or contain inappropriate information. Do not include any personal data or confidential information."
+  data-modal-title = "Ray Docs AI - Ask a Question"
+  data-button-position-bottom = "60px"
+></script>
+
+<script>
+(function(apiKey){
+    (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
+    v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
+        o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
+        y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
+        z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
+
+        pendo.initialize({
+            visitor: {
+                id: 'VISITOR-UNIQUE-ID'
+            },
+            account: {
+                id: 'ACCOUNT-UNIQUE-ID'
+            }
+        });
+})('f89fa48a-6dd7-4d7c-67cf-a8051ed891f2');
+</script>
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"><div class='topnav'></div></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Ray 2.7.2</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main Navigation">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    欢迎来到 Ray ！
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Ray
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-overview/index.html">
+   概述「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-overview/getting-started.html">
+   入门
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-overview/installation.html">
+   安装「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-overview/use-cases.html">
+   用例「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-overview/examples.html">
+   示例库「1%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-overview/ray-libraries.html">
+   生态「3%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-core/walkthrough.html">
+   Ray 核心「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../data/data.html">
+   Ray 数据「75%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../train/train.html">
+   Ray 训练「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../tune/index.html">
+   Ray 调参「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../serve/index.html">
+   Ray Serve
+  </a>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="index.html">
+   Ray RLlib
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     RLlib 入门
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="key-concepts.html">
+     关键概念
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="rllib-env.html">
+     环境
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="rllib-algorithms.html">
+     算法
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="user-guides.html">
+     用户指南
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="rllib-examples.html">
+     示例
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="package_ref/index.html">
+     Ray RLlib API
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-more-libs/index.html">
+   更多类库「40%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cluster/getting-started.html">
+   Ray 集群「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-observability/index.html">
+   监控调试「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-references/api.html">
+   参考「20%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-contribute/index.html">
+   开发者指引「30%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-security/index.html">
+   安全「100%」
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/ray-project/ray"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/issues/new?title=Issue%20on%20page%20%2Frllib/rllib-training.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/edit/master/doc/source/rllib/rllib-training.rst"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/rllib/rllib-training.rst.txt"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.rst</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#using-the-rllib-cli">
+   Using the RLlib CLI
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#running-tuned-examples">
+   Running Tuned Examples
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#using-the-python-api">
+   Using the Python API
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#computing-actions">
+     Computing Actions
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#accessing-policy-state">
+     Accessing Policy State
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#accessing-model-state">
+     Accessing Model State
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#configuring-rllib-algorithms">
+   Configuring RLlib Algorithms
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#specifying-training-options">
+     Specifying Training Options
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#specifying-environments">
+     Specifying Environments
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#specifying-framework-options">
+     Specifying Framework Options
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#specifying-rollout-workers">
+     Specifying Rollout Workers
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#specifying-evaluation-options">
+     Specifying Evaluation Options
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#specifying-exploration-options">
+     Specifying Exploration Options
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#specifying-offline-data-options">
+     Specifying Offline Data Options
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#specifying-multi-agent-options">
+     Specifying Multi-Agent Options
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#specifying-reporting-options">
+     Specifying Reporting Options
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#specifying-checkpointing-options">
+     Specifying Checkpointing Options
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#specifying-debugging-options">
+     Specifying Debugging Options
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#specifying-callback-options">
+     Specifying Callback Options
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#specifying-resources">
+     Specifying Resources
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#specifying-experimental-features">
+     Specifying Experimental Features
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#rllib-scaling-guide">
+   RLlib Scaling Guide
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#debugging-rllib-experiments">
+   Debugging RLlib Experiments
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#gym-monitor">
+     Gym Monitor
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#eager-mode">
+     Eager Mode
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#using-pytorch">
+     Using PyTorch
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#episode-traces">
+     Episode Traces
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#log-verbosity">
+     Log Verbosity
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#stack-traces">
+     Stack Traces
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#next-steps">
+   Next Steps
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>RLlib 入门</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#using-the-rllib-cli">
+   Using the RLlib CLI
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#running-tuned-examples">
+   Running Tuned Examples
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#using-the-python-api">
+   Using the Python API
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#computing-actions">
+     Computing Actions
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#accessing-policy-state">
+     Accessing Policy State
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#accessing-model-state">
+     Accessing Model State
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#configuring-rllib-algorithms">
+   Configuring RLlib Algorithms
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#specifying-training-options">
+     Specifying Training Options
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#specifying-environments">
+     Specifying Environments
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#specifying-framework-options">
+     Specifying Framework Options
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#specifying-rollout-workers">
+     Specifying Rollout Workers
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#specifying-evaluation-options">
+     Specifying Evaluation Options
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#specifying-exploration-options">
+     Specifying Exploration Options
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#specifying-offline-data-options">
+     Specifying Offline Data Options
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#specifying-multi-agent-options">
+     Specifying Multi-Agent Options
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#specifying-reporting-options">
+     Specifying Reporting Options
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#specifying-checkpointing-options">
+     Specifying Checkpointing Options
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#specifying-debugging-options">
+     Specifying Debugging Options
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#specifying-callback-options">
+     Specifying Callback Options
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#specifying-resources">
+     Specifying Resources
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#specifying-experimental-features">
+     Specifying Experimental Features
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#rllib-scaling-guide">
+   RLlib Scaling Guide
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#debugging-rllib-experiments">
+   Debugging RLlib Experiments
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#gym-monitor">
+     Gym Monitor
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#eager-mode">
+     Eager Mode
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#using-pytorch">
+     Using PyTorch
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#episode-traces">
+     Episode Traces
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#log-verbosity">
+     Log Verbosity
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#stack-traces">
+     Stack Traces
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#next-steps">
+   Next Steps
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>From Ray 2.6.0 onwards, RLlib is adopting a new stack for training and model customization,
+gradually replacing the ModelV2 API and some convoluted parts of Policy API with the RLModule API.
+Click <a class="reference external" href="rllib-rlmodule.html">here</a> for details.</p>
+</div>
+<section id="rllib">
+<span id="rllib-getting-started"></span><h1>RLlib 入门<a class="headerlink" href="#rllib" title="Permalink to this headline">#</a></h1>
+<p>At a high level, RLlib provides you with an <code class="docutils literal notranslate"><span class="pre">Algorithm</span></code> class which
+holds a policy for environment interaction.
+Through the algorithm’s interface, you can train the policy compute actions, or store
+your algorithms.
+In multi-agent training, the algorithm manages the querying
+and optimization of multiple policies at once.</p>
+<img alt="../_images/rllib-api.svg" src="../_images/rllib-api.svg" /><p>In this guide, we will first walk you through running your first experiments with
+the RLlib CLI, and then discuss our Python API in more detail.</p>
+<section id="using-the-rllib-cli">
+<h2>Using the RLlib CLI<a class="headerlink" href="#using-the-rllib-cli" title="Permalink to this headline">#</a></h2>
+<p>The quickest way to run your first RLlib algorithm is to use the command line interface.
+You can train DQN with the following commands:</p>
+<div class="termynal" data-termynal>
+    <span data-ty="input">pip install "ray[rllib]" tensorflow</span>
+    <span data-ty="input">rllib train --algo DQN --env CartPole-v1 --stop  '{"training_iteration": 30}'</span>
+</div><aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">rllib</span> <span class="pre">train</span></code> command (same as the <code class="docutils literal notranslate"><span class="pre">train.py</span></code> script in the repo)
+has a number of options you can show by running <code class="xref py py-obj docutils literal notranslate"><span class="pre">rllib</span> <span class="pre">train</span> <span class="pre">--help</span></code>.</p>
+</aside>
+<p>Note that you choose any supported RLlib algorithm (<code class="docutils literal notranslate"><span class="pre">--algo</span></code>) and environment (<code class="docutils literal notranslate"><span class="pre">--env</span></code>).
+RLlib supports any Farama-Foundation Gymnasium environment, as well as a number of other environments
+(see <a class="reference internal" href="rllib-env.html#rllib-environments-doc"><span class="std std-ref">环境</span></a>).
+It also supports a large number of algorithms (see <a class="reference internal" href="rllib-algorithms.html#rllib-algorithms-doc"><span class="std std-ref">算法</span></a>) to
+choose from.</p>
+<p>Running the above will return one of the <code class="xref py py-obj docutils literal notranslate"><span class="pre">checkpoints</span></code> that get generated during training after 30 training iterations,
+as well as a command that you can use to evaluate the trained algorithm.
+You can evaluate the trained algorithm with the following command (assuming the checkpoint path is called <code class="docutils literal notranslate"><span class="pre">checkpoint</span></code>):</p>
+<div class="termynal" data-termynal>
+    <span data-ty="input">rllib evaluate checkpoint --algo DQN --env CartPole-v1</span>
+</div><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>By default, the results will be logged to a subdirectory of <code class="docutils literal notranslate"><span class="pre">~/ray_results</span></code>.
+This subdirectory will contain a file <code class="docutils literal notranslate"><span class="pre">params.json</span></code> which contains the
+hyper-parameters, a file <code class="docutils literal notranslate"><span class="pre">result.json</span></code> which contains a training summary
+for each episode and a TensorBoard file that can be used to visualize
+training process with TensorBoard by running</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tensorboard --logdir<span class="o">=</span>~/ray_results
+</pre></div>
+</div>
+</div>
+<p>For more advanced evaluation functionality, refer to <a class="reference external" href="#customized-evaluation-during-training">Customized Evaluation During Training</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Each algorithm has specific hyperparameters that can be set with <code class="docutils literal notranslate"><span class="pre">--config</span></code>,
+see the <a class="reference external" href="rllib-algorithms.html">algorithms documentation</a> for more information.
+For instance, you can train the A2C algorithm on 8 workers by specifying
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">num_workers:</span> <span class="pre">8</span></code> in a JSON string passed to <code class="docutils literal notranslate"><span class="pre">--config</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rllib train --env<span class="o">=</span>PongDeterministic-v4 --run<span class="o">=</span>A2C --config <span class="s1">&#39;{&quot;num_workers&quot;: 8}&#39;</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="running-tuned-examples">
+<h2>Running Tuned Examples<a class="headerlink" href="#running-tuned-examples" title="Permalink to this headline">#</a></h2>
+<p>Some good hyperparameters and settings are available in
+<a class="reference external" href="https://github.com/ray-project/ray/blob/master/rllib/tuned_examples">the RLlib repository</a>
+(some of them are tuned to run on GPUs).</p>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<p>If you find better settings or tune an algorithm on a different domain,
+consider submitting a Pull Request!</p>
+</aside>
+<p>You can run these with the <code class="docutils literal notranslate"><span class="pre">rllib</span> <span class="pre">train</span> <span class="pre">file</span></code> command as follows:</p>
+<div class="termynal" data-termynal>
+    <span data-ty="input">rllib train file /path/to/tuned/example.yaml</span>
+</div><p>Note that this works with any local YAML file in the correct format, or with remote URLs
+pointing to such files.
+If you want to learn more about the RLlib CLI, please check out
+the <a class="reference internal" href="rllib-cli.html#rllib-cli-doc"><span class="std std-ref">RLlib CLI user guide</span></a>.</p>
+</section>
+<section id="using-the-python-api">
+<span id="rllib-training-api"></span><h2>Using the Python API<a class="headerlink" href="#using-the-python-api" title="Permalink to this headline">#</a></h2>
+<p>The Python API provides the needed flexibility for applying RLlib to new problems.
+For instance, you will need to use this API if you wish to use
+<a class="reference external" href="rllib-models.html">custom environments, preprocessors, or models</a> with RLlib.</p>
+<p>Here is an example of the basic usage.
+We first create a <code class="xref py py-obj docutils literal notranslate"><span class="pre">PPOConfig</span></code> and add properties to it, like the <code class="xref py py-obj docutils literal notranslate"><span class="pre">environment</span></code> we want
+to use, or the <code class="xref py py-obj docutils literal notranslate"><span class="pre">resources</span></code> we want to leverage for training.
+After we <code class="xref py py-obj docutils literal notranslate"><span class="pre">build</span></code> the <code class="xref py py-obj docutils literal notranslate"><span class="pre">algo</span></code> from its configuration, we can <code class="xref py py-obj docutils literal notranslate"><span class="pre">train</span></code> it for a number of
+episodes (here <code class="xref py py-obj docutils literal notranslate"><span class="pre">10</span></code>) and <code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code> the resulting policy periodically
+(here every <code class="xref py py-obj docutils literal notranslate"><span class="pre">5</span></code> episodes).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray.rllib.algorithms.ppo</span> <span class="kn">import</span> <span class="n">PPOConfig</span>
+<span class="kn">from</span> <span class="nn">ray.tune.logger</span> <span class="kn">import</span> <span class="n">pretty_print</span>
+
+
+<span class="n">algo</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">PPOConfig</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">rollouts</span><span class="p">(</span><span class="n">num_rollout_workers</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">resources</span><span class="p">(</span><span class="n">num_gpus</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">environment</span><span class="p">(</span><span class="n">env</span><span class="o">=</span><span class="s2">&quot;CartPole-v1&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">build</span><span class="p">()</span>
+<span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">pretty_print</span><span class="p">(</span><span class="n">result</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">checkpoint_dir</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">save</span><span class="p">()</span><span class="o">.</span><span class="n">checkpoint</span><span class="o">.</span><span class="n">path</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Checkpoint saved in directory </span><span class="si">{</span><span class="n">checkpoint_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>All RLlib algorithms are compatible with the <a class="reference internal" href="../tune/api/api.html#tune-api-ref"><span class="std std-ref">Tune API</span></a>.
+This enables them to be easily used in experiments with <a class="reference internal" href="../tune/index.html#tune-main"><span class="std std-ref">Ray Tune</span></a>.
+For example, the following code performs a simple hyper-parameter sweep of PPO.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ray</span>
+<span class="kn">from</span> <span class="nn">ray</span> <span class="kn">import</span> <span class="n">train</span><span class="p">,</span> <span class="n">tune</span>
+
+<span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">PPOConfig</span><span class="p">()</span><span class="o">.</span><span class="n">training</span><span class="p">(</span><span class="n">lr</span><span class="o">=</span><span class="n">tune</span><span class="o">.</span><span class="n">grid_search</span><span class="p">([</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">]))</span>
+
+<span class="n">tuner</span> <span class="o">=</span> <span class="n">tune</span><span class="o">.</span><span class="n">Tuner</span><span class="p">(</span>
+    <span class="s2">&quot;PPO&quot;</span><span class="p">,</span>
+    <span class="n">run_config</span><span class="o">=</span><span class="n">train</span><span class="o">.</span><span class="n">RunConfig</span><span class="p">(</span>
+        <span class="n">stop</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;episode_reward_mean&quot;</span><span class="p">:</span> <span class="mi">150</span><span class="p">},</span>
+    <span class="p">),</span>
+    <span class="n">param_space</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">tuner</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Tune will schedule the trials to run in parallel on your Ray cluster:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">==</span> <span class="n">Status</span> <span class="o">==</span>
+<span class="n">Using</span> <span class="n">FIFO</span> <span class="n">scheduling</span> <span class="n">algorithm</span><span class="o">.</span>
+<span class="n">Resources</span> <span class="n">requested</span><span class="p">:</span> <span class="mi">4</span><span class="o">/</span><span class="mi">4</span> <span class="n">CPUs</span><span class="p">,</span> <span class="mi">0</span><span class="o">/</span><span class="mi">0</span> <span class="n">GPUs</span>
+<span class="n">Result</span> <span class="n">logdir</span><span class="p">:</span> <span class="o">~/</span><span class="n">ray_results</span><span class="o">/</span><span class="n">my_experiment</span>
+<span class="n">PENDING</span> <span class="n">trials</span><span class="p">:</span>
+ <span class="o">-</span> <span class="n">PPO_CartPole</span><span class="o">-</span><span class="n">v1_2_lr</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">:</span>     <span class="n">PENDING</span>
+<span class="n">RUNNING</span> <span class="n">trials</span><span class="p">:</span>
+ <span class="o">-</span> <span class="n">PPO_CartPole</span><span class="o">-</span><span class="n">v1_0_lr</span><span class="o">=</span><span class="mf">0.01</span><span class="p">:</span>       <span class="n">RUNNING</span> <span class="p">[</span><span class="n">pid</span><span class="o">=</span><span class="mi">21940</span><span class="p">],</span> <span class="mi">16</span> <span class="n">s</span><span class="p">,</span> <span class="mi">4013</span> <span class="n">ts</span><span class="p">,</span> <span class="mi">22</span> <span class="n">rew</span>
+ <span class="o">-</span> <span class="n">PPO_CartPole</span><span class="o">-</span><span class="n">v1_1_lr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">:</span>      <span class="n">RUNNING</span> <span class="p">[</span><span class="n">pid</span><span class="o">=</span><span class="mi">21942</span><span class="p">],</span> <span class="mi">27</span> <span class="n">s</span><span class="p">,</span> <span class="mi">8111</span> <span class="n">ts</span><span class="p">,</span> <span class="mf">54.7</span> <span class="n">rew</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Tuner.fit()</span></code> returns an <code class="docutils literal notranslate"><span class="pre">ResultGrid</span></code> object that allows further analysis
+of the training results and retrieving the checkpoint(s) of the trained agent.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># ``Tuner.fit()`` allows setting a custom log directory (other than ``~/ray-results``)</span>
+<span class="n">tuner</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">tune</span><span class="o">.</span><span class="n">Tuner</span><span class="p">(</span>
+    <span class="s2">&quot;PPO&quot;</span><span class="p">,</span>
+    <span class="n">param_space</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+    <span class="n">run_config</span><span class="o">=</span><span class="n">train</span><span class="o">.</span><span class="n">RunConfig</span><span class="p">(</span>
+        <span class="n">stop</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;episode_reward_mean&quot;</span><span class="p">:</span> <span class="mi">150</span><span class="p">},</span>
+        <span class="n">checkpoint_config</span><span class="o">=</span><span class="n">train</span><span class="o">.</span><span class="n">CheckpointConfig</span><span class="p">(</span><span class="n">checkpoint_at_end</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">tuner</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+<span class="c1"># Get the best result based on a particular metric.</span>
+<span class="n">best_result</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">get_best_result</span><span class="p">(</span><span class="n">metric</span><span class="o">=</span><span class="s2">&quot;episode_reward_mean&quot;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;max&quot;</span><span class="p">)</span>
+
+<span class="c1"># Get the best checkpoint corresponding to the best result.</span>
+<span class="n">best_checkpoint</span> <span class="o">=</span> <span class="n">best_result</span><span class="o">.</span><span class="n">checkpoint</span>
+</pre></div>
+</div>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<p>You can find your checkpoint’s version by
+looking into the <code class="docutils literal notranslate"><span class="pre">rllib_checkpoint.json</span></code> file inside your checkpoint directory.</p>
+</aside>
+<p>Loading and restoring a trained algorithm from a checkpoint is simple.
+Let’s assume you have a local checkpoint directory called <code class="docutils literal notranslate"><span class="pre">checkpoint_path</span></code>.
+To load newer RLlib checkpoints (version &gt;= 1.0), use the following code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray.rllib.algorithms.algorithm</span> <span class="kn">import</span> <span class="n">Algorithm</span>
+<span class="n">algo</span> <span class="o">=</span> <span class="n">Algorithm</span><span class="o">.</span><span class="n">from_checkpoint</span><span class="p">(</span><span class="n">checkpoint_path</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For older RLlib checkpoint versions (version &lt; 1.0), you can
+restore an algorithm via:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray.rllib.algorithms.ppo</span> <span class="kn">import</span> <span class="n">PPO</span>
+<span class="n">algo</span> <span class="o">=</span> <span class="n">PPO</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="n">env_class</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">restore</span><span class="p">(</span><span class="n">checkpoint_path</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="computing-actions">
+<h3>Computing Actions<a class="headerlink" href="#computing-actions" title="Permalink to this headline">#</a></h3>
+<p>The simplest way to programmatically compute actions from a trained agent is to
+use <code class="docutils literal notranslate"><span class="pre">Algorithm.compute_single_action()</span></code>.
+This method preprocesses and filters the observation before passing it to the agent
+policy.
+Here is a simple example of testing a trained agent for one episode:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Note: `gymnasium` (not `gym`) will be **the** API supported by RLlib from Ray 2.3 on.</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
+
+    <span class="n">gymnasium</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">gym</span>
+
+    <span class="n">gymnasium</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="kn">from</span> <span class="nn">ray.rllib.algorithms.ppo</span> <span class="kn">import</span> <span class="n">PPOConfig</span>
+
+<span class="n">env_name</span> <span class="o">=</span> <span class="s2">&quot;CartPole-v1&quot;</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">env_name</span><span class="p">)</span>
+<span class="n">algo</span> <span class="o">=</span> <span class="n">PPOConfig</span><span class="p">()</span><span class="o">.</span><span class="n">environment</span><span class="p">(</span><span class="n">env_name</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+
+<span class="n">episode_reward</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">terminated</span> <span class="o">=</span> <span class="n">truncated</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="k">if</span> <span class="n">gymnasium</span><span class="p">:</span>
+    <span class="n">obs</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">obs</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+<span class="k">while</span> <span class="ow">not</span> <span class="n">terminated</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">truncated</span><span class="p">:</span>
+    <span class="n">action</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">compute_single_action</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">gymnasium</span><span class="p">:</span>
+        <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+    <span class="n">episode_reward</span> <span class="o">+=</span> <span class="n">reward</span>
+</pre></div>
+</div>
+<p>For more advanced usage on computing actions and other functionality,
+you can consult the <a class="reference internal" href="package_ref/algorithm.html#rllib-algorithm-api"><span class="std std-ref">RLlib Algorithm API documentation</span></a>.</p>
+</section>
+<section id="accessing-policy-state">
+<h3>Accessing Policy State<a class="headerlink" href="#accessing-policy-state" title="Permalink to this headline">#</a></h3>
+<p>It is common to need to access a algorithm’s internal state, for instance to set
+or get model weights.</p>
+<p>In RLlib algorithm state is replicated across multiple <em>rollout workers</em> (Ray actors)
+in the cluster.
+However, you can easily get and update this state between calls to <code class="docutils literal notranslate"><span class="pre">train()</span></code>
+via <code class="docutils literal notranslate"><span class="pre">Algorithm.workers.foreach_worker()</span></code>
+or <code class="docutils literal notranslate"><span class="pre">Algorithm.workers.foreach_worker_with_index()</span></code>.
+These functions take a lambda function that is applied with the worker as an argument.
+These functions return values for each worker as a list.</p>
+<p>You can also access just the “master” copy of the algorithm state through
+<code class="docutils literal notranslate"><span class="pre">Algorithm.get_policy()</span></code> or <code class="docutils literal notranslate"><span class="pre">Algorithm.workers.local_worker()</span></code>,
+but note that updates here may not be immediately reflected in
+your rollout workers (if you have configured <code class="docutils literal notranslate"><span class="pre">num_rollout_workers</span> <span class="pre">&gt;</span> <span class="pre">0</span></code>).
+Here’s a quick example of how to access state of a model:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray.rllib.algorithms.dqn</span> <span class="kn">import</span> <span class="n">DQNConfig</span>
+
+<span class="n">algo</span> <span class="o">=</span> <span class="n">DQNConfig</span><span class="p">()</span><span class="o">.</span><span class="n">environment</span><span class="p">(</span><span class="n">env</span><span class="o">=</span><span class="s2">&quot;CartPole-v1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+
+<span class="c1"># Get weights of the default local policy</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">get_policy</span><span class="p">()</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()</span>
+
+<span class="c1"># Same as above</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">workers</span><span class="o">.</span><span class="n">local_worker</span><span class="p">()</span><span class="o">.</span><span class="n">policy_map</span><span class="p">[</span><span class="s2">&quot;default_policy&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()</span>
+
+<span class="c1"># Get list of weights of each worker, including remote replicas</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">workers</span><span class="o">.</span><span class="n">foreach_worker</span><span class="p">(</span><span class="k">lambda</span> <span class="n">worker</span><span class="p">:</span> <span class="n">worker</span><span class="o">.</span><span class="n">get_policy</span><span class="p">()</span><span class="o">.</span><span class="n">get_weights</span><span class="p">())</span>
+
+<span class="c1"># Same as above, but with index.</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">workers</span><span class="o">.</span><span class="n">foreach_worker_with_id</span><span class="p">(</span>
+    <span class="k">lambda</span> <span class="n">_id</span><span class="p">,</span> <span class="n">worker</span><span class="p">:</span> <span class="n">worker</span><span class="o">.</span><span class="n">get_policy</span><span class="p">()</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="accessing-model-state">
+<h3>Accessing Model State<a class="headerlink" href="#accessing-model-state" title="Permalink to this headline">#</a></h3>
+<p>Similar to accessing policy state, you may want to get a reference to the
+underlying neural network model being trained. For example, you may want to
+pre-train it separately, or otherwise update its weights outside of RLlib.
+This can be done by accessing the <code class="docutils literal notranslate"><span class="pre">model</span></code> of the policy.</p>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<p>To run these examples, you need to install a few extra dependencies, namely
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">&quot;gym[atari]&quot;</span> <span class="pre">&quot;gym[accept-rom-license]&quot;</span> <span class="pre">atari_py</span></code>.</p>
+</aside>
+<p>Below you find three explicit examples showing how to access the model state of
+an algorithm.</p>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<strong>Example: Preprocessing observations for feeding into a model</strong><div class="sd-summary-down docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-down" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"></path></svg></div>
+<div class="sd-summary-up docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-up" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"></path></svg></div>
+</summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Then for the code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
+
+    <span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;ALE/Pong-v5&quot;</span><span class="p">)</span>
+    <span class="n">obs</span><span class="p">,</span> <span class="n">infos</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">gym</span>
+
+    <span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;PongNoFrameskip-v4&quot;</span><span class="p">)</span>
+    <span class="n">obs</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+<span class="c1"># RLlib uses preprocessors to implement transforms such as one-hot encoding</span>
+<span class="c1"># and flattening of tuple and dict observations.</span>
+<span class="kn">from</span> <span class="nn">ray.rllib.models.preprocessors</span> <span class="kn">import</span> <span class="n">get_preprocessor</span>
+
+<span class="n">prep</span> <span class="o">=</span> <span class="n">get_preprocessor</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">observation_space</span><span class="p">)(</span><span class="n">env</span><span class="o">.</span><span class="n">observation_space</span><span class="p">)</span>
+<span class="c1"># &lt;ray.rllib.models.preprocessors.GenericPixelPreprocessor object at 0x7fc4d049de80&gt;</span>
+
+<span class="c1"># Observations should be preprocessed prior to feeding into a model</span>
+<span class="n">obs</span><span class="o">.</span><span class="n">shape</span>
+<span class="c1"># (210, 160, 3)</span>
+<span class="n">prep</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span>
+<span class="c1"># (84, 84, 3)</span>
+</pre></div>
+</div>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<strong>Example: Querying a policy’s action distribution</strong><div class="sd-summary-down docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-down" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"></path></svg></div>
+<div class="sd-summary-up docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-up" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"></path></svg></div>
+</summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get a reference to the policy</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">ray.rllib.algorithms.dqn</span> <span class="kn">import</span> <span class="n">DQNConfig</span>
+
+<span class="n">algo</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">DQNConfig</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">environment</span><span class="p">(</span><span class="s2">&quot;CartPole-v1&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">framework</span><span class="p">(</span><span class="s2">&quot;tf2&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">rollouts</span><span class="p">(</span><span class="n">num_rollout_workers</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">build</span><span class="p">()</span>
+<span class="p">)</span>
+<span class="c1"># &lt;ray.rllib.algorithms.ppo.PPO object at 0x7fd020186384&gt;</span>
+
+<span class="n">policy</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">get_policy</span><span class="p">()</span>
+<span class="c1"># &lt;ray.rllib.policy.eager_tf_policy.PPOTFPolicy_eager object at 0x7fd020165470&gt;</span>
+
+<span class="c1"># Run a forward pass to get model output logits. Note that complex observations</span>
+<span class="c1"># must be preprocessed as in the above code block.</span>
+<span class="n">logits</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">policy</span><span class="o">.</span><span class="n">model</span><span class="p">({</span><span class="s2">&quot;obs&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">]])})</span>
+<span class="c1"># (&lt;tf.Tensor: id=1274, shape=(1, 2), dtype=float32, numpy=...&gt;, [])</span>
+
+<span class="c1"># Compute action distribution given logits</span>
+<span class="n">policy</span><span class="o">.</span><span class="n">dist_class</span>
+<span class="c1"># &lt;class_object &#39;ray.rllib.models.tf.tf_action_dist.Categorical&#39;&gt;</span>
+<span class="n">dist</span> <span class="o">=</span> <span class="n">policy</span><span class="o">.</span><span class="n">dist_class</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">policy</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+<span class="c1"># &lt;ray.rllib.models.tf.tf_action_dist.Categorical object at 0x7fd02301d710&gt;</span>
+
+<span class="c1"># Query the distribution for samples, sample logps</span>
+<span class="n">dist</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+<span class="c1"># &lt;tf.Tensor: id=661, shape=(1,), dtype=int64, numpy=..&gt;</span>
+<span class="n">dist</span><span class="o">.</span><span class="n">logp</span><span class="p">([</span><span class="mi">1</span><span class="p">])</span>
+<span class="c1"># &lt;tf.Tensor: id=1298, shape=(1,), dtype=float32, numpy=...&gt;</span>
+
+<span class="c1"># Get the estimated values for the most recent forward pass</span>
+<span class="n">policy</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">value_function</span><span class="p">()</span>
+<span class="c1"># &lt;tf.Tensor: id=670, shape=(1,), dtype=float32, numpy=...&gt;</span>
+
+<span class="n">policy</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">base_model</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Model: &quot;model&quot;</span>
+<span class="sd">_____________________________________________________________________</span>
+<span class="sd">Layer (type)               Output Shape  Param #  Connected to</span>
+<span class="sd">=====================================================================</span>
+<span class="sd">observations (InputLayer)  [(None, 4)]   0</span>
+<span class="sd">_____________________________________________________________________</span>
+<span class="sd">fc_1 (Dense)               (None, 256)   1280     observations[0][0]</span>
+<span class="sd">_____________________________________________________________________</span>
+<span class="sd">fc_value_1 (Dense)         (None, 256)   1280     observations[0][0]</span>
+<span class="sd">_____________________________________________________________________</span>
+<span class="sd">fc_2 (Dense)               (None, 256)   65792    fc_1[0][0]</span>
+<span class="sd">_____________________________________________________________________</span>
+<span class="sd">fc_value_2 (Dense)         (None, 256)   65792    fc_value_1[0][0]</span>
+<span class="sd">_____________________________________________________________________</span>
+<span class="sd">fc_out (Dense)             (None, 2)     514      fc_2[0][0]</span>
+<span class="sd">_____________________________________________________________________</span>
+<span class="sd">value_out (Dense)          (None, 1)     257      fc_value_2[0][0]</span>
+<span class="sd">=====================================================================</span>
+<span class="sd">Total params: 134,915</span>
+<span class="sd">Trainable params: 134,915</span>
+<span class="sd">Non-trainable params: 0</span>
+<span class="sd">_____________________________________________________________________</span>
+<span class="sd">&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<strong>Example: Getting Q values from a DQN model</strong><div class="sd-summary-down docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-down" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"></path></svg></div>
+<div class="sd-summary-up docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-up" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"></path></svg></div>
+</summary><div class="sd-summary-content sd-card-body docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get a reference to the model through the policy</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">ray.rllib.algorithms.dqn</span> <span class="kn">import</span> <span class="n">DQNConfig</span>
+
+<span class="n">algo</span> <span class="o">=</span> <span class="n">DQNConfig</span><span class="p">()</span><span class="o">.</span><span class="n">environment</span><span class="p">(</span><span class="s2">&quot;CartPole-v1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">framework</span><span class="p">(</span><span class="s2">&quot;tf2&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">get_policy</span><span class="p">()</span><span class="o">.</span><span class="n">model</span>
+<span class="c1"># &lt;ray.rllib.models.catalog.FullyConnectedNetwork_as_DistributionalQModel ...&gt;</span>
+
+<span class="c1"># List of all model variables</span>
+<span class="n">model</span><span class="o">.</span><span class="n">variables</span><span class="p">()</span>
+
+<span class="c1"># Run a forward pass to get base model output. Note that complex observations</span>
+<span class="c1"># must be preprocessed. An example of preprocessing is examples/saving_experiences.py</span>
+<span class="n">model_out</span> <span class="o">=</span> <span class="n">model</span><span class="p">({</span><span class="s2">&quot;obs&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">]])})</span>
+<span class="c1"># (&lt;tf.Tensor: id=832, shape=(1, 256), dtype=float32, numpy=...)</span>
+
+<span class="c1"># Access the base Keras models (all default models have a base)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">base_model</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Model: &quot;model&quot;</span>
+<span class="sd">_______________________________________________________________________</span>
+<span class="sd">Layer (type)                Output Shape    Param #  Connected to</span>
+<span class="sd">=======================================================================</span>
+<span class="sd">observations (InputLayer)   [(None, 4)]     0</span>
+<span class="sd">_______________________________________________________________________</span>
+<span class="sd">fc_1 (Dense)                (None, 256)     1280     observations[0][0]</span>
+<span class="sd">_______________________________________________________________________</span>
+<span class="sd">fc_out (Dense)              (None, 256)     65792    fc_1[0][0]</span>
+<span class="sd">_______________________________________________________________________</span>
+<span class="sd">value_out (Dense)           (None, 1)       257      fc_1[0][0]</span>
+<span class="sd">=======================================================================</span>
+<span class="sd">Total params: 67,329</span>
+<span class="sd">Trainable params: 67,329</span>
+<span class="sd">Non-trainable params: 0</span>
+<span class="sd">______________________________________________________________________________</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># Access the Q value model (specific to DQN)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">get_q_value_distributions</span><span class="p">(</span><span class="n">model_out</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+<span class="c1"># tf.Tensor([[ 0.13023682 -0.36805138]], shape=(1, 2), dtype=float32)</span>
+<span class="c1"># ^ exact numbers may differ due to randomness</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">q_value_head</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+
+<span class="c1"># Access the state value model (specific to DQN)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">get_state_value</span><span class="p">(</span><span class="n">model_out</span><span class="p">))</span>
+<span class="c1"># tf.Tensor([[0.09381643]], shape=(1, 1), dtype=float32)</span>
+<span class="c1"># ^ exact number may differ due to randomness</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">state_value_head</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></div>
+</div>
+<p class="sd-card-text">This is especially useful when used with
+<a class="reference external" href="rllib-models.html">custom model classes</a>.</p>
+</div>
+</details></section>
+</section>
+<section id="configuring-rllib-algorithms">
+<span id="rllib-algo-configuration"></span><h2>Configuring RLlib Algorithms<a class="headerlink" href="#configuring-rllib-algorithms" title="Permalink to this headline">#</a></h2>
+<p>You can configure RLlib algorithms in a modular fashion by working with so-called
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">AlgorithmConfig</span></code> objects.
+In essence, you first create a <code class="xref py py-obj docutils literal notranslate"><span class="pre">config</span> <span class="pre">=</span> <span class="pre">AlgorithmConfig()</span></code> object and then call methods
+on it to set the desired configuration options.
+Each RLlib algorithm has its own config class that inherits from <code class="xref py py-obj docutils literal notranslate"><span class="pre">AlgorithmConfig</span></code>.
+For instance, to create a <code class="xref py py-obj docutils literal notranslate"><span class="pre">PPO</span></code> algorithm, you start with a <code class="xref py py-obj docutils literal notranslate"><span class="pre">PPOConfig</span></code> object, to work
+with a <code class="xref py py-obj docutils literal notranslate"><span class="pre">DQN</span></code> algorithm, you start with a <code class="xref py py-obj docutils literal notranslate"><span class="pre">DQNConfig</span></code> object, etc.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Each algorithm has its specific settings, but most configuration options are shared.
+We discuss the common options below, and refer to
+<a class="reference internal" href="rllib-algorithms.html#rllib-algorithms-doc"><span class="std std-ref">the RLlib algorithms guide</span></a> for algorithm-specific
+properties.
+Algorithms differ mostly in their <code class="xref py py-obj docutils literal notranslate"><span class="pre">training</span></code> settings.</p>
+</div>
+<p>Below you find the basic signature of the <code class="xref py py-obj docutils literal notranslate"><span class="pre">AlgorithmConfig</span></code> class, as well as some
+advanced usage examples:</p>
+<p>As RLlib algorithms are fairly complex, they come with many configuration options.
+To make things easier, the common properties of algorithms are naturally grouped into
+the following categories:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#rllib-config-train"><span class="std std-ref">training options</span></a>,</p></li>
+<li><p><a class="reference internal" href="#rllib-config-env"><span class="std std-ref">environment options</span></a>,</p></li>
+<li><p><a class="reference internal" href="#rllib-config-framework"><span class="std std-ref">deep learning framework options</span></a>,</p></li>
+<li><p><a class="reference internal" href="#rllib-config-rollouts"><span class="std std-ref">rollout worker options</span></a>,</p></li>
+<li><p><a class="reference internal" href="#rllib-config-evaluation"><span class="std std-ref">evaluation options</span></a>,</p></li>
+<li><p><a class="reference internal" href="#rllib-config-exploration"><span class="std std-ref">exploration options</span></a>,</p></li>
+<li><p><a class="reference internal" href="#rllib-config-offline-data"><span class="std std-ref">options for training with offline data</span></a>,</p></li>
+<li><p><a class="reference internal" href="#rllib-config-multi-agent"><span class="std std-ref">options for training multiple agents</span></a>,</p></li>
+<li><p><a class="reference internal" href="#rllib-config-reporting"><span class="std std-ref">reporting options</span></a>,</p></li>
+<li><p><a class="reference internal" href="#rllib-config-checkpointing"><span class="std std-ref">options for saving and restoring checkpoints</span></a>,</p></li>
+<li><p><a class="reference internal" href="#rllib-config-debugging"><span class="std std-ref">debugging options</span></a>,</p></li>
+<li><p><a class="reference internal" href="#rllib-config-callbacks"><span class="std std-ref">options for adding callbacks to algorithms</span></a>,</p></li>
+<li><p><a class="reference internal" href="#rllib-config-resources"><span class="std std-ref">Resource options</span></a></p></li>
+<li><p><a class="reference internal" href="#rllib-config-experimental"><span class="std std-ref">and options for experimental features</span></a></p></li>
+</ul>
+<p>Let’s discuss each category one by one, starting with training options.</p>
+<section id="specifying-training-options">
+<span id="rllib-config-train"></span><h3>Specifying Training Options<a class="headerlink" href="#specifying-training-options" title="Permalink to this headline">#</a></h3>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<p>For instance, a <code class="xref py py-obj docutils literal notranslate"><span class="pre">DQNConfig</span></code> takes a <code class="xref py py-obj docutils literal notranslate"><span class="pre">double_q</span></code> <code class="xref py py-obj docutils literal notranslate"><span class="pre">training</span></code> argument to specify whether
+to use a double-Q DQN, whereas in a <code class="xref py py-obj docutils literal notranslate"><span class="pre">PPOConfig</span></code> this does not make sense.</p>
+</aside>
+<p>For individual algorithms, this is probably the most relevant configuration group,
+as this is where all the algorithm-specific options go.
+But the base configuration for <code class="xref py py-obj docutils literal notranslate"><span class="pre">training</span></code> of an <code class="xref py py-obj docutils literal notranslate"><span class="pre">AlgorithmConfig</span></code> is actually quite small:</p>
+</section>
+<section id="specifying-environments">
+<span id="rllib-config-env"></span><h3>Specifying Environments<a class="headerlink" href="#specifying-environments" title="Permalink to this headline">#</a></h3>
+</section>
+<section id="specifying-framework-options">
+<span id="rllib-config-framework"></span><h3>Specifying Framework Options<a class="headerlink" href="#specifying-framework-options" title="Permalink to this headline">#</a></h3>
+</section>
+<section id="specifying-rollout-workers">
+<span id="rllib-config-rollouts"></span><h3>Specifying Rollout Workers<a class="headerlink" href="#specifying-rollout-workers" title="Permalink to this headline">#</a></h3>
+</section>
+<section id="specifying-evaluation-options">
+<span id="rllib-config-evaluation"></span><h3>Specifying Evaluation Options<a class="headerlink" href="#specifying-evaluation-options" title="Permalink to this headline">#</a></h3>
+</section>
+<section id="specifying-exploration-options">
+<span id="rllib-config-exploration"></span><h3>Specifying Exploration Options<a class="headerlink" href="#specifying-exploration-options" title="Permalink to this headline">#</a></h3>
+</section>
+<section id="specifying-offline-data-options">
+<span id="rllib-config-offline-data"></span><h3>Specifying Offline Data Options<a class="headerlink" href="#specifying-offline-data-options" title="Permalink to this headline">#</a></h3>
+</section>
+<section id="specifying-multi-agent-options">
+<span id="rllib-config-multi-agent"></span><h3>Specifying Multi-Agent Options<a class="headerlink" href="#specifying-multi-agent-options" title="Permalink to this headline">#</a></h3>
+</section>
+<section id="specifying-reporting-options">
+<span id="rllib-config-reporting"></span><h3>Specifying Reporting Options<a class="headerlink" href="#specifying-reporting-options" title="Permalink to this headline">#</a></h3>
+</section>
+<section id="specifying-checkpointing-options">
+<span id="rllib-config-checkpointing"></span><h3>Specifying Checkpointing Options<a class="headerlink" href="#specifying-checkpointing-options" title="Permalink to this headline">#</a></h3>
+</section>
+<section id="specifying-debugging-options">
+<span id="rllib-config-debugging"></span><h3>Specifying Debugging Options<a class="headerlink" href="#specifying-debugging-options" title="Permalink to this headline">#</a></h3>
+</section>
+<section id="specifying-callback-options">
+<span id="rllib-config-callbacks"></span><h3>Specifying Callback Options<a class="headerlink" href="#specifying-callback-options" title="Permalink to this headline">#</a></h3>
+</section>
+<section id="specifying-resources">
+<span id="rllib-config-resources"></span><h3>Specifying Resources<a class="headerlink" href="#specifying-resources" title="Permalink to this headline">#</a></h3>
+<p>You can control the degree of parallelism used by setting the <code class="docutils literal notranslate"><span class="pre">num_workers</span></code>
+hyperparameter for most algorithms. The Algorithm will construct that many
+“remote worker” instances (<a class="reference external" href="https://github.com/ray-project/ray/blob/master/rllib/evaluation/rollout_worker.py">see RolloutWorker class</a>)
+that are constructed as ray.remote actors, plus exactly one “local worker”, a <code class="docutils literal notranslate"><span class="pre">RolloutWorker</span></code> object that is not a
+ray actor, but lives directly inside the Algorithm.
+For most algorithms, learning updates are performed on the local worker and sample collection from
+one or more environments is performed by the remote workers (in parallel).
+For example, setting <code class="docutils literal notranslate"><span class="pre">num_workers=0</span></code> will only create the local worker, in which case both
+sample collection and training will be done by the local worker.
+On the other hand, setting <code class="docutils literal notranslate"><span class="pre">num_workers=5</span></code> will create the local worker (responsible for training updates)
+and 5 remote workers (responsible for sample collection).</p>
+<p>Since learning is most of the time done on the local worker, it may help to provide one or more GPUs
+to that worker via the <code class="docutils literal notranslate"><span class="pre">num_gpus</span></code> setting.
+Similarly, the resource allocation to remote workers can be controlled via <code class="docutils literal notranslate"><span class="pre">num_cpus_per_worker</span></code>, <code class="docutils literal notranslate"><span class="pre">num_gpus_per_worker</span></code>, and <code class="docutils literal notranslate"><span class="pre">custom_resources_per_worker</span></code>.</p>
+<p>The number of GPUs can be fractional quantities (e.g. 0.5) to allocate only a fraction
+of a GPU. For example, with DQN you can pack five algorithms onto one GPU by setting
+<code class="docutils literal notranslate"><span class="pre">num_gpus:</span> <span class="pre">0.2</span></code>. Check out <a class="reference external" href="https://github.com/ray-project/ray/blob/master/rllib/examples/fractional_gpus.py">this fractional GPU example here</a>
+as well that also demonstrates how environments (running on the remote workers) that
+require a GPU can benefit from the <code class="docutils literal notranslate"><span class="pre">num_gpus_per_worker</span></code> setting.</p>
+<p>For synchronous algorithms like PPO and A2C, the driver and workers can make use of
+the same GPU. To do this for an amount of <code class="docutils literal notranslate"><span class="pre">n</span></code> GPUS:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">gpu_count</span> <span class="o">=</span> <span class="n">n</span>
+<span class="n">num_gpus</span> <span class="o">=</span> <span class="mf">0.0001</span> <span class="c1"># Driver GPU</span>
+<span class="n">num_gpus_per_worker</span> <span class="o">=</span> <span class="p">(</span><span class="n">gpu_count</span> <span class="o">-</span> <span class="n">num_gpus</span><span class="p">)</span> <span class="o">/</span> <span class="n">num_workers</span>
+</pre></div>
+</div>
+<img alt="../_images/rllib-config.svg" src="../_images/rllib-config.svg" /><p>If you specify <code class="docutils literal notranslate"><span class="pre">num_gpus</span></code> and your machine does not have the required number of GPUs
+available, a RuntimeError will be thrown by the respective worker. On the other hand,
+if you set <code class="docutils literal notranslate"><span class="pre">num_gpus=0</span></code>, your policies will be built solely on the CPU, even if
+GPUs are available on the machine.</p>
+</section>
+<section id="specifying-experimental-features">
+<span id="rllib-config-experimental"></span><h3>Specifying Experimental Features<a class="headerlink" href="#specifying-experimental-features" title="Permalink to this headline">#</a></h3>
+</section>
+</section>
+<section id="rllib-scaling-guide">
+<span id="id1"></span><h2>RLlib Scaling Guide<a class="headerlink" href="#rllib-scaling-guide" title="Permalink to this headline">#</a></h2>
+<p>Here are some rules of thumb for scaling training with RLlib.</p>
+<ol class="arabic simple">
+<li><p>If the environment is slow and cannot be replicated (e.g., since it requires interaction with physical systems), then you should use a sample-efficient off-policy algorithm such as <a class="reference internal" href="rllib-algorithms.html#dqn"><span class="std std-ref">DQN</span></a> or <a class="reference internal" href="rllib-algorithms.html#sac"><span class="std std-ref">SAC</span></a>. These algorithms default to <code class="docutils literal notranslate"><span class="pre">num_workers:</span> <span class="pre">0</span></code> for single-process operation. Make sure to set <code class="docutils literal notranslate"><span class="pre">num_gpus:</span> <span class="pre">1</span></code> if you want to use a GPU. Consider also batch RL training with the <a class="reference external" href="rllib-offline.html">offline data</a> API.</p></li>
+<li><p>If the environment is fast and the model is small (most models for RL are), use time-efficient algorithms such as <a class="reference internal" href="rllib-algorithms.html#ppo"><span class="std std-ref">PPO</span></a>, <a class="reference internal" href="rllib-algorithms.html#impala"><span class="std std-ref">IMPALA</span></a>, or <a class="reference internal" href="rllib-algorithms.html#apex"><span class="std std-ref">APEX</span></a>. These can be scaled by increasing <code class="docutils literal notranslate"><span class="pre">num_workers</span></code> to add rollout workers. It may also make sense to enable <a class="reference external" href="rllib-env.html#vectorized">vectorization</a> for inference. Make sure to set <code class="docutils literal notranslate"><span class="pre">num_gpus:</span> <span class="pre">1</span></code> if you want to use a GPU. If the learner becomes a bottleneck, multiple GPUs can be used for learning by setting <code class="docutils literal notranslate"><span class="pre">num_gpus</span> <span class="pre">&gt;</span> <span class="pre">1</span></code>.</p></li>
+<li><p>If the model is compute intensive (e.g., a large deep residual network) and inference is the bottleneck, consider allocating GPUs to workers by setting <code class="docutils literal notranslate"><span class="pre">num_gpus_per_worker:</span> <span class="pre">1</span></code>. If you only have a single GPU, consider <code class="docutils literal notranslate"><span class="pre">num_workers:</span> <span class="pre">0</span></code> to use the learner GPU for inference. For efficient use of GPU time, use a small number of GPU workers and a large number of <a class="reference external" href="rllib-env.html#vectorized">envs per worker</a>.</p></li>
+<li><p>Finally, if both model and environment are compute intensive, then enable <a class="reference external" href="rllib-env.html#vectorized">remote worker envs</a> with <a class="reference external" href="rllib-env.html#vectorized">async batching</a> by setting <code class="docutils literal notranslate"><span class="pre">remote_worker_envs:</span> <span class="pre">True</span></code> and optionally <code class="docutils literal notranslate"><span class="pre">remote_env_batch_wait_ms</span></code>. This batches inference on GPUs in the rollout workers while letting envs run asynchronously in separate actors, similar to the <a class="reference external" href="https://ai.googleblog.com/2020/03/massively-scaling-reinforcement.html">SEED</a> architecture. The number of workers and number of envs per worker should be tuned to maximize GPU utilization. If your env requires GPUs to function, or if multi-node SGD is needed, then also consider <a class="reference internal" href="rllib-algorithms.html#ddppo"><span class="std std-ref">DD-PPO</span></a>.</p></li>
+</ol>
+<p>In case you are using lots of workers (<code class="docutils literal notranslate"><span class="pre">num_workers</span> <span class="pre">&gt;&gt;</span> <span class="pre">10</span></code>) and you observe worker failures for whatever reasons, which normally interrupt your RLlib training runs, consider using
+the config settings <code class="docutils literal notranslate"><span class="pre">ignore_worker_failures=True</span></code>, <code class="docutils literal notranslate"><span class="pre">recreate_failed_workers=True</span></code>, or <code class="docutils literal notranslate"><span class="pre">restart_failed_sub_environments=True</span></code>:</p>
+<p><code class="docutils literal notranslate"><span class="pre">ignore_worker_failures</span></code>: When set to True, your Algorithm will not crash due to a single worker error but continue for as long as there is at least one functional worker remaining.
+<code class="docutils literal notranslate"><span class="pre">recreate_failed_workers</span></code>: When set to True, your Algorithm will attempt to replace/recreate any failed worker(s) with newly created one(s). This way, your number of workers will never decrease, even if some of them fail from time to time.
+<code class="docutils literal notranslate"><span class="pre">restart_failed_sub_environments</span></code>: When set to True and there is a failure in one of the vectorized sub-environments in one of your workers, the worker will try to recreate only the failed sub-environment and re-integrate the newly created one into your vectorized env stack on that worker.</p>
+<p>Note that only one of <code class="docutils literal notranslate"><span class="pre">ignore_worker_failures</span></code> or <code class="docutils literal notranslate"><span class="pre">recreate_failed_workers</span></code> may be set to True (they are mutually exclusive settings). However,
+you can combine each of these with the <code class="docutils literal notranslate"><span class="pre">restart_failed_sub_environments=True</span></code> setting.
+Using these options will make your training runs much more stable and more robust against occasional OOM or other similar “once in a while” errors on your workers
+themselves or inside your environments.</p>
+</section>
+<section id="debugging-rllib-experiments">
+<h2>Debugging RLlib Experiments<a class="headerlink" href="#debugging-rllib-experiments" title="Permalink to this headline">#</a></h2>
+<section id="gym-monitor">
+<h3>Gym Monitor<a class="headerlink" href="#gym-monitor" title="Permalink to this headline">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">&quot;monitor&quot;:</span> <span class="pre">true</span></code> config can be used to save Gym episode videos to the result dir. For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rllib train --env<span class="o">=</span>PongDeterministic-v4 <span class="se">\</span>
+    --run<span class="o">=</span>A2C --config <span class="s1">&#39;{&quot;num_workers&quot;: 2, &quot;monitor&quot;: true}&#39;</span>
+
+<span class="c1"># videos will be saved in the ~/ray_results/&lt;experiment&gt; dir, for example</span>
+openaigym.video.0.31401.video000000.meta.json
+openaigym.video.0.31401.video000000.mp4
+openaigym.video.0.31403.video000000.meta.json
+openaigym.video.0.31403.video000000.mp4
+</pre></div>
+</div>
+</section>
+<section id="eager-mode">
+<h3>Eager Mode<a class="headerlink" href="#eager-mode" title="Permalink to this headline">#</a></h3>
+<p>Policies built with <code class="docutils literal notranslate"><span class="pre">build_tf_policy</span></code> (most of the reference algorithms are)
+can be run in eager mode by setting the
+<code class="docutils literal notranslate"><span class="pre">&quot;framework&quot;:</span> <span class="pre">&quot;tf2&quot;</span></code> / <code class="docutils literal notranslate"><span class="pre">&quot;eager_tracing&quot;:</span> <span class="pre">true</span></code> config options or using
+<code class="docutils literal notranslate"><span class="pre">rllib</span> <span class="pre">train</span> <span class="pre">--config</span> <span class="pre">'{&quot;framework&quot;:</span> <span class="pre">&quot;tf2&quot;}'</span> <span class="pre">[--trace]</span></code>.
+This will tell RLlib to execute the model forward pass, action distribution,
+loss, and stats functions in eager mode.</p>
+<p>Eager mode makes debugging much easier, since you can now use line-by-line
+debugging with breakpoints or Python <code class="docutils literal notranslate"><span class="pre">print()</span></code> to inspect
+intermediate tensor values.
+However, eager can be slower than graph mode unless tracing is enabled.</p>
+</section>
+<section id="using-pytorch">
+<h3>Using PyTorch<a class="headerlink" href="#using-pytorch" title="Permalink to this headline">#</a></h3>
+<p>Algorithms that have an implemented TorchPolicy, will allow you to run
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">rllib</span> <span class="pre">train</span></code> using the command line <code class="docutils literal notranslate"><span class="pre">--framework=torch</span></code> flag.
+Algorithms that do not have a torch version yet will complain with an error in
+this case.</p>
+</section>
+<section id="episode-traces">
+<h3>Episode Traces<a class="headerlink" href="#episode-traces" title="Permalink to this headline">#</a></h3>
+<p>You can use the <a class="reference external" href="rllib-offline.html">data output API</a> to save episode traces
+for debugging. For example, the following command will run PPO while saving episode
+traces to <code class="docutils literal notranslate"><span class="pre">/tmp/debug</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rllib train --run<span class="o">=</span>PPO --env<span class="o">=</span>CartPole-v1 <span class="se">\</span>
+    --config<span class="o">=</span><span class="s1">&#39;{&quot;output&quot;: &quot;/tmp/debug&quot;, &quot;output_compress_columns&quot;: []}&#39;</span>
+
+<span class="c1"># episode traces will be saved in /tmp/debug, for example</span>
+output-2019-02-23_12-02-03_worker-2_0.json
+output-2019-02-23_12-02-04_worker-1_0.json
+</pre></div>
+</div>
+</section>
+<section id="log-verbosity">
+<h3>Log Verbosity<a class="headerlink" href="#log-verbosity" title="Permalink to this headline">#</a></h3>
+<p>You can control the log level via the <code class="docutils literal notranslate"><span class="pre">&quot;log_level&quot;</span></code> flag. Valid values are “DEBUG”,
+“INFO”, “WARN” (default), and “ERROR”. This can be used to increase or decrease the
+verbosity of internal logging. You can also use the <code class="docutils literal notranslate"><span class="pre">-v</span></code> and <code class="docutils literal notranslate"><span class="pre">-vv</span></code> flags.
+For example, the following two commands are about equivalent:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rllib train --env<span class="o">=</span>PongDeterministic-v4 <span class="se">\</span>
+    --run<span class="o">=</span>A2C --config <span class="s1">&#39;{&quot;num_workers&quot;: 2, &quot;log_level&quot;: &quot;DEBUG&quot;}&#39;</span>
+
+rllib train --env<span class="o">=</span>PongDeterministic-v4 <span class="se">\</span>
+    --run<span class="o">=</span>A2C --config <span class="s1">&#39;{&quot;num_workers&quot;: 2}&#39;</span> -vv
+</pre></div>
+</div>
+<p>The default log level is <code class="docutils literal notranslate"><span class="pre">WARN</span></code>. We strongly recommend using at least <code class="docutils literal notranslate"><span class="pre">INFO</span></code>
+level logging for development.</p>
+</section>
+<section id="stack-traces">
+<h3>Stack Traces<a class="headerlink" href="#stack-traces" title="Permalink to this headline">#</a></h3>
+<p>You can use the <code class="docutils literal notranslate"><span class="pre">ray</span> <span class="pre">stack</span></code> command to dump the stack traces of all the
+Python workers on a single node. This can be useful for debugging unexpected
+hangs or performance issues.</p>
+</section>
+</section>
+<section id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>To check how your application is doing, you can use the <a class="reference internal" href="../ray-observability/getting-started.html#observability-getting-started"><span class="std std-ref">Ray dashboard</span></a>.</p></li>
+</ul>
+</section>
+</section>
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="index.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">RLlib: 工业级强化学习</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="key-concepts.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">关键概念</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><!-- Override the footer area for the sphinx-book-theme to include the CSAT widget -->
+<div id="csat">
+  <div id="csat-feedback-received" class="csat-hidden">
+    <span>谢谢你的反馈！</span>
+  </div>
+  <div id="csat-inputs">
+    <span>是否能帮助到你？</span>
+    <div id="csat-yes" class="csat-button">
+      <svg id="csat-yes-icon" class="csat-hidden csat-icon" width="18" height="13" viewBox="0 0 18 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 10.172L16.1922 0.979004L17.6072 2.393L7.00023 13L0.63623 6.636L2.05023 5.222L7.00023 10.172Z" fill="black"/>
+      </svg>
+      <span>是<span>
+    </div>
+    <div id="csat-no" class="csat-button">
+      <svg id="csat-no-icon" class="csat-hidden csat-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 5.58599L11.9502 0.635986L13.3642 2.04999L8.41423 6.99999L13.3642 11.95L11.9502 13.364L7.00023 8.41399L2.05023 13.364L0.63623 11.95L5.58623 6.99999L0.63623 2.04999L2.05023 0.635986L7.00023 5.58599Z" fill="black"/>
+      </svg>
+      <span>否<span>
+    </div>
+  </div>
+  <div id="csat-textarea-group" class="csat-hidden">
+    <span id="csat-feedback-label">反馈</span>
+    <textarea id="csat-textarea"></textarea>
+    <div id="csat-submit">提交</div>
+  </div>
+</div><p>
+  
+    By The Ray Team<br/>
+  
+      &copy; Copyright 2024, The Ray Team.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

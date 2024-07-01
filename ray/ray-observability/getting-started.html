@@ -1,0 +1,1060 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Ray 仪表盘 &#8212; Ray 2.7.2</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/termynal.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/js/versionwarning.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+    <script defer="defer" src="../_static/js/docsearch.js"></script>
+    <script defer="defer" src="../_static/js/csat.js"></script>
+    <script defer="defer" src="../_static/js/termynal.js"></script>
+    <script defer="defer" src="../_static/js/custom.js"></script>
+    <script defer="defer" src="../_static/js/top-navigation.js"></script>
+    <script src="../_static/js/tags.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <link rel="canonical" href="https://docs.ray.io/en/latest/ray-observability/getting-started.html" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="关键概念" href="key-concepts.html" />
+    <link rel="prev" title="监控和调试" href="index.html" />
+
+<!-- Fathom - beautiful, simple website analytics -->
+<script src="https://deer.ray.io/script.js" data-site="WYYANYOS" defer></script>
+<!-- / Fathom -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-110413294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-110413294-1');
+</script>
+
+<script
+  src="https://widget.kapa.ai/kapa-widget.bundle.js"
+  data-website-id="18a8c339-4ec5-43c8-8182-db3f2bc8c6b6"
+  data-project-name="Ray"
+  data-project-color="#2C2C2C"
+  data-project-logo="https://global.discourse-cdn.com/business7/uploads/ray/original/1X/8f4dcb72f7cd34e2a332d548bd65860994bc8ff1.png"
+  data-modal-disclaimer = "Results are automated and may be incorrect or contain inappropriate information. Do not include any personal data or confidential information."
+  data-modal-title = "Ray Docs AI - Ask a Question"
+  data-button-position-bottom = "60px"
+></script>
+
+<script>
+(function(apiKey){
+    (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
+    v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
+        o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
+        y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
+        z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
+
+        pendo.initialize({
+            visitor: {
+                id: 'VISITOR-UNIQUE-ID'
+            },
+            account: {
+                id: 'ACCOUNT-UNIQUE-ID'
+            }
+        });
+})('f89fa48a-6dd7-4d7c-67cf-a8051ed891f2');
+</script>
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"><div class='topnav'></div></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Ray 2.7.2</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main Navigation">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    欢迎来到 Ray ！
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Ray
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-overview/index.html">
+   概述「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-overview/getting-started.html">
+   入门
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-overview/installation.html">
+   安装「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-overview/use-cases.html">
+   用例「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-overview/examples.html">
+   示例库「1%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-overview/ray-libraries.html">
+   生态「3%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-core/walkthrough.html">
+   Ray 核心「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../data/data.html">
+   Ray 数据「75%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../train/train.html">
+   Ray 训练「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../tune/index.html">
+   Ray 调参「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../serve/index.html">
+   Ray Serve
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../rllib/index.html">
+   Ray RLlib
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-more-libs/index.html">
+   更多类库「40%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cluster/getting-started.html">
+   Ray 集群「100%」
+  </a>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="index.html">
+   监控调试「100%」
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     Ray 仪表盘
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="key-concepts.html">
+     关键概念
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="user-guides/index.html">
+     用户指南
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="reference/index.html">
+     参考
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-references/api.html">
+   参考「20%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-contribute/index.html">
+   开发者指引「30%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ray-security/index.html">
+   安全「100%」
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/ray-project/ray"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/issues/new?title=Issue%20on%20page%20%2Fray-observability/getting-started.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/edit/master/doc/source/ray-observability/getting-started.rst"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/ray-observability/getting-started.rst.txt"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.rst</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   设置仪表板
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id4">
+   浏览视图
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#dash-jobs-view">
+   作业视图
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#job">
+     Job 概况
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#actor">
+     任务和 actor 细分
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dashboard-timeline">
+     任务时间线
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id9">
+     Ray 状态
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dash-workflow-state-apis">
+     任务、actor 和 占位组
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#dash-serve-view">
+   服务视图
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id12">
+     提供应用程序详细信息页面
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id13">
+     服务副本详细信息页面
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#serve">
+     Serve 指标
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#dash-node-view">
+   集群视图
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#actors">
+   Actors 视图
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id15">
+     Actor 性能
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id16">
+     Actor 详情页
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#dash-metrics-view">
+   指标视图
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#tasksactorscpu">
+     分析Tasks和Actors的CPU和内存使用情况
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dash-workflow-resource-utilization">
+     查看资源利用率
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#dash-logs-view">
+   日志视图
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#dash-overview">
+   概览视图
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id27">
+   资源
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Ray 仪表盘</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   设置仪表板
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id4">
+   浏览视图
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#dash-jobs-view">
+   作业视图
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#job">
+     Job 概况
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#actor">
+     任务和 actor 细分
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dashboard-timeline">
+     任务时间线
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id9">
+     Ray 状态
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dash-workflow-state-apis">
+     任务、actor 和 占位组
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#dash-serve-view">
+   服务视图
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id12">
+     提供应用程序详细信息页面
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id13">
+     服务副本详细信息页面
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#serve">
+     Serve 指标
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#dash-node-view">
+   集群视图
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#actors">
+   Actors 视图
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id15">
+     Actor 性能
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id16">
+     Actor 详情页
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#dash-metrics-view">
+   指标视图
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#tasksactorscpu">
+     分析Tasks和Actors的CPU和内存使用情况
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dash-workflow-resource-utilization">
+     查看资源利用率
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#dash-logs-view">
+   日志视图
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#dash-overview">
+   概览视图
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id27">
+   资源
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section id="ray">
+<span id="observability-getting-started"></span><h1>Ray 仪表盘<a class="headerlink" href="#ray" title="Permalink to this headline">#</a></h1>
+<p>Ray 提供了一个基于 Web 的仪表板，用于监视和调试 Ray 应用程序。系统状态的可视化表示允许用户跟踪应用程序的性能并解决问题。</p>
+<div style="position: relative; height: 0; overflow: hidden; max-width: 100%; height: auto;">
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/i33b1DYjYRQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+</div><section id="id1">
+<h2>设置仪表板<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h2>
+<p>要访问仪表板，请使用 <code class="xref py py-obj docutils literal notranslate"><span class="pre">ray[default]</span></code> 或包含 Ray 仪表板组件的 <a class="reference internal" href="../ray-overview/installation.html#installation"><span class="std std-ref">其他安装命令</span></a> 。例如：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install -U <span class="s2">&quot;ray[default]&quot;</span>
+</pre></div>
+</div>
+<p>当您在笔记本电脑上启动单节点 Ray 集群时，可以使用 Ray 初始化时打印的 URL（默认 URL 为 <a href="#id2"><span class="problematic" id="id3">**</span></a><a class="reference external" href="http://localhost:8265**5">http://localhost:8265**5</a>）或使用 <a class="reference internal" href="../ray-core/api/doc/ray.init.html#ray.init" title="ray.init"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ray.init</span></code></a> 返回的上下文对象来访问仪表板。</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ray</span>
+
+<span class="n">context</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">dashboard_url</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>127.0.0.1:8265
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>INFO worker.py:1487 -- Connected to Ray cluster. View the dashboard at 127.0.0.1:8265.
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>如果在 docker 容器中启动 Ray， <code class="docutils literal notranslate"><span class="pre">--dashboard-host</span></code> 是必需参数。例如， <code class="docutils literal notranslate"><span class="pre">ray</span> <span class="pre">start</span> <span class="pre">--head</span> <span class="pre">--dashboard-host=0.0.0.0</span></code>。</p>
+</div>
+<p>当使用 <a class="reference internal" href="../cluster/vms/getting-started.html#vm-cluster-quick-start"><span class="std std-ref">虚拟机集群启动器</span></a>， <a class="reference internal" href="../cluster/kubernetes/getting-started.html#kuberay-quickstart"><span class="std std-ref">KubeRay 控制器</span></a>，或手动配置启动远程 Ray 集群， Ray 仪表盘在头节点上启动，但仪表板端口可能不会公开暴露。查看 <a class="reference internal" href="../cluster/configure-manage-dashboard.html#dashboard-in-browser"><span class="std std-ref">配置仪表盘</span></a> 了解如何从头节点外部查看仪表板。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>使用 Ray Dashboard 时，强烈建议同时设置 Prometheus 和 Grafana。
+它们对于 <span class="xref std std-ref">Metrics View</span> ，了解如何将 Prometheus 和 Grafana 与 Ray Dashboard 集成。</p>
+</div>
+</section>
+<section id="id4">
+<h2>浏览视图<a class="headerlink" href="#id4" title="Permalink to this headline">#</a></h2>
+<p>仪表板有多个称为视图的选项卡。根据您的目标，您可以使用一种或多种视图的组合：</p>
+<ul class="simple">
+<li><p>分析、监控或可视化逻辑或物理组件的状态和资源利用率指标： <a class="reference internal" href="#dash-metrics-view"><span class="std std-ref">指标视图</span></a>、 <a class="reference internal" href="#dash-node-view"><span class="std std-ref">集群视图</span></a></p></li>
+<li><p>监控作业和任务的进度和状态：: <a class="reference internal" href="#dash-jobs-view"><span class="std std-ref">作业视图</span></a></p></li>
+<li><p>查找失败任务和 actor 的日志和错误消息： <a class="reference internal" href="#dash-jobs-view"><span class="std std-ref">作业视图</span></a>, <a class="reference internal" href="#dash-logs-view"><span class="std std-ref">日志视图</span></a></p></li>
+<li><p>分析任务和 actor 的CPU和内存使用情况： <a class="reference internal" href="#dash-metrics-view"><span class="std std-ref">指标视图</span></a>,  <a class="reference internal" href="#dash-node-view"><span class="std std-ref">集群视图</span></a></p></li>
+<li><p>监视服务应用程序： <a class="reference internal" href="#dash-serve-view"><span class="std std-ref">服务视图</span></a></p></li>
+</ul>
+</section>
+<section id="dash-jobs-view">
+<span id="id5"></span><h2>作业视图<a class="headerlink" href="#dash-jobs-view" title="Permalink to this headline">#</a></h2>
+<div style="position: relative; height: 0; overflow: hidden; max-width: 100%; height: auto;">
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/CrpXSSs0uaw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+</div><p>作业视图可让您监控 Ray Cluster 上运行的不同作业。
+<a class="reference internal" href="../cluster/running-applications/job-submission/index.html#jobs-overview"><span class="std std-ref">Ray Job</span></a> 是使用 Ray API（例如 <a class="reference internal" href="../ray-core/api/doc/ray.init.html#ray.init" title="ray.init"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ray.init</span></code></a>）的 Ray 工作负载。建议通过 :ref:<a href="#id6"><span class="problematic" id="id7">`</span></a>Ray Job API &lt;jobs-quickstart&gt;`将作业提交到集群。您还可以交互地运行 Ray 作业（例如，通过在头节点内执行 Python 脚本）。</p>
+<p>作业视图显示活动、已完成和失败作业的列表，单击 ID 允许用户查看有关该作业的详细信息。
+有关 Ray 作业的更多信息，请参阅 <a class="reference internal" href="../cluster/running-applications/job-submission/index.html#jobs-overview"><span class="std std-ref">Ray 作业概述部分</span></a>。</p>
+<section id="job">
+<h3>Job 概况<a class="headerlink" href="#job" title="Permalink to this headline">#</a></h3>
+<p>您可以通过单击“堆栈跟踪”或“CPU 火焰图”操作来分析 Ray 作业。有关更多详细信息，请参阅:ref:<code class="xref py py-obj docutils literal notranslate"><span class="pre">Profiling</span></code>。</p>
+</section>
+<section id="actor">
+<span id="dash-workflow-job-progress"></span><h3>任务和 actor 细分<a class="headerlink" href="#actor" title="Permalink to this headline">#</a></h3>
+<img alt="https://raw.githubusercontent.com/ray-project/Images/master/docs/new-dashboard-v2/dashboard-pics/advanced-progress.png" class="align-center" src="https://raw.githubusercontent.com/ray-project/Images/master/docs/new-dashboard-v2/dashboard-pics/advanced-progress.png" />
+<p>作业视图按状态细分任务和 actor。
+默认情况下，任务和 actor 是分组和嵌套的。您可以通过单击展开按钮来查看嵌套条目。</p>
+<p>任务和 actor 使用以下标准进行分组和嵌套：</p>
+<ul class="simple">
+<li><p>A所有task 和 actor都分组在一起。通过展开相应的行来查看各个条目。</p></li>
+<li><p>T任务按其 <code class="docutils literal notranslate"><span class="pre">name</span></code> 属性分组（例如， <code class="docutils literal notranslate"><span class="pre">task.options(name=&quot;&lt;name_here&gt;&quot;).remote()</span></code>）。</p></li>
+<li><p>子任务（嵌套任务）嵌套在其父任务行下。</p></li>
+<li><p>Actors 按他们的类名分组。</p></li>
+<li><p>子 Actors（在 Actor 内创建的 Actor）嵌套在其父 Actor 的行下。</p></li>
+<li><p>Actor 任务（Actor 内的远程方法）嵌套在相应 Actor 方法的 Actor 下。</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>作业详细信息页面只能显示或检索每个作业最多 10K 个任务。对于任务数超过 10K 的作业，超出 10K 限制的任务部分不予计算。未计入任务的数量可从任务细分中获得。</p>
+</div>
+</section>
+<section id="dashboard-timeline">
+<span id="id8"></span><h3>任务时间线<a class="headerlink" href="#dashboard-timeline" title="Permalink to this headline">#</a></h3>
+<p>首先，单击下载按钮下载 chrome 跟踪文件。或者，您可以 <a class="reference internal" href="user-guides/debug-apps/optimize-performance.html#ray-core-timeline"><span class="std std-ref">使用 CLI 或 SDK 导出跟踪文件</span></a>。</p>
+<p>其次，使用 <code class="docutils literal notranslate"><span class="pre">chrome://tracing</span></code> 或者 <a class="reference external" href="https://ui.perfetto.dev/">Perfetto UI</a> 等工具并拖拽下载的 chrome 跟踪文件。我们将使用 Perfetto，因为它是可视化 chrome 跟踪文件的推荐方法。</p>
+<p>在 Ray Tasks 和 Actors 的时间线可视化中，有 Node 行（硬件）和 Worker 行（进程）。
+每个 worker 行显示该 worker 随时间发生的任务事件列表（例如，计划的任务、运行的任务、输入/输出反序列化等）。</p>
+</section>
+<section id="id9">
+<h3>Ray 状态<a class="headerlink" href="#id9" title="Permalink to this headline">#</a></h3>
+<p>作业视图显示 Ray Cluster 的状态。此信息是 CLI 命令 <code class="docutils literal notranslate"><span class="pre">ray</span> <span class="pre">status</span></code>  的输出。</p>
+<p>左侧面板显示自动缩放状态，包括挂起、活动和失败的节点。右侧面板显示资源需求，即当前无法调度到集群的资源。此页面对于调试资源死锁或缓慢的调度很有用。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>输出显示整个集群的聚合信息（不是按作业）。如果您运行多个作业，则某些需求可能来自其他作业。</p>
+</div>
+</section>
+<section id="dash-workflow-state-apis">
+<span id="id10"></span><h3>任务、actor 和 占位组<a class="headerlink" href="#dash-workflow-state-apis" title="Permalink to this headline">#</a></h3>
+<p>仪表板显示作业任务、actor 和 占位组的状态表。
+该信息是 <a class="reference internal" href="user-guides/cli-sdk.html#state-api-overview-ref"><span class="std std-ref">Ray State APIs</span></a> 输出的。</p>
+<p>您可以展开该表以查看每个任务、actor 和 占位组的列表。</p>
+</section>
+</section>
+<section id="dash-serve-view">
+<span id="id11"></span><h2>服务视图<a class="headerlink" href="#dash-serve-view" title="Permalink to this headline">#</a></h2>
+<div style="position: relative; height: 0; overflow: hidden; max-width: 100%; height: auto;">
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/eqXfwM641a4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+</div><p>查看您的常规 Serve 配置、Serve 应用程序列表，如果您配置了 <a class="reference internal" href="../cluster/configure-manage-dashboard.html#observability-visualization-setup"><span class="std std-ref">Grafana 和 Prometheus</span></a> ， 还可以查看 Serve 应用程序的高级指标。单击服务应用程序名称，进入服务应用程序详细信息页面。</p>
+<section id="id12">
+<h3>提供应用程序详细信息页面<a class="headerlink" href="#id12" title="Permalink to this headline">#</a></h3>
+<p>查看 Serve 应用程序的配置和元数据以及 <a class="reference internal" href="../serve/key-concepts.html#serve-key-concepts-deployment"><span class="std std-ref">Serve 部署和副本</span></a> 的列表。
+单击部署的展开按钮以查看副本。</p>
+<p>每个部署都有两个可用的操作。您可以查看部署配置，如果您配置了 <a class="reference internal" href="../cluster/configure-manage-dashboard.html#observability-configure-manage-dashboard"><span class="std std-ref">Grafana 和 Prometheus</span></a> ，则可以打开 Grafana 仪表板，其中包含有关该部署的详细指标。</p>
+<p>对于每个副本，有两个可用的操作。您可以查看该副本的日志，如果您配置了 <a class="reference internal" href="../cluster/configure-manage-dashboard.html#observability-visualization-setup"><span class="std std-ref">Grafana 和 Prometheus</span></a> ，则可以打开 Grafana 仪表板，其中包含有关该副本的详细指标。单击副本名称，进入服务副本详细信息页面。</p>
+</section>
+<section id="id13">
+<h3>服务副本详细信息页面<a class="headerlink" href="#id13" title="Permalink to this headline">#</a></h3>
+<p>此页面显示有关服务副本的元数据、有关副本的高级指标，如果您配置了 <a class="reference internal" href="../cluster/configure-manage-dashboard.html#observability-visualization-setup"><span class="std std-ref">Grafana 和 Prometheus</span></a> ，以及该副本已完成 <a class="reference internal" href="../ray-core/key-concepts.html#core-key-concepts"><span class="std std-ref">Tasks</span></a> 的历史记录。</p>
+</section>
+<section id="serve">
+<h3>Serve 指标<a class="headerlink" href="#serve" title="Permalink to this headline">#</a></h3>
+<p>Ray Serve 导出各种时间序列指标，以帮助您了解 Serve 应用程序随时间变化的状态。 在 <a class="reference internal" href="../serve/monitoring.html#serve-production-monitoring-metrics"><span class="std std-ref">此处</span></a> 查找有关这些指标的更多详细信息。
+要存储和可视化这些指标，请按照 <a class="reference internal" href="../cluster/configure-manage-dashboard.html#observability-visualization-setup"><span class="std std-ref">这里</span></a> 说明设置 Prometheus 和 Grafana 。</p>
+<p>这些指标可在 Ray Dashboard 的“服务”页面和“服务副本详细信息”页面中找到。
+它们也可以作为 Grafana 仪表板进行访问。
+在 Grafana 仪表板中，使用顶部的下拉筛选器按路由、部署或副本筛选指标。
+将鼠标悬停在每个图表左上角的“信息”图标上即可获得每个图表的准确描述。</p>
+</section>
+</section>
+<section id="dash-node-view">
+<span id="id14"></span><h2>集群视图<a class="headerlink" href="#dash-node-view" title="Permalink to this headline">#</a></h2>
+<div style="position: relative; height: 0; overflow: hidden; max-width: 100%; height: auto;">
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/K2jLoIhlsnY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+</div><p>Cluster 视图是机器（节点）和 Workers（进程）层次关系的可视化。
+每台主机由许多 Worker 组成，您可以通过单击 + 按钮查看。
+另请参阅将 GPU 资源分配给特定的 Actor 或任务。</p>
+<p>单击节点 ID，可查看节点详细信息页面。</p>
+<p>此外，机器视图允许您查看节点或工作线程的 <strong>日志</strong>。</p>
+</section>
+<section id="actors">
+<span id="dash-actors-view"></span><h2>Actors 视图<a class="headerlink" href="#actors" title="Permalink to this headline">#</a></h2>
+<p>使用 Actors 视图查看 Actor 的日志以及哪个作业创建了该 Actor。</p>
+<div style="position: relative; height: 0; overflow: hidden; max-width: 100%; height: auto;">
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/MChn6O1ecEQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+</div><p>最多存储 1000 个死亡 Actor 的信息。
+Ray 启动时覆盖该 <code class="xref py py-obj docutils literal notranslate"><span class="pre">RAY_DASHBOARD_MAX_ACTORS_TO_CACHE</span></code> 环境变量。</p>
+<section id="id15">
+<h3>Actor 性能<a class="headerlink" href="#id15" title="Permalink to this headline">#</a></h3>
+<p>在正在运行的 Actor 上运行分析器。有关更多详细信息，请参阅 <a class="reference internal" href="user-guides/debug-apps/optimize-performance.html#dashboard-profiling"><span class="std std-ref">Dashboard Profiling</span></a>  。</p>
+</section>
+<section id="id16">
+<h3>Actor 详情页<a class="headerlink" href="#id16" title="Permalink to this headline">#</a></h3>
+<p>单击 ID，可查看 Actor 的详细信息视图。</p>
+<p>在 Actor 详细信息页面上，查看元数据、状态以及所有已运行的 Actor 任务。</p>
+</section>
+</section>
+<section id="dash-metrics-view">
+<span id="id17"></span><h2>指标视图<a class="headerlink" href="#dash-metrics-view" title="Permalink to this headline">#</a></h2>
+<div style="position: relative; height: 0; overflow: hidden; max-width: 100%; height: auto;">
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/yn5Q65iHAR8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+</div><p>Ray 导出可从 <a class="reference internal" href="#dash-metrics-view"><span class="std std-ref">“指标”视图</span></a> 中获得的默认指标。以下是一些可用的示例指标。</p>
+<ul class="simple">
+<li><p>Ta按状态细分的任务、actor 和 占位组</p></li>
+<li><p>跨节点 <a class="reference internal" href="../ray-core/scheduling/resources.html#logical-resources"><span class="std std-ref">L辑资源使用情况</span></a></p></li>
+<li><p>跨节点硬件资源使用情况</p></li>
+<li><p>Autoscaler 状态</p></li>
+</ul>
+<p>有关可用指标，请参阅 <a class="reference internal" href="reference/system-metrics.html#system-metrics"><span class="std std-ref">系统指标页</span></a> 。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Metrics 视图需要 Prometheus 和 Grafana 设置。请参阅 :ref:<a href="#id18"><span class="problematic" id="id19">`</span></a>配置和管理仪表板 &lt;observability-visualization-setup&gt;`以了解如何设置 Prometheus 和 Grafana。</p>
+</div>
+<p>Metrics 视图提供 Ray 发出的时间序列指标的可视化。</p>
+<p>您可以在右上角选择指标的时间范围。图表每 15 秒自动刷新一次。</p>
+<p>还有一个方便的按钮可以从仪表板打开 Grafana UI。 Grafana UI 提供了图表的额外可定制性。</p>
+<section id="tasksactorscpu">
+<span id="dash-workflow-cpu-memory-analysis"></span><h3>分析Tasks和Actors的CPU和内存使用情况<a class="headerlink" href="#tasksactorscpu" title="Permalink to this headline">#</a></h3>
+<p>仪表板中的 <a class="reference internal" href="#dash-metrics-view"><span class="std std-ref">标视图</span></a> 提供了“每个组件的 CPU/内存使用情况图表”，显示应用程序（以及系统组件）中每个task 和 actor随时间的 CPU 和内存使用情况。
+您可以识别可能消耗比预期更多资源的task 和 actor，并优化应用程序的性能。</p>
+<img alt="https://raw.githubusercontent.com/ray-project/Images/master/docs/new-dashboard-v2/dashboard-pics/node_cpu_by_comp.png" class="align-center" src="https://raw.githubusercontent.com/ray-project/Images/master/docs/new-dashboard-v2/dashboard-pics/node_cpu_by_comp.png" />
+<p>每个组件 CPU 图表。 0.379个核心意味着它使用了单个CPU核心的40%。  以 <code class="docutils literal notranslate"><span class="pre">ray::</span></code>. <code class="docutils literal notranslate"><span class="pre">raylet</span></code>, <code class="docutils literal notranslate"><span class="pre">agent</span></code>、<code class="docutils literal notranslate"><span class="pre">dashboard</span></code>、<code class="docutils literal notranslate"><span class="pre">gcs</span></code> 进程名称开头的是系统组件。</p>
+<img alt="https://raw.githubusercontent.com/ray-project/Images/master/docs/new-dashboard-v2/dashboard-pics/node_memory_by_comp.png" class="align-center" src="https://raw.githubusercontent.com/ray-project/Images/master/docs/new-dashboard-v2/dashboard-pics/node_memory_by_comp.png" />
+<p>每个组件的内存图。以 <code class="docutils literal notranslate"><span class="pre">ray::</span></code>. <code class="docutils literal notranslate"><span class="pre">raylet</span></code>, <code class="docutils literal notranslate"><span class="pre">agent</span></code>, <code class="docutils literal notranslate"><span class="pre">dashboard</span></code>, or <code class="docutils literal notranslate"><span class="pre">gcs</span></code> 程名称开头的是系统组件。</p>
+<img alt="https://raw.githubusercontent.com/ray-project/Images/master/docs/new-dashboard-v2/dashboard-pics/cluster_page.png" class="align-center" src="https://raw.githubusercontent.com/ray-project/Images/master/docs/new-dashboard-v2/dashboard-pics/cluster_page.png" />
+<p>此外，用户还可以从 <a class="reference internal" href="#dash-node-view"><span class="std std-ref">集群视图</span></a> 中查看硬件利用率的快照，，该视图提供了整个 Ray 集群的资源使用情况概览。</p>
+</section>
+<section id="dash-workflow-resource-utilization">
+<span id="id20"></span><h3>查看资源利用率<a class="headerlink" href="#dash-workflow-resource-utilization" title="Permalink to this headline">#</a></h3>
+<p>Ray 要求用指定 <a class="reference internal" href="../ray-core/scheduling/resources.html#logical-resources"><span class="std std-ref">资源</span></a> 数量，以及 Tasks 和 Actors 通过 <code class="docutils literal notranslate"><span class="pre">num_cpus</span></code>、 <code class="docutils literal notranslate"><span class="pre">num_gpus</span></code>、 <code class="docutils literal notranslate"><span class="pre">memory</span></code> 和 <code class="docutils literal notranslate"><span class="pre">resource</span></code> 等参数指定资源数量.
+这些值用于调度，但可能并不总是与实际资源利用率（物理资源利用率）匹配。</p>
+<ul class="simple">
+<li><p>从 :ref:<a href="#id21"><span class="problematic" id="id22">`</span></a>指标视图 &lt;dash-metrics-view&gt;`中查看一段时间内逻辑和物理资源的利用率。</p></li>
+<li><p>物理资源利用率（CPU、GPU、内存、磁盘、网络）的快照也可以从 <a class="reference internal" href="#dash-node-view"><span class="std std-ref">集群视图</span></a> 获得。</p></li>
+</ul>
+<img alt="https://raw.githubusercontent.com/ray-project/Images/master/docs/new-dashboard-v2/dashboard-pics/logical_resource.png" class="align-center" src="https://raw.githubusercontent.com/ray-project/Images/master/docs/new-dashboard-v2/dashboard-pics/logical_resource.png" />
+<p><a class="reference internal" href="../ray-core/scheduling/resources.html#logical-resources"><span class="std std-ref">逻辑资源</span></a> 使用率。</p>
+<img alt="https://raw.githubusercontent.com/ray-project/Images/master/docs/new-dashboard-v2/dashboard-pics/physical_resource.png" class="align-center" src="https://raw.githubusercontent.com/ray-project/Images/master/docs/new-dashboard-v2/dashboard-pics/physical_resource.png" />
+<p>物理资源（硬件）使用情况。 Ray 提供集群中每台机器的 CPU、GPU、内存、GRAM、磁盘和网络使用情况。</p>
+</section>
+</section>
+<section id="dash-logs-view">
+<span id="id23"></span><h2>日志视图<a class="headerlink" href="#dash-logs-view" title="Permalink to this headline">#</a></h2>
+<div style="position: relative; height: 0; overflow: hidden; max-width: 100%; height: auto;">
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/8V187F2DsN0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+</div><p>日志视图列出了集群中的 Ray 日志。它按节点和日志文件名组织。其他页面中的许多日志链接都链接到此视图并过滤列表，以便显示相关日志。</p>
+<p>要了解 Ray 的日志记录结构，请参阅 <a class="reference internal" href="user-guides/configure-logging.html#logging-directory-structure"><span class="std std-ref">志记录目录和文件结构</span></a>。</p>
+<p>日志视图提供搜索功能来帮助您查找特定日志消息。</p>
+<p><strong>驱动器日志</strong></p>
+<p>如果 Ray 作业是通过 <a class="reference internal" href="../cluster/running-applications/job-submission/quickstart.html#jobs-quickstart"><span class="std std-ref">Job API</span></a> 提交的，则可以从仪表板获取作业日志。日志文件遵循以下格式： <code class="docutils literal notranslate"><span class="pre">job-driver-&lt;job_submission_id&gt;.log</span></code>。</p>
+<p>如果直接在 Ray 集群的头节点上执行驱动程序（不使用作业 API）或使用 <a class="reference internal" href="../cluster/running-applications/job-submission/ray-client.html#ray-client-ref"><span class="std std-ref">Ray 客户端</span></a> 运行，则无法从仪表板访问驱动程序日志。在这种情况下，请查看终端或 Jupyter Notebook 输出以查看驱动程序日志。</p>
+<p><strong>Task 和 Actor 日志 (Worker 日志)</strong></p>
+<p>Task 和 Actor 日志通过 <a class="reference internal" href="#dash-workflow-state-apis"><span class="std std-ref">Task 和 Actor 表视图</span></a>。单击“日志”按钮。
+您可以查看包含从任务和 actor 发出的输出的 <code class="docutils literal notranslate"><span class="pre">stdout</span></code> 和 <code class="docutils literal notranslate"><span class="pre">stderr</span></code> 日志。
+对于Actors，还可以查看对应Worker进程的系统日志。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>异步 Actor 任务或线程 Actor 任务（并发度&gt;1）的日志仅作为 Actor 日志的一部分提供。按照仪表板中的说明查看 Actor 日志。</p>
+</div>
+<p><strong>Task 和 Actor 错误</strong></p>
+<p>您可以通过查看作业进度栏轻松识别失败的任务或 actor。</p>
+<p>task 和 actor表分别显示失败的task 或 actor的名称。它们还提供对相应日志或错误消息的访问。</p>
+</section>
+<section id="dash-overview">
+<span id="id24"></span><h2>概览视图<a class="headerlink" href="#dash-overview" title="Permalink to this headline">#</a></h2>
+<img alt="../_images/dashboard-overview.png" class="align-center" src="../_images/dashboard-overview.png" />
+<p>概览视图提供了 Ray Cluster 的高级状态。</p>
+<p><strong>概览指标</strong></p>
+<p>概览指标页面提供集群级别的硬件利用率和自动缩放状态（待处理、活动和故障节点的数量）。</p>
+<p><strong>最近的 Job</strong></p>
+<p>最近的作业窗格提供了最近提交的 Ray 作业的列表。</p>
+<p><strong>Serve 应用</strong></p>
+<p>“服务应用程序”窗格提供最近部署的服务应用程序的列表</p>
+<p id="dash-event"><strong>时间视图</strong></p>
+<img alt="https://raw.githubusercontent.com/ray-project/Images/master/docs/new-dashboard-v2/dashboard-pics/event-page.png" class="align-center" src="https://raw.githubusercontent.com/ray-project/Images/master/docs/new-dashboard-v2/dashboard-pics/event-page.png" />
+<p>事件视图按时间顺序显示与特定类型（例如，自动缩放器或作业）关联的事件列表。
+可以使用 <a class="reference internal" href="user-guides/cli-sdk.html#state-api-overview-ref"><span class="std std-ref">(Ray state APIs)</span></a> 的 CLI 命令 <code class="docutils literal notranslate"><span class="pre">ray</span> <span class="pre">list</span> <span class="pre">cluster-events</span></code> 访问相同的信息。</p>
+<p>有两种类型的事件可用：</p>
+<ul class="simple">
+<li><p>Job: 与 :ref:<a href="#id25"><span class="problematic" id="id26">`</span></a>Ray Jobs API &lt;jobs-quickstart&gt;`相关的事件。</p></li>
+<li><p>Autoscaler: <a class="reference internal" href="../cluster/key-concepts.html#cluster-autoscaler"><span class="std std-ref">Ray autoscaler</span></a> 相关事件。</p></li>
+</ul>
+</section>
+<section id="id27">
+<h2>资源<a class="headerlink" href="#id27" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.youtube.com/watch?v=v_JzurOkdVQ">Ray Summit 可观测行演讲</a></p></li>
+<li><p><a class="reference external" href="https://www.anyscale.com/blog/monitoring-and-debugging-ray-workloads-ray-metrics">Ray 指标博客</a></p></li>
+<li><p><a class="reference external" href="https://github.com/ray-project/ray/issues/30097#issuecomment-1445756658">Ray Dashboard 路线图</a></p></li>
+<li><p><a class="reference external" href="https://github.com/ray-project/ray-educational-materials/blob/main/Observability/Ray_observability_part_1.ipynb">可观察性训练模块</a></p></li>
+</ul>
+</section>
+</section>
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="index.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">监控和调试</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="key-concepts.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">关键概念</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><!-- Override the footer area for the sphinx-book-theme to include the CSAT widget -->
+<div id="csat">
+  <div id="csat-feedback-received" class="csat-hidden">
+    <span>谢谢你的反馈！</span>
+  </div>
+  <div id="csat-inputs">
+    <span>是否能帮助到你？</span>
+    <div id="csat-yes" class="csat-button">
+      <svg id="csat-yes-icon" class="csat-hidden csat-icon" width="18" height="13" viewBox="0 0 18 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 10.172L16.1922 0.979004L17.6072 2.393L7.00023 13L0.63623 6.636L2.05023 5.222L7.00023 10.172Z" fill="black"/>
+      </svg>
+      <span>是<span>
+    </div>
+    <div id="csat-no" class="csat-button">
+      <svg id="csat-no-icon" class="csat-hidden csat-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 5.58599L11.9502 0.635986L13.3642 2.04999L8.41423 6.99999L13.3642 11.95L11.9502 13.364L7.00023 8.41399L2.05023 13.364L0.63623 11.95L5.58623 6.99999L0.63623 2.04999L2.05023 0.635986L7.00023 5.58599Z" fill="black"/>
+      </svg>
+      <span>否<span>
+    </div>
+  </div>
+  <div id="csat-textarea-group" class="csat-hidden">
+    <span id="csat-feedback-label">反馈</span>
+    <textarea id="csat-textarea"></textarea>
+    <div id="csat-submit">提交</div>
+  </div>
+</div><p>
+  
+    By The Ray Team<br/>
+  
+      &copy; Copyright 2024, The Ray Team.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

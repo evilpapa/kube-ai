@@ -1,0 +1,1145 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Configuring Persistent Storage &#8212; Ray 2.7.2</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/termynal.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/versionwarning.js"></script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+    <script defer="defer" src="../../_static/js/docsearch.js"></script>
+    <script defer="defer" src="../../_static/js/csat.js"></script>
+    <script defer="defer" src="../../_static/js/termynal.js"></script>
+    <script defer="defer" src="../../_static/js/custom.js"></script>
+    <script defer="defer" src="../../_static/js/top-navigation.js"></script>
+    <script src="../../_static/js/tags.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <link rel="canonical" href="https://docs.ray.io/en/latest/train/user-guides/persistent-storage.html" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Monitoring and Logging Metrics" href="monitoring-logging.html" />
+    <link rel="prev" title="Configuring Scale and GPUs" href="using-gpus.html" />
+
+<!-- Fathom - beautiful, simple website analytics -->
+<script src="https://deer.ray.io/script.js" data-site="WYYANYOS" defer></script>
+<!-- / Fathom -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-110413294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-110413294-1');
+</script>
+
+<script
+  src="https://widget.kapa.ai/kapa-widget.bundle.js"
+  data-website-id="18a8c339-4ec5-43c8-8182-db3f2bc8c6b6"
+  data-project-name="Ray"
+  data-project-color="#2C2C2C"
+  data-project-logo="https://global.discourse-cdn.com/business7/uploads/ray/original/1X/8f4dcb72f7cd34e2a332d548bd65860994bc8ff1.png"
+  data-modal-disclaimer = "Results are automated and may be incorrect or contain inappropriate information. Do not include any personal data or confidential information."
+  data-modal-title = "Ray Docs AI - Ask a Question"
+  data-button-position-bottom = "60px"
+></script>
+
+<script>
+(function(apiKey){
+    (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
+    v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
+        o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
+        y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
+        z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
+
+        pendo.initialize({
+            visitor: {
+                id: 'VISITOR-UNIQUE-ID'
+            },
+            account: {
+                id: 'ACCOUNT-UNIQUE-ID'
+            }
+        });
+})('f89fa48a-6dd7-4d7c-67cf-a8051ed891f2');
+</script>
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"><div class='topnav'></div></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Ray 2.7.2</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main Navigation">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../index.html">
+                    欢迎来到 Ray ！
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Ray
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/index.html">
+   概述「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/getting-started.html">
+   入门
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/installation.html">
+   安装「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/use-cases.html">
+   用例「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/examples.html">
+   示例库「1%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/ray-libraries.html">
+   生态「3%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-core/walkthrough.html">
+   Ray 核心「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../data/data.html">
+   Ray 数据「75%」
+  </a>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="../train.html">
+   Ray 训练「0%」
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="../overview.html">
+     概述
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../getting-started-pytorch.html">
+     PyTorch 指南
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../getting-started-pytorch-lightning.html">
+     PyTorch Lightning 指南
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../getting-started-transformers.html">
+     Hugging Face Transformers 指南
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../more-frameworks.html">
+     更多框架
+    </a>
+   </li>
+   <li class="toctree-l2 current active has-children">
+    <a class="reference internal" href="../user-guides.html">
+     用户指南
+    </a>
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+    <label for="toctree-checkbox-2">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul class="current">
+     <li class="toctree-l3">
+      <a class="reference internal" href="data-loading-preprocessing.html">
+       Data Loading and Preprocessing
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="using-gpus.html">
+       Configuring Scale and GPUs
+      </a>
+     </li>
+     <li class="toctree-l3 current active">
+      <a class="current reference internal" href="#">
+       Configuring Persistent Storage
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="monitoring-logging.html">
+       Monitoring and Logging Metrics
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="checkpoints.html">
+       Saving and Loading Checkpoints
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="experiment-tracking.html">
+       Experiment Tracking
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="results.html">
+       Inspecting Training Results
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="fault-tolerance.html">
+       Handling Failures and Node Preemption
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="reproducibility.html">
+       Reproducibility
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="hyperparameter-optimization.html">
+       Hyperparameter Optimization
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples.html">
+     示例
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../benchmarks.html">
+     基准
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/api.html">
+     Ray 训练 API
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../tune/index.html">
+   Ray 调参「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../serve/index.html">
+   Ray Serve
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../rllib/index.html">
+   Ray RLlib
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-more-libs/index.html">
+   更多类库「40%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../cluster/getting-started.html">
+   Ray 集群「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-observability/index.html">
+   监控调试「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-references/api.html">
+   参考「20%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-contribute/index.html">
+   开发者指引「30%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-security/index.html">
+   安全「100%」
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/ray-project/ray"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/issues/new?title=Issue%20on%20page%20%2Ftrain/user-guides/persistent-storage.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/edit/master/doc/source/train/user-guides/persistent-storage.rst"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../_sources/train/user-guides/persistent-storage.rst.txt"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.rst</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#cloud-storage-aws-s3-google-cloud-storage">
+   Cloud storage (AWS S3, Google Cloud Storage)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#shared-filesystem-nfs-hdfs">
+   Shared filesystem (NFS, HDFS)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#local-storage">
+   Local storage
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#using-local-storage-for-a-single-node-cluster">
+     Using local storage for a single-node cluster
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#using-local-storage-for-a-multi-node-cluster">
+     Using local storage for a multi-node cluster
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#custom-storage">
+   Custom storage
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#fsspec-filesystems">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       fsspec
+      </span>
+     </code>
+     filesystems
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#minio-and-other-s3-compatible-storage">
+     MinIO and other S3-compatible storage
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#overview-of-ray-train-outputs">
+   Overview of Ray Train outputs
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#persisting-training-artifacts">
+     Persisting training artifacts
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#advanced-configuration">
+   Advanced configuration
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#setting-the-intermediate-local-directory">
+     Setting the intermediate local directory
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#automatically-setting-up-persistent-storage">
+     Automatically setting up persistent storage
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Configuring Persistent Storage</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#cloud-storage-aws-s3-google-cloud-storage">
+   Cloud storage (AWS S3, Google Cloud Storage)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#shared-filesystem-nfs-hdfs">
+   Shared filesystem (NFS, HDFS)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#local-storage">
+   Local storage
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#using-local-storage-for-a-single-node-cluster">
+     Using local storage for a single-node cluster
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#using-local-storage-for-a-multi-node-cluster">
+     Using local storage for a multi-node cluster
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#custom-storage">
+   Custom storage
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#fsspec-filesystems">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       fsspec
+      </span>
+     </code>
+     filesystems
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#minio-and-other-s3-compatible-storage">
+     MinIO and other S3-compatible storage
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#overview-of-ray-train-outputs">
+   Overview of Ray Train outputs
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#persisting-training-artifacts">
+     Persisting training artifacts
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#advanced-configuration">
+   Advanced configuration
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#setting-the-intermediate-local-directory">
+     Setting the intermediate local directory
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#automatically-setting-up-persistent-storage">
+     Automatically setting up persistent storage
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section id="configuring-persistent-storage">
+<span id="train-log-dir"></span><span id="persistent-storage-guide"></span><h1>Configuring Persistent Storage<a class="headerlink" href="#configuring-persistent-storage" title="Permalink to this headline">#</a></h1>
+<p>A Ray Train run produces a history of <a class="reference internal" href="monitoring-logging.html#train-monitoring-and-logging"><span class="std std-ref">reported metrics</span></a>,
+<a class="reference internal" href="checkpoints.html#train-checkpointing"><span class="std std-ref">checkpoints</span></a>, and <a class="reference internal" href="#train-artifacts"><span class="std std-ref">other artifacts</span></a>.
+You can configure these to be saved to a persistent storage location.</p>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="../../_images/persistent_storage_checkpoint.png"><img alt="../../_images/persistent_storage_checkpoint.png" src="../../_images/persistent_storage_checkpoint.png" style="width: 600px;" /></a>
+<figcaption>
+<p><span class="caption-text">An example of multiple workers spread across multiple nodes uploading checkpoints to persistent storage.</span><a class="headerlink" href="#id1" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p><strong>Ray Train expects all workers to be able to write files to the same persistent storage location.</strong>
+Therefore, Ray Train requires some form of external persistent storage such as
+cloud storage (e.g., S3, GCS) or a shared filesystem (e.g., AWS EFS, Google Filestore, HDFS)
+for multi-node training.</p>
+<p>Here are some capabilities that persistent storage enables:</p>
+<ul class="simple">
+<li><p><strong>Checkpointing and fault tolerance</strong>: Saving checkpoints to a persistent storage location
+allows you to resume training from the last checkpoint in case of a node failure.
+See <a class="reference internal" href="checkpoints.html#train-checkpointing"><span class="std std-ref">Saving and Loading Checkpoints</span></a> for a detailed guide on how to set up checkpointing.</p></li>
+<li><p><strong>Post-experiment analysis</strong>: A consolidated location storing data from all trials is useful for post-experiment analysis
+such as accessing the best checkpoints and hyperparameter configs after the cluster has already been terminated.</p></li>
+<li><p><strong>Bridge training/fine-tuning with downstream serving and batch inference tasks</strong>: You can easily access the models
+and artifacts to share them with others or use them in downstream tasks.</p></li>
+</ul>
+<section id="cloud-storage-aws-s3-google-cloud-storage">
+<h2>Cloud storage (AWS S3, Google Cloud Storage)<a class="headerlink" href="#cloud-storage-aws-s3-google-cloud-storage" title="Permalink to this headline">#</a></h2>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Cloud storage is the recommended persistent storage option.</p>
+</div>
+<p>Use cloud storage by specifying a bucket URI as the <a class="reference internal" href="../api/doc/ray.train.RunConfig.html#ray.train.RunConfig" title="ray.train.RunConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunConfig(storage_path)</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray</span> <span class="kn">import</span> <span class="n">train</span>
+<span class="kn">from</span> <span class="nn">ray.train.torch</span> <span class="kn">import</span> <span class="n">TorchTrainer</span>
+
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">TorchTrainer</span><span class="p">(</span>
+    <span class="o">...</span><span class="p">,</span>
+    <span class="n">run_config</span><span class="o">=</span><span class="n">train</span><span class="o">.</span><span class="n">RunConfig</span><span class="p">(</span>
+        <span class="n">storage_path</span><span class="o">=</span><span class="s2">&quot;s3://bucket-name/sub-path/&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;experiment_name&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Ensure that all nodes in the Ray cluster have access to cloud storage, so outputs from workers can be uploaded to a shared cloud bucket.
+In this example, all files are uploaded to shared storage at <code class="docutils literal notranslate"><span class="pre">s3://bucket-name/sub-path/experiment_name</span></code> for further processing.</p>
+</section>
+<section id="shared-filesystem-nfs-hdfs">
+<h2>Shared filesystem (NFS, HDFS)<a class="headerlink" href="#shared-filesystem-nfs-hdfs" title="Permalink to this headline">#</a></h2>
+<p>Use by specifying the shared storage path as the <a class="reference internal" href="../api/doc/ray.train.RunConfig.html#ray.train.RunConfig" title="ray.train.RunConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunConfig(storage_path)</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray</span> <span class="kn">import</span> <span class="n">train</span>
+<span class="kn">from</span> <span class="nn">ray.train.torch</span> <span class="kn">import</span> <span class="n">TorchTrainer</span>
+
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">TorchTrainer</span><span class="p">(</span>
+    <span class="o">...</span><span class="p">,</span>
+    <span class="n">run_config</span><span class="o">=</span><span class="n">train</span><span class="o">.</span><span class="n">RunConfig</span><span class="p">(</span>
+        <span class="n">storage_path</span><span class="o">=</span><span class="s2">&quot;/mnt/cluster_storage&quot;</span><span class="p">,</span>
+        <span class="c1"># HDFS example:</span>
+        <span class="c1"># storage_path=f&quot;hdfs://{hostname}:{port}/subpath&quot;,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;experiment_name&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Ensure that all nodes in the Ray cluster have access to the shared filesystem, e.g. AWS EFS, Google Cloud Filestore, or HDFS,
+so that outputs can be saved to there.
+In this example, all files are saved to <code class="docutils literal notranslate"><span class="pre">/mnt/cluster_storage/experiment_name</span></code> for further processing.</p>
+</section>
+<section id="local-storage">
+<h2>Local storage<a class="headerlink" href="#local-storage" title="Permalink to this headline">#</a></h2>
+<section id="using-local-storage-for-a-single-node-cluster">
+<h3>Using local storage for a single-node cluster<a class="headerlink" href="#using-local-storage-for-a-single-node-cluster" title="Permalink to this headline">#</a></h3>
+<p>If you’re just running an experiment on a single node (e.g., on a laptop), Ray Train will use the
+local filesystem as the storage location for checkpoints and other artifacts.
+Results are saved to <code class="docutils literal notranslate"><span class="pre">~/ray_results</span></code> in a sub-directory with a unique auto-generated name by default,
+unless you customize this with <code class="docutils literal notranslate"><span class="pre">storage_path</span></code> and <code class="docutils literal notranslate"><span class="pre">name</span></code> in <a class="reference internal" href="../api/doc/ray.train.RunConfig.html#ray.train.RunConfig" title="ray.train.RunConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunConfig</span></code></a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray</span> <span class="kn">import</span> <span class="n">train</span>
+<span class="kn">from</span> <span class="nn">ray.train.torch</span> <span class="kn">import</span> <span class="n">TorchTrainer</span>
+
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">TorchTrainer</span><span class="p">(</span>
+    <span class="o">...</span><span class="p">,</span>
+    <span class="n">run_config</span><span class="o">=</span><span class="n">train</span><span class="o">.</span><span class="n">RunConfig</span><span class="p">(</span>
+        <span class="n">storage_path</span><span class="o">=</span><span class="s2">&quot;/tmp/custom/storage/path&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;experiment_name&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>In this example, all experiment results can found locally at <code class="docutils literal notranslate"><span class="pre">/tmp/custom/storage/path/experiment_name</span></code> for further processing.</p>
+</section>
+<section id="using-local-storage-for-a-multi-node-cluster">
+<h3>Using local storage for a multi-node cluster<a class="headerlink" href="#using-local-storage-for-a-multi-node-cluster" title="Permalink to this headline">#</a></h3>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>When running on multiple nodes, using the local filesystem of the head node as the persistent storage location is no longer supported.</p>
+<p>If you save checkpoints with <a class="reference internal" href="../api/doc/ray.train.report.html#ray.train.report" title="ray.train.report"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ray.train.report(...,</span> <span class="pre">checkpoint=...)</span></code></a>
+and run on a multi-node cluster, Ray Train will raise an error if NFS or cloud storage is not setup.
+This is because Ray Train expects all workers to be able to write the checkpoint to
+the same persistent storage location.</p>
+<p>If your training loop does not save checkpoints, the reported metrics will still
+be aggregated to the local storage path on the head node.</p>
+<p>See <a class="reference external" href="https://github.com/ray-project/ray/issues/37177">this issue</a> for more information.</p>
+</div>
+</section>
+</section>
+<section id="custom-storage">
+<span id="custom-storage-filesystem"></span><h2>Custom storage<a class="headerlink" href="#custom-storage" title="Permalink to this headline">#</a></h2>
+<p>If the cases above don’t suit your needs, Ray Train can support custom filesystems and perform custom logic.
+Ray Train standardizes on the <code class="docutils literal notranslate"><span class="pre">pyarrow.fs.FileSystem</span></code> interface to interact with storage
+(<a class="reference external" href="https://arrow.apache.org/docs/python/generated/pyarrow.fs.FileSystem.html">see the API reference here</a>).</p>
+<p>By default, passing <code class="docutils literal notranslate"><span class="pre">storage_path=s3://bucket-name/sub-path/</span></code> will use pyarrow’s
+<a class="reference external" href="https://arrow.apache.org/docs/python/generated/pyarrow.fs.S3FileSystem.html">default S3 filesystem implementation</a>
+to upload files. (<a class="reference external" href="https://arrow.apache.org/docs/python/api/filesystems.html#filesystem-implementations">See the other default implementations.</a>)</p>
+<p>Implement custom storage upload and download logic by providing an implementation of
+<code class="docutils literal notranslate"><span class="pre">pyarrow.fs.FileSystem</span></code> to <a class="reference internal" href="../api/doc/ray.train.RunConfig.html#ray.train.RunConfig" title="ray.train.RunConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunConfig(storage_filesystem)</span></code></a>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>When providing a custom filesystem, the associated <code class="docutils literal notranslate"><span class="pre">storage_path</span></code> is expected
+to be a qualified filesystem path <em>without the protocol prefix</em>.</p>
+<p>For example, if you provide a custom S3 filesystem for <code class="docutils literal notranslate"><span class="pre">s3://bucket-name/sub-path/</span></code>,
+then the <code class="docutils literal notranslate"><span class="pre">storage_path</span></code> should be <code class="docutils literal notranslate"><span class="pre">bucket-name/sub-path/</span></code> with the <code class="docutils literal notranslate"><span class="pre">s3://</span></code> stripped.
+See the example below for example usage.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyarrow.fs</span>
+
+<span class="kn">from</span> <span class="nn">ray</span> <span class="kn">import</span> <span class="n">train</span>
+<span class="kn">from</span> <span class="nn">ray.train.torch</span> <span class="kn">import</span> <span class="n">TorchTrainer</span>
+
+<span class="n">fs</span> <span class="o">=</span> <span class="n">pyarrow</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">S3FileSystem</span><span class="p">(</span>
+    <span class="n">endpoint_override</span><span class="o">=</span><span class="s2">&quot;http://localhost:9000&quot;</span><span class="p">,</span>
+    <span class="n">access_key</span><span class="o">=...</span><span class="p">,</span>
+    <span class="n">secret_key</span><span class="o">=...</span>
+<span class="p">)</span>
+
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">TorchTrainer</span><span class="p">(</span>
+    <span class="o">...</span><span class="p">,</span>
+    <span class="n">run_config</span><span class="o">=</span><span class="n">train</span><span class="o">.</span><span class="n">RunConfig</span><span class="p">(</span>
+        <span class="n">storage_filesystem</span><span class="o">=</span><span class="n">fs</span><span class="p">,</span>
+        <span class="n">storage_path</span><span class="o">=</span><span class="s2">&quot;bucket-name/sub-path&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;experiment_name&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<section id="fsspec-filesystems">
+<h3><code class="docutils literal notranslate"><span class="pre">fsspec</span></code> filesystems<a class="headerlink" href="#fsspec-filesystems" title="Permalink to this headline">#</a></h3>
+<p><a class="reference external" href="https://filesystem-spec.readthedocs.io/en/latest/">fsspec</a> offers many filesystem implementations,
+such as <code class="docutils literal notranslate"><span class="pre">s3fs</span></code>, <code class="docutils literal notranslate"><span class="pre">gcsfs</span></code>, etc.</p>
+<p>You can use any of these implementations by wrapping the <code class="docutils literal notranslate"><span class="pre">fsspec</span></code> filesystem with a <code class="docutils literal notranslate"><span class="pre">pyarrow.fs</span></code> utility:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Make sure to install: `pip install -U s3fs`</span>
+<span class="kn">import</span> <span class="nn">s3fs</span>
+<span class="kn">import</span> <span class="nn">pyarrow.fs</span>
+
+<span class="n">s3_fs</span> <span class="o">=</span> <span class="n">s3fs</span><span class="o">.</span><span class="n">S3FileSystem</span><span class="p">(</span>
+    <span class="n">key</span><span class="o">=</span><span class="s1">&#39;miniokey...&#39;</span><span class="p">,</span>
+    <span class="n">secret</span><span class="o">=</span><span class="s1">&#39;asecretkey...&#39;</span><span class="p">,</span>
+    <span class="n">endpoint_url</span><span class="o">=</span><span class="s1">&#39;https://...&#39;</span>
+<span class="p">)</span>
+<span class="n">custom_fs</span> <span class="o">=</span> <span class="n">pyarrow</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">PyFileSystem</span><span class="p">(</span><span class="n">pyarrow</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">FSSpecHandler</span><span class="p">(</span><span class="n">s3_fs</span><span class="p">))</span>
+
+<span class="n">run_config</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span><span class="n">storage_path</span><span class="o">=</span><span class="s2">&quot;minio_bucket&quot;</span><span class="p">,</span> <span class="n">storage_filesystem</span><span class="o">=</span><span class="n">custom_fs</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>See the API references to the <code class="docutils literal notranslate"><span class="pre">pyarrow.fs</span></code> wrapper utilities:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://arrow.apache.org/docs/python/generated/pyarrow.fs.PyFileSystem.html">https://arrow.apache.org/docs/python/generated/pyarrow.fs.PyFileSystem.html</a></p></li>
+<li><p><a class="reference external" href="https://arrow.apache.org/docs/python/generated/pyarrow.fs.FSSpecHandler.html">https://arrow.apache.org/docs/python/generated/pyarrow.fs.FSSpecHandler.html</a></p></li>
+</ul>
+</div>
+</section>
+<section id="minio-and-other-s3-compatible-storage">
+<h3>MinIO and other S3-compatible storage<a class="headerlink" href="#minio-and-other-s3-compatible-storage" title="Permalink to this headline">#</a></h3>
+<p>You can follow the <a class="reference internal" href="#custom-storage-filesystem"><span class="std std-ref">examples shown above</span></a> to configure
+a custom S3 filesystem to work with MinIO.</p>
+<p>Note that including these as query parameters in the <code class="docutils literal notranslate"><span class="pre">storage_path</span></code> URI directly is another option:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray</span> <span class="kn">import</span> <span class="n">train</span>
+<span class="kn">from</span> <span class="nn">ray.train.torch</span> <span class="kn">import</span> <span class="n">TorchTrainer</span>
+
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">TorchTrainer</span><span class="p">(</span>
+    <span class="o">...</span><span class="p">,</span>
+    <span class="n">run_config</span><span class="o">=</span><span class="n">train</span><span class="o">.</span><span class="n">RunConfig</span><span class="p">(</span>
+        <span class="n">storage_path</span><span class="o">=</span><span class="s2">&quot;s3://bucket-name/sub-path?endpoint_override=http://localhost:9000&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;experiment_name&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="overview-of-ray-train-outputs">
+<h2>Overview of Ray Train outputs<a class="headerlink" href="#overview-of-ray-train-outputs" title="Permalink to this headline">#</a></h2>
+<p>So far, we covered how to configure the storage location for Ray Train outputs.
+Let’s walk through a concrete example to see what exactly these outputs are,
+and how they’re structured in storage.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>This example includes checkpointing, which is covered in detail in <a class="reference internal" href="checkpoints.html#train-checkpointing"><span class="std std-ref">Saving and Loading Checkpoints</span></a>.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+
+<span class="kn">from</span> <span class="nn">ray</span> <span class="kn">import</span> <span class="n">train</span>
+<span class="kn">from</span> <span class="nn">ray.train</span> <span class="kn">import</span> <span class="n">Checkpoint</span>
+<span class="kn">from</span> <span class="nn">ray.train.torch</span> <span class="kn">import</span> <span class="n">TorchTrainer</span>
+
+<span class="k">def</span> <span class="nf">train_fn</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+        <span class="c1"># Training logic here</span>
+
+        <span class="n">metrics</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;loss&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">}</span>
+
+        <span class="c1"># Save arbitrary artifacts to the working directory</span>
+        <span class="n">rank</span> <span class="o">=</span> <span class="n">train</span><span class="o">.</span><span class="n">get_context</span><span class="p">()</span><span class="o">.</span><span class="n">get_world_rank</span><span class="p">()</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;artifact-rank=</span><span class="si">{</span><span class="n">rank</span><span class="si">}</span><span class="s2">-iter=</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">temp_checkpoint_dir</span><span class="p">:</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">temp_checkpoint_dir</span><span class="p">,</span> <span class="s2">&quot;checkpoint.pt&quot;</span><span class="p">))</span>
+            <span class="n">train</span><span class="o">.</span><span class="n">report</span><span class="p">(</span>
+                <span class="n">metrics</span><span class="p">,</span>
+                <span class="n">checkpoint</span><span class="o">=</span><span class="n">Checkpoint</span><span class="o">.</span><span class="n">from_directory</span><span class="p">(</span><span class="n">temp_checkpoint_dir</span><span class="p">)</span>
+            <span class="p">)</span>
+
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">TorchTrainer</span><span class="p">(</span>
+    <span class="n">train_fn</span><span class="p">,</span>
+    <span class="n">scaling_config</span><span class="o">=</span><span class="n">train</span><span class="o">.</span><span class="n">ScalingConfig</span><span class="p">(</span><span class="n">num_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+    <span class="n">run_config</span><span class="o">=</span><span class="n">train</span><span class="o">.</span><span class="n">RunConfig</span><span class="p">(</span>
+        <span class="n">storage_path</span><span class="o">=</span><span class="s2">&quot;s3://bucket-name/sub-path/&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;experiment_name&quot;</span><span class="p">,</span>
+        <span class="n">sync_config</span><span class="o">=</span><span class="n">train</span><span class="o">.</span><span class="n">SyncConfig</span><span class="p">(</span><span class="n">sync_artifacts</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+<span class="n">result</span><span class="p">:</span> <span class="n">train</span><span class="o">.</span><span class="n">Result</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">last_checkpoint</span><span class="p">:</span> <span class="n">Checkpoint</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">checkpoint</span>
+</pre></div>
+</div>
+<p>Here’s a rundown of all files that will be persisted to storage:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>s3://bucket-name/sub-path (RunConfig.storage_path)
+└── experiment_name (RunConfig.name)          &lt;- The &quot;experiment directory&quot;
+    ├── experiment_state-*.json
+    ├── basic-variant-state-*.json
+    ├── trainer.pkl
+    ├── tuner.pkl
+    └── TorchTrainer_46367_00000_0_...        &lt;- The &quot;trial directory&quot;
+        ├── events.out.tfevents...            &lt;- Tensorboard logs of reported metrics
+        ├── result.json                       &lt;- JSON log file of reported metrics
+        ├── checkpoint_000000/                &lt;- Checkpoints
+        ├── checkpoint_000001/
+        ├── ...
+        ├── artifact-rank=0-iter=0.txt        &lt;- Worker artifacts (see the next section)
+        ├── artifact-rank=1-iter=0.txt
+        └── ...
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="../api/doc/ray.train.Result.html#ray.train.Result" title="ray.train.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a> and <a class="reference internal" href="../api/doc/ray.train.Checkpoint.html#ray.train.Checkpoint" title="ray.train.Checkpoint"><code class="xref py py-class docutils literal notranslate"><span class="pre">Checkpoint</span></code></a> objects returned by
+<code class="docutils literal notranslate"><span class="pre">trainer.fit</span></code> are the easiest way to access the data in these files:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span><span class="o">.</span><span class="n">filesystem</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">path</span>
+<span class="c1"># S3FileSystem, &quot;bucket-name/sub-path/experiment_name/TorchTrainer_46367_00000_0_...&quot;</span>
+
+<span class="n">result</span><span class="o">.</span><span class="n">checkpoint</span><span class="o">.</span><span class="n">filesystem</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">checkpoint</span><span class="o">.</span><span class="n">path</span>
+<span class="c1"># S3FileSystem, &quot;bucket-name/sub-path/experiment_name/TorchTrainer_46367_00000_0_.../checkpoint_000009&quot;</span>
+</pre></div>
+</div>
+<p>See <a class="reference internal" href="results.html#train-inspect-results"><span class="std std-ref">Inspecting Training Results</span></a> for a full guide on interacting with training <a class="reference internal" href="../api/doc/ray.train.Result.html#ray.train.Result" title="ray.train.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Results</span></code></a>.</p>
+<section id="persisting-training-artifacts">
+<span id="train-artifacts"></span><h3>Persisting training artifacts<a class="headerlink" href="#persisting-training-artifacts" title="Permalink to this headline">#</a></h3>
+<p>In the example above, we saved some artifacts within the training loop to the worker’s
+<em>current working directory</em>.
+If you were training a stable diffusion model, you could save
+some sample generated images every so often as a training artifact.</p>
+<p>By default, the worker’s current working directory is set to the local version of the “trial directory.”
+For example, <code class="docutils literal notranslate"><span class="pre">~/ray_results/experiment_name/TorchTrainer_46367_00000_0_...</span></code> in the example above.</p>
+<p>If <a class="reference internal" href="../api/doc/ray.train.SyncConfig.html#ray.train.SyncConfig" title="ray.train.SyncConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunConfig(SyncConfig(sync_artifacts=True))</span></code></a>, then
+all artifacts saved in this directory will be persisted to storage.</p>
+<p>The frequency of artifact syncing can be configured via <a class="reference internal" href="../api/doc/ray.train.SyncConfig.html#ray.train.SyncConfig" title="ray.train.SyncConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">SyncConfig</span></code></a>.
+Note that this behavior is off by default.</p>
+<figure class="align-center" id="id2">
+<a class="reference internal image-reference" href="../../_images/persistent_storage_artifacts.png"><img alt="../../_images/persistent_storage_artifacts.png" src="../../_images/persistent_storage_artifacts.png" style="width: 600px;" /></a>
+<figcaption>
+<p><span class="caption-text">Multiple workers spread across multiple nodes save artifacts to their local
+working directory, which is then persisted to storage.</span><a class="headerlink" href="#id2" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Artifacts saved by <em>every worker</em> will be synced to storage. If you have multiple workers
+co-located on the same node, make sure that workers don’t delete files within their
+shared working directory.</p>
+<p>A best practice is to only write artifacts from a single worker unless you
+really need artifacts from multiple.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray</span> <span class="kn">import</span> <span class="n">train</span>
+
+<span class="k">if</span> <span class="n">train</span><span class="o">.</span><span class="n">get_context</span><span class="p">()</span><span class="o">.</span><span class="n">get_world_rank</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="c1"># Only the global rank 0 worker saves artifacts.</span>
+    <span class="o">...</span>
+
+<span class="k">if</span> <span class="n">train</span><span class="o">.</span><span class="n">get_context</span><span class="p">()</span><span class="o">.</span><span class="n">get_local_rank</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="c1"># Every local rank 0 worker saves artifacts.</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="advanced-configuration">
+<h2>Advanced configuration<a class="headerlink" href="#advanced-configuration" title="Permalink to this headline">#</a></h2>
+<section id="setting-the-intermediate-local-directory">
+<h3>Setting the intermediate local directory<a class="headerlink" href="#setting-the-intermediate-local-directory" title="Permalink to this headline">#</a></h3>
+<p>When a <code class="docutils literal notranslate"><span class="pre">storage_path</span></code> is specified, training outputs are saved to an
+<em>intermediate local directory</em>, then persisted (copied/uploaded) to the <code class="docutils literal notranslate"><span class="pre">storage_path</span></code>.
+By default, this intermediate local directory is a sub-directory of <code class="docutils literal notranslate"><span class="pre">~/ray_results</span></code>.</p>
+<p>Customize this intermediate local directory with the <code class="docutils literal notranslate"><span class="pre">RAY_AIR_LOCAL_CACHE_DIR</span></code> environment variable:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;RAY_AIR_LOCAL_CACHE_DIR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;/tmp/custom/&quot;</span>
+
+<span class="o">...</span>
+</pre></div>
+</div>
+</section>
+<section id="automatically-setting-up-persistent-storage">
+<span id="train-ray-storage"></span><h3>Automatically setting up persistent storage<a class="headerlink" href="#automatically-setting-up-persistent-storage" title="Permalink to this headline">#</a></h3>
+<p>You can control where to store training results with the <code class="docutils literal notranslate"><span class="pre">RAY_STORAGE</span></code>
+environment variable.</p>
+<p>For instance, if you set <code class="docutils literal notranslate"><span class="pre">RAY_STORAGE=&quot;s3://my_bucket/train_results&quot;</span></code>, your
+results will automatically persisted there.</p>
+<p>If you manually set a <a class="reference internal" href="../api/doc/ray.train.RunConfig.storage_path.html#ray.train.RunConfig.storage_path" title="ray.train.RunConfig.storage_path"><code class="xref py py-attr docutils literal notranslate"><span class="pre">RunConfig.storage_path</span></code></a>, it
+will take precedence over this environment variable.</p>
+</section>
+</section>
+</section>
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="using-gpus.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Configuring Scale and GPUs</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="monitoring-logging.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Monitoring and Logging Metrics</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><!-- Override the footer area for the sphinx-book-theme to include the CSAT widget -->
+<div id="csat">
+  <div id="csat-feedback-received" class="csat-hidden">
+    <span>谢谢你的反馈！</span>
+  </div>
+  <div id="csat-inputs">
+    <span>是否能帮助到你？</span>
+    <div id="csat-yes" class="csat-button">
+      <svg id="csat-yes-icon" class="csat-hidden csat-icon" width="18" height="13" viewBox="0 0 18 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 10.172L16.1922 0.979004L17.6072 2.393L7.00023 13L0.63623 6.636L2.05023 5.222L7.00023 10.172Z" fill="black"/>
+      </svg>
+      <span>是<span>
+    </div>
+    <div id="csat-no" class="csat-button">
+      <svg id="csat-no-icon" class="csat-hidden csat-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 5.58599L11.9502 0.635986L13.3642 2.04999L8.41423 6.99999L13.3642 11.95L11.9502 13.364L7.00023 8.41399L2.05023 13.364L0.63623 11.95L5.58623 6.99999L0.63623 2.04999L2.05023 0.635986L7.00023 5.58599Z" fill="black"/>
+      </svg>
+      <span>否<span>
+    </div>
+  </div>
+  <div id="csat-textarea-group" class="csat-hidden">
+    <span id="csat-feedback-label">反馈</span>
+    <textarea id="csat-textarea"></textarea>
+    <div id="csat-submit">提交</div>
+  </div>
+</div><p>
+  
+    By The Ray Team<br/>
+  
+      &copy; Copyright 2024, The Ray Team.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

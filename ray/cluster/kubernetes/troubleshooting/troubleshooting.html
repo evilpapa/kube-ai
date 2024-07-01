@@ -1,0 +1,815 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>故障排除指南 &#8212; Ray 2.7.2</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/termynal.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/js/versionwarning.js"></script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+    <script defer="defer" src="../../../_static/js/docsearch.js"></script>
+    <script defer="defer" src="../../../_static/js/csat.js"></script>
+    <script defer="defer" src="../../../_static/js/termynal.js"></script>
+    <script defer="defer" src="../../../_static/js/custom.js"></script>
+    <script defer="defer" src="../../../_static/js/top-navigation.js"></script>
+    <script src="../../../_static/js/tags.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <link rel="canonical" href="https://docs.ray.io/en/latest/cluster/kubernetes/troubleshooting/troubleshooting.html" />
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="RayService 故障排除" href="rayservice-troubleshooting.html" />
+    <link rel="prev" title="KubeRay 故障排除" href="../troubleshooting.html" />
+
+<!-- Fathom - beautiful, simple website analytics -->
+<script src="https://deer.ray.io/script.js" data-site="WYYANYOS" defer></script>
+<!-- / Fathom -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-110413294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-110413294-1');
+</script>
+
+<script
+  src="https://widget.kapa.ai/kapa-widget.bundle.js"
+  data-website-id="18a8c339-4ec5-43c8-8182-db3f2bc8c6b6"
+  data-project-name="Ray"
+  data-project-color="#2C2C2C"
+  data-project-logo="https://global.discourse-cdn.com/business7/uploads/ray/original/1X/8f4dcb72f7cd34e2a332d548bd65860994bc8ff1.png"
+  data-modal-disclaimer = "Results are automated and may be incorrect or contain inappropriate information. Do not include any personal data or confidential information."
+  data-modal-title = "Ray Docs AI - Ask a Question"
+  data-button-position-bottom = "60px"
+></script>
+
+<script>
+(function(apiKey){
+    (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
+    v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
+        o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
+        y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
+        z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
+
+        pendo.initialize({
+            visitor: {
+                id: 'VISITOR-UNIQUE-ID'
+            },
+            account: {
+                id: 'ACCOUNT-UNIQUE-ID'
+            }
+        });
+})('f89fa48a-6dd7-4d7c-67cf-a8051ed891f2');
+</script>
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"><div class='topnav'></div></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Ray 2.7.2</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main Navigation">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../index.html">
+                    欢迎来到 Ray ！
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Ray
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/index.html">
+   概述「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/getting-started.html">
+   入门
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/installation.html">
+   安装「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/use-cases.html">
+   用例「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/examples.html">
+   示例库「1%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/ray-libraries.html">
+   生态「3%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-core/walkthrough.html">
+   Ray 核心「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../data/data.html">
+   Ray 数据「75%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../train/train.html">
+   Ray 训练「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../tune/index.html">
+   Ray 调参「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../serve/index.html">
+   Ray Serve
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../rllib/index.html">
+   Ray RLlib
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-more-libs/index.html">
+   更多类库「40%」
+  </a>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="../../getting-started.html">
+   Ray 集群「100%」
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../key-concepts.html">
+     关键概念
+    </a>
+   </li>
+   <li class="toctree-l2 current active has-children">
+    <a class="reference internal" href="../index.html">
+     在 Kubernetes 部署
+    </a>
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+    <label for="toctree-checkbox-2">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul class="current">
+     <li class="toctree-l3">
+      <a class="reference internal" href="../getting-started.html">
+       KubeRay 入门
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../user-guides.html">
+       用户指引
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../examples.html">
+       示例
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../k8s-ecosystem.html">
+       KubeRay 生态系统
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../benchmarks.html">
+       KubeRay 基准测试
+      </a>
+     </li>
+     <li class="toctree-l3 current active has-children">
+      <a class="reference internal" href="../troubleshooting.html">
+       KubeRay 故障排除
+      </a>
+      <input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+      <label for="toctree-checkbox-3">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul class="current">
+       <li class="toctree-l4 current active">
+        <a class="current reference internal" href="#">
+         故障排除指南
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="rayservice-troubleshooting.html">
+         RayService 故障排除
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../references.html">
+       API 参考
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../vms/index.html">
+     在虚拟机部署
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../metrics.html">
+     指标收集和监控
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../configure-manage-dashboard.html">
+     配置管理 Ray 仪表盘
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../running-applications/index.html">
+     应用指引
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../faq.html">
+     FAQ
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../package-overview.html">
+     Ray Cluster 管理 API
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-observability/index.html">
+   监控调试「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-references/api.html">
+   参考「20%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-contribute/index.html">
+   开发者指引「30%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-security/index.html">
+   安全「100%」
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/ray-project/ray"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/issues/new?title=Issue%20on%20page%20%2Fcluster/kubernetes/troubleshooting/troubleshooting.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/edit/master/doc/source/cluster/kubernetes/troubleshooting/troubleshooting.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../../_sources/cluster/kubernetes/troubleshooting/troubleshooting.md.txt"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   故障排除指南
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id2">
+   内容
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#worker">
+     Worker 初始化容器
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id3">
+       1. 初始化容器故障排除
+      </a>
+     </li>
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#init">
+       2. 禁用 init 容器注入
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id4">
+     集群域
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#rayservice">
+     RayService
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id5">
+     问题
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#raycluster-rayjob-cr">
+       为什么对 RayCluster 或 RayJob CR 的更改未生效？
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>故障排除指南</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   故障排除指南
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id2">
+   内容
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#worker">
+     Worker 初始化容器
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id3">
+       1. 初始化容器故障排除
+      </a>
+     </li>
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#init">
+       2. 禁用 init 容器注入
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id4">
+     集群域
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#rayservice">
+     RayService
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id5">
+     问题
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#raycluster-rayjob-cr">
+       为什么对 RayCluster 或 RayJob CR 的更改未生效？
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="kuberay-troubleshootin-guides">
+<span id="id1"></span><h1>故障排除指南<a class="headerlink" href="#kuberay-troubleshootin-guides" title="Permalink to this headline">#</a></h1>
+<p>本文档解决了常见问题。如果您在此处找不到问题的答案，请随时通过我们的 <a class="reference external" href="https://github.com/ray-project/kuberay#getting-involved">社区渠道</a> 联系我们。</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="id2">
+<h1>内容<a class="headerlink" href="#id2" title="Permalink to this headline">#</a></h1>
+<ul class="simple">
+<li><p><a class="reference external" href="#worker-init-container">Worker 初始化容器</a></p></li>
+<li><p><a class="reference external" href="#cluster-domain">Cluster 域</a></p></li>
+<li><p><a class="reference external" href="#rayservice">RayService</a></p></li>
+<li><p><a class="reference external" href="#gpu-multitenancy">GPU 多租户</a></p></li>
+<li><p><a class="reference external" href="#questions">其他问题</a></p></li>
+</ul>
+<section id="worker">
+<h2>Worker 初始化容器<a class="headerlink" href="#worker" title="Permalink to this headline">#</a></h2>
+<p>KubeRay operator 会将默认的 <a class="reference external" href="https://kubernetes.io/docs/concepts/workloads/pods/init-containers/">init container</a> 入到每个 worker Pod 中。
+此 init 容器负责等待，直到 Head Pod 上的全局控制服务 (GCS) 准备好，然后再建立与头的连接。 init 容器将 <code class="docutils literal notranslate"><span class="pre">ray</span> <span class="pre">health-check</span></code> 用于持续检查 GCS 服务器状态。</p>
+<p>默认的 worker 进程初始化容器可能不适用于所有用例，或者用户可能想要自定义初始化容器。</p>
+<section id="id3">
+<h3>1. 初始化容器故障排除<a class="headerlink" href="#id3" title="Permalink to this headline">#</a></h3>
+<p>worker 进程初始化容器陷入 <code class="docutils literal notranslate"><span class="pre">Init:0/1</span></code> 状态的一些常见原因是：</p>
+<ul class="simple">
+<li><p>head Pod 中的 GCS 服务器进程失败。请检查 head Pod 中 <code class="docutils literal notranslate"><span class="pre">/tmp/ray/session_latest/logs/</span></code> 日志目录是否有与 GCS 服务器相关的错误。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ray</span></code> 可执行文件不包含在 <code class="docutils literal notranslate"><span class="pre">$PATH</span></code> 镜像中，因此 init 容器将无法运行 <code class="docutils literal notranslate"><span class="pre">ray</span> <span class="pre">health-check</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CLUSTER_DOMAIN</span></code> 环境变量设置不正确。参考 <a class="reference external" href="#cluster-domain">cluster domain</a> 获取信息。</p></li>
+<li><p>Worker init 容器与 Worker Pod 模板共享相同的 <em><strong>ImagePullPolicy</strong></em>、<em><strong>SecurityContext</strong></em>、<em><strong>Env</strong></em>、<em><strong>VolumeMounts</strong></em> 以及 <em><strong>Resources</strong></em> 。共享这些设置可能会导致死锁。有关更多详细信息，请参阅 <a class="reference external" href="https://github.com/ray-project/kuberay/issues/1130">#1130</a> 。</p></li>
+</ul>
+<p>如果 init 容器停留在 <code class="docutils literal notranslate"><span class="pre">Init:0/1</span></code> 状态 2 分钟，我们将停止将输出消息重定向到 <code class="docutils literal notranslate"><span class="pre">/dev/null</span></code> 而是将它们打印到 worker Pod 日志中。要进一步排除故障，您可以使用 <code class="docutils literal notranslate"><span class="pre">kubectl</span> <span class="pre">logs</span></code>检查日志。</p>
+</section>
+<section id="init">
+<h3>2. 禁用 init 容器注入<a class="headerlink" href="#init" title="Permalink to this headline">#</a></h3>
+<p>如果你想自定义worker init容器，你可以禁用注入并添加你自己的 init 容器。
+要禁用注入，请将 KubeRay operator 中的环境变量 <code class="docutils literal notranslate"><span class="pre">ENABLE_INIT_CONTAINER_INJECTION</span></code> 设置为f <code class="docutils literal notranslate"><span class="pre">false</span></code> （适用于 KubeRay v0.5.2）。
+请参阅 <a class="reference external" href="https://github.com/ray-project/kuberay/pull/1069">#1069</a> 和 <a class="reference external" href="https://github.com/ray-project/kuberay/blob/ddb5e528c29c2e1fb80994f05b1bd162ecbaf9f2/helm-chart/kuberay-operator/values.yaml#L83-L87">KubeRay Helm chart</a> ，了解如何设置环境变量的说明。禁用后，您可以将自定义 init 容器添加到 worker Pod 模板中。</p>
+</section>
+</section>
+<section id="id4">
+<h2>集群域<a class="headerlink" href="#id4" title="Permalink to this headline">#</a></h2>
+<p>在 KubeRay 中，我们使用完全限定域名（FQDN）来建立 worker 和 head 之间的连接。
+head service 的 FQDN 是 <code class="docutils literal notranslate"><span class="pre">${HEAD_SVC}.${NAMESPACE}.svc.${CLUSTER_DOMAIN}</span></code>。
+默认的 <a class="reference external" href="https://kubernetes.io/docs/tasks/administer-cluster/dns-custom-nameservers/#introduction">集群域</a> 是 <code class="docutils literal notranslate"><span class="pre">cluster.local</span></code>，适用于大多数 Kubernetes 集群。
+但是，请务必注意，某些集群可能具有不同的集群域。
+您可以通过 Pod 中的 <code class="docutils literal notranslate"><span class="pre">/etc/resolv.conf</span></code> 检查集群域。</p>
+<p>要设置自定义集群域，请调整 KubeRay operator 的 <code class="docutils literal notranslate"><span class="pre">CLUSTER_DOMAIN</span></code> 环境变量。
+Helm chart 用户可在 <a class="reference external" href="https://github.com/ray-project/kuberay/blob/ddb5e528c29c2e1fb80994f05b1bd162ecbaf9f2/helm-chart/kuberay-operator/values.yaml#L88-L91">这里</a> 修改。
+欲了解更多信息，请参阅 <a class="reference external" href="https://github.com/ray-project/kuberay/pull/951">#951</a> 和 <a class="reference external" href="https://github.com/ray-project/kuberay/pull/938">#938</a> 。</p>
+</section>
+<section id="rayservice">
+<h2>RayService<a class="headerlink" href="#rayservice" title="Permalink to this headline">#</a></h2>
+<p>RayService 是专为 Ray Serve 设计的自定义资源定义 (CRD)。在 KubeRay 中，创建 RayService 将首先创建 RayCluster，然后在 RayCluster 准备就绪后创建 Ray Serve 应用程序。如果问题与数据平面有关，特别是 Ray Serve 脚本或 Ray Serve 配置 (<code class="docutils literal notranslate"><span class="pre">serveConfigV2</span></code>)，则故障排除可能会很困难。有关更多详细信息，请参阅 <a class="reference internal" href="rayservice-troubleshooting.html#kuberay-raysvc-troubleshoot"><span class="std std-ref">rayservice-troubleshooting</span></a> 。</p>
+</section>
+<section id="id5">
+<h2>问题<a class="headerlink" href="#id5" title="Permalink to this headline">#</a></h2>
+<section id="raycluster-rayjob-cr">
+<h3>为什么对 RayCluster 或 RayJob CR 的更改未生效？<a class="headerlink" href="#raycluster-rayjob-cr" title="Permalink to this headline">#</a></h3>
+<p>目前仅支持对 <code class="docutils literal notranslate"><span class="pre">RayCluster/RayJob</span></code> CR 中的 <code class="docutils literal notranslate"><span class="pre">replicas</span></code> 进行修改。对其他字段的更改可能不会生效或可能导致意外结果。</p>
+</section>
+</section>
+</section>
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="../troubleshooting.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">KubeRay 故障排除</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="rayservice-troubleshooting.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">RayService 故障排除</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><!-- Override the footer area for the sphinx-book-theme to include the CSAT widget -->
+<div id="csat">
+  <div id="csat-feedback-received" class="csat-hidden">
+    <span>谢谢你的反馈！</span>
+  </div>
+  <div id="csat-inputs">
+    <span>是否能帮助到你？</span>
+    <div id="csat-yes" class="csat-button">
+      <svg id="csat-yes-icon" class="csat-hidden csat-icon" width="18" height="13" viewBox="0 0 18 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 10.172L16.1922 0.979004L17.6072 2.393L7.00023 13L0.63623 6.636L2.05023 5.222L7.00023 10.172Z" fill="black"/>
+      </svg>
+      <span>是<span>
+    </div>
+    <div id="csat-no" class="csat-button">
+      <svg id="csat-no-icon" class="csat-hidden csat-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 5.58599L11.9502 0.635986L13.3642 2.04999L8.41423 6.99999L13.3642 11.95L11.9502 13.364L7.00023 8.41399L2.05023 13.364L0.63623 11.95L5.58623 6.99999L0.63623 2.04999L2.05023 0.635986L7.00023 5.58599Z" fill="black"/>
+      </svg>
+      <span>否<span>
+    </div>
+  </div>
+  <div id="csat-textarea-group" class="csat-hidden">
+    <span id="csat-feedback-label">反馈</span>
+    <textarea id="csat-textarea"></textarea>
+    <div id="csat-submit">提交</div>
+  </div>
+</div><p>
+  
+    By The Ray Team<br/>
+  
+      &copy; Copyright 2024, The Ray Team.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

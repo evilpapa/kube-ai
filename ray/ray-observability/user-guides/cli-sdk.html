@@ -1,0 +1,1268 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>使用 CLI 或 SDK 进行监控 &#8212; Ray 2.7.2</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/termynal.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/versionwarning.js"></script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+    <script defer="defer" src="../../_static/js/docsearch.js"></script>
+    <script defer="defer" src="../../_static/js/csat.js"></script>
+    <script defer="defer" src="../../_static/js/termynal.js"></script>
+    <script defer="defer" src="../../_static/js/custom.js"></script>
+    <script defer="defer" src="../../_static/js/top-navigation.js"></script>
+    <script src="../../_static/js/tags.js"></script>
+    <script src="../../_static/tabs.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <link rel="canonical" href="https://docs.ray.io/en/latest/ray-observability/user-guides/cli-sdk.html" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="日志配置" href="configure-logging.html" />
+    <link rel="prev" title="使用 Ray 调试器" href="debug-apps/ray-debugging.html" />
+
+<!-- Fathom - beautiful, simple website analytics -->
+<script src="https://deer.ray.io/script.js" data-site="WYYANYOS" defer></script>
+<!-- / Fathom -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-110413294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-110413294-1');
+</script>
+
+<script
+  src="https://widget.kapa.ai/kapa-widget.bundle.js"
+  data-website-id="18a8c339-4ec5-43c8-8182-db3f2bc8c6b6"
+  data-project-name="Ray"
+  data-project-color="#2C2C2C"
+  data-project-logo="https://global.discourse-cdn.com/business7/uploads/ray/original/1X/8f4dcb72f7cd34e2a332d548bd65860994bc8ff1.png"
+  data-modal-disclaimer = "Results are automated and may be incorrect or contain inappropriate information. Do not include any personal data or confidential information."
+  data-modal-title = "Ray Docs AI - Ask a Question"
+  data-button-position-bottom = "60px"
+></script>
+
+<script>
+(function(apiKey){
+    (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
+    v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
+        o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
+        y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
+        z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
+
+        pendo.initialize({
+            visitor: {
+                id: 'VISITOR-UNIQUE-ID'
+            },
+            account: {
+                id: 'ACCOUNT-UNIQUE-ID'
+            }
+        });
+})('f89fa48a-6dd7-4d7c-67cf-a8051ed891f2');
+</script>
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"><div class='topnav'></div></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Ray 2.7.2</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main Navigation">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../index.html">
+                    欢迎来到 Ray ！
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Ray
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/index.html">
+   概述「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/getting-started.html">
+   入门
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/installation.html">
+   安装「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/use-cases.html">
+   用例「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/examples.html">
+   示例库「1%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/ray-libraries.html">
+   生态「3%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-core/walkthrough.html">
+   Ray 核心「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../data/data.html">
+   Ray 数据「75%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../train/train.html">
+   Ray 训练「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../tune/index.html">
+   Ray 调参「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../serve/index.html">
+   Ray Serve
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../rllib/index.html">
+   Ray RLlib
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-more-libs/index.html">
+   更多类库「40%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../cluster/getting-started.html">
+   Ray 集群「100%」
+  </a>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="../index.html">
+   监控调试「100%」
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="../getting-started.html">
+     Ray 仪表盘
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../key-concepts.html">
+     关键概念
+    </a>
+   </li>
+   <li class="toctree-l2 current active has-children">
+    <a class="reference internal" href="index.html">
+     用户指南
+    </a>
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+    <label for="toctree-checkbox-2">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul class="current">
+     <li class="toctree-l3">
+      <a class="reference internal" href="debug-apps/index.html">
+       调试应用
+      </a>
+     </li>
+     <li class="toctree-l3 current active">
+      <a class="current reference internal" href="#">
+       使用 CLI 或 SDK 进行监控
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="configure-logging.html">
+       日志配置
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="profiling.html">
+       分析
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="add-app-metrics.html">
+       添加应用级指标
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="ray-tracing.html">
+       追踪
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../reference/index.html">
+     参考
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-references/api.html">
+   参考「20%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-contribute/index.html">
+   开发者指引「30%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-security/index.html">
+   安全「100%」
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/ray-project/ray"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/issues/new?title=Issue%20on%20page%20%2Fray-observability/user-guides/cli-sdk.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/edit/master/doc/source/ray-observability/user-guides/cli-sdk.rst"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../_sources/ray-observability/user-guides/cli-sdk.rst.txt"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.rst</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#cli-ray-status">
+   CLI 命令
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     ray
+    </span>
+    <span class="pre">
+     status
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ray-cli-sdk">
+   Ray 状态 CLI 和 SDK
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id4">
+     开始
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id5">
+     关键概念
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id6">
+     用户指南
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id7">
+       按类型获取实体状态的摘要
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id8">
+       列出某种类型的所有实体的状态
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#actor">
+       获取特定实体（任务、actor 等）的状态
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id11">
+       获取特定实体（任务、actor 等）的日志
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id12">
+       失败语义
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#api">
+     API 参考
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ray-cli">
+   从集群外部使用 Ray CLI 工具
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>使用 CLI 或 SDK 进行监控</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#cli-ray-status">
+   CLI 命令
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     ray
+    </span>
+    <span class="pre">
+     status
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ray-cli-sdk">
+   Ray 状态 CLI 和 SDK
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id4">
+     开始
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id5">
+     关键概念
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id6">
+     用户指南
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id7">
+       按类型获取实体状态的摘要
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id8">
+       列出某种类型的所有实体的状态
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#actor">
+       获取特定实体（任务、actor 等）的状态
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id11">
+       获取特定实体（任务、actor 等）的日志
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id12">
+       失败语义
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#api">
+     API 参考
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ray-cli">
+   从集群外部使用 Ray CLI 工具
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section id="cli-sdk">
+<span id="observability-programmatic"></span><h1>使用 CLI 或 SDK 进行监控<a class="headerlink" href="#cli-sdk" title="Permalink to this headline">#</a></h1>
+<p>Ray 中的监控和调试功能可通过 CLI 或 SDK 获得。</p>
+<section id="cli-ray-status">
+<h2>CLI 命令 <code class="docutils literal notranslate"><span class="pre">ray</span> <span class="pre">status</span></code><a class="headerlink" href="#cli-ray-status" title="Permalink to this headline">#</a></h2>
+<p>您可以通过在头节点上运行 CLI 命令 <a href="#id1"><span class="problematic" id="id2">``</span></a>ray status``来监控节点状态和资源使用情况。它显示了</p>
+<ul class="simple">
+<li><p><strong>节点状态</strong>: 正在运行并自动向上或向下扩展的节点。运行节点的地址。有关待处理节点和失败节点的信息。</p></li>
+<li><p><strong>资源使用情况</strong>: Ray 集群的资源使用情况。例如，从所有 Ray 任务和 Actor 请求的 CPU。使用的 GPU 数量。</p></li>
+</ul>
+<p>以下是示例输出：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ ray <span class="nv">status</span>
+<span class="o">========</span> Autoscaler status: <span class="m">2021</span>-10-12 <span class="m">13</span>:10:21.035674 <span class="o">========</span>
+Node status
+---------------------------------------------------------------
+Healthy:
+ <span class="m">1</span> ray.head.default
+ <span class="m">2</span> ray.worker.cpu
+Pending:
+ <span class="o">(</span>no pending nodes<span class="o">)</span>
+Recent failures:
+ <span class="o">(</span>no failures<span class="o">)</span>
+
+Resources
+---------------------------------------------------------------
+Usage:
+ <span class="m">0</span>.0/10.0 CPU
+ <span class="m">0</span>.00/70.437 GiB memory
+ <span class="m">0</span>.00/10.306 GiB object_store_memory
+
+Demands:
+ <span class="o">(</span>no resource demands<span class="o">)</span>
+</pre></div>
+</div>
+<p>当您需要有关每个节点的更多详细信息时，请运行 <code class="docutils literal notranslate"><span class="pre">ray</span> <span class="pre">status</span> <span class="pre">-v</span></code>。 当您需要调查为什么特定节点不自动缩小规模时，这非常有用。</p>
+</section>
+<section id="ray-cli-sdk">
+<span id="state-api-overview-ref"></span><h2>Ray 状态 CLI 和 SDK<a class="headerlink" href="#ray-cli-sdk" title="Permalink to this headline">#</a></h2>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>提供有关使用 Ray state API 的反馈 - <a class="reference external" href="https://forms.gle/gh77mwjEskjhN8G46">反馈表</a>!</p>
+</div>
+<p>使用 Ray State API 通过 CLI 或 Python SDK（开发人员 API）访问 Ray 的当前状态（快照）。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>此功能需要使用 <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">&quot;ray[default]&quot;</span></code>. 完整安装 Ray 。此功能还要求仪表板组件可用。启动 Ray Cluster 时需要包含仪表板组件，这是 <code class="xref py py-obj docutils literal notranslate"><span class="pre">ray</span> <span class="pre">start`</span></code> 和 <code class="docutils literal notranslate"><span class="pre">ray.init()</span></code> 的默认行为。</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>State API CLI 命令是 <a class="reference internal" href="../../ray-contribute/stability.html#api-stability-stable"><span class="std std-ref">stable</span></a>，而 Python SDK 是 <a class="reference internal" href="../../ray-contribute/stability.html#developer-api-def"><span class="std std-ref">DeveloperAPI</span></a>。建议使用 CLI 而不是 Python SDK。</p>
+</div>
+<section id="id4">
+<h3>开始<a class="headerlink" href="#id4" title="Permalink to this headline">#</a></h3>
+<p>此示例使用以下脚本运行两个任务并创建两个 Actor。</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ray</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">num_cpus</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span>
+<span class="k">def</span> <span class="nf">task_running_300_seconds</span><span class="p">():</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">300</span><span class="p">)</span>
+
+<span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span>
+<span class="k">class</span> <span class="nc">Actor</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+<span class="c1"># Create 2 tasks</span>
+<span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span><span class="n">task_running_300_seconds</span><span class="o">.</span><span class="n">remote</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span>
+
+<span class="c1"># Create 2 actors</span>
+<span class="n">actors</span> <span class="o">=</span> <span class="p">[</span><span class="n">Actor</span><span class="o">.</span><span class="n">remote</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>查看任务的汇总状态。如果它没有立即返回输出，请重试该命令。</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" role="tablist"><button aria-controls="panel-0-Q0xJIO+8iOaOqOiNkO+8iQ==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-0-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tab" tabindex="0">CLI （推荐）</button><button aria-controls="panel-0-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tab" tabindex="-1">Python SDK （内部开发 API）</button></div><div aria-labelledby="tab-0-Q0xJIO+8iOaOqOiNkO+8iQ==" class="sphinx-tabs-panel group-tab" id="panel-0-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ray summary tasks
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>======== Tasks Summary: 2022-07-22 08:54:38.332537 ========
+Stats:
+------------------------------------
+total_actor_scheduled: 2
+total_actor_tasks: 0
+total_tasks: 2
+
+
+Table (group by func_name):
+------------------------------------
+    FUNC_OR_CLASS_NAME        STATE_COUNTS    TYPE
+0   task_running_300_seconds  RUNNING: 2      NORMAL_TASK
+1   Actor.__init__            FINISHED: 2     ACTOR_CREATION_TASK
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tabpanel" tabindex="0"><div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray.util.state</span> <span class="kn">import</span> <span class="n">summarize_tasks</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">summarize_tasks</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;cluster&#39;: {&#39;summary&#39;: {&#39;task_running_300_seconds&#39;: {&#39;func_or_class_name&#39;: &#39;task_running_300_seconds&#39;, &#39;type&#39;: &#39;NORMAL_TASK&#39;, &#39;state_counts&#39;: {&#39;RUNNING&#39;: 2}}, &#39;Actor.__init__&#39;: {&#39;func_or_class_name&#39;: &#39;Actor.__init__&#39;, &#39;type&#39;: &#39;ACTOR_CREATION_TASK&#39;, &#39;state_counts&#39;: {&#39;FINISHED&#39;: 2}}}, &#39;total_tasks&#39;: 2, &#39;total_actor_tasks&#39;: 0, &#39;total_actor_scheduled&#39;: 2, &#39;summary_by&#39;: &#39;func_name&#39;}}
+</pre></div>
+</div>
+</div></div>
+<p>列出所有 Actors。</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" role="tablist"><button aria-controls="panel-1-Q0xJIO+8iOaOqOiNkO+8iQ==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-1-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tab" tabindex="0">CLI （推荐）</button><button aria-controls="panel-1-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-1-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tab" tabindex="-1">Python SDK （内部开发 API）</button></div><div aria-labelledby="tab-1-Q0xJIO+8iOaOqOiNkO+8iQ==" class="sphinx-tabs-panel group-tab" id="panel-1-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ray list actors
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>======== List: 2022-07-23 21:29:39.323925 ========
+Stats:
+------------------------------
+Total: 2
+
+Table:
+------------------------------
+    ACTOR_ID                          CLASS_NAME    NAME      PID  STATE
+0  31405554844820381c2f0f8501000000  Actor                 96956  ALIVE
+1  f36758a9f8871a9ca993b1d201000000  Actor                 96955  ALIVE
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-1-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-1-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tabpanel" tabindex="0"><div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray.util.state</span> <span class="kn">import</span> <span class="n">list_actors</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">list_actors</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[ActorState(actor_id=&#39;...&#39;, class_name=&#39;Actor&#39;, state=&#39;ALIVE&#39;, job_id=&#39;01000000&#39;, name=&#39;&#39;, node_id=&#39;...&#39;, pid=..., ray_namespace=&#39;...&#39;, serialized_runtime_env=None, required_resources=None, death_cause=None, is_detached=None, placement_group_id=None, repr_name=None), ActorState(actor_id=&#39;...&#39;, class_name=&#39;Actor&#39;, state=&#39;ALIVE&#39;, job_id=&#39;01000000&#39;, name=&#39;&#39;, node_id=&#39;...&#39;, pid=..., ray_namespace=&#39;...&#39;, serialized_runtime_env=None, required_resources=None, death_cause=None, is_detached=None, placement_group_id=None, repr_name=None)]
+</pre></div>
+</div>
+</div></div>
+<p>使用 get API 获取单个任务的状态。</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" role="tablist"><button aria-controls="panel-2-Q0xJIO+8iOaOqOiNkO+8iQ==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-2-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tab" tabindex="0">CLI （推荐）</button><button aria-controls="panel-2-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-2-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tab" tabindex="-1">Python SDK （内部开发 API）</button></div><div aria-labelledby="tab-2-Q0xJIO+8iOaOqOiNkO+8iQ==" class="sphinx-tabs-panel group-tab" id="panel-2-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># In this case, 31405554844820381c2f0f8501000000</span>
+ray get actors &lt;ACTOR_ID&gt;
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>---
+actor_id: 31405554844820381c2f0f8501000000
+class_name: Actor
+death_cause: null
+is_detached: false
+name: &#39;&#39;
+pid: 96956
+resource_mapping: []
+serialized_runtime_env: &#39;{}&#39;
+state: ALIVE
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-2-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-2-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tabpanel" tabindex="0"><div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray.util.state</span> <span class="kn">import</span> <span class="n">get_actor</span>
+<span class="c1"># In this case, 31405554844820381c2f0f8501000000</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">get_actor</span><span class="p">(</span><span class="nb">id</span><span class="o">=&lt;</span><span class="n">ACTOR_ID</span><span class="o">&gt;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div></div>
+<p>通过 <code class="docutils literal notranslate"><span class="pre">ray</span> <span class="pre">logs</span></code>  API 访问日志。</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" role="tablist"><button aria-controls="panel-3-Q0xJIO+8iOaOqOiNkO+8iQ==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-3-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tab" tabindex="0">CLI （推荐）</button><button aria-controls="panel-3-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-3-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tab" tabindex="-1">Python SDK （内部开发 API）</button></div><div aria-labelledby="tab-3-Q0xJIO+8iOaOqOiNkO+8iQ==" class="sphinx-tabs-panel group-tab" id="panel-3-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ray list actors
+<span class="c1"># In this case, ACTOR_ID is 31405554844820381c2f0f8501000000</span>
+ray logs actor --id &lt;ACTOR_ID&gt;
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>--- Log has been truncated to last 1000 lines. Use `--tail` flag to toggle. ---
+
+:actor_name:Actor
+Actor created
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-3-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-3-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tabpanel" tabindex="0"><div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray.util.state</span> <span class="kn">import</span> <span class="n">get_log</span>
+
+<span class="c1"># In this case, ACTOR_ID is 31405554844820381c2f0f8501000000</span>
+<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">get_log</span><span class="p">(</span><span class="n">actor_id</span><span class="o">=&lt;</span><span class="n">ACTOR_ID</span><span class="o">&gt;</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="id5">
+<h3>关键概念<a class="headerlink" href="#id5" title="Permalink to this headline">#</a></h3>
+<p>Ray State API 允许您通过 <strong>summary</strong>、 <strong>list</strong> 和 <strong>get</strong> API访问 <strong>资源</strong> 的 <strong>状态</strong>。 它还支持 <strong>logs</strong> API 来访问日志。</p>
+<ul class="simple">
+<li><p><strong>states</strong>: 对应资源的集群状态。状态由不可变元数据（例如，Actor 的名称）和可变状态（例如，Actor 的调度状态或 pid）组成。</p></li>
+<li><p><strong>resources</strong>: Ray 创建的资源。例如，actor、任务、对象、占位组等。</p></li>
+<li><p><strong>summary</strong>: 返回资源汇总视图的 API。</p></li>
+<li><p><strong>list</strong>: 返回每个资源实体的 API。</p></li>
+<li><p><strong>get</strong>: 返回单个资源实体详细信息的 API。</p></li>
+<li><p><strong>logs</strong>: 用于访问 Actor、任务、Workers 日志或系统日志文件的 API。</p></li>
+</ul>
+</section>
+<section id="id6">
+<h3>用户指南<a class="headerlink" href="#id6" title="Permalink to this headline">#</a></h3>
+<section id="id7">
+<h4>按类型获取实体状态的摘要<a class="headerlink" href="#id7" title="Permalink to this headline">#</a></h4>
+<p>返回给定 Ray 实体（对象、Actor、任务）的汇总信息。
+建议首先通过摘要 API 开始监控状态。
+当您发现异常情况时（例如，长时间运行的Actor、长时间未调度的任务），
+您可以使用 <code class="docutils literal notranslate"><span class="pre">list</span></code> 或 <code class="docutils literal notranslate"><span class="pre">get</span></code> API 来获取单个异常实体的更多详细信息。</p>
+<p><strong>汇总所有 actor</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" role="tablist"><button aria-controls="panel-4-Q0xJIO+8iOaOqOiNkO+8iQ==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-4-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tab" tabindex="0">CLI （推荐）</button><button aria-controls="panel-4-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-4-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tab" tabindex="-1">Python SDK （内部开发 API）</button></div><div aria-labelledby="tab-4-Q0xJIO+8iOaOqOiNkO+8iQ==" class="sphinx-tabs-panel group-tab" id="panel-4-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ray summary actors
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-4-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-4-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tabpanel" tabindex="0"><div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray.util.state</span> <span class="kn">import</span> <span class="n">summarize_actors</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">summarize_actors</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;cluster&#39;: {&#39;summary&#39;: {&#39;Actor&#39;: {&#39;class_name&#39;: &#39;Actor&#39;, &#39;state_counts&#39;: {&#39;ALIVE&#39;: 2}}}, &#39;total_actors&#39;: 2, &#39;summary_by&#39;: &#39;class&#39;}}
+</pre></div>
+</div>
+</div></div>
+<p><strong>汇总所有 task</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" role="tablist"><button aria-controls="panel-5-Q0xJIO+8iOaOqOiNkO+8iQ==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-5-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tab" tabindex="0">CLI （推荐）</button><button aria-controls="panel-5-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-5-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tab" tabindex="-1">Python SDK （内部开发 API）</button></div><div aria-labelledby="tab-5-Q0xJIO+8iOaOqOiNkO+8iQ==" class="sphinx-tabs-panel group-tab" id="panel-5-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ray summary tasks
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-5-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-5-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tabpanel" tabindex="0"><div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray.util.state</span> <span class="kn">import</span> <span class="n">summarize_tasks</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">summarize_tasks</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;cluster&#39;: {&#39;summary&#39;: {&#39;task_running_300_seconds&#39;: {&#39;func_or_class_name&#39;: &#39;task_running_300_seconds&#39;, &#39;type&#39;: &#39;NORMAL_TASK&#39;, &#39;state_counts&#39;: {&#39;RUNNING&#39;: 2}}, &#39;Actor.__init__&#39;: {&#39;func_or_class_name&#39;: &#39;Actor.__init__&#39;, &#39;type&#39;: &#39;ACTOR_CREATION_TASK&#39;, &#39;state_counts&#39;: {&#39;FINISHED&#39;: 2}}}, &#39;total_tasks&#39;: 2, &#39;total_actor_tasks&#39;: 0, &#39;total_actor_scheduled&#39;: 2, &#39;summary_by&#39;: &#39;func_name&#39;}}
+</pre></div>
+</div>
+</div></div>
+<p><strong>汇总所有对象</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>默认情况下，对象按调用点进行汇总。但是，Ray 默认情况下不记录调用点。要获取调用点信息，请在启动 Ray 集群时设置环境变量 <code class="xref py py-obj docutils literal notranslate"><span class="pre">RAY_record_ref_creation_sites=1</span></code>
+RAY_record_ref_creation_sites=1 ray start –head</p>
+</div>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" role="tablist"><button aria-controls="panel-6-Q0xJIO+8iOaOqOiNkO+8iQ==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-6-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tab" tabindex="0">CLI （推荐）</button><button aria-controls="panel-6-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-6-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tab" tabindex="-1">Python SDK （内部开发 API）</button></div><div aria-labelledby="tab-6-Q0xJIO+8iOaOqOiNkO+8iQ==" class="sphinx-tabs-panel group-tab" id="panel-6-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ray summary objects
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-6-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-6-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tabpanel" tabindex="0"><div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray.util.state</span> <span class="kn">import</span> <span class="n">summarize_objects</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">summarize_objects</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;cluster&#39;: {&#39;summary&#39;: {&#39;disabled&#39;: {&#39;total_objects&#39;: 6, &#39;total_size_mb&#39;: 0.0, &#39;total_num_workers&#39;: 3, &#39;total_num_nodes&#39;: 1, &#39;task_state_counts&#39;: {&#39;SUBMITTED_TO_WORKER&#39;: 2, &#39;FINISHED&#39;: 2, &#39;NIL&#39;: 2}, &#39;ref_type_counts&#39;: {&#39;LOCAL_REFERENCE&#39;: 2, &#39;ACTOR_HANDLE&#39;: 4}}}, &#39;total_objects&#39;: 6, &#39;total_size_mb&#39;: 0.0, &#39;callsite_enabled&#39;: False, &#39;summary_by&#39;: &#39;callsite&#39;}}
+</pre></div>
+</div>
+</div></div>
+<p>有关命令的更多详细信息，请参阅 <a class="reference internal" href="../reference/cli.html#state-api-cli-ref"><span class="std std-ref">state CLI 参考</span></a> 关于 <code class="docutils literal notranslate"><span class="pre">ray</span> <span class="pre">summary</span></code> 命令。</p>
+</section>
+<section id="id8">
+<h4>列出某种类型的所有实体的状态<a class="headerlink" href="#id8" title="Permalink to this headline">#</a></h4>
+<p>获取资源列表。可能的资源包括：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../ray-core/actors.html#actor-guide"><span class="std std-ref">Actors</span></a> 例如 Actor ID、状态、PID、death_cause ( <code class="xref py py-class docutils literal notranslate"><span class="pre">output</span> <span class="pre">schema</span></code>）</p></li>
+<li><p><a class="reference internal" href="../../ray-core/tasks.html#ray-remote-functions"><span class="std std-ref">Tasks</span></a> 例如名称、调度状态、类型、运行时环境信息 (<code class="xref py py-class docutils literal notranslate"><span class="pre">output</span> <span class="pre">schema</span></code>)</p></li>
+<li><p><a class="reference internal" href="../../ray-core/objects.html#objects-in-ray"><span class="std std-ref">Objects</span></a>, 例如对象 ID、调用点、引用类型 ( (<code class="xref py py-class docutils literal notranslate"><span class="pre">output</span> <span class="pre">schema</span></code>)</p></li>
+<li><p><a class="reference internal" href="../../cluster/running-applications/job-submission/index.html#jobs-overview"><span class="std std-ref">Jobs</span></a>,例如开始/结束时间、入口点、状态 (<code class="xref py py-class docutils literal notranslate"><span class="pre">output</span> <span class="pre">schema</span></code>)</p></li>
+<li><p><a class="reference internal" href="../../ray-core/scheduling/placement-group.html#ray-placement-group-doc-ref"><span class="std std-ref">Placement Groups</span></a>, 例如名称、捆绑包、统计信息 (<code class="xref py py-class docutils literal notranslate"><span class="pre">output</span> <span class="pre">schema</span></code>)</p></li>
+<li><p>节点（Ray 工作节点），例如节点 ID、节点 IP、节点状态 (<code class="xref py py-class docutils literal notranslate"><span class="pre">output</span> <span class="pre">schema</span></code>)</p></li>
+<li><p>Workers（Ray 工作进程），例如工作 ID、类型、退出类型和详细信息 (<code class="xref py py-class docutils literal notranslate"><span class="pre">output</span> <span class="pre">schema</span></code>)</p></li>
+<li><p><a class="reference internal" href="../../ray-core/handling-dependencies.html#runtime-environments"><span class="std std-ref">运行时环境</span></a>, 例如运行时环境、创建时间、节点 (<code class="xref py py-class docutils literal notranslate"><span class="pre">output</span> <span class="pre">schema</span></code>)</p></li>
+</ul>
+<p><strong>列出所有节点</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" role="tablist"><button aria-controls="panel-7-Q0xJIO+8iOaOqOiNkO+8iQ==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-7-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tab" tabindex="0">CLI （推荐）</button><button aria-controls="panel-7-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-7-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tab" tabindex="-1">Python SDK （内部开发 API）</button></div><div aria-labelledby="tab-7-Q0xJIO+8iOaOqOiNkO+8iQ==" class="sphinx-tabs-panel group-tab" id="panel-7-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ray list nodes
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-7-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-7-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tabpanel" tabindex="0"><div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray.util.state</span> <span class="kn">import</span> <span class="n">list_nodes</span>
+<span class="n">list_nodes</span><span class="p">()</span>
+</pre></div>
+</div>
+</div></div>
+<p><strong>列出所有归置组</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" role="tablist"><button aria-controls="panel-8-Q0xJIO+8iOaOqOiNkO+8iQ==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-8-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tab" tabindex="0">CLI （推荐）</button><button aria-controls="panel-8-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-8-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tab" tabindex="-1">Python SDK （内部开发 API）</button></div><div aria-labelledby="tab-8-Q0xJIO+8iOaOqOiNkO+8iQ==" class="sphinx-tabs-panel group-tab" id="panel-8-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ray list placement-groups
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-8-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-8-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tabpanel" tabindex="0"><div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray.util.state</span> <span class="kn">import</span> <span class="n">list_placement_groups</span>
+<span class="n">list_placement_groups</span><span class="p">()</span>
+</pre></div>
+</div>
+</div></div>
+<p><strong>列出进程创建的本地引用对象</strong></p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>您可以使用一个或多个过滤器列出资源：使用 <code class="xref py py-obj docutils literal notranslate"><span class="pre">--filter</span></code> 或 <code class="xref py py-obj docutils literal notranslate"><span class="pre">-f</span></code></p>
+</div>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" role="tablist"><button aria-controls="panel-9-Q0xJIO+8iOaOqOiNkO+8iQ==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-9-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tab" tabindex="0">CLI （推荐）</button><button aria-controls="panel-9-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-9-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tab" tabindex="-1">Python SDK （内部开发 API）</button></div><div aria-labelledby="tab-9-Q0xJIO+8iOaOqOiNkO+8iQ==" class="sphinx-tabs-panel group-tab" id="panel-9-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ray list objects -f <span class="nv">pid</span><span class="o">=</span>&lt;PID&gt; -f <span class="nv">reference_type</span><span class="o">=</span>LOCAL_REFERENCE
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-9-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-9-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tabpanel" tabindex="0"><div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray.util.state</span> <span class="kn">import</span> <span class="n">list_objects</span>
+<span class="n">list_objects</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;pid&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="mi">1234</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;reference_type&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="s2">&quot;LOCAL_REFERENCE&quot;</span><span class="p">)])</span>
+</pre></div>
+</div>
+</div></div>
+<p><strong>列出存活的 actor</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" role="tablist"><button aria-controls="panel-10-Q0xJIO+8iOaOqOiNkO+8iQ==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-10-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tab" tabindex="0">CLI （推荐）</button><button aria-controls="panel-10-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-10-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tab" tabindex="-1">Python SDK （内部开发 API）</button></div><div aria-labelledby="tab-10-Q0xJIO+8iOaOqOiNkO+8iQ==" class="sphinx-tabs-panel group-tab" id="panel-10-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ray list actors -f <span class="nv">state</span><span class="o">=</span>ALIVE
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-10-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-10-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tabpanel" tabindex="0"><div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray.util.state</span> <span class="kn">import</span> <span class="n">list_actors</span>
+<span class="n">list_actors</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;state&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="s2">&quot;ALIVE&quot;</span><span class="p">)])</span>
+</pre></div>
+</div>
+</div></div>
+<p><strong>列出运行中的 task</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" role="tablist"><button aria-controls="panel-11-Q0xJIO+8iOaOqOiNkO+8iQ==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-11-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tab" tabindex="0">CLI （推荐）</button><button aria-controls="panel-11-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-11-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tab" tabindex="-1">Python SDK （内部开发 API）</button></div><div aria-labelledby="tab-11-Q0xJIO+8iOaOqOiNkO+8iQ==" class="sphinx-tabs-panel group-tab" id="panel-11-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ray list tasks -f <span class="nv">state</span><span class="o">=</span>RUNNING
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-11-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-11-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tabpanel" tabindex="0"><div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray.util.state</span> <span class="kn">import</span> <span class="n">list_tasks</span>
+<span class="n">list_tasks</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;state&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="s2">&quot;RUNNING&quot;</span><span class="p">)])</span>
+</pre></div>
+</div>
+</div></div>
+<p><strong>列出非运行 task</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" role="tablist"><button aria-controls="panel-12-Q0xJIO+8iOaOqOiNkO+8iQ==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-12-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tab" tabindex="0">CLI （推荐）</button><button aria-controls="panel-12-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-12-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tab" tabindex="-1">Python SDK （内部开发 API）</button></div><div aria-labelledby="tab-12-Q0xJIO+8iOaOqOiNkO+8iQ==" class="sphinx-tabs-panel group-tab" id="panel-12-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ray list tasks -f state!<span class="o">=</span>RUNNING
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-12-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-12-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tabpanel" tabindex="0"><div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray.util.state</span> <span class="kn">import</span> <span class="n">list_tasks</span>
+<span class="n">list_tasks</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;state&quot;</span><span class="p">,</span> <span class="s2">&quot;!=&quot;</span><span class="p">,</span> <span class="s2">&quot;RUNNING&quot;</span><span class="p">)])</span>
+</pre></div>
+</div>
+</div></div>
+<p><strong>列出具有名称的正在运行的任务</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" role="tablist"><button aria-controls="panel-13-Q0xJIO+8iOaOqOiNkO+8iQ==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-13-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tab" tabindex="0">CLI （推荐）</button><button aria-controls="panel-13-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-13-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tab" tabindex="-1">Python SDK （内部开发 API）</button></div><div aria-labelledby="tab-13-Q0xJIO+8iOaOqOiNkO+8iQ==" class="sphinx-tabs-panel group-tab" id="panel-13-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ray list tasks -f <span class="nv">state</span><span class="o">=</span>RUNNING -f <span class="nv">name</span><span class="o">=</span><span class="s2">&quot;task_running_300_seconds()&quot;</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-13-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-13-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tabpanel" tabindex="0"><div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray.util.state</span> <span class="kn">import</span> <span class="n">list_tasks</span>
+<span class="n">list_tasks</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;state&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="s2">&quot;RUNNING&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="s2">&quot;task_running_300_seconds()&quot;</span><span class="p">)])</span>
+</pre></div>
+</div>
+</div></div>
+<p><strong>列出包含更多详细信息的任务</strong></p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>当指定 <a href="#id9"><span class="problematic" id="id10">``</span></a>–detail``时，API可以查询更多数据源以获取详细的状态信息。</p>
+</div>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" role="tablist"><button aria-controls="panel-14-Q0xJIO+8iOaOqOiNkO+8iQ==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-14-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tab" tabindex="0">CLI （推荐）</button><button aria-controls="panel-14-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-14-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tab" tabindex="-1">Python SDK （内部开发 API）</button></div><div aria-labelledby="tab-14-Q0xJIO+8iOaOqOiNkO+8iQ==" class="sphinx-tabs-panel group-tab" id="panel-14-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ray list tasks --detail
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-14-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-14-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tabpanel" tabindex="0"><div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray.util.state</span> <span class="kn">import</span> <span class="n">list_tasks</span>
+<span class="n">list_tasks</span><span class="p">(</span><span class="n">detail</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></div>
+<p>有关命令的更多详细信息，请参阅 <a class="reference internal" href="../reference/cli.html#state-api-cli-ref"><span class="std std-ref">state CLI 参考</span></a> 的 <code class="docutils literal notranslate"><span class="pre">ray</span> <span class="pre">list</span></code> 命令。</p>
+</section>
+<section id="actor">
+<h4>获取特定实体（任务、actor 等）的状态<a class="headerlink" href="#actor" title="Permalink to this headline">#</a></h4>
+<p><strong>获取任务的状态</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" role="tablist"><button aria-controls="panel-15-Q0xJIO+8iOaOqOiNkO+8iQ==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-15-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tab" tabindex="0">CLI （推荐）</button><button aria-controls="panel-15-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-15-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tab" tabindex="-1">Python SDK （内部开发 API）</button></div><div aria-labelledby="tab-15-Q0xJIO+8iOaOqOiNkO+8iQ==" class="sphinx-tabs-panel group-tab" id="panel-15-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ray get tasks &lt;TASK_ID&gt;
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-15-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-15-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tabpanel" tabindex="0"><div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray.util.state</span> <span class="kn">import</span> <span class="n">get_task</span>
+<span class="n">get_task</span><span class="p">(</span><span class="nb">id</span><span class="o">=&lt;</span><span class="n">TASK_ID</span><span class="o">&gt;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></div>
+<p><strong>获取节点的状态</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" role="tablist"><button aria-controls="panel-16-Q0xJIO+8iOaOqOiNkO+8iQ==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-16-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tab" tabindex="0">CLI （推荐）</button><button aria-controls="panel-16-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-16-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tab" tabindex="-1">Python SDK （内部开发 API）</button></div><div aria-labelledby="tab-16-Q0xJIO+8iOaOqOiNkO+8iQ==" class="sphinx-tabs-panel group-tab" id="panel-16-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ray get nodes &lt;NODE_ID&gt;
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-16-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-16-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tabpanel" tabindex="0"><div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray.util.state</span> <span class="kn">import</span> <span class="n">get_node</span>
+<span class="n">get_node</span><span class="p">(</span><span class="nb">id</span><span class="o">=&lt;</span><span class="n">NODE_ID</span><span class="o">&gt;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></div>
+<p>有关命令的更多详细信息，请参阅 <a class="reference internal" href="../reference/cli.html#state-api-cli-ref"><span class="std std-ref">状态 CLI 参考</span></a> 的 <code class="docutils literal notranslate"><span class="pre">ray</span> <span class="pre">get</span></code> 命令。</p>
+</section>
+<section id="id11">
+<h4>获取特定实体（任务、actor 等）的日志<a class="headerlink" href="#id11" title="Permalink to this headline">#</a></h4>
+<p id="state-api-log-doc">State API 还允许您访问 Ray 日志。请注意，您无法从死节点访问日志。默认情况下，API 从头节点打印日志。</p>
+<p><strong>从集群中的头节点获取所有可检索的日志文件名</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" role="tablist"><button aria-controls="panel-17-Q0xJIO+8iOaOqOiNkO+8iQ==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-17-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tab" tabindex="0">CLI （推荐）</button><button aria-controls="panel-17-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-17-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tab" tabindex="-1">Python SDK （内部开发 API）</button></div><div aria-labelledby="tab-17-Q0xJIO+8iOaOqOiNkO+8iQ==" class="sphinx-tabs-panel group-tab" id="panel-17-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ray logs cluster
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-17-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-17-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tabpanel" tabindex="0"><div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># You could get the node ID / node IP from `ray list nodes`</span>
+<span class="kn">from</span> <span class="nn">ray.util.state</span> <span class="kn">import</span> <span class="n">list_logs</span>
+<span class="c1"># `ray logs` by default print logs from a head node.</span>
+<span class="c1"># To list the same logs, you should provide the head node ID.</span>
+<span class="c1"># Get the node ID / node IP from `ray list nodes`</span>
+<span class="n">list_logs</span><span class="p">(</span><span class="n">node_id</span><span class="o">=&lt;</span><span class="n">HEAD_NODE_ID</span><span class="o">&gt;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></div>
+<p><strong>从节点获取特定日志文件</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" role="tablist"><button aria-controls="panel-18-Q0xJIO+8iOaOqOiNkO+8iQ==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-18-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tab" tabindex="0">CLI （推荐）</button><button aria-controls="panel-18-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-18-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tab" tabindex="-1">Python SDK （内部开发 API）</button></div><div aria-labelledby="tab-18-Q0xJIO+8iOaOqOiNkO+8iQ==" class="sphinx-tabs-panel group-tab" id="panel-18-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get the node ID / node IP from `ray list nodes`</span>
+ray logs cluster gcs_server.out --node-id &lt;NODE_ID&gt;
+<span class="c1"># `ray logs cluster` is alias to `ray logs` when querying with globs.</span>
+ray logs gcs_server.out --node-id &lt;NODE_ID&gt;
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-18-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-18-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tabpanel" tabindex="0"><div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray.util.state</span> <span class="kn">import</span> <span class="n">get_log</span>
+
+<span class="c1"># Node IP can be retrieved from list_nodes() or ray.nodes()</span>
+<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">get_log</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s2">&quot;gcs_server.out&quot;</span><span class="p">,</span> <span class="n">node_id</span><span class="o">=&lt;</span><span class="n">NODE_ID</span><span class="o">&gt;</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></div>
+<p><strong>从节点流式传输日志文件</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" role="tablist"><button aria-controls="panel-19-Q0xJIO+8iOaOqOiNkO+8iQ==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-19-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tab" tabindex="0">CLI （推荐）</button><button aria-controls="panel-19-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-19-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tab" tabindex="-1">Python SDK （内部开发 API）</button></div><div aria-labelledby="tab-19-Q0xJIO+8iOaOqOiNkO+8iQ==" class="sphinx-tabs-panel group-tab" id="panel-19-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get the node ID / node IP from `ray list nodes`</span>
+ray logs raylet.out --node-ip &lt;NODE_IP&gt; --follow
+<span class="c1"># Or,</span>
+ray logs cluster raylet.out --node-ip &lt;NODE_IP&gt; --follow
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-19-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-19-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tabpanel" tabindex="0"><div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray.util.state</span> <span class="kn">import</span> <span class="n">get_log</span>
+
+<span class="c1"># Retrieve the Node IP from list_nodes() or ray.nodes()</span>
+<span class="c1"># The loop blocks with `follow=True`</span>
+<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">get_log</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s2">&quot;raylet.out&quot;</span><span class="p">,</span> <span class="n">node_ip</span><span class="o">=&lt;</span><span class="n">NODE_IP</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">follow</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></div>
+<p><strong>来自具有 actor id 的 actor 的流日志</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" role="tablist"><button aria-controls="panel-20-Q0xJIO+8iOaOqOiNkO+8iQ==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-20-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tab" tabindex="0">CLI （推荐）</button><button aria-controls="panel-20-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-20-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tab" tabindex="-1">Python SDK （内部开发 API）</button></div><div aria-labelledby="tab-20-Q0xJIO+8iOaOqOiNkO+8iQ==" class="sphinx-tabs-panel group-tab" id="panel-20-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ray logs actor --id<span class="o">=</span>&lt;ACTOR_ID&gt; --follow
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-20-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-20-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tabpanel" tabindex="0"><div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray.util.state</span> <span class="kn">import</span> <span class="n">get_log</span>
+
+<span class="c1"># Get the Actor&#39;s ID from the output of `ray list actors`.</span>
+<span class="c1"># The loop blocks with `follow=True`</span>
+<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">get_log</span><span class="p">(</span><span class="n">actor_id</span><span class="o">=&lt;</span><span class="n">ACTOR_ID</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">follow</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></div>
+<p><strong>来自 pid 的日志流</strong></p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" role="tablist"><button aria-controls="panel-21-Q0xJIO+8iOaOqOiNkO+8iQ==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-21-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tab" tabindex="0">CLI （推荐）</button><button aria-controls="panel-21-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-21-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tab" tabindex="-1">Python SDK （内部开发 API）</button></div><div aria-labelledby="tab-21-Q0xJIO+8iOaOqOiNkO+8iQ==" class="sphinx-tabs-panel group-tab" id="panel-21-Q0xJIO+8iOaOqOiNkO+8iQ==" name="Q0xJIO+8iOaOqOiNkO+8iQ==" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ray logs worker --pid<span class="o">=</span>&lt;PID&gt; --follow
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-21-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-21-UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" name="UHl0aG9uIFNESyDvvIjlhoXpg6jlvIDlj5EgQVBJ77yJ" role="tabpanel" tabindex="0"><div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray.util.state</span> <span class="kn">import</span> <span class="n">get_log</span>
+
+<span class="c1"># Retrieve the node IP from list_nodes() or ray.nodes()</span>
+<span class="c1"># get the PID of the worker running the Actor easily when output</span>
+<span class="c1"># of worker is directed to the driver (default)</span>
+<span class="c1"># The loop blocks with `follow=True`</span>
+<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">get_log</span><span class="p">(</span><span class="n">pid</span><span class="o">=&lt;</span><span class="n">PID</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">node_ip</span><span class="o">=&lt;</span><span class="n">NODE_IP</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">follow</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></div>
+<p>有关命令的更多详细信息，请参阅 <a class="reference internal" href="../reference/cli.html#state-api-cli-ref"><span class="std std-ref">状态 CLI 参考</span></a> 的 <code class="docutils literal notranslate"><span class="pre">ray</span> <span class="pre">logs</span></code> 命令。</p>
+</section>
+<section id="id12">
+<h4>失败语义<a class="headerlink" href="#id12" title="Permalink to this headline">#</a></h4>
+<p>State API 不保证始终返回一致或完整的集群快照。
+默认情况下，当 API 缺少输出时，所有 Python SDK 都会引发异常。
+CLI 返回部分结果并提供警告消息。在以下情况下，API 可能会丢失输出。</p>
+<p><strong>查询失败</strong></p>
+<p>状态 API 查询“数据源”（例如，GCS、raylet 等）以获取并构建集群的快照。
+然而，数据源有时不可用（例如，源已关闭或过载）。
+在这种情况下，API 返回集群的部分（不完整）快照，并通过警告消息通知用户输出不完整。
+所有警告都通过 Python 的 <code class="docutils literal notranslate"><span class="pre">warnings</span></code> 库打印，可以抑制它们。</p>
+<p><strong>数据截断</strong></p>
+<p>当返回的实体数（行数）太大（&gt; 100K）时，状态 API 会截断输出数据以确保系统稳定性（发生这种情况时，无法选择截断的数据）。
+当发生截断时， Python 的 <code class="docutils literal notranslate"><span class="pre">warnings</span></code> 模块会通知它。</p>
+<p><strong>垃圾收集资源</strong></p>
+<p>根据资源的生命周期，某些“已完成”资源无法通过 API 访问，因为它们已被垃圾收集。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>不要依赖此 API 来获取有关已完成资源的正确信息。
+例如，Ray 定期垃圾收集 DEAD 状态 Actor 数据以减少内存使用。
+或者，当其沿袭超出范围时，它会清除任务的 FINISHED 状态。</p>
+</div>
+</section>
+</section>
+<section id="api">
+<h3>API 参考<a class="headerlink" href="#api" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>有关 CLI 参考，请参阅 <a class="reference internal" href="../reference/cli.html#state-api-cli-ref"><span class="std std-ref">状态 CLI 参考</span></a>。</p></li>
+<li><p>有关 SDK 参考，请参阅 <a class="reference internal" href="../reference/api.html#state-api-ref"><span class="std std-ref">状态 API 参考</span></a>。</p></li>
+<li><p>有关日志 CLI 参考，请参阅 <a class="reference internal" href="../reference/cli.html#ray-logs-api-cli-ref"><span class="std std-ref">日志 CLI 参考</span></a>。</p></li>
+</ul>
+</section>
+</section>
+<section id="ray-cli">
+<h2>从集群外部使用 Ray CLI 工具<a class="headerlink" href="#ray-cli" title="Permalink to this headline">#</a></h2>
+<p>这些 CLI 命令必须在 Ray Cluster 中的节点上运行。下面提供了从 Ray Cluster 外部的机器执行这些命令的示例。</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-0">
+VM Cluster Launcher</label><div class="sd-tab-content docutils">
+<p>使用以下命令 <code class="docutils literal notranslate"><span class="pre">ray</span> <span class="pre">exec</span></code> 在集群上执行命令：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ ray <span class="nb">exec</span> &lt;cluster config file&gt; <span class="s2">&quot;ray status&quot;</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-1">
+KubeRay</label><div class="sd-tab-content docutils">
+<p>使用 <code class="docutils literal notranslate"><span class="pre">kubectl</span> <span class="pre">exec</span></code> 和配置的 RayCluster 名称在集群上执行命令。
+Ray 使用定位到 Ray head pod 的 Service 在集群上执行 CLI 命令。</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># First, find the name of the Ray head service.</span>
+$ kubectl get pod <span class="p">|</span> grep &lt;RayCluster name&gt;-head
+<span class="c1"># NAME                                             READY   STATUS    RESTARTS   AGE</span>
+<span class="c1"># &lt;RayCluster name&gt;-head-xxxxx                     2/2     Running   0          XXs</span>
+
+<span class="c1"># Then, use the name of the Ray head service to run `ray status`.</span>
+$ kubectl <span class="nb">exec</span> &lt;RayCluster name&gt;-head-xxxxx -- ray status
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="debug-apps/ray-debugging.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">使用 Ray 调试器</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="configure-logging.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">日志配置</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><!-- Override the footer area for the sphinx-book-theme to include the CSAT widget -->
+<div id="csat">
+  <div id="csat-feedback-received" class="csat-hidden">
+    <span>谢谢你的反馈！</span>
+  </div>
+  <div id="csat-inputs">
+    <span>是否能帮助到你？</span>
+    <div id="csat-yes" class="csat-button">
+      <svg id="csat-yes-icon" class="csat-hidden csat-icon" width="18" height="13" viewBox="0 0 18 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 10.172L16.1922 0.979004L17.6072 2.393L7.00023 13L0.63623 6.636L2.05023 5.222L7.00023 10.172Z" fill="black"/>
+      </svg>
+      <span>是<span>
+    </div>
+    <div id="csat-no" class="csat-button">
+      <svg id="csat-no-icon" class="csat-hidden csat-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 5.58599L11.9502 0.635986L13.3642 2.04999L8.41423 6.99999L13.3642 11.95L11.9502 13.364L7.00023 8.41399L2.05023 13.364L0.63623 11.95L5.58623 6.99999L0.63623 2.04999L2.05023 0.635986L7.00023 5.58599Z" fill="black"/>
+      </svg>
+      <span>否<span>
+    </div>
+  </div>
+  <div id="csat-textarea-group" class="csat-hidden">
+    <span id="csat-feedback-label">反馈</span>
+    <textarea id="csat-textarea"></textarea>
+    <div id="csat-submit">提交</div>
+  </div>
+</div><p>
+  
+    By The Ray Team<br/>
+  
+      &copy; Copyright 2024, The Ray Team.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

@@ -62,7 +62,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=83e35b93" />
     <link rel="stylesheet" type="text/css" href="../_static/material.css?v=79c92029" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/css/rtd_sphinx_search.min.css?v=fb480935" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/rtd_sphinx_search.min.css" />
     <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
     <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=15a8f09d" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
@@ -71,7 +71,7 @@
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/js/rtd_search_config.js"></script>
-    <script src="../_static/js/rtd_sphinx_search.min.js?v=60fbc683"></script>
+    <script src="../_static/js/rtd_sphinx_search.min.js"></script>
     <script src="../_static/design-tabs.js?v=36754332"></script>
     <link rel="icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -249,133 +249,161 @@
     
     
       <a href="../nav/configuration.html" class="md-nav__link">配置</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/installation.html" class="md-nav__link">安装</a>
       
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/deployments.html" class="md-nav__link">发布</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/servers.html" class="md-nav__link">服务器</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="custom.html" class="md-nav__link">自定义推理服务</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="index.html" class="md-nav__link">存储初始化</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../production/optimization.html" class="md-nav__link">推理优化</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="xgboost.html" class="md-nav__link">XGBoost 服务</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="triton.html" class="md-nav__link">Triton 推理服务</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> SKLearn 服务 </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">SKLearn 服务</a>
+      
+        
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#servers-sklearn--page-root" class="md-nav__link">SKLearn 服务</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id1" class="md-nav__link">要求</a>
+        </li>
+        <li class="md-nav__item"><a href="#id2" class="md-nav__link">使用方法</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id3" class="md-nav__link">Sklearn 预估方法</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#v2-kfserving" class="md-nav__link">V2 KFServing 协议 [孵化中]</a>
+        </li>
+        <li class="md-nav__item"><a href="#id4" class="md-nav__link">版本兼容</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#id5" class="md-nav__link">使用老版本</a>
+        </li>
+        <li class="md-nav__item"><a href="#id6" class="md-nav__link">使用不同版本的 SKLearn</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/servers/sklearn.md.txt">Show Source</a> </li>
+
+  </ul>
+</nav>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="tempo.html" class="md-nav__link">Tempo 服务</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="mlflow.html" class="md-nav__link">MLFlow 服务</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="huggingface.html" class="md-nav__link">HuggingFace Server</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="tensorflow.html" class="md-nav__link">TensorFlow 服务</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/routing.html" class="md-nav__link">路由</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/wrappers.html" class="md-nav__link">语言封装和 SDK</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../nav/config/integrations.html" class="md-nav__link">集成</a>
+      
+    
+    </li></ul>
     
     </li>
     <li class="md-nav__item">
     
     
       <a href="../nav/tutorials.html" class="md-nav__link">教程</a>
-      <ul class="md-nav__list"> 
-    <li class="md-nav__item">
-    
-    
-      <a href="../examples/notebooks.html" class="md-nav__link">笔记本</a>
-      <ul class="md-nav__list"> 
-    <li class="md-nav__item">
-    
-    
-      <a href="../examples/notebooks.html#seldon-core" class="md-nav__link">Seldon Core 设置</a>
       
-    
-    </li>
-    <li class="md-nav__item">
-    
-    
-      <a href="../examples/notebooks.html#id2" class="md-nav__link">预包装推理服务示例</a>
-      
-    
-    </li>
-    <li class="md-nav__item">
-    
-    
-      <a href="../examples/notebooks.html#python" class="md-nav__link">Python 语言封装示例</a>
-      
-    
-    </li>
-    <li class="md-nav__item">
-    
-    
-      <a href="../examples/notebooks.html#id3" class="md-nav__link">专门的框架示例</a>
-      
-    
-    </li>
-    <li class="md-nav__item">
-    
-    
-      <a href="../examples/notebooks.html#id4" class="md-nav__link">孵化项目示例</a>
-      
-    
-    </li>
-    <li class="md-nav__item">
-    
-    
-      <a href="../examples/notebooks.html#id5" class="md-nav__link">基于云的基础示例</a>
-      
-    
-    </li>
-    <li class="md-nav__item">
-    
-    
-      <a href="../examples/notebooks.html#id6" class="md-nav__link">高级机器学习监控</a>
-      
-    
-    </li>
-    <li class="md-nav__item">
-    
-    
-      <a href="../examples/notebooks.html#id7" class="md-nav__link">Seldon Core 批处理</a>
-      
-    
-    </li>
-    <li class="md-nav__item">
-    
-    
-      <a href="../examples/notebooks.html#mlops" class="md-nav__link">MLOps: 扩展、监控和可观察性</a>
-      
-    
-    </li>
-    <li class="md-nav__item">
-    
-    
-      <a href="../examples/notebooks.html#id8" class="md-nav__link">生产配置及实现</a>
-      
-    
-    </li>
-    <li class="md-nav__item">
-    
-    
-      <a href="../examples/notebooks.html#ab" class="md-nav__link">AB 测试及渐进式部署</a>
-      
-    
-    </li>
-    <li class="md-nav__item">
-    
-    
-      <a href="../examples/notebooks.html#id9" class="md-nav__link">复杂图示例</a>
-      
-    
-    </li>
-    <li class="md-nav__item">
-    
-    
-      <a href="../examples/notebooks.html#id10" class="md-nav__link">入口</a>
-      
-    
-    </li>
-    <li class="md-nav__item">
-    
-    
-      <a href="../examples/notebooks.html#id11" class="md-nav__link">基础设施</a>
-      
-    
-    </li>
-    <li class="md-nav__item">
-    
-    
-      <a href="../examples/notebooks.html#id12" class="md-nav__link">基准测试和负载测试</a>
-      
-    
-    </li>
-    <li class="md-nav__item">
-    
-    
-      <a href="../examples/notebooks.html#id13" class="md-nav__link">升级示例</a>
-      
-    
-    </li></ul>
-    
-    </li></ul>
     
     </li>
     <li class="md-nav__item">

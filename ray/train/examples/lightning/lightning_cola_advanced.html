@@ -1,0 +1,1130 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Fine-tune a PyTorch Lightning Text Classifier with Ray Data &#8212; Ray 2.7.2</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/termynal.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/js/versionwarning.js"></script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+    <script defer="defer" src="../../../_static/js/docsearch.js"></script>
+    <script defer="defer" src="../../../_static/js/csat.js"></script>
+    <script defer="defer" src="../../../_static/js/termynal.js"></script>
+    <script defer="defer" src="../../../_static/js/custom.js"></script>
+    <script defer="defer" src="../../../_static/js/top-navigation.js"></script>
+    <script src="../../../_static/js/tags.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <link rel="canonical" href="https://docs.ray.io/en/latest/train/examples/lightning/lightning_cola_advanced.html" />
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+
+<!-- Fathom - beautiful, simple website analytics -->
+<script src="https://deer.ray.io/script.js" data-site="WYYANYOS" defer></script>
+<!-- / Fathom -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-110413294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-110413294-1');
+</script>
+
+<script
+  src="https://widget.kapa.ai/kapa-widget.bundle.js"
+  data-website-id="18a8c339-4ec5-43c8-8182-db3f2bc8c6b6"
+  data-project-name="Ray"
+  data-project-color="#2C2C2C"
+  data-project-logo="https://global.discourse-cdn.com/business7/uploads/ray/original/1X/8f4dcb72f7cd34e2a332d548bd65860994bc8ff1.png"
+  data-modal-disclaimer = "Results are automated and may be incorrect or contain inappropriate information. Do not include any personal data or confidential information."
+  data-modal-title = "Ray Docs AI - Ask a Question"
+  data-button-position-bottom = "60px"
+></script>
+
+<script>
+(function(apiKey){
+    (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
+    v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
+        o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
+        y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
+        z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
+
+        pendo.initialize({
+            visitor: {
+                id: 'VISITOR-UNIQUE-ID'
+            },
+            account: {
+                id: 'ACCOUNT-UNIQUE-ID'
+            }
+        });
+})('f89fa48a-6dd7-4d7c-67cf-a8051ed891f2');
+</script>
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"><div class='topnav'></div></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Ray 2.7.2</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main Navigation">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../index.html">
+                    欢迎来到 Ray ！
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Ray
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/index.html">
+   概述「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/getting-started.html">
+   入门
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/installation.html">
+   安装「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/use-cases.html">
+   用例「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/examples.html">
+   示例库「1%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-overview/ray-libraries.html">
+   生态「3%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-core/walkthrough.html">
+   Ray 核心「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../data/data.html">
+   Ray 数据「75%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../train.html">
+   Ray 训练「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../tune/index.html">
+   Ray 调参「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../serve/index.html">
+   Ray Serve
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../rllib/index.html">
+   Ray RLlib
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-more-libs/index.html">
+   更多类库「40%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../cluster/getting-started.html">
+   Ray 集群「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-observability/index.html">
+   监控调试「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-references/api.html">
+   参考「20%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-contribute/index.html">
+   开发者指引「30%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../ray-security/index.html">
+   安全「100%」
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/ray-project/ray"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/issues/new?title=Issue%20on%20page%20%2Ftrain/examples/lightning/lightning_cola_advanced.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/edit/master/doc/source/train/examples/lightning/lightning_cola_advanced.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../../_sources/train/examples/lightning/lightning_cola_advanced.ipynb.txt"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#pre-process-cola-dataset">
+   Pre-process CoLA Dataset
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#define-a-pytorch-lightning-model">
+   Define a PyTorch Lightning model
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#define-a-training-function">
+   Define a training function
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#distributed-training-with-ray-torchtrainer">
+   Distributed training with Ray TorchTrainer
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#see-also">
+   See also
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Fine-tune a PyTorch Lightning Text Classifier with Ray Data</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#pre-process-cola-dataset">
+   Pre-process CoLA Dataset
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#define-a-pytorch-lightning-model">
+   Define a PyTorch Lightning model
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#define-a-training-function">
+   Define a training function
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#distributed-training-with-ray-torchtrainer">
+   Distributed training with Ray TorchTrainer
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#see-also">
+   See also
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="fine-tune-a-pytorch-lightning-text-classifier-with-ray-data">
+<span id="lightning-advanced-example"></span><h1>Fine-tune a PyTorch Lightning Text Classifier with Ray Data<a class="headerlink" href="#fine-tune-a-pytorch-lightning-text-classifier-with-ray-data" title="Permalink to this headline">#</a></h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is an intermediate example demonstrates how to use <a class="reference internal" href="../../../data/data.html#data"><span class="std std-ref">Ray Data</span></a> with PyTorch Lightning in Ray Train.</p>
+<p>If you just want to quickly convert your existing PyTorch Lightning scripts into Ray Train, you can refer to the <a class="reference internal" href="../../getting-started-pytorch-lightning.html#train-pytorch-lightning"><span class="std std-ref">Lightning Quick Start Guide</span></a>.</p>
+</div>
+<p>This demo introduces how to fine-tune a text classifier on the <a class="reference external" href="https://nyu-mll.github.io/CoLA/">CoLA(The Corpus of Linguistic Acceptability)</a> dataset using a pre-trained BERT model. In particular, it follows three steps:</p>
+<ul class="simple">
+<li><p>Preprocess the CoLA dataset with Ray Data.</p></li>
+<li><p>Define a training function with PyTorch Lightning.</p></li>
+<li><p>Launch distributed training with Ray Train’s TorchTrainer.</p></li>
+</ul>
+<p>Run the following line in order to install all the necessary dependencies:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip install numpy datasets <span class="s2">&quot;transformers&gt;=4.19.1&quot;</span> <span class="s2">&quot;pytorch_lightning&gt;=1.6.5&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Start by importing the needed libraries:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ray</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pytorch_lightning</span> <span class="k">as</span> <span class="nn">pl</span>
+<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
+<span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span><span class="p">,</span> <span class="n">random_split</span>
+<span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">AutoTokenizer</span><span class="p">,</span> <span class="n">AutoModelForSequenceClassification</span>
+<span class="kn">from</span> <span class="nn">datasets</span> <span class="kn">import</span> <span class="n">load_dataset</span><span class="p">,</span> <span class="n">load_metric</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-08-14 16:45:51.059256: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F AVX512_VNNI FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2023-08-14 16:45:51.198481: I tensorflow/core/util/port.cc:104] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2023-08-14 16:45:52.005931: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#39;libnvinfer.so.7&#39;; dlerror: libnvinfer.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /usr/local/nvidia/lib:/usr/local/nvidia/lib64
+2023-08-14 16:45:52.006010: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#39;libnvinfer_plugin.so.7&#39;; dlerror: libnvinfer_plugin.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /usr/local/nvidia/lib:/usr/local/nvidia/lib64
+2023-08-14 16:45:52.006015: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Cannot dlopen some TensorRT libraries. If you would like to use Nvidia GPU with TensorRT, please make sure the missing libraries mentioned above are installed properly.
+</pre></div>
+</div>
+</div>
+</div>
+<section id="pre-process-cola-dataset">
+<h2>Pre-process CoLA Dataset<a class="headerlink" href="#pre-process-cola-dataset" title="Permalink to this headline">#</a></h2>
+<p>CoLA is a dataset for binary sentence classification with 10.6K training examples. First, download the dataset and metrics using the Hugging Face datasets API, and create a Ray Dataset for each split accordingly.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dataset</span> <span class="o">=</span> <span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;glue&quot;</span><span class="p">,</span> <span class="s2">&quot;cola&quot;</span><span class="p">)</span>
+
+<span class="n">train_dataset</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">from_huggingface</span><span class="p">(</span><span class="n">dataset</span><span class="p">[</span><span class="s2">&quot;train&quot;</span><span class="p">])</span>
+<span class="n">validation_dataset</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">from_huggingface</span><span class="p">(</span><span class="n">dataset</span><span class="p">[</span><span class="s2">&quot;validation&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next, tokenize the input sentences and pad the ID sequence to length 128 using the <code class="docutils literal notranslate"><span class="pre">bert-base-uncased</span></code> tokenizer. The <a class="reference internal" href="../../../data/api/doc/ray.data.Dataset.map_batches.html#ray.data.Dataset.map_batches" title="ray.data.Dataset.map_batches"><code class="xref py py-meth docutils literal notranslate"><span class="pre">map_batches</span></code></a> applies this preprocessing function on all data samples.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s2">&quot;bert-base-cased&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">tokenize_sentence</span><span class="p">(</span><span class="n">batch</span><span class="p">):</span>
+    <span class="n">outputs</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="p">(</span>
+        <span class="n">batch</span><span class="p">[</span><span class="s2">&quot;sentence&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+        <span class="n">max_length</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span>
+        <span class="n">truncation</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">padding</span><span class="o">=</span><span class="s2">&quot;max_length&quot;</span><span class="p">,</span>
+        <span class="n">return_tensors</span><span class="o">=</span><span class="s2">&quot;np&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">outputs</span>
+
+<span class="n">train_dataset</span> <span class="o">=</span> <span class="n">train_dataset</span><span class="o">.</span><span class="n">map_batches</span><span class="p">(</span><span class="n">tokenize_sentence</span><span class="p">,</span> <span class="n">batch_format</span><span class="o">=</span><span class="s2">&quot;numpy&quot;</span><span class="p">)</span>
+<span class="n">validation_dataset</span> <span class="o">=</span> <span class="n">validation_dataset</span><span class="o">.</span><span class="n">map_batches</span><span class="p">(</span><span class="n">tokenize_sentence</span><span class="p">,</span> <span class="n">batch_format</span><span class="o">=</span><span class="s2">&quot;numpy&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="define-a-pytorch-lightning-model">
+<h2>Define a PyTorch Lightning model<a class="headerlink" href="#define-a-pytorch-lightning-model" title="Permalink to this headline">#</a></h2>
+<p>You don’t have to make any changes to your <code class="docutils literal notranslate"><span class="pre">LightningModule</span></code> definition. Just copy and paste your code here:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">SentimentModel</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">LightningModule</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">2e-5</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lr</span> <span class="o">=</span> <span class="n">lr</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eps</span> <span class="o">=</span> <span class="n">eps</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">AutoModelForSequenceClassification</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span>
+            <span class="s2">&quot;bert-base-cased&quot;</span><span class="p">,</span> <span class="n">num_labels</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">=</span> <span class="n">load_metric</span><span class="p">(</span><span class="s2">&quot;glue&quot;</span><span class="p">,</span> <span class="s2">&quot;cola&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">predictions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">references</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">):</span>
+        <span class="n">input_ids</span><span class="p">,</span> <span class="n">attention_mask</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="s2">&quot;input_ids&quot;</span><span class="p">],</span> <span class="n">batch</span><span class="p">[</span><span class="s2">&quot;attention_mask&quot;</span><span class="p">]</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">input_ids</span><span class="p">,</span> <span class="n">attention_mask</span><span class="o">=</span><span class="n">attention_mask</span><span class="p">)</span>
+        <span class="n">logits</span> <span class="o">=</span> <span class="n">outputs</span><span class="o">.</span><span class="n">logits</span>
+        <span class="k">return</span> <span class="n">logits</span>
+
+    <span class="k">def</span> <span class="nf">training_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">batch_idx</span><span class="p">):</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span>
+        <span class="n">logits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">cross_entropy</span><span class="p">(</span><span class="n">logits</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span><span class="p">),</span> <span class="n">labels</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;train_loss&quot;</span><span class="p">,</span> <span class="n">loss</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">loss</span>
+
+    <span class="k">def</span> <span class="nf">validation_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">batch_idx</span><span class="p">):</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span>
+        <span class="n">logits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+        <span class="n">preds</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">predictions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">preds</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">references</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">on_validation_epoch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">predictions</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predictions</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">references</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">references</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">matthews_correlation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span>
+            <span class="n">predictions</span><span class="o">=</span><span class="n">predictions</span><span class="p">,</span> <span class="n">references</span><span class="o">=</span><span class="n">references</span>
+        <span class="p">)</span>
+
+        <span class="c1"># self.metric.compute() returns a dictionary:</span>
+        <span class="c1"># e.g. {&quot;matthews_correlation&quot;: 0.53}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_dict</span><span class="p">(</span><span class="n">matthews_correlation</span><span class="p">,</span> <span class="n">sync_dist</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">predictions</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">references</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">configure_optimizers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">AdamW</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">eps</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="define-a-training-function">
+<h2>Define a training function<a class="headerlink" href="#define-a-training-function" title="Permalink to this headline">#</a></h2>
+<p>Define a <a class="reference internal" href="../../overview.html#train-overview-training-function"><span class="std std-ref">training function</span></a> that includes all of your lightning training logic. <a class="reference internal" href="../../api/doc/ray.train.torch.TorchTrainer.html#ray.train.torch.TorchTrainer" title="ray.train.torch.TorchTrainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">TorchTrainer</span></code></a> launches this function on each worker in parallel.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ray.train</span>
+<span class="kn">from</span> <span class="nn">ray.train.lightning</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">prepare_trainer</span><span class="p">,</span>
+    <span class="n">RayDDPStrategy</span><span class="p">,</span>
+    <span class="n">RayLightningEnvironment</span><span class="p">,</span>
+    <span class="n">RayTrainReportCallback</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">train_func_config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;lr&quot;</span><span class="p">:</span> <span class="mf">1e-5</span><span class="p">,</span>
+    <span class="s2">&quot;eps&quot;</span><span class="p">:</span> <span class="mf">1e-8</span><span class="p">,</span>
+    <span class="s2">&quot;batch_size&quot;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+    <span class="s2">&quot;max_epochs&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="k">def</span> <span class="nf">train_func</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+    <span class="c1"># Unpack the input configs passed from `TorchTrainer(train_loop_config)`</span>
+    <span class="n">lr</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;lr&quot;</span><span class="p">]</span>
+    <span class="n">eps</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;eps&quot;</span><span class="p">]</span>
+    <span class="n">batch_size</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;batch_size&quot;</span><span class="p">]</span>
+    <span class="n">max_epochs</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;max_epochs&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Fetch the Dataset shards</span>
+    <span class="n">train_ds</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">get_dataset_shard</span><span class="p">(</span><span class="s2">&quot;train&quot;</span><span class="p">)</span>
+    <span class="n">val_ds</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">get_dataset_shard</span><span class="p">(</span><span class="s2">&quot;validation&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Create a dataloader for Ray Datasets</span>
+    <span class="n">train_ds_loader</span> <span class="o">=</span> <span class="n">train_ds</span><span class="o">.</span><span class="n">iter_torch_batches</span><span class="p">(</span><span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">)</span>
+    <span class="n">val_ds_loader</span> <span class="o">=</span> <span class="n">val_ds</span><span class="o">.</span><span class="n">iter_torch_batches</span><span class="p">(</span><span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">)</span>
+
+    <span class="c1"># Model</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">SentimentModel</span><span class="p">(</span><span class="n">lr</span><span class="o">=</span><span class="n">lr</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="n">eps</span><span class="p">)</span>
+
+    <span class="n">trainer</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Trainer</span><span class="p">(</span>
+        <span class="n">max_epochs</span><span class="o">=</span><span class="n">max_epochs</span><span class="p">,</span>
+        <span class="n">accelerator</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+        <span class="n">devices</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+        <span class="n">strategy</span><span class="o">=</span><span class="n">RayDDPStrategy</span><span class="p">(),</span>
+        <span class="n">plugins</span><span class="o">=</span><span class="p">[</span><span class="n">RayLightningEnvironment</span><span class="p">()],</span>
+        <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">RayTrainReportCallback</span><span class="p">()],</span>
+        <span class="n">enable_progress_bar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">trainer</span> <span class="o">=</span> <span class="n">prepare_trainer</span><span class="p">(</span><span class="n">trainer</span><span class="p">)</span>
+
+    <span class="n">trainer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">train_dataloaders</span><span class="o">=</span><span class="n">train_ds_loader</span><span class="p">,</span> <span class="n">val_dataloaders</span><span class="o">=</span><span class="n">val_ds_loader</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>To enable distributed training with Ray Train, configure the Lightning Trainer with the following utilities:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../api/doc/ray.train.lightning.RayDDPStrategy.html#ray.train.lightning.RayDDPStrategy" title="ray.train.lightning.RayDDPStrategy"><code class="xref py py-class docutils literal notranslate"><span class="pre">RayDDPStrategy</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../api/doc/ray.train.lightning.RayLightningEnvironment.html#ray.train.lightning.RayLightningEnvironment" title="ray.train.lightning.RayLightningEnvironment"><code class="xref py py-class docutils literal notranslate"><span class="pre">RayLightningEnvironment</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../api/doc/ray.train.lightning.RayTrainReportCallback.html#ray.train.lightning.RayTrainReportCallback" title="ray.train.lightning.RayTrainReportCallback"><code class="xref py py-class docutils literal notranslate"><span class="pre">RayTrainReportCallback</span></code></a></p></li>
+</ul>
+<p>To ingest Ray Data with Lightning Trainer, follow these three steps:</p>
+<ul class="simple">
+<li><p>Feed the full Ray dataset to Ray <code class="docutils literal notranslate"><span class="pre">TorchTrainer</span></code> (details in the next section).</p></li>
+<li><p>Use <a class="reference internal" href="../../api/doc/ray.train.get_dataset_shard.html#ray.train.get_dataset_shard" title="ray.train.get_dataset_shard"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ray.train.get_dataset_shard</span></code></a> to fetch the sharded dataset on each worker.</p></li>
+<li><p>Use <a class="reference internal" href="../../../data/api/doc/ray.data.Dataset.iter_torch_batches.html#ray.data.Dataset.iter_torch_batches" title="ray.data.Dataset.iter_torch_batches"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ds.iter_torch_batches</span></code></a> to create a Ray data loader for Lightning Trainer.</p></li>
+</ul>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../getting-started-pytorch-lightning.html#train-pytorch-lightning"><span class="std std-ref">Lightning Quick Start Guide</span></a></p></li>
+<li><p><a class="reference internal" href="../../user-guides/data-loading-preprocessing.html#data-ingest-torch"><span class="std std-ref">User Guides for Ray Data</span></a></p></li>
+</ul>
+</div>
+</section>
+<section id="distributed-training-with-ray-torchtrainer">
+<h2>Distributed training with Ray TorchTrainer<a class="headerlink" href="#distributed-training-with-ray-torchtrainer" title="Permalink to this headline">#</a></h2>
+<p>Next, define a <a class="reference internal" href="../../api/doc/ray.train.torch.TorchTrainer.html#ray.train.torch.TorchTrainer" title="ray.train.torch.TorchTrainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">TorchTrainer</span></code></a> to launch your training function on 4 GPU workers.</p>
+<p>You can pass the full Ray dataset to the <code class="docutils literal notranslate"><span class="pre">datasets</span></code> argument of <code class="docutils literal notranslate"><span class="pre">TorchTrainer</span></code>. TorchTrainer automatically shards the datasets among multiple workers.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray.train.torch</span> <span class="kn">import</span> <span class="n">TorchTrainer</span>
+<span class="kn">from</span> <span class="nn">ray.train</span> <span class="kn">import</span> <span class="n">RunConfig</span><span class="p">,</span> <span class="n">ScalingConfig</span><span class="p">,</span> <span class="n">CheckpointConfig</span><span class="p">,</span> <span class="n">DataConfig</span>
+
+
+<span class="c1"># Save the top-2 checkpoints according to the evaluation metric</span>
+<span class="c1"># The checkpoints and metrics are reported by `RayTrainReportCallback`</span>
+<span class="n">run_config</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;ptl-sent-classification&quot;</span><span class="p">,</span>
+    <span class="n">checkpoint_config</span><span class="o">=</span><span class="n">CheckpointConfig</span><span class="p">(</span>
+        <span class="n">num_to_keep</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">checkpoint_score_attribute</span><span class="o">=</span><span class="s2">&quot;matthews_correlation&quot;</span><span class="p">,</span>
+        <span class="n">checkpoint_score_order</span><span class="o">=</span><span class="s2">&quot;max&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+
+<span class="c1"># Schedule four workers for DDP training (1 GPU/worker by default)</span>
+<span class="n">scaling_config</span> <span class="o">=</span> <span class="n">ScalingConfig</span><span class="p">(</span><span class="n">num_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">use_gpu</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">TorchTrainer</span><span class="p">(</span>
+    <span class="n">train_loop_per_worker</span><span class="o">=</span><span class="n">train_func</span><span class="p">,</span>
+    <span class="n">train_loop_config</span><span class="o">=</span><span class="n">train_func_config</span><span class="p">,</span>
+    <span class="n">scaling_config</span><span class="o">=</span><span class="n">scaling_config</span><span class="p">,</span>
+    <span class="n">run_config</span><span class="o">=</span><span class="n">run_config</span><span class="p">,</span>
+    <span class="n">datasets</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;train&quot;</span><span class="p">:</span> <span class="n">train_dataset</span><span class="p">,</span> <span class="s2">&quot;validation&quot;</span><span class="p">:</span> <span class="n">validation_dataset</span><span class="p">},</span> <span class="c1"># &lt;- Feed the Ray Datasets here</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class="tuneStatus">
+  <div style="display: flex;flex-direction: row">
+    <div style="display: flex;flex-direction: column;">
+      <h3>Tune Status</h3>
+      <table>
+<tbody>
+<tr><td>Current time:</td><td>2023-08-14 16:51:48</td></tr>
+<tr><td>Running for: </td><td>00:05:50.88        </td></tr>
+<tr><td>Memory:      </td><td>34.5/186.6 GiB     </td></tr>
+</tbody>
+</table>
+    </div>
+    <div class="vDivider"></div>
+    <div class="systemInfo">
+      <h3>System Info</h3>
+      Using FIFO scheduling algorithm.<br>Logical resource usage: 1.0/48 CPUs, 4.0/4 GPUs
+    </div>
+
+  </div>
+  <div class="hDivider"></div>
+  <div class="trialStatus">
+    <h3>Trial Status</h3>
+    <table>
+<thead>
+<tr><th>Trial name              </th><th>status    </th><th>loc               </th><th style="text-align: right;">  iter</th><th style="text-align: right;">  total time (s)</th><th style="text-align: right;">  train_loss</th><th style="text-align: right;">  matthews_correlation</th><th style="text-align: right;">  epoch</th></tr>
+</thead>
+<tbody>
+<tr><td>TorchTrainer_b723f_00000</td><td>TERMINATED</td><td>10.0.63.245:150507</td><td style="text-align: right;">     5</td><td style="text-align: right;">         337.748</td><td style="text-align: right;">   0.0199119</td><td style="text-align: right;">              0.577705</td><td style="text-align: right;">      4</td></tr>
+</tbody>
+</table>
+  </div>
+</div>
+<style>
+.tuneStatus {
+  color: var(--jp-ui-font-color1);
+}
+.tuneStatus .systemInfo {
+  display: flex;
+  flex-direction: column;
+}
+.tuneStatus td {
+  white-space: nowrap;
+}
+.tuneStatus .trialStatus {
+  display: flex;
+  flex-direction: column;
+}
+.tuneStatus h3 {
+  font-weight: bold;
+}
+.tuneStatus .hDivider {
+  border-bottom-width: var(--jp-border-width);
+  border-bottom-color: var(--jp-border-color0);
+  border-bottom-style: solid;
+}
+.tuneStatus .vDivider {
+  border-left-width: var(--jp-border-width);
+  border-left-color: var(--jp-border-color0);
+  border-left-style: solid;
+  margin: 0.5em 1em 0.5em 1em;
+}
+</style>
+</div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Faint -Color-Faint-Cyan">(TrainTrainable pid=150507)</span> 2023-08-14 16:46:02.166995: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F AVX512_VNNI FMA
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(TrainTrainable pid=150507)</span> To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(TrainTrainable pid=150507)</span> 2023-08-14 16:46:02.306203: I tensorflow/core/util/port.cc:104] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(TrainTrainable pid=150507)</span> 2023-08-14 16:46:03.087593: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#39;libnvinfer.so.7&#39;; dlerror: libnvinfer.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /usr/local/nvidia/lib:/usr/local/nvidia/lib64
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(TrainTrainable pid=150507)</span> 2023-08-14 16:46:03.087670: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#39;libnvinfer_plugin.so.7&#39;; dlerror: libnvinfer_plugin.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /usr/local/nvidia/lib:/usr/local/nvidia/lib64
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(TrainTrainable pid=150507)</span> 2023-08-14 16:46:03.087677: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Cannot dlopen some TensorRT libraries. If you would like to use Nvidia GPU with TensorRT, please make sure the missing libraries mentioned above are installed properly.
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(TorchTrainer pid=150507)</span> Starting distributed worker processes: [&#39;150618 (10.0.63.245)&#39;, &#39;150619 (10.0.63.245)&#39;, &#39;150620 (10.0.63.245)&#39;, &#39;150621 (10.0.63.245)&#39;]
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150618)</span> Setting up process group for: env:// [rank=0, world_size=4]
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(SplitCoordinator pid=150822)</span> Auto configuring locality_with_output=[&#39;d4dd34cdb4b35e8b1e0f1ab4187b66ed900ab78de951f03e1125233b&#39;, &#39;d4dd34cdb4b35e8b1e0f1ab4187b66ed900ab78de951f03e1125233b&#39;, &#39;d4dd34cdb4b35e8b1e0f1ab4187b66ed900ab78de951f03e1125233b&#39;, &#39;d4dd34cdb4b35e8b1e0f1ab4187b66ed900ab78de951f03e1125233b&#39;]
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150620)</span> 2023-08-14 16:46:10.311338: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F AVX512_VNNI FMA
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150620)</span> To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150618)</span> 2023-08-14 16:46:10.408092: I tensorflow/core/util/port.cc:104] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150620)</span> 2023-08-14 16:46:11.238415: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#39;libnvinfer.so.7&#39;; dlerror: libnvinfer.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /usr/local/nvidia/lib:/usr/local/nvidia/lib64
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150620)</span> 2023-08-14 16:46:11.238492: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#39;libnvinfer_plugin.so.7&#39;; dlerror: libnvinfer_plugin.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /usr/local/nvidia/lib:/usr/local/nvidia/lib64
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150620)</span> 2023-08-14 16:46:11.238500: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Cannot dlopen some TensorRT libraries. If you would like to use Nvidia GPU with TensorRT, please make sure the missing libraries mentioned above are installed properly.
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150620)</span> Some weights of the model checkpoint at bert-base-cased were not used when initializing BertForSequenceClassification: [&#39;cls.predictions.transform.LayerNorm.bias&#39;, &#39;cls.predictions.bias&#39;, &#39;cls.predictions.transform.dense.bias&#39;, &#39;cls.predictions.decoder.weight&#39;, &#39;cls.seq_relationship.weight&#39;, &#39;cls.predictions.transform.dense.weight&#39;, &#39;cls.predictions.transform.LayerNorm.weight&#39;, &#39;cls.seq_relationship.bias&#39;]
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150620)</span> - This IS expected if you are initializing BertForSequenceClassification from the checkpoint of a model trained on another task or with another architecture (e.g. initializing a BertForSequenceClassification model from a BertForPreTraining model).
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150620)</span> - This IS NOT expected if you are initializing BertForSequenceClassification from the checkpoint of a model that you expect to be exactly identical (initializing a BertForSequenceClassification model from a BertForSequenceClassification model).
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150620)</span> Some weights of BertForSequenceClassification were not initialized from the model checkpoint at bert-base-cased and are newly initialized: [&#39;classifier.weight&#39;, &#39;classifier.bias&#39;]
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150620)</span> You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150621)</span> Some weights of the model checkpoint at bert-base-cased were not used when initializing BertForSequenceClassification: [&#39;cls.predictions.transform.LayerNorm.bias&#39;, &#39;cls.predictions.decoder.weight&#39;, &#39;cls.predictions.transform.dense.weight&#39;, &#39;cls.predictions.transform.dense.bias&#39;, &#39;cls.seq_relationship.weight&#39;, &#39;cls.seq_relationship.bias&#39;, &#39;cls.predictions.transform.LayerNorm.weight&#39;, &#39;cls.predictions.bias&#39;]
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150621)</span> Some weights of BertForSequenceClassification were not initialized from the model checkpoint at bert-base-cased and are newly initialized: [&#39;classifier.bias&#39;, &#39;classifier.weight&#39;]
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150619)</span> Some weights of the model checkpoint at bert-base-cased were not used when initializing BertForSequenceClassification: [&#39;cls.seq_relationship.bias&#39;, &#39;cls.predictions.transform.LayerNorm.weight&#39;, &#39;cls.predictions.bias&#39;, &#39;cls.predictions.transform.dense.bias&#39;, &#39;cls.predictions.decoder.weight&#39;, &#39;cls.seq_relationship.weight&#39;, &#39;cls.predictions.transform.LayerNorm.bias&#39;, &#39;cls.predictions.transform.dense.weight&#39;]
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150618)</span> Some weights of the model checkpoint at bert-base-cased were not used when initializing BertForSequenceClassification: [&#39;cls.seq_relationship.bias&#39;, &#39;cls.predictions.transform.dense.bias&#39;, &#39;cls.predictions.decoder.weight&#39;, &#39;cls.predictions.transform.LayerNorm.weight&#39;, &#39;cls.predictions.bias&#39;, &#39;cls.predictions.transform.dense.weight&#39;, &#39;cls.seq_relationship.weight&#39;, &#39;cls.predictions.transform.LayerNorm.bias&#39;]
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150618)</span> GPU available: True, used: True
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150618)</span> TPU available: False, using: 0 TPU cores
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150618)</span> IPU available: False, using: 0 IPUs
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150618)</span> HPU available: False, using: 0 HPUs
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150621)</span> Missing logger folder: /home/ray/ray_results/ptl-sent-classification/TorchTrainer_b723f_00000_0_2023-08-14_16-45-57/rank_3/lightning_logs
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150620)</span> LOCAL_RANK: 2 - CUDA_VISIBLE_DEVICES: [0,1,2,3]
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150621)</span> 2023-08-14 16:46:10.337167: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F AVX512_VNNI FMA<span class=" -Color -Color-Green"> [repeated 3x across cluster] (Ray deduplicates logs by default. Set RAY_DEDUP_LOGS=0 to disable log deduplication, or see https://docs.ray.io/en/master/ray-observability/ray-logging.html#log-deduplication for more options.)</span>
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150621)</span> To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.<span class=" -Color -Color-Green"> [repeated 3x across cluster]</span>
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150621)</span> 2023-08-14 16:46:10.467812: I tensorflow/core/util/port.cc:104] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.<span class=" -Color -Color-Green"> [repeated 3x across cluster]</span>
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150621)</span> 2023-08-14 16:46:11.270123: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#39;libnvinfer_plugin.so.7&#39;; dlerror: libnvinfer_plugin.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /usr/local/nvidia/lib:/usr/local/nvidia/lib64<span class=" -Color -Color-Green"> [repeated 6x across cluster]</span>
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150621)</span> 2023-08-14 16:46:11.270131: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Cannot dlopen some TensorRT libraries. If you would like to use Nvidia GPU with TensorRT, please make sure the missing libraries mentioned above are installed properly.<span class=" -Color -Color-Green"> [repeated 3x across cluster]</span>
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150618)</span> 
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150618)</span>   | Name  | Type                          | Params
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150618)</span> --------------------------------------------------------
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150618)</span> 0 | model | BertForSequenceClassification | 108 M 
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150618)</span> --------------------------------------------------------
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150618)</span> 108 M     Trainable params
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150618)</span> 0         Non-trainable params
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150618)</span> 108 M     Total params
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150618)</span> 433.247   Total estimated model params size (MB)
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "9855485835db46d5be3df9ad8aeef168", "version_major": 2, "version_minor": 0}
+</script><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150620)</span> Executing DAG InputDataBuffer[Input] -&gt; TaskPoolMapOperator[MapBatches(tokenize_sentence)]
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150620)</span> Execution config: ExecutionOptions(resource_limits=ExecutionResources(cpu=None, gpu=None, object_store_memory=2000000000.0), locality_with_output=True, preserve_order=False, actor_locality_enabled=True, verbose_progress=False)
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150620)</span> Tip: For detailed progress reporting, run `ray.data.DataContext.get_current().execution_options.verbose_progress = True`
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "319d63c5ab5b4fdcb83f40b6250e2aa8", "version_major": 2, "version_minor": 0}
+</script><script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "d33b2a67421a4472b09e391cb19eac01", "version_major": 2, "version_minor": 0}
+</script><script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "9fd5becbccf448139cd5906118711ce9", "version_major": 2, "version_minor": 0}
+</script><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Faint -Color-Faint-Cyan">(SplitCoordinator pid=150822)</span> Executing DAG InputDataBuffer[Input] -&gt; TaskPoolMapOperator[MapBatches(tokenize_sentence)] -&gt; OutputSplitter[split(4, equal=True)]
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(SplitCoordinator pid=150822)</span> Execution config: ExecutionOptions(resource_limits=ExecutionResources(cpu=None, gpu=None, object_store_memory=2000000000.0), locality_with_output=[&#39;d4dd34cdb4b35e8b1e0f1ab4187b66ed900ab78de951f03e1125233b&#39;, &#39;d4dd34cdb4b35e8b1e0f1ab4187b66ed900ab78de951f03e1125233b&#39;, &#39;d4dd34cdb4b35e8b1e0f1ab4187b66ed900ab78de951f03e1125233b&#39;, &#39;d4dd34cdb4b35e8b1e0f1ab4187b66ed900ab78de951f03e1125233b&#39;], preserve_order=False, actor_locality_enabled=True, verbose_progress=False)
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150618)</span> - This IS expected if you are initializing BertForSequenceClassification from the checkpoint of a model trained on another task or with another architecture (e.g. initializing a BertForSequenceClassification model from a BertForPreTraining model).<span class=" -Color -Color-Green"> [repeated 3x across cluster]</span>
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150618)</span> - This IS NOT expected if you are initializing BertForSequenceClassification from the checkpoint of a model that you expect to be exactly identical (initializing a BertForSequenceClassification model from a BertForSequenceClassification model).<span class=" -Color -Color-Green"> [repeated 3x across cluster]</span>
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150619)</span> Some weights of BertForSequenceClassification were not initialized from the model checkpoint at bert-base-cased and are newly initialized: [&#39;classifier.weight&#39;, &#39;classifier.bias&#39;]
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150618)</span> You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.<span class=" -Color -Color-Green"> [repeated 3x across cluster]</span>
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150618)</span> Some weights of BertForSequenceClassification were not initialized from the model checkpoint at bert-base-cased and are newly initialized: [&#39;classifier.bias&#39;, &#39;classifier.weight&#39;]
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150620)</span> Missing logger folder: /home/ray/ray_results/ptl-sent-classification/TorchTrainer_b723f_00000_0_2023-08-14_16-45-57/rank_2/lightning_logs<span class=" -Color -Color-Green"> [repeated 3x across cluster]</span>
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "4929168d51234b51b9e0ab72c30d6ae3", "version_major": 2, "version_minor": 0}
+</script><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150620)</span> [W reducer.cpp:1300] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "e3a7a20a10d84f829496fb716a17b4d6", "version_major": 2, "version_minor": 0}
+</script><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150618)</span> LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1,2,3]<span class=" -Color -Color-Green"> [repeated 3x across cluster]</span>
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150620)</span> Executing DAG InputDataBuffer[Input] -&gt; TaskPoolMapOperator[MapBatches(tokenize_sentence)]<span class=" -Color -Color-Green"> [repeated 4x across cluster]</span>
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150620)</span> Execution config: ExecutionOptions(resource_limits=ExecutionResources(cpu=None, gpu=None, object_store_memory=2000000000.0), locality_with_output=True, preserve_order=False, actor_locality_enabled=True, verbose_progress=False)<span class=" -Color -Color-Green"> [repeated 4x across cluster]</span>
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150620)</span> Tip: For detailed progress reporting, run `ray.data.DataContext.get_current().execution_options.verbose_progress = True`<span class=" -Color -Color-Green"> [repeated 5x across cluster]</span>
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150618)</span> [W reducer.cpp:1300] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())<span class=" -Color -Color-Green"> [repeated 3x across cluster]</span>
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "9dc2da867eae4cd08a5d1efbd596ca0b", "version_major": 2, "version_minor": 0}
+</script><script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "ef8287661a6e4af58e9a68a8573c2571", "version_major": 2, "version_minor": 0}
+</script><script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "a6c8f59f08a64dfbb7d86f05063ee507", "version_major": 2, "version_minor": 0}
+</script><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Faint -Color-Faint-Cyan">(SplitCoordinator pid=150822)</span> Executing DAG InputDataBuffer[Input] -&gt; TaskPoolMapOperator[MapBatches(tokenize_sentence)] -&gt; OutputSplitter[split(4, equal=True)]
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(SplitCoordinator pid=150822)</span> Execution config: ExecutionOptions(resource_limits=ExecutionResources(cpu=None, gpu=None, object_store_memory=2000000000.0), locality_with_output=[&#39;d4dd34cdb4b35e8b1e0f1ab4187b66ed900ab78de951f03e1125233b&#39;, &#39;d4dd34cdb4b35e8b1e0f1ab4187b66ed900ab78de951f03e1125233b&#39;, &#39;d4dd34cdb4b35e8b1e0f1ab4187b66ed900ab78de951f03e1125233b&#39;, &#39;d4dd34cdb4b35e8b1e0f1ab4187b66ed900ab78de951f03e1125233b&#39;], preserve_order=False, actor_locality_enabled=True, verbose_progress=False)
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150618)</span> Executing DAG InputDataBuffer[Input] -&gt; TaskPoolMapOperator[MapBatches(tokenize_sentence)]<span class=" -Color -Color-Green"> [repeated 3x across cluster]</span>
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150618)</span> Execution config: ExecutionOptions(resource_limits=ExecutionResources(cpu=None, gpu=None, object_store_memory=2000000000.0), locality_with_output=True, preserve_order=False, actor_locality_enabled=True, verbose_progress=False)<span class=" -Color -Color-Green"> [repeated 3x across cluster]</span>
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(SplitCoordinator pid=150822)</span> Tip: For detailed progress reporting, run `ray.data.DataContext.get_current().execution_options.verbose_progress = True`<span class=" -Color -Color-Green"> [repeated 4x across cluster]</span>
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "b44b3149e60c458a868c1bdefc2d7f1b", "version_major": 2, "version_minor": 0}
+</script><script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "bb1dc7ec559a47828cd07e980bd90b38", "version_major": 2, "version_minor": 0}
+</script><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150620)</span> Executing DAG InputDataBuffer[Input] -&gt; TaskPoolMapOperator[MapBatches(tokenize_sentence)]
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150620)</span> Execution config: ExecutionOptions(resource_limits=ExecutionResources(cpu=None, gpu=None, object_store_memory=2000000000.0), locality_with_output=True, preserve_order=False, actor_locality_enabled=True, verbose_progress=False)
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150620)</span> Tip: For detailed progress reporting, run `ray.data.DataContext.get_current().execution_options.verbose_progress = True`
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150621)</span> Executing DAG InputDataBuffer[Input] -&gt; TaskPoolMapOperator[MapBatches(tokenize_sentence)]
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150621)</span> Execution config: ExecutionOptions(resource_limits=ExecutionResources(cpu=None, gpu=None, object_store_memory=2000000000.0), locality_with_output=True, preserve_order=False, actor_locality_enabled=True, verbose_progress=False)
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150621)</span> Tip: For detailed progress reporting, run `ray.data.DataContext.get_current().execution_options.verbose_progress = True`
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "2ed7416eada74116a4360666e91a4929", "version_major": 2, "version_minor": 0}
+</script><script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "9ebb42be9d5640488e36ed0ec018a568", "version_major": 2, "version_minor": 0}
+</script><script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "0eea5895443f4b06a0957f052f2b542f", "version_major": 2, "version_minor": 0}
+</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Faint -Color-Bold-Faint-Cyan">(autoscaler +2m37s)</span> Tip: use `ray status` to view detailed cluster status. To disable these messages, set RAY_SCHEDULER_EVENTS=0.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Faint -Color-Faint-Cyan">(SplitCoordinator pid=150822)</span> Executing DAG InputDataBuffer[Input] -&gt; TaskPoolMapOperator[MapBatches(tokenize_sentence)] -&gt; OutputSplitter[split(4, equal=True)]
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(SplitCoordinator pid=150822)</span> Execution config: ExecutionOptions(resource_limits=ExecutionResources(cpu=None, gpu=None, object_store_memory=2000000000.0), locality_with_output=[&#39;d4dd34cdb4b35e8b1e0f1ab4187b66ed900ab78de951f03e1125233b&#39;, &#39;d4dd34cdb4b35e8b1e0f1ab4187b66ed900ab78de951f03e1125233b&#39;, &#39;d4dd34cdb4b35e8b1e0f1ab4187b66ed900ab78de951f03e1125233b&#39;, &#39;d4dd34cdb4b35e8b1e0f1ab4187b66ed900ab78de951f03e1125233b&#39;], preserve_order=False, actor_locality_enabled=True, verbose_progress=False)
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150618)</span> Executing DAG InputDataBuffer[Input] -&gt; TaskPoolMapOperator[MapBatches(tokenize_sentence)]<span class=" -Color -Color-Green"> [repeated 2x across cluster]</span>
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150618)</span> Execution config: ExecutionOptions(resource_limits=ExecutionResources(cpu=None, gpu=None, object_store_memory=2000000000.0), locality_with_output=True, preserve_order=False, actor_locality_enabled=True, verbose_progress=False)<span class=" -Color -Color-Green"> [repeated 2x across cluster]</span>
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(SplitCoordinator pid=150822)</span> Tip: For detailed progress reporting, run `ray.data.DataContext.get_current().execution_options.verbose_progress = True`<span class=" -Color -Color-Green"> [repeated 3x across cluster]</span>
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "55002f995b1f4b13a06ab9d9ad26bde4", "version_major": 2, "version_minor": 0}
+</script><script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "cc83a64b6a7c4d509267a5e491ec2cb3", "version_major": 2, "version_minor": 0}
+</script><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150620)</span> Executing DAG InputDataBuffer[Input] -&gt; TaskPoolMapOperator[MapBatches(tokenize_sentence)]
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150620)</span> Execution config: ExecutionOptions(resource_limits=ExecutionResources(cpu=None, gpu=None, object_store_memory=2000000000.0), locality_with_output=True, preserve_order=False, actor_locality_enabled=True, verbose_progress=False)
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150620)</span> Tip: For detailed progress reporting, run `ray.data.DataContext.get_current().execution_options.verbose_progress = True`
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150621)</span> Executing DAG InputDataBuffer[Input] -&gt; TaskPoolMapOperator[MapBatches(tokenize_sentence)]
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150621)</span> Execution config: ExecutionOptions(resource_limits=ExecutionResources(cpu=None, gpu=None, object_store_memory=2000000000.0), locality_with_output=True, preserve_order=False, actor_locality_enabled=True, verbose_progress=False)
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150621)</span> Tip: For detailed progress reporting, run `ray.data.DataContext.get_current().execution_options.verbose_progress = True`
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "c506b0e9ab6049cf935f434946ded564", "version_major": 2, "version_minor": 0}
+</script><script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "b1d1983ca77b4f2bb765695c6e3d2cff", "version_major": 2, "version_minor": 0}
+</script><script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "4dec92bf49e44c08bae10a177fa39d4f", "version_major": 2, "version_minor": 0}
+</script><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Faint -Color-Faint-Cyan">(SplitCoordinator pid=150822)</span> Executing DAG InputDataBuffer[Input] -&gt; TaskPoolMapOperator[MapBatches(tokenize_sentence)] -&gt; OutputSplitter[split(4, equal=True)]
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(SplitCoordinator pid=150822)</span> Execution config: ExecutionOptions(resource_limits=ExecutionResources(cpu=None, gpu=None, object_store_memory=2000000000.0), locality_with_output=[&#39;d4dd34cdb4b35e8b1e0f1ab4187b66ed900ab78de951f03e1125233b&#39;, &#39;d4dd34cdb4b35e8b1e0f1ab4187b66ed900ab78de951f03e1125233b&#39;, &#39;d4dd34cdb4b35e8b1e0f1ab4187b66ed900ab78de951f03e1125233b&#39;, &#39;d4dd34cdb4b35e8b1e0f1ab4187b66ed900ab78de951f03e1125233b&#39;], preserve_order=False, actor_locality_enabled=True, verbose_progress=False)
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150618)</span> Executing DAG InputDataBuffer[Input] -&gt; TaskPoolMapOperator[MapBatches(tokenize_sentence)]<span class=" -Color -Color-Green"> [repeated 2x across cluster]</span>
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150618)</span> Execution config: ExecutionOptions(resource_limits=ExecutionResources(cpu=None, gpu=None, object_store_memory=2000000000.0), locality_with_output=True, preserve_order=False, actor_locality_enabled=True, verbose_progress=False)<span class=" -Color -Color-Green"> [repeated 2x across cluster]</span>
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(SplitCoordinator pid=150822)</span> Tip: For detailed progress reporting, run `ray.data.DataContext.get_current().execution_options.verbose_progress = True`<span class=" -Color -Color-Green"> [repeated 3x across cluster]</span>
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "3fe17e7cfe8c46c59f19eeee3f035ac0", "version_major": 2, "version_minor": 0}
+</script><script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "2b3c03c2d16243e9909f0993bcb3236a", "version_major": 2, "version_minor": 0}
+</script><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150620)</span> Executing DAG InputDataBuffer[Input] -&gt; TaskPoolMapOperator[MapBatches(tokenize_sentence)]
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150620)</span> Execution config: ExecutionOptions(resource_limits=ExecutionResources(cpu=None, gpu=None, object_store_memory=2000000000.0), locality_with_output=True, preserve_order=False, actor_locality_enabled=True, verbose_progress=False)
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150620)</span> Tip: For detailed progress reporting, run `ray.data.DataContext.get_current().execution_options.verbose_progress = True`
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150621)</span> Executing DAG InputDataBuffer[Input] -&gt; TaskPoolMapOperator[MapBatches(tokenize_sentence)]
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150621)</span> Execution config: ExecutionOptions(resource_limits=ExecutionResources(cpu=None, gpu=None, object_store_memory=2000000000.0), locality_with_output=True, preserve_order=False, actor_locality_enabled=True, verbose_progress=False)
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150621)</span> Tip: For detailed progress reporting, run `ray.data.DataContext.get_current().execution_options.verbose_progress = True`
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "bf189f6d33d349f78319bc0c8cbdfe74", "version_major": 2, "version_minor": 0}
+</script><script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "913dbf89b0f049b88a79ded14306343a", "version_major": 2, "version_minor": 0}
+</script><script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "b462dba6a9dd41caaf09cc2328d74123", "version_major": 2, "version_minor": 0}
+</script><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Faint -Color-Faint-Cyan">(SplitCoordinator pid=150822)</span> Executing DAG InputDataBuffer[Input] -&gt; TaskPoolMapOperator[MapBatches(tokenize_sentence)] -&gt; OutputSplitter[split(4, equal=True)]
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(SplitCoordinator pid=150822)</span> Execution config: ExecutionOptions(resource_limits=ExecutionResources(cpu=None, gpu=None, object_store_memory=2000000000.0), locality_with_output=[&#39;d4dd34cdb4b35e8b1e0f1ab4187b66ed900ab78de951f03e1125233b&#39;, &#39;d4dd34cdb4b35e8b1e0f1ab4187b66ed900ab78de951f03e1125233b&#39;, &#39;d4dd34cdb4b35e8b1e0f1ab4187b66ed900ab78de951f03e1125233b&#39;, &#39;d4dd34cdb4b35e8b1e0f1ab4187b66ed900ab78de951f03e1125233b&#39;], preserve_order=False, actor_locality_enabled=True, verbose_progress=False)
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150618)</span> Executing DAG InputDataBuffer[Input] -&gt; TaskPoolMapOperator[MapBatches(tokenize_sentence)]<span class=" -Color -Color-Green"> [repeated 2x across cluster]</span>
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150618)</span> Execution config: ExecutionOptions(resource_limits=ExecutionResources(cpu=None, gpu=None, object_store_memory=2000000000.0), locality_with_output=True, preserve_order=False, actor_locality_enabled=True, verbose_progress=False)<span class=" -Color -Color-Green"> [repeated 2x across cluster]</span>
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(SplitCoordinator pid=150822)</span> Tip: For detailed progress reporting, run `ray.data.DataContext.get_current().execution_options.verbose_progress = True`<span class=" -Color -Color-Green"> [repeated 3x across cluster]</span>
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "6a84f019f5394fbc91a19d85ea06eaec", "version_major": 2, "version_minor": 0}
+</script><script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "9b777e13fc9b4ad887a2954dd50ef2ce", "version_major": 2, "version_minor": 0}
+</script><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150620)</span> Executing DAG InputDataBuffer[Input] -&gt; TaskPoolMapOperator[MapBatches(tokenize_sentence)]
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150620)</span> Execution config: ExecutionOptions(resource_limits=ExecutionResources(cpu=None, gpu=None, object_store_memory=2000000000.0), locality_with_output=True, preserve_order=False, actor_locality_enabled=True, verbose_progress=False)
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150620)</span> Tip: For detailed progress reporting, run `ray.data.DataContext.get_current().execution_options.verbose_progress = True`
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150621)</span> Executing DAG InputDataBuffer[Input] -&gt; TaskPoolMapOperator[MapBatches(tokenize_sentence)]
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150621)</span> Execution config: ExecutionOptions(resource_limits=ExecutionResources(cpu=None, gpu=None, object_store_memory=2000000000.0), locality_with_output=True, preserve_order=False, actor_locality_enabled=True, verbose_progress=False)
+<span class=" -Color -Color-Faint -Color-Faint-Cyan">(RayTrainWorker pid=150621)</span> Tip: For detailed progress reporting, run `ray.data.DataContext.get_current().execution_options.verbose_progress = True`
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "397281cffac14ce6a6a6e5ea1f22ccf1", "version_major": 2, "version_minor": 0}
+</script><script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "dd2a2d8ee918493388f0b3c500087692", "version_major": 2, "version_minor": 0}
+</script><script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "d68438f4b645455097c1d75d5c6a7c50", "version_major": 2, "version_minor": 0}
+</script><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2023-08-14 16:51:48,299	INFO tune.py:1146 -- Total run time: 350.99 seconds (350.87 seconds for the tuning loop).
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Note that this examples uses Ray Data for data ingestion for faster preprocessing, but you can also continue to use the native <code class="docutils literal notranslate"><span class="pre">PyTorch</span> <span class="pre">DataLoader</span></code> or <code class="docutils literal notranslate"><span class="pre">LightningDataModule</span></code>. See <a class="reference internal" href="lightning_mnist_example.html#lightning-mnist-example"><span class="std std-ref">Train a Pytorch Lightning Image Classifier</span></a>.</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Result(
+  metrics={&#39;train_loss&#39;: 0.019911885261535645, &#39;matthews_correlation&#39;: 0.577705364544777, &#39;epoch&#39;: 4, &#39;step&#39;: 670},
+  path=&#39;/home/ray/ray_results/ptl-sent-classification/TorchTrainer_b723f_00000_0_2023-08-14_16-45-57&#39;,
+  checkpoint=TorchCheckpoint(local_path=/home/ray/ray_results/ptl-sent-classification/TorchTrainer_b723f_00000_0_2023-08-14_16-45-57/checkpoint_000004)
+)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Faint -Color-Bold-Faint-Cyan">(autoscaler +50m28s)</span> Cluster is terminating (reason: user action).
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="see-also">
+<h2>See also<a class="headerlink" href="#see-also" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../examples.html#train-examples"><span class="std std-ref">Ray Train Examples</span></a> for more use cases</p></li>
+<li><p><a class="reference internal" href="../../user-guides.html#train-user-guides"><span class="std std-ref">Ray Train User Guides</span></a> for how-to guides</p></li>
+</ul>
+</section>
+</section>
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><!-- Override the footer area for the sphinx-book-theme to include the CSAT widget -->
+<div id="csat">
+  <div id="csat-feedback-received" class="csat-hidden">
+    <span>谢谢你的反馈！</span>
+  </div>
+  <div id="csat-inputs">
+    <span>是否能帮助到你？</span>
+    <div id="csat-yes" class="csat-button">
+      <svg id="csat-yes-icon" class="csat-hidden csat-icon" width="18" height="13" viewBox="0 0 18 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 10.172L16.1922 0.979004L17.6072 2.393L7.00023 13L0.63623 6.636L2.05023 5.222L7.00023 10.172Z" fill="black"/>
+      </svg>
+      <span>是<span>
+    </div>
+    <div id="csat-no" class="csat-button">
+      <svg id="csat-no-icon" class="csat-hidden csat-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 5.58599L11.9502 0.635986L13.3642 2.04999L8.41423 6.99999L13.3642 11.95L11.9502 13.364L7.00023 8.41399L2.05023 13.364L0.63623 11.95L5.58623 6.99999L0.63623 2.04999L2.05023 0.635986L7.00023 5.58599Z" fill="black"/>
+      </svg>
+      <span>否<span>
+    </div>
+  </div>
+  <div id="csat-textarea-group" class="csat-hidden">
+    <span id="csat-feedback-label">反馈</span>
+    <textarea id="csat-textarea"></textarea>
+    <div id="csat-submit">提交</div>
+  </div>
+</div><p>
+  
+    By The Ray Team<br/>
+  
+      &copy; Copyright 2024, The Ray Team.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

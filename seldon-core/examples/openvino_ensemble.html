@@ -62,17 +62,17 @@
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=83e35b93" />
     <link rel="stylesheet" type="text/css" href="../_static/material.css?v=79c92029" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/css/rtd_sphinx_search.min.css?v=e72958e9" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/rtd_sphinx_search.min.css" />
     <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
-    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
     <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=15a8f09d" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=f281be69"></script>
-    <script src="../_static/js/rtd_search_config.js?v=b0596c34"></script>
-    <script src="../_static/js/rtd_sphinx_search.min.js?v=43f26ba4"></script>
+    <script src="../_static/js/rtd_search_config.js"></script>
+    <script src="../_static/js/rtd_sphinx_search.min.js"></script>
     <script src="../_static/design-tabs.js?v=36754332"></script>
     <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -446,7 +446,7 @@
 <h1 id="examples-openvino-ensemble--page-root">Pipeline example with OpenVINO inference execution engine<a class="headerlink" href="#examples-openvino-ensemble--page-root" title="Permalink to this heading">¶</a></h1>
 <p>This notebook illustrates how you can serve ensemble of models using <a class="reference external" href="https://github.com/SeldonIO/seldon-core/tree/master/examples/models/openvino_imagenet_ensemble/resources/model">OpenVINO prediction model</a>. The demo includes optimized ResNet50 and DenseNet169 models by OpenVINO model optimizer. They have <a class="reference external" href="https://www.intel.ai/introducing-int8-quantization-for-fast-cpu-inference-using-openvino/#gs.lUSgiWKa">reduced precision</a> of graph operations from FP32 to INT8. It significantly
 improves the execution peformance with minimal impact on the accuracy. The gain is particularly visible with the latest Casade Lake CPU with <a class="reference external" href="https://www.intel.ai/intel-deep-learning-boost/#gs.sy7JEtwu">VNNI</a> extension.</p>
-<p><img alt="pipeline" src="../_images/pipeline11.png"/></p>
+<p><img alt="pipeline" src="../_images/pipeline1.png"/></p>
 <section id="Setup-Seldon-Core">
 <h2 id="Setup-Seldon-Core">Setup Seldon Core<a class="headerlink" href="#Setup-Seldon-Core" title="Permalink to this heading">¶</a></h2>
 <p>Use the setup notebook to <a class="reference external" href="https://docs.seldon.io/projects/seldon-core/en/latest/examples/seldon_core_setup.html#Setup-Cluster">Setup Cluster</a> with <a class="reference external" href="https://docs.seldon.io/projects/seldon-core/en/latest/examples/seldon_core_setup.html#Ambassador">Ambassador Ingress</a> and <a class="reference external" href="https://docs.seldon.io/projects/seldon-core/en/latest/examples/seldon_core_setup.html#Install-Seldon-Core">Install Seldon Core</a>. Instructions <a class="reference external" href="https://docs.seldon.io/projects/seldon-core/en/latest/examples/seldon_core_setup.html">also

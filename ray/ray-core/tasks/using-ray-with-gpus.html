@@ -1,0 +1,911 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>GPU 支持 &#8212; Ray 2.7.2</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/termynal.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/versionwarning.js"></script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+    <script defer="defer" src="../../_static/js/docsearch.js"></script>
+    <script defer="defer" src="../../_static/js/csat.js"></script>
+    <script defer="defer" src="../../_static/js/termynal.js"></script>
+    <script defer="defer" src="../../_static/js/custom.js"></script>
+    <script defer="defer" src="../../_static/js/top-navigation.js"></script>
+    <script src="../../_static/js/tags.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <link rel="canonical" href="https://docs.ray.io/en/latest/ray-core/tasks/using-ray-with-gpus.html" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="占位组" href="../scheduling/placement-group.html" />
+    <link rel="prev" title="资源" href="../scheduling/resources.html" />
+
+<!-- Fathom - beautiful, simple website analytics -->
+<script src="https://deer.ray.io/script.js" data-site="WYYANYOS" defer></script>
+<!-- / Fathom -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-110413294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-110413294-1');
+</script>
+
+<script
+  src="https://widget.kapa.ai/kapa-widget.bundle.js"
+  data-website-id="18a8c339-4ec5-43c8-8182-db3f2bc8c6b6"
+  data-project-name="Ray"
+  data-project-color="#2C2C2C"
+  data-project-logo="https://global.discourse-cdn.com/business7/uploads/ray/original/1X/8f4dcb72f7cd34e2a332d548bd65860994bc8ff1.png"
+  data-modal-disclaimer = "Results are automated and may be incorrect or contain inappropriate information. Do not include any personal data or confidential information."
+  data-modal-title = "Ray Docs AI - Ask a Question"
+  data-button-position-bottom = "60px"
+></script>
+
+<script>
+(function(apiKey){
+    (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
+    v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
+        o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
+        y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
+        z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
+
+        pendo.initialize({
+            visitor: {
+                id: 'VISITOR-UNIQUE-ID'
+            },
+            account: {
+                id: 'ACCOUNT-UNIQUE-ID'
+            }
+        });
+})('f89fa48a-6dd7-4d7c-67cf-a8051ed891f2');
+</script>
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"><div class='topnav'></div></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Ray 2.7.2</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main Navigation">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../index.html">
+                    欢迎来到 Ray ！
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Ray
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/index.html">
+   概述「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/getting-started.html">
+   入门
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/installation.html">
+   安装「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/use-cases.html">
+   用例「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/examples.html">
+   示例库「1%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/ray-libraries.html">
+   生态「3%」
+  </a>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="../walkthrough.html">
+   Ray 核心「100%」
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="../key-concepts.html">
+     关键概念
+    </a>
+   </li>
+   <li class="toctree-l2 current active has-children">
+    <a class="reference internal" href="../user-guide.html">
+     用户指南
+    </a>
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+    <label for="toctree-checkbox-2">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul class="current">
+     <li class="toctree-l3">
+      <a class="reference internal" href="../tasks.html">
+       任务
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../actors.html">
+       Actors
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../objects.html">
+       对象
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../handling-dependencies.html">
+       环境依赖
+      </a>
+     </li>
+     <li class="toctree-l3 current active has-children">
+      <a class="reference internal" href="../scheduling/index.html">
+       调度
+      </a>
+      <input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+      <label for="toctree-checkbox-3">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul class="current">
+       <li class="toctree-l4">
+        <a class="reference internal" href="../scheduling/resources.html">
+         资源
+        </a>
+       </li>
+       <li class="toctree-l4 current active">
+        <a class="current reference internal" href="#">
+         GPU 支持
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../scheduling/placement-group.html">
+         占位组
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../scheduling/memory-management.html">
+         内存管理
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../scheduling/ray-oom-prevention.html">
+         预防 OOM
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../fault-tolerance.html">
+       容错
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../patterns/index.html">
+       设计模型 及 反模式
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../advanced-topics.html">
+       高级主题
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/overview.html">
+     示例
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/index.html">
+     Ray Core API
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../data/data.html">
+   Ray 数据「75%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../train/train.html">
+   Ray 训练「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../tune/index.html">
+   Ray 调参「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../serve/index.html">
+   Ray Serve
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../rllib/index.html">
+   Ray RLlib
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-more-libs/index.html">
+   更多类库「40%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../cluster/getting-started.html">
+   Ray 集群「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-observability/index.html">
+   监控调试「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-references/api.html">
+   参考「20%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-contribute/index.html">
+   开发者指引「30%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-security/index.html">
+   安全「100%」
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/ray-project/ray"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/issues/new?title=Issue%20on%20page%20%2Fray-core/tasks/using-ray-with-gpus.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/edit/master/doc/source/ray-core/tasks/using-ray-with-gpus.rst"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../_sources/ray-core/tasks/using-ray-with-gpus.rst.txt"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.rst</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#gpu-ray">
+   启动 GPU 的 Ray 节点
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#actor-gpu">
+   在任务和 actor 中使用 GPU
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   分数 GPU
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#worker-gpu">
+   Worker 不释放 GPU 资源
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#accelerator-types">
+   加速器类型
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#aws-neuron-core">
+   AWS Neuron Core 加速器（实验性）
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>GPU 支持</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#gpu-ray">
+   启动 GPU 的 Ray 节点
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#actor-gpu">
+   在任务和 actor 中使用 GPU
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   分数 GPU
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#worker-gpu">
+   Worker 不释放 GPU 资源
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#accelerator-types">
+   加速器类型
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#aws-neuron-core">
+   AWS Neuron Core 加速器（实验性）
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section id="gpu">
+<span id="gpu-support"></span><h1>GPU 支持<a class="headerlink" href="#gpu" title="Permalink to this headline">#</a></h1>
+<p>GPU 对于许多机器学习应用程序至关重要。
+Ray 远程支持 GPU 作为预定义的 <a class="reference internal" href="../scheduling/resources.html#core-resources"><span class="std std-ref">resource</span></a> 类型，并允许任务和 actor 指定它们的 GPU <a class="reference internal" href="../scheduling/resources.html#resource-requirements"><span class="std std-ref">资源需求</span></a>。</p>
+<section id="gpu-ray">
+<h2>启动 GPU 的 Ray 节点<a class="headerlink" href="#gpu-ray" title="Permalink to this headline">#</a></h2>
+<p>默认的，Ray 会将节点的 GPU 资源数量设置为 Ray 自动检测到的物理 GPU 数量。
+如果需要，你可以 <a class="reference internal" href="../scheduling/resources.html#specify-node-resources"><span class="std std-ref">覆盖</span></a> 这个设置。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>没什么可以阻止你在机器上指定一个比真实 GPU 数量更大的 <code class="docutils literal notranslate"><span class="pre">num_gpus</span></code> 值，因为 Ray 资源是 <a class="reference internal" href="../scheduling/resources.html#logical-resources"><span class="std std-ref">逻辑的</span></a>。
+在此情况下，Ray 会表现的好像机器上有你指定的 GPU 数量一样，用于调度需要 GPU 的任务和 actor。
+只有当这些任务和 actor 尝试使用不存在的 GPU 时才会出现问题。</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>你可以在启动 Ray 节点之前设置 <code class="docutils literal notranslate"><span class="pre">CUDA_VISIBLE_DEVICES</span></code> 环境变量来限制 Ray 可见的 GPU。
+比如，<code class="docutils literal notranslate"><span class="pre">CUDA_VISIBLE_DEVICES=1,3</span> <span class="pre">ray</span> <span class="pre">start</span> <span class="pre">--head</span> <span class="pre">--num-gpus=2</span></code> 将只让 Ray 看到设备 1 和 3。</p>
+</div>
+</section>
+<section id="actor-gpu">
+<h2>在任务和 actor 中使用 GPU<a class="headerlink" href="#actor-gpu" title="Permalink to this headline">#</a></h2>
+<p>如果一个任务或 actor 需要 GPU，你可以指定相应的 <span class="xref std std-ref">资源需求 &lt;resource-requirements&gt;`（比如 ``&#64;ray.remote(num_gpus=1)`</span>）。
+Ray 然后会将任务或 actor 调度到一个有足够空闲 GPU 资源的节点上，
+并在运行任务或 actor 代码之前通过设置 <code class="docutils literal notranslate"><span class="pre">CUDA_VISIBLE_DEVICES</span></code> 环境变量来分配 GPU。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">ray</span>
+
+<span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">num_gpus</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+
+<span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">num_gpus</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">GPUActor</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">ping</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ray.get_gpu_ids(): </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ray</span><span class="o">.</span><span class="n">get_gpu_ids</span><span class="p">()))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;CUDA_VISIBLE_DEVICES: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;CUDA_VISIBLE_DEVICES&quot;</span><span class="p">]))</span>
+
+
+<span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">num_gpus</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">use_gpu</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ray.get_gpu_ids(): </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ray</span><span class="o">.</span><span class="n">get_gpu_ids</span><span class="p">()))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;CUDA_VISIBLE_DEVICES: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;CUDA_VISIBLE_DEVICES&quot;</span><span class="p">]))</span>
+
+
+<span class="n">gpu_actor</span> <span class="o">=</span> <span class="n">GPUActor</span><span class="o">.</span><span class="n">remote</span><span class="p">()</span>
+<span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">gpu_actor</span><span class="o">.</span><span class="n">ping</span><span class="o">.</span><span class="n">remote</span><span class="p">())</span>
+<span class="c1"># The actor uses the first GPU so the task will use the second one.</span>
+<span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">use_gpu</span><span class="o">.</span><span class="n">remote</span><span class="p">())</span>
+<span class="c1"># (GPUActor pid=52420) ray.get_gpu_ids(): [0]</span>
+<span class="c1"># (GPUActor pid=52420) CUDA_VISIBLE_DEVICES: 0</span>
+<span class="c1"># (use_gpu pid=51830) ray.get_gpu_ids(): [1]</span>
+<span class="c1"># (use_gpu pid=51830) CUDA_VISIBLE_DEVICES: 1</span>
+</pre></div>
+</div>
+<p>在任务或 actor 中，<a class="reference internal" href="../api/doc/ray.get_gpu_ids.html#ray.get_gpu_ids" title="ray.get_gpu_ids"><code class="xref py py-func docutils literal notranslate"><span class="pre">ray.get_gpu_ids()</span></code></a> 会返回一个可用于任务或 actor 的 GPU ID 列表。
+通常，不需要调用 <code class="docutils literal notranslate"><span class="pre">ray.get_gpu_ids()</span></code>，因为 Ray 会自动设置 <code class="docutils literal notranslate"><span class="pre">CUDA_VISIBLE_DEVICES</span></code> 环境变量，
+这在大多数机器学习框架中都会被用于 GPU 分配。</p>
+<p><strong>注意：</strong> 上面定义的 <code class="docutils literal notranslate"><span class="pre">use_gpu</span></code>  函数实际上并没有使用任何 GPU。Ray 会将其调度到至少有一个 GPU 的节点上，
+并在其执行时为其保留一个 GPU，但实际上使用 GPU 是由函数自己决定的。
+这通常通过外部库（比如 TensorFlow）来完成。下面是一个实际使用 GPU 的例子。
+为了使这个例子工作，你需要安装 TensorFlow 的 GPU 版本。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">num_gpus</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">use_gpu</span><span class="p">():</span>
+    <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+
+    <span class="c1"># Create a TensorFlow session. TensorFlow will restrict itself to use the</span>
+    <span class="c1"># GPUs specified by the CUDA_VISIBLE_DEVICES environment variable.</span>
+    <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+
+
+</pre></div>
+</div>
+<p><strong>注意：</strong> 使用了 <code class="docutils literal notranslate"><span class="pre">use_gpu</span></code> 的人员可以忽略 <code class="docutils literal notranslate"><span class="pre">ray.get_gpu_ids()</span></code> 并使用机器上的所有 GPU。
+Ray 不会阻止这种情况发生，这可能导致太多任务或 actor 同时使用同一个 GPU。然而，Ray 会自动设置 <code class="docutils literal notranslate"><span class="pre">CUDA_VISIBLE_DEVICES</span></code> 环境变量，
+它会限制大多数深度学习框架使用的 GPU，假设用户没有覆盖它。</p>
+</section>
+<section id="id1">
+<h2>分数 GPU<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h2>
+<p>Ray 支持 <a class="reference internal" href="../scheduling/resources.html#fractional-resource-requirements"><span class="std std-ref">分数资源需求</span></a>，这样多个任务和 actor 可以共享同一个 GPU。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">num_cpus</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">num_gpus</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">num_gpus</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">():</span>
+    <span class="kn">import</span> <span class="nn">time</span>
+
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+
+<span class="c1"># The four tasks created here can execute concurrently</span>
+<span class="c1"># and share the same GPU.</span>
+<span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">([</span><span class="n">f</span><span class="o">.</span><span class="n">remote</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)])</span>
+</pre></div>
+</div>
+<p><strong>注意：</strong> 用户需要确保单个任务不会使用超过其 GPU 内存份额。
+TensorFlow 可以配置为限制其内存使用量。</p>
+<p>当 Ray 将节点的 GPU 分配给具有分数资源需求的任务或 actor 时，它会先分配一个 GPU，然后再分配下一个 GPU，以避免碎片化。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">num_gpus</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+
+<span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">num_gpus</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">FractionalGPUActor</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">ping</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ray.get_gpu_ids(): </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ray</span><span class="o">.</span><span class="n">get_gpu_ids</span><span class="p">()))</span>
+
+
+<span class="n">fractional_gpu_actors</span> <span class="o">=</span> <span class="p">[</span><span class="n">FractionalGPUActor</span><span class="o">.</span><span class="n">remote</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+<span class="c1"># Ray will try to pack GPUs if possible.</span>
+<span class="p">[</span><span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">fractional_gpu_actors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">ping</span><span class="o">.</span><span class="n">remote</span><span class="p">())</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+<span class="c1"># (FractionalGPUActor pid=57417) ray.get_gpu_ids(): [0]</span>
+<span class="c1"># (FractionalGPUActor pid=57416) ray.get_gpu_ids(): [0]</span>
+<span class="c1"># (FractionalGPUActor pid=57418) ray.get_gpu_ids(): [1]</span>
+</pre></div>
+</div>
+</section>
+<section id="worker-gpu">
+<span id="gpu-leak"></span><h2>Worker 不释放 GPU 资源<a class="headerlink" href="#worker-gpu" title="Permalink to this headline">#</a></h2>
+<p>目前，当 worker 执行使用 GPU 的任务（比如，通过 TensorFlow）时，任务可能会在 GPU 上分配内存，并且在任务执行完毕后可能不会释放它。
+这可能会导致下次任务尝试使用相同的 GPU 时出现问题。为了解决这个问题，Ray 默认情况下禁用了 GPU 任务之间的 worker 进程重用，其中 GPU 资源在任务进程退出后被释放。
+由于这会增加 GPU 任务调度的开销，你可以通过在 <a class="reference internal" href="../api/doc/ray.remote.html#ray.remote" title="ray.remote"><code class="xref py py-func docutils literal notranslate"><span class="pre">ray.remote</span></code></a> 装饰器中设置 <code class="docutils literal notranslate"><span class="pre">max_calls=0</span></code> 来重新启用 worker 重用。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># By default, ray will not reuse workers for GPU tasks to prevent</span>
+<span class="c1"># GPU resource leakage.</span>
+<span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">num_gpus</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">leak_gpus</span><span class="p">():</span>
+    <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+
+    <span class="c1"># This task will allocate memory on the GPU and then never release it.</span>
+    <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+
+
+</pre></div>
+</div>
+</section>
+<section id="accelerator-types">
+<span id="id2"></span><h2>加速器类型<a class="headerlink" href="#accelerator-types" title="Permalink to this headline">#</a></h2>
+<p>Ray 支持特定资源的加速器类型。<code class="docutils literal notranslate"><span class="pre">accelerator_type</span></code> 选项可以用于强制任务或 actor 在具有特定类型加速器的节点上运行。
+在底层，加速器类型选项被实现为 <code class="docutils literal notranslate"><span class="pre">&quot;accelerator_type:&lt;type&gt;&quot;:</span> <span class="pre">0.001</span></code> 的 <a class="reference internal" href="../scheduling/resources.html#custom-resources"><span class="std std-ref">自定义资源需求</span></a>。
+这会强制任务或 actor 被放置在具有该特定加速器类型的节点上。
+这还让多节点类型自动缩放器知道有需求的资源类型，可能会触发提供该加速器的新节点的启动。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray.util.accelerators</span> <span class="kn">import</span> <span class="n">NVIDIA_TESLA_V100</span>
+
+
+<span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">num_gpus</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">accelerator_type</span><span class="o">=</span><span class="n">NVIDIA_TESLA_V100</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s2">&quot;This function was run on a node with a Tesla V100 GPU&quot;</span>
+
+
+<span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>参考 <code class="docutils literal notranslate"><span class="pre">ray.util.accelerators</span></code> 获取可用的加速器类型。当前自动检测到的加速器类型包括：</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Nvidia GPU</p></li>
+<li><p>AWS Neuron Cores</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="aws-neuron-core">
+<h2>AWS Neuron Core 加速器（实验性）<a class="headerlink" href="#aws-neuron-core" title="Permalink to this headline">#</a></h2>
+<p>类似于 Nvidia GPU，Ray 默认情况下会自动检测 <a class="reference external" href="https://awsdocs-neuron.readthedocs-hosted.com/en/latest/general/arch/model-architecture-fit.html">AWS Neuron Cores</a>。
+用户可以在任务或 actor 的资源需求中指定 <code class="xref py py-obj docutils literal notranslate"><span class="pre">resources={&quot;neuron_cores&quot;:</span> <span class="pre">some_number}</span></code> 来分配 Neuron Core(s)。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Ray 支持异构的 GPU 和 Neuron Core 集群，但不允许为任务或 actor 指定 <code class="docutils literal notranslate"><span class="pre">num_gpus</span></code> 和 <code class="docutils literal notranslate"><span class="pre">neuron_cores</span></code> 的资源需求。</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ray</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">ray.util.accelerators</span> <span class="kn">import</span> <span class="n">AWS_NEURON_CORE</span>
+
+<span class="c1"># On trn1.2xlarge instance, there will be 2 neuron cores.</span>
+<span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">resources</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;neuron_cores&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
+
+
+<span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">resources</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;neuron_cores&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+<span class="k">class</span> <span class="nc">NeuronCoreActor</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">ids</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">get_runtime_context</span><span class="p">()</span><span class="o">.</span><span class="n">get_resource_ids</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;neuron_core_ids: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ids</span><span class="p">[</span><span class="s2">&quot;neuron_cores&quot;</span><span class="p">]))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;NEURON_RT_VISIBLE_CORES: </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;NEURON_RT_VISIBLE_CORES&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+<span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">resources</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;neuron_cores&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="n">accelerator_type</span><span class="o">=</span><span class="n">AWS_NEURON_CORE</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">use_neuron_core_task</span><span class="p">():</span>
+    <span class="n">ids</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">get_runtime_context</span><span class="p">()</span><span class="o">.</span><span class="n">get_resource_ids</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;neuron_core_ids: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ids</span><span class="p">[</span><span class="s2">&quot;neuron_cores&quot;</span><span class="p">]))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;NEURON_RT_VISIBLE_CORES: </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;NEURON_RT_VISIBLE_CORES&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+<span class="n">neuron_core_actor</span> <span class="o">=</span> <span class="n">NeuronCoreActor</span><span class="o">.</span><span class="n">remote</span><span class="p">()</span>
+<span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">neuron_core_actor</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">remote</span><span class="p">())</span>
+<span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">use_neuron_core_task</span><span class="o">.</span><span class="n">remote</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="../scheduling/resources.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">资源</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="../scheduling/placement-group.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">占位组</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><!-- Override the footer area for the sphinx-book-theme to include the CSAT widget -->
+<div id="csat">
+  <div id="csat-feedback-received" class="csat-hidden">
+    <span>谢谢你的反馈！</span>
+  </div>
+  <div id="csat-inputs">
+    <span>是否能帮助到你？</span>
+    <div id="csat-yes" class="csat-button">
+      <svg id="csat-yes-icon" class="csat-hidden csat-icon" width="18" height="13" viewBox="0 0 18 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 10.172L16.1922 0.979004L17.6072 2.393L7.00023 13L0.63623 6.636L2.05023 5.222L7.00023 10.172Z" fill="black"/>
+      </svg>
+      <span>是<span>
+    </div>
+    <div id="csat-no" class="csat-button">
+      <svg id="csat-no-icon" class="csat-hidden csat-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 5.58599L11.9502 0.635986L13.3642 2.04999L8.41423 6.99999L13.3642 11.95L11.9502 13.364L7.00023 8.41399L2.05023 13.364L0.63623 11.95L5.58623 6.99999L0.63623 2.04999L2.05023 0.635986L7.00023 5.58599Z" fill="black"/>
+      </svg>
+      <span>否<span>
+    </div>
+  </div>
+  <div id="csat-textarea-group" class="csat-hidden">
+    <span id="csat-feedback-label">反馈</span>
+    <textarea id="csat-textarea"></textarea>
+    <div id="csat-submit">提交</div>
+  </div>
+</div><p>
+  
+    By The Ray Team<br/>
+  
+      &copy; Copyright 2024, The Ray Team.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

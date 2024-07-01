@@ -1,0 +1,950 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>内存管理 &#8212; Ray 2.7.2</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/termynal.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/versionwarning.js"></script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+    <script defer="defer" src="../../_static/js/docsearch.js"></script>
+    <script defer="defer" src="../../_static/js/csat.js"></script>
+    <script defer="defer" src="../../_static/js/termynal.js"></script>
+    <script defer="defer" src="../../_static/js/custom.js"></script>
+    <script defer="defer" src="../../_static/js/top-navigation.js"></script>
+    <script src="../../_static/js/tags.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <link rel="canonical" href="https://docs.ray.io/en/latest/ray-core/scheduling/memory-management.html" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="预防 OOM" href="ray-oom-prevention.html" />
+    <link rel="prev" title="占位组" href="placement-group.html" />
+
+<!-- Fathom - beautiful, simple website analytics -->
+<script src="https://deer.ray.io/script.js" data-site="WYYANYOS" defer></script>
+<!-- / Fathom -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-110413294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-110413294-1');
+</script>
+
+<script
+  src="https://widget.kapa.ai/kapa-widget.bundle.js"
+  data-website-id="18a8c339-4ec5-43c8-8182-db3f2bc8c6b6"
+  data-project-name="Ray"
+  data-project-color="#2C2C2C"
+  data-project-logo="https://global.discourse-cdn.com/business7/uploads/ray/original/1X/8f4dcb72f7cd34e2a332d548bd65860994bc8ff1.png"
+  data-modal-disclaimer = "Results are automated and may be incorrect or contain inappropriate information. Do not include any personal data or confidential information."
+  data-modal-title = "Ray Docs AI - Ask a Question"
+  data-button-position-bottom = "60px"
+></script>
+
+<script>
+(function(apiKey){
+    (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
+    v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
+        o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
+        y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
+        z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
+
+        pendo.initialize({
+            visitor: {
+                id: 'VISITOR-UNIQUE-ID'
+            },
+            account: {
+                id: 'ACCOUNT-UNIQUE-ID'
+            }
+        });
+})('f89fa48a-6dd7-4d7c-67cf-a8051ed891f2');
+</script>
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"><div class='topnav'></div></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Ray 2.7.2</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main Navigation">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../index.html">
+                    欢迎来到 Ray ！
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Ray
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/index.html">
+   概述「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/getting-started.html">
+   入门
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/installation.html">
+   安装「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/use-cases.html">
+   用例「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/examples.html">
+   示例库「1%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/ray-libraries.html">
+   生态「3%」
+  </a>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="../walkthrough.html">
+   Ray 核心「100%」
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="../key-concepts.html">
+     关键概念
+    </a>
+   </li>
+   <li class="toctree-l2 current active has-children">
+    <a class="reference internal" href="../user-guide.html">
+     用户指南
+    </a>
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+    <label for="toctree-checkbox-2">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul class="current">
+     <li class="toctree-l3">
+      <a class="reference internal" href="../tasks.html">
+       任务
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../actors.html">
+       Actors
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../objects.html">
+       对象
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../handling-dependencies.html">
+       环境依赖
+      </a>
+     </li>
+     <li class="toctree-l3 current active has-children">
+      <a class="reference internal" href="index.html">
+       调度
+      </a>
+      <input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+      <label for="toctree-checkbox-3">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul class="current">
+       <li class="toctree-l4">
+        <a class="reference internal" href="resources.html">
+         资源
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="../tasks/using-ray-with-gpus.html">
+         GPU 支持
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="placement-group.html">
+         占位组
+        </a>
+       </li>
+       <li class="toctree-l4 current active">
+        <a class="current reference internal" href="#">
+         内存管理
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="ray-oom-prevention.html">
+         预防 OOM
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../fault-tolerance.html">
+       容错
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../patterns/index.html">
+       设计模型 及 反模式
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../advanced-topics.html">
+       高级主题
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/overview.html">
+     示例
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/index.html">
+     Ray Core API
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../data/data.html">
+   Ray 数据「75%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../train/train.html">
+   Ray 训练「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../tune/index.html">
+   Ray 调参「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../serve/index.html">
+   Ray Serve
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../rllib/index.html">
+   Ray RLlib
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-more-libs/index.html">
+   更多类库「40%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../cluster/getting-started.html">
+   Ray 集群「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-observability/index.html">
+   监控调试「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-references/api.html">
+   参考「20%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-contribute/index.html">
+   开发者指引「30%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-security/index.html">
+   安全「100%」
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/ray-project/ray"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/issues/new?title=Issue%20on%20page%20%2Fray-core/scheduling/memory-management.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/edit/master/doc/source/ray-core/scheduling/memory-management.rst"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../_sources/ray-core/scheduling/memory-management.rst.txt"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.rst</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id2">
+   概念
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#objectref">
+     ObjectRef 对象引用
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ray-memory">
+   使用 ‘ray memory’ 进行调试
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#memory-aware-scheduling">
+   内存感知调度
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id8">
+     有疑问或问题？
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>内存管理</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id2">
+   概念
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#objectref">
+     ObjectRef 对象引用
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ray-memory">
+   使用 ‘ray memory’ 进行调试
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#memory-aware-scheduling">
+   内存感知调度
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id8">
+     有疑问或问题？
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section id="memory">
+<span id="id1"></span><h1>内存管理<a class="headerlink" href="#memory" title="Permalink to this headline">#</a></h1>
+<p>本页介绍了 Ray 中的内存管理工作原理。</p>
+<p>另请参阅 <a class="reference internal" href="../../ray-observability/user-guides/debug-apps/debug-memory.html#troubleshooting-out-of-memory"><span class="std std-ref">OOM 调试</span></a> 以了解如何排除内存不足问题。</p>
+<section id="id2">
+<h2>概念<a class="headerlink" href="#id2" title="Permalink to this headline">#</a></h2>
+<p>Ray 应用程序使用内存的几种方式：</p>
+<img alt="../../_images/memory.svg" src="../../_images/memory.svg" /><dl class="simple">
+<dt>Ray 系统内存：Ray 内部使用的内存</dt><dd><ul class="simple">
+<li><p><strong>GCS</strong>：内存用于存储集群中存在的节点和 actor 的列表。通常，用于这些目的的内存量非常小。</p></li>
+<li><p><strong>Raylet</strong>：内存用于在每个节点上运行的 C++ raylet 进程。这不能被控制，但通常非常小。</p></li>
+</ul>
+</dd>
+<dt>应用内存：这是应用程序使用的内存</dt><dd><ul class="simple">
+<li><p><strong>工作堆</strong>：内存用于你的应用（如，Python 代码或 TensorFlow），最好通过 <code class="docutils literal notranslate"><span class="pre">top</span></code> 等命令中的应用程序的 <em>驻留集大小 (RSS)</em> 减去其 <em>共享内存使用 (SHR)</em> 来测量。你需要减去 <em>SHR</em> 的原因是，对象存储共享内存由操作系统报告为与每个 worker 共享。不减去 <em>SHR</em> 会导致内存使用量重复计数。</p></li>
+<li><p><strong>对象存储内存</strong>：当你的程序通过 <code class="docutils literal notranslate"><span class="pre">ray.put</span></code> 创建对象并通过远程函数返回值时使用的内存。对象是引用计数的，当它们超出范围时会被驱逐。每个节点上都运行一个对象存储服务器。默认情况下，Ray 在启动实例时会保留可用内存的 30%。对象存储的大小可以通过 <a class="reference external" href="https://docs.ray.io/en/master/cluster/cli.html#cmdoption-ray-start-object-store-memory">–object-store-memory</a> 控制。默认情况下，内存分配给 Linux 的 <a href="#id3"><span class="problematic" id="id4">``</span></a>/dev/shm``（共享内存）。对于 MacOS，Ray 使用 <a href="#id5"><span class="problematic" id="id6">``</span></a>/tmp``（磁盘），这可能会影响性能。在 Ray 1.3+ 中，如果对象存储填满，对象会被 <a class="reference internal" href="../objects/object-spilling.html#object-spilling"><span class="std std-ref">溢出到磁盘</span></a>。</p></li>
+<li><p><strong>对象存储共享内存</strong>：当你的程序通过 <code class="docutils literal notranslate"><span class="pre">ray.get</span></code> 读取对象时使用的内存。请注意，如果对象已经存在于节点上，则不会导致额外的分配。这允许大对象在许多 actor 和任务之间高效共享。</p></li>
+</ul>
+</dd>
+</dl>
+<section id="objectref">
+<h3>ObjectRef 对象引用<a class="headerlink" href="#objectref" title="Permalink to this headline">#</a></h3>
+<p>Ray 实现了分布式引用计数，以便集群中的任何 <code class="docutils literal notranslate"><span class="pre">ObjectRef</span></code> 都会在对象存储中固定。这包括本地 Python 引用、待处理任务的参数以及序列化在其他对象中的 ID。</p>
+</section>
+</section>
+<section id="ray-memory">
+<span id="debug-with-ray-memory"></span><h2>使用 ‘ray memory’ 进行调试<a class="headerlink" href="#ray-memory" title="Permalink to this headline">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">ray</span> <span class="pre">memory</span></code> 命令可以帮助跟踪哪些 <code class="docutils literal notranslate"><span class="pre">ObjectRef</span></code> 引用在范围内，可能导致的 <code class="docutils literal notranslate"><span class="pre">ObjectStoreFullError</span></code>。</p>
+<p>在 Ray 应用程序运行时从命令行运行 <code class="docutils literal notranslate"><span class="pre">ray</span> <span class="pre">memory</span></code> 将为你提供当前由驱动程序、actor 和集群中的任务持有的所有 <code class="docutils literal notranslate"><span class="pre">ObjectRef</span></code> 引用的转储。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>======== Object references status: 2021-02-23 22:02:22.072221 ========
+Grouping by node address...        Sorting by object size...
+
+
+--- Summary for node address: 192.168.0.15 ---
+Mem Used by Objects  Local References  Pinned Count  Pending Tasks  Captured in Objects  Actor Handles
+287 MiB              4                 0             0              1                    0
+
+--- Object references for node address: 192.168.0.15 ---
+IP Address    PID    Type    Object Ref                                                Size    Reference Type      Call Site
+192.168.0.15  6465   Driver  ffffffffffffffffffffffffffffffffffffffff0100000001000000  15 MiB  LOCAL_REFERENCE     (put object)
+                                                                                                                  | test.py:
+                                                                                                                  &lt;module&gt;:17
+
+192.168.0.15  6465   Driver  a67dc375e60ddd1affffffffffffffffffffffff0100000001000000  15 MiB  LOCAL_REFERENCE     (task call)
+                                                                                                                  | test.py:
+                                                                                                                  :&lt;module&gt;:18
+
+192.168.0.15  6465   Driver  ffffffffffffffffffffffffffffffffffffffff0100000002000000  18 MiB  CAPTURED_IN_OBJECT  (put object)  |
+                                                                                                                   test.py:
+                                                                                                                  &lt;module&gt;:19
+
+192.168.0.15  6465   Driver  ffffffffffffffffffffffffffffffffffffffff0100000004000000  21 MiB  LOCAL_REFERENCE     (put object)  |
+                                                                                                                   test.py:
+                                                                                                                  &lt;module&gt;:20
+
+192.168.0.15  6465   Driver  ffffffffffffffffffffffffffffffffffffffff0100000003000000  218 MiB  LOCAL_REFERENCE     (put object)  |
+                                                                                                                  test.py:
+                                                                                                                  &lt;module&gt;:20
+
+--- Aggregate object store stats across all nodes ---
+Plasma memory usage 0 MiB, 4 objects, 0.0% full
+</pre></div>
+</div>
+<p>输出中的每个条目都对应于当前在对象存储中固定对象的 <code class="docutils literal notranslate"><span class="pre">ObjectRef</span></code>，以及引用所在的位置（在驱动程序中、在 worker 中等），引用的类型（有关引用类型的详细信息，请参见下文），对象的大小（以字节为单位），创建对象的进程 ID 和 IP 地址，以及引用在应用程序中创建的位置。</p>
+<p><code class="docutils literal notranslate"><span class="pre">ray</span> <span class="pre">memory</span></code> 附带一些功能，使内存调试体验更加有效。例如，你可以添加参数 <code class="docutils literal notranslate"><span class="pre">sort-by=OBJECT_SIZE</span></code> 和 <code class="docutils literal notranslate"><span class="pre">group-by=STACK_TRACE</span></code>，这对于跟踪内存泄漏发生的代码行可能特别有帮助。你可以通过运行 <code class="docutils literal notranslate"><span class="pre">ray</span> <span class="pre">memory</span> <span class="pre">--help</span></code> 查看完整的选项套件。</p>
+<p>有五种引用类型可以保持对象固定：</p>
+<p><strong>1. 本地 ObjectRef 引用</strong></p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ray</span>
+
+<span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">arg</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>在这个例子中，我们创建了两个对象的引用：一个是 <code class="docutils literal notranslate"><span class="pre">ray.put()</span></code> 在对象存储中的对象，另一个是 <code class="docutils literal notranslate"><span class="pre">f.remote()</span></code> 的返回值。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>--- Summary for node address: 192.168.0.15 ---
+Mem Used by Objects  Local References  Pinned Count  Pending Tasks  Captured in Objects  Actor Handles
+30 MiB               2                 0             0              0                    0
+
+--- Object references for node address: 192.168.0.15 ---
+IP Address    PID    Type    Object Ref                                                Size    Reference Type      Call Site
+192.168.0.15  6867   Driver  ffffffffffffffffffffffffffffffffffffffff0100000001000000  15 MiB  LOCAL_REFERENCE     (put object)  |
+                                                                                                                  test.py:
+                                                                                                                  &lt;module&gt;:12
+
+192.168.0.15  6867   Driver  a67dc375e60ddd1affffffffffffffffffffffff0100000001000000  15 MiB  LOCAL_REFERENCE     (task call)
+                                                                                                                  | test.py:
+                                                                                                                  :&lt;module&gt;:13
+</pre></div>
+</div>
+<p>在 <code class="docutils literal notranslate"><span class="pre">ray</span> <span class="pre">memory</span></code> 的输出中，我们可以看到这两个引用都在驱动程序进程中标记为 <code class="docutils literal notranslate"><span class="pre">LOCAL_REFERENCE</span></code>，但是“引用创建位置”中的注释表明第一个是从“put object”创建的，第二个是从“task call”创建的。</p>
+<p><strong>2. 内存中固定的对象</strong></p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="k">del</span> <span class="n">a</span>
+</pre></div>
+</div>
+<p>此例中，我们创建了一个 <code class="docutils literal notranslate"><span class="pre">numpy</span></code> 数组，然后将其存储在对象存储中。然后，我们从对象存储中获取相同的 <code class="docutils literal notranslate"><span class="pre">numpy</span></code> 数组并删除其 <code class="docutils literal notranslate"><span class="pre">ObjectRef</span></code>。在这种情况下，对象仍然固定在对象存储中，因为反序列化的副本（存储在 <code class="docutils literal notranslate"><span class="pre">b</span></code> 中）直接指向对象存储中的内存。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>--- Summary for node address: 192.168.0.15 ---
+Mem Used by Objects  Local References  Pinned Count  Pending Tasks  Captured in Objects  Actor Handles
+243 MiB              0                 1             0              0                    0
+
+--- Object references for node address: 192.168.0.15 ---
+IP Address    PID    Type    Object Ref                                                Size    Reference Type      Call Site
+192.168.0.15  7066   Driver  ffffffffffffffffffffffffffffffffffffffff0100000001000000  243 MiB  PINNED_IN_MEMORY   test.
+                                                                                                                  py:&lt;module&gt;:19
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">ray</span> <span class="pre">memory</span></code> 的输出显示这个对象是 <code class="docutils literal notranslate"><span class="pre">PINNED_IN_MEMORY</span></code>。如果我们 <code class="docutils literal notranslate"><span class="pre">del</span> <span class="pre">b</span></code>，引用就可以被释放。</p>
+<p><strong>3. 待处理任务引用</strong></p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>本例中，我们首先通过 <code class="docutils literal notranslate"><span class="pre">ray.put()</span></code> 创建一个对象，然后提交一个依赖于该对象的任务。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>--- Summary for node address: 192.168.0.15 ---
+Mem Used by Objects  Local References  Pinned Count  Pending Tasks  Captured in Objects  Actor Handles
+25 MiB               1                 1             1              0                    0
+
+--- Object references for node address: 192.168.0.15 ---
+IP Address    PID    Type    Object Ref                                                Size    Reference Type      Call Site
+192.168.0.15  7207   Driver  a67dc375e60ddd1affffffffffffffffffffffff0100000001000000  ?       LOCAL_REFERENCE     (task call)
+                                                                                                                    | test.py:
+                                                                                                                  :&lt;module&gt;:29
+
+192.168.0.15  7241   Worker  ffffffffffffffffffffffffffffffffffffffff0100000001000000  10 MiB  PINNED_IN_MEMORY    (deserialize task arg)
+                                                                                                                    __main__.f
+
+192.168.0.15  7207   Driver  ffffffffffffffffffffffffffffffffffffffff0100000001000000  15 MiB  USED_BY_PENDING_TASK  (put object)  |
+                                                                                                                  test.py:
+                                                                                                                  &lt;module&gt;:28
+</pre></div>
+</div>
+<p>在任务运行时，我们看到 <code class="docutils literal notranslate"><span class="pre">ray</span> <span class="pre">memory</span></code> 显示驱动程序进程中的对象既有 <code class="docutils literal notranslate"><span class="pre">LOCAL_REFERENCE</span></code> 又有 <code class="docutils literal notranslate"><span class="pre">USED_BY_PENDING_TASK</span></code> 引用。工作进程也持有对象的引用，因为 Python <code class="docutils literal notranslate"><span class="pre">arg</span></code> 直接引用 plasma 中的内存，所以它不能被驱逐；因此它是 <code class="docutils literal notranslate"><span class="pre">PINNED_IN_MEMORY</span></code>。</p>
+<p><strong>4. 序列化的 ObjectRef 引用</strong></p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">remote</span><span class="p">([</span><span class="n">a</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>例子中，我们再次通过 <code class="docutils literal notranslate"><span class="pre">ray.put()</span></code> 创建一个对象，然后将其传递给另一个对象包装的任务（在本例中是一个列表）。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>--- Summary for node address: 192.168.0.15 ---
+Mem Used by Objects  Local References  Pinned Count  Pending Tasks  Captured in Objects  Actor Handles
+15 MiB               2                 0             1              0                    0
+
+--- Object references for node address: 192.168.0.15 ---
+IP Address    PID    Type    Object Ref                                                Size    Reference Type      Call Site
+192.168.0.15  7411   Worker  ffffffffffffffffffffffffffffffffffffffff0100000001000000  ?       LOCAL_REFERENCE     (deserialize task arg)
+                                                                                                                    __main__.f
+
+192.168.0.15  7373   Driver  a67dc375e60ddd1affffffffffffffffffffffff0100000001000000  ?       LOCAL_REFERENCE     (task call)
+                                                                                                                  | test.py:
+                                                                                                                  :&lt;module&gt;:38
+
+192.168.0.15  7373   Driver  ffffffffffffffffffffffffffffffffffffffff0100000001000000  15 MiB  USED_BY_PENDING_TASK  (put object)
+                                                                                                                  | test.py:
+                                                                                                                  &lt;module&gt;:37
+</pre></div>
+</div>
+<p>现在，驱动程序和运行任务的工作进程都持有对象的 <code class="docutils literal notranslate"><span class="pre">LOCAL_REFERENCE</span></code>，除了驱动程序上的 <code class="docutils literal notranslate"><span class="pre">USED_BY_PENDING_TASK</span></code>。如果这是一个 actor 任务，actor 可以在任务完成后通过将 <code class="docutils literal notranslate"><span class="pre">ObjectRef</span></code> 存储在成员变量中持有 <code class="docutils literal notranslate"><span class="pre">LOCAL_REFERENCE</span></code>。</p>
+<p><strong>5. 捕获 ObjectRef 引用</strong></p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">put</span><span class="p">([</span><span class="n">a</span><span class="p">])</span>
+<span class="k">del</span> <span class="n">a</span>
+</pre></div>
+</div>
+<p>本例中，我们首先通过 <code class="docutils literal notranslate"><span class="pre">ray.put()</span></code> 创建一个对象，然后在另一个 <code class="docutils literal notranslate"><span class="pre">ray.put()</span></code> 对象中捕获其 <code class="docutils literal notranslate"><span class="pre">ObjectRef</span></code>，然后删除第一个 <code class="docutils literal notranslate"><span class="pre">ObjectRef</span></code>。在这种情况下，这两个对象仍然固定。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>--- Summary for node address: 192.168.0.15 ---
+Mem Used by Objects  Local References  Pinned Count  Pending Tasks  Captured in Objects  Actor Handles
+233 MiB              1                 0             0              1                    0
+
+--- Object references for node address: 192.168.0.15 ---
+IP Address    PID    Type    Object Ref                                                Size    Reference Type      Call Site
+192.168.0.15  7473   Driver  ffffffffffffffffffffffffffffffffffffffff0100000001000000  15 MiB  CAPTURED_IN_OBJECT  (put object)  |
+                                                                                                                  test.py:
+                                                                                                                  &lt;module&gt;:41
+
+192.168.0.15  7473   Driver  ffffffffffffffffffffffffffffffffffffffff0100000002000000  218 MiB  LOCAL_REFERENCE     (put object)  |
+                                                                                                                  test.py:
+                                                                                                                  &lt;module&gt;:42
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">ray</span> <span class="pre">memory</span></code> 输出中，我们可以看到第二个对象显示为普通的 <code class="docutils literal notranslate"><span class="pre">LOCAL_REFERENCE</span></code>，但第一个对象被列为 <code class="docutils literal notranslate"><span class="pre">CAPTURED_IN_OBJECT</span></code>。</p>
+</section>
+<section id="memory-aware-scheduling">
+<span id="id7"></span><h2>内存感知调度<a class="headerlink" href="#memory-aware-scheduling" title="Permalink to this headline">#</a></h2>
+<p>默认，Ray 在调度时不考虑任务或 actor 的潜在内存使用情况。这只是因为它无法提前估计需要多少内存。但是，如果你知道一个任务或 actor 需要多少内存，你可以在其 <code class="docutils literal notranslate"><span class="pre">ray.remote</span></code> 装饰器的资源需求中指定它，以启用内存感知调度：</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>指定内存要求不会对内存使用施加任何限制。这些要求仅用于调度期间的准入控制（类似于 Ray 中的 CPU 调度工作原理）。任务本身不应使用超过请求的内存。</p>
+</div>
+<p>要告诉 Ray 调度程序一个任务或 actor 需要一定数量的可用内存来运行，请设置 <code class="docutils literal notranslate"><span class="pre">memory</span></code> 参数。Ray 调度程序将在调度期间保留指定数量的可用内存，类似于它处理 CPU 和 GPU 资源的方式：</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># reserve 500MiB of available memory to place this task</span>
+<span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">memory</span><span class="o">=</span><span class="mi">500</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">some_function</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="c1"># reserve 2.5GiB of available memory to place this actor</span>
+<span class="nd">@ray</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">memory</span><span class="o">=</span><span class="mi">2500</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">SomeActor</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+<p>上例中，内存配额是通过装饰器静态指定的，但你也可以在运行时使用 <code class="docutils literal notranslate"><span class="pre">.options()</span></code> 动态设置它们，如下所示：</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># override the memory quota to 100MiB when submitting the task</span>
+<span class="n">some_function</span><span class="o">.</span><span class="n">options</span><span class="p">(</span><span class="n">memory</span><span class="o">=</span><span class="mi">100</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">)</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># override the memory quota to 1GiB when creating the actor</span>
+<span class="n">SomeActor</span><span class="o">.</span><span class="n">options</span><span class="p">(</span><span class="n">memory</span><span class="o">=</span><span class="mi">1000</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">)</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="id8">
+<h3>有疑问或问题？<a class="headerlink" href="#id8" title="Permalink to this headline">#</a></h3>
+<p>你可以通过以下渠道提问、报告问题或者提供反馈：</p>
+<ol class="arabic simple">
+<li><p><a class="reference external" href="https://discuss.ray.io/">Discussion Board</a>: For <strong>questions about Ray usage</strong> or <strong>feature requests</strong>.</p></li>
+<li><p><a class="reference external" href="https://github.com/ray-project/ray/issues">GitHub Issues</a>: For <strong>bug reports</strong>.</p></li>
+<li><p><a class="reference external" href="https://forms.gle/9TSdDYUgxYs8SA9e8">Ray Slack</a>: For <strong>getting in touch</strong> with Ray maintainers.</p></li>
+<li><p><a class="reference external" href="https://stackoverflow.com/questions/tagged/ray">StackOverflow</a>: Use the [ray] tag <strong>questions about Ray</strong>.</p></li>
+</ol>
+</section>
+</section>
+</section>
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="placement-group.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">占位组</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="ray-oom-prevention.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">预防 OOM</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><!-- Override the footer area for the sphinx-book-theme to include the CSAT widget -->
+<div id="csat">
+  <div id="csat-feedback-received" class="csat-hidden">
+    <span>谢谢你的反馈！</span>
+  </div>
+  <div id="csat-inputs">
+    <span>是否能帮助到你？</span>
+    <div id="csat-yes" class="csat-button">
+      <svg id="csat-yes-icon" class="csat-hidden csat-icon" width="18" height="13" viewBox="0 0 18 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 10.172L16.1922 0.979004L17.6072 2.393L7.00023 13L0.63623 6.636L2.05023 5.222L7.00023 10.172Z" fill="black"/>
+      </svg>
+      <span>是<span>
+    </div>
+    <div id="csat-no" class="csat-button">
+      <svg id="csat-no-icon" class="csat-hidden csat-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 5.58599L11.9502 0.635986L13.3642 2.04999L8.41423 6.99999L13.3642 11.95L11.9502 13.364L7.00023 8.41399L2.05023 13.364L0.63623 11.95L5.58623 6.99999L0.63623 2.04999L2.05023 0.635986L7.00023 5.58599Z" fill="black"/>
+      </svg>
+      <span>否<span>
+    </div>
+  </div>
+  <div id="csat-textarea-group" class="csat-hidden">
+    <span id="csat-feedback-label">反馈</span>
+    <textarea id="csat-textarea"></textarea>
+    <div id="csat-submit">提交</div>
+  </div>
+</div><p>
+  
+    By The Ray Team<br/>
+  
+      &copy; Copyright 2024, The Ray Team.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

@@ -1,0 +1,1047 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Deploy on Kubernetes &#8212; Ray 2.7.2</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/termynal.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/versionwarning.js"></script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+    <script defer="defer" src="../../_static/js/docsearch.js"></script>
+    <script defer="defer" src="../../_static/js/csat.js"></script>
+    <script defer="defer" src="../../_static/js/termynal.js"></script>
+    <script defer="defer" src="../../_static/js/custom.js"></script>
+    <script defer="defer" src="../../_static/js/top-navigation.js"></script>
+    <script src="../../_static/js/tags.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <link rel="canonical" href="https://docs.ray.io/en/latest/serve/production-guide/kubernetes.html" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Custom Docker Images" href="docker.html" />
+    <link rel="prev" title="Serve Config Files (serve build)" href="config.html" />
+
+<!-- Fathom - beautiful, simple website analytics -->
+<script src="https://deer.ray.io/script.js" data-site="WYYANYOS" defer></script>
+<!-- / Fathom -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-110413294-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-110413294-1');
+</script>
+
+<script
+  src="https://widget.kapa.ai/kapa-widget.bundle.js"
+  data-website-id="18a8c339-4ec5-43c8-8182-db3f2bc8c6b6"
+  data-project-name="Ray"
+  data-project-color="#2C2C2C"
+  data-project-logo="https://global.discourse-cdn.com/business7/uploads/ray/original/1X/8f4dcb72f7cd34e2a332d548bd65860994bc8ff1.png"
+  data-modal-disclaimer = "Results are automated and may be incorrect or contain inappropriate information. Do not include any personal data or confidential information."
+  data-modal-title = "Ray Docs AI - Ask a Question"
+  data-button-position-bottom = "60px"
+></script>
+
+<script>
+(function(apiKey){
+    (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
+    v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
+        o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
+        y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
+        z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
+
+        pendo.initialize({
+            visitor: {
+                id: 'VISITOR-UNIQUE-ID'
+            },
+            account: {
+                id: 'ACCOUNT-UNIQUE-ID'
+            }
+        });
+})('f89fa48a-6dd7-4d7c-67cf-a8051ed891f2');
+</script>
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"><div class='topnav'></div></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Ray 2.7.2</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main Navigation">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../index.html">
+                    欢迎来到 Ray ！
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Ray
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/index.html">
+   概述「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/getting-started.html">
+   入门
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/installation.html">
+   安装「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/use-cases.html">
+   用例「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/examples.html">
+   示例库「1%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-overview/ray-libraries.html">
+   生态「3%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-core/walkthrough.html">
+   Ray 核心「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../data/data.html">
+   Ray 数据「75%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../train/train.html">
+   Ray 训练「0%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../tune/index.html">
+   Ray 调参「0%」
+  </a>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="../index.html">
+   Ray Serve
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="../getting_started.html">
+     入门
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../key-concepts.html">
+     关键概念
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../develop-and-deploy.html">
+     开发并部署 ML 应用
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../model_composition.html">
+     部署模型组合
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../multi-app.html">
+     部署多应用
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../model-multiplexing.html">
+     模型复用
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../configure-serve-deployment.html">
+     配置 Ray Serve 发布
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../http-guide.html">
+     设置 FastAPI 及 HTTP
+    </a>
+   </li>
+   <li class="toctree-l2 current active has-children">
+    <a class="reference internal" href="index.html">
+     生产指引
+    </a>
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+    <label for="toctree-checkbox-2">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul class="current">
+     <li class="toctree-l3">
+      <a class="reference internal" href="config.html">
+       Serve Config Files (
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         serve
+        </span>
+        <span class="pre">
+         build
+        </span>
+       </code>
+       )
+      </a>
+     </li>
+     <li class="toctree-l3 current active">
+      <a class="current reference internal" href="#">
+       Deploy on Kubernetes
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="docker.html">
+       Custom Docker Images
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="fault-tolerance.html">
+       Add End-to-End Fault Tolerance
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="handling-dependencies.html">
+       Handle Dependencies
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="best-practices.html">
+       Best practices in production
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../monitoring.html">
+     监控你的应用
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../resource-allocation.html">
+     资源分配
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../autoscaling-guide.html">
+     Ray Serve 自动扩缩
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../advanced-guides/index.html">
+     高级指南
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../architecture.html">
+     架构
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorials/index.html">
+     示例
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../api/index.html">
+     Ray Serve API
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../rllib/index.html">
+   Ray RLlib
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-more-libs/index.html">
+   更多类库「40%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../cluster/getting-started.html">
+   Ray 集群「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-observability/index.html">
+   监控调试「100%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-references/api.html">
+   参考「20%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-contribute/index.html">
+   开发者指引「30%」
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../ray-security/index.html">
+   安全「100%」
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/ray-project/ray"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/issues/new?title=Issue%20on%20page%20%2Fserve/production-guide/kubernetes.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/ray-project/ray/edit/master/doc/source/serve/production-guide/kubernetes.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../_sources/serve/production-guide/kubernetes.md.txt"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#installing-the-kuberay-operator">
+   Installing the KubeRay operator
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#setting-up-a-rayservice-custom-resource-cr">
+   Setting up a RayService custom resource (CR)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#deploying-a-serve-application">
+   Deploying a Serve application
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#querying-the-application">
+   Querying the application
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#getting-the-status-of-the-application">
+   Getting the status of the application
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#updating-the-application">
+   Updating the application
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#example-serve-config-update">
+     Example: Serve config update
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#updating-the-raycluster-config">
+     Updating the RayCluster config
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#autoscaling">
+   Autoscaling
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#load-balancer">
+   Load balancer
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#monitoring">
+   Monitoring
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#next-steps">
+   Next Steps
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Deploy on Kubernetes</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#installing-the-kuberay-operator">
+   Installing the KubeRay operator
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#setting-up-a-rayservice-custom-resource-cr">
+   Setting up a RayService custom resource (CR)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#deploying-a-serve-application">
+   Deploying a Serve application
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#querying-the-application">
+   Querying the application
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#getting-the-status-of-the-application">
+   Getting the status of the application
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#updating-the-application">
+   Updating the application
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#example-serve-config-update">
+     Example: Serve config update
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#updating-the-raycluster-config">
+     Updating the RayCluster config
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#autoscaling">
+   Autoscaling
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#load-balancer">
+   Load balancer
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#monitoring">
+   Monitoring
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#next-steps">
+   Next Steps
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="deploy-on-kubernetes">
+<span id="serve-in-production-kubernetes"></span><h1>Deploy on Kubernetes<a class="headerlink" href="#deploy-on-kubernetes" title="Permalink to this headline">#</a></h1>
+<p>This section should help you:</p>
+<ul class="simple">
+<li><p>understand how to install and use the <a class="reference internal" href="../../cluster/kubernetes/getting-started.html#kuberay-quickstart"><span class="std std-ref">KubeRay</span></a> operator.</p></li>
+<li><p>understand how to deploy a Ray Serve application using a <a class="reference internal" href="../../cluster/kubernetes/getting-started/rayservice-quick-start.html#kuberay-rayservice-quickstart"><span class="std std-ref">RayService</span></a>.</p></li>
+<li><p>understand how to monitor and update your application.</p></li>
+</ul>
+<p>The recommended way to deploy Ray Serve is on Kubernetes, providing the best of both worlds: the user experience and scalable compute of Ray Serve and operational benefits of Kubernetes.
+This also allows you to integrate with existing applications that may be running on Kubernetes.
+The recommended practice when running on Kubernetes is to use the <a class="reference internal" href="../../cluster/kubernetes/getting-started/rayservice-quick-start.html#kuberay-rayservice-quickstart"><span class="std std-ref">RayService</span></a> controller that’s provided as part of <a class="reference internal" href="../../cluster/kubernetes/getting-started.html#kuberay-quickstart"><span class="std std-ref">KubeRay</span></a>. The RayService controller automatically handles important production requirements such as health checking, status reporting, failure recovery, and upgrades.</p>
+<p>A <a class="reference internal" href="../../cluster/kubernetes/getting-started/rayservice-quick-start.html#kuberay-rayservice-quickstart"><span class="std std-ref">RayService</span></a> CR encapsulates a multi-node Ray Cluster and a Serve application that runs on top of it into a single Kubernetes manifest.
+Deploying, upgrading, and getting the status of the application can be done using standard <code class="docutils literal notranslate"><span class="pre">kubectl</span></code> commands.
+This section walks through how to deploy, monitor, and upgrade the <a class="reference internal" href="index.html#serve-in-production-example"><span class="std std-ref">Text ML example</span></a> on Kubernetes.</p>
+<section id="installing-the-kuberay-operator">
+<span id="serve-installing-kuberay-operator"></span><h2>Installing the KubeRay operator<a class="headerlink" href="#installing-the-kuberay-operator" title="Permalink to this headline">#</a></h2>
+<p>Follow the <a class="reference internal" href="../../cluster/kubernetes/getting-started.html#kuberay-quickstart"><span class="std std-ref">KubeRay quickstart guide</span></a> to:</p>
+<ul class="simple">
+<li><p>Install <code class="docutils literal notranslate"><span class="pre">kubectl</span></code> and <code class="docutils literal notranslate"><span class="pre">Helm</span></code></p></li>
+<li><p>Prepare a Kubernetes cluster</p></li>
+<li><p>Deploy a KubeRay operator</p></li>
+</ul>
+</section>
+<section id="setting-up-a-rayservice-custom-resource-cr">
+<h2>Setting up a RayService custom resource (CR)<a class="headerlink" href="#setting-up-a-rayservice-custom-resource-cr" title="Permalink to this headline">#</a></h2>
+<p>Once the KubeRay controller is running, manage your Ray Serve application by creating and updating a <code class="docutils literal notranslate"><span class="pre">RayService</span></code> CR (<a class="reference external" href="https://github.com/ray-project/kuberay/blob/5b1a5a11f5df76db2d66ed332ff0802dc3bbff76/ray-operator/config/samples/ray-service.text-ml.yaml">example</a>).</p>
+<p>Under the <code class="docutils literal notranslate"><span class="pre">spec</span></code> section in the <code class="docutils literal notranslate"><span class="pre">RayService</span></code> CR, set the following fields:</p>
+<p><strong><code class="docutils literal notranslate"><span class="pre">serviceUnhealthySecondThreshold</span></code></strong>: Represents the threshold in seconds that defines when a service is considered unhealthy (application status is not RUNNING status). The default is 60 seconds. When the service is unhealthy, the KubeRay Service controller tries to recreate a new cluster and deploy the application to the new cluster.</p>
+<p><strong><code class="docutils literal notranslate"><span class="pre">deploymentUnhealthySecondThreshold</span></code></strong>: Represents the number of seconds that the Serve application status can be unavailable before the service is considered unhealthy. The Serve application status is unavailable whenever the Ray dashboard is unavailable. The default is 60 seconds. When the service is unhealthy, the KubeRay Service controller tries to recreate a new cluster and deploy the application to the new cluster.</p>
+<p><strong><code class="docutils literal notranslate"><span class="pre">serveConfigV2</span></code></strong>: Represents the configuration that Ray Serve uses to deploy the application. Using <code class="docutils literal notranslate"><span class="pre">serve</span> <span class="pre">build</span></code> to print the Serve configuration and copy-paste it directly into your <a class="reference internal" href="#serve-in-production-kubernetes"><span class="std std-ref">Kubernetes config</span></a> and <code class="docutils literal notranslate"><span class="pre">RayService</span></code> CR.</p>
+<p><strong><code class="docutils literal notranslate"><span class="pre">rayClusterConfig</span></code></strong>: Populate this field with the contents of the <code class="docutils literal notranslate"><span class="pre">spec</span></code> field from the <code class="docutils literal notranslate"><span class="pre">RayCluster</span></code> CR YAML file. Refer to <a class="reference internal" href="../../cluster/kubernetes/user-guides/config.html#kuberay-config"><span class="std std-ref">KubeRay configuration</span></a> for more details.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>To enhance the reliability of your application, particularly when dealing with large dependencies that may require a significant amount of time to download, consider increasing the value of the <code class="docutils literal notranslate"><span class="pre">deploymentUnhealthySecondThreshold</span></code> to avoid a cluster restart.</p>
+<p>Alternatively, include the dependencies in your image’s Dockerfile, so the dependencies are available as soon as the pods start.</p>
+</div>
+</section>
+<section id="deploying-a-serve-application">
+<span id="serve-deploy-app-on-kuberay"></span><h2>Deploying a Serve application<a class="headerlink" href="#deploying-a-serve-application" title="Permalink to this headline">#</a></h2>
+<p>When the <code class="docutils literal notranslate"><span class="pre">RayService</span></code> is created, the <code class="docutils literal notranslate"><span class="pre">KubeRay</span></code> controller first creates a Ray cluster using the provided configuration.
+Then, once the cluster is running, it deploys the Serve application to the cluster using the <a class="reference internal" href="../advanced-guides/deploy-vm.html#serve-in-production-deploying"><span class="std std-ref">REST API</span></a>.
+The controller also creates a Kubernetes Service that can be used to route traffic to the Serve application.</p>
+<p>To see an example, deploy the <a class="reference internal" href="index.html#serve-in-production-example"><span class="std std-ref">Text ML example</span></a>.
+The Serve config for the example is embedded into <a class="reference external" href="https://github.com/ray-project/kuberay/blob/5b1a5a11f5df76db2d66ed332ff0802dc3bbff76/ray-operator/config/samples/ray-service.text-ml.yaml">this sample <code class="docutils literal notranslate"><span class="pre">RayService</span></code> CR</a>.
+Save this CR locally to a file named <code class="docutils literal notranslate"><span class="pre">ray-service.text-ml.yaml</span></code>:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The example <code class="docutils literal notranslate"><span class="pre">RayService</span></code> uses very low <code class="docutils literal notranslate"><span class="pre">numCpus</span></code> values for demonstration purposes. In production, provide more resources to the Serve application.
+Learn more about how to configure KubeRay clusters <a class="reference internal" href="../../cluster/kubernetes/user-guides/config.html#kuberay-config"><span class="std std-ref">here</span></a>.</p></li>
+<li><p>If you have dependencies that must be installed during deployment, you can add them to the <code class="docutils literal notranslate"><span class="pre">runtime_env</span></code> in the Deployment code. Learn more <a class="reference internal" href="handling-dependencies.html#serve-handling-dependencies"><span class="std std-ref">here</span></a></p></li>
+</ul>
+</div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>curl -o ray-service.text-ml.yaml https://raw.githubusercontent.com/ray-project/kuberay/5b1a5a11f5df76db2d66ed332ff0802dc3bbff76/ray-operator/config/samples/ray-service.text-ml.yaml
+</pre></div>
+</div>
+<p>To deploy the example, we simply <code class="docutils literal notranslate"><span class="pre">kubectl</span> <span class="pre">apply</span></code> the CR.
+This creates the underlying Ray cluster, consisting of a head and worker node pod (see <a class="reference internal" href="../../cluster/key-concepts.html"><span class="doc std std-doc">Ray Clusters Key Concepts</span></a> for more details on Ray clusters), as well as the service that can be used to query our application:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>kubectl apply -f ray-service.text-ml.yaml
+
+<span class="gp">$ </span>kubectl get rayservices
+<span class="go">NAME                AGE</span>
+<span class="go">rayservice-sample   7s</span>
+
+<span class="gp">$ </span>kubectl get pods
+<span class="go">NAME                                                      READY   STATUS    RESTARTS   AGE</span>
+<span class="go">ervice-sample-raycluster-454c4-worker-small-group-b6mmg   1/1     Running   0          XXs</span>
+<span class="go">kuberay-operator-7fbdbf8c89-4lrnr                         1/1     Running   0          XXs</span>
+<span class="go">rayservice-sample-raycluster-454c4-head-krk9d             1/1     Running   0          XXs</span>
+
+<span class="gp">$ </span>kubectl get services
+
+<span class="go">rayservice-sample-head-svc                         ClusterIP   ...        8080/TCP,6379/TCP,8265/TCP,10001/TCP,8000/TCP,52365/TCP   XXs</span>
+<span class="go">rayservice-sample-raycluster-454c4-dashboard-svc   ClusterIP   ...        52365/TCP                                                 XXs</span>
+<span class="go">rayservice-sample-raycluster-454c4-head-svc        ClusterIP   ...        8000/TCP,52365/TCP,8080/TCP,6379/TCP,8265/TCP,10001/TCP   XXs</span>
+<span class="go">rayservice-sample-serve-svc                        ClusterIP   ...        8000/TCP                                                  XXs</span>
+</pre></div>
+</div>
+<p>Note that the <code class="docutils literal notranslate"><span class="pre">rayservice-sample-serve-svc</span></code> above is the one that can be used to send queries to the Serve application – this will be used in the next section.</p>
+</section>
+<section id="querying-the-application">
+<h2>Querying the application<a class="headerlink" href="#querying-the-application" title="Permalink to this headline">#</a></h2>
+<p>Once the <code class="docutils literal notranslate"><span class="pre">RayService</span></code> is running, we can query it over HTTP using the service created by the KubeRay controller.
+This service can be queried directly from inside the cluster, but to access it from your laptop you’ll need to configure a <a class="reference internal" href="../../cluster/kubernetes/user-guides/config.html#kuberay-networking"><span class="std std-ref">Kubernetes ingress</span></a> or use port forwarding as below:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>kubectl port-forward service/rayservice-sample-serve-svc <span class="m">8000</span>
+<span class="gp">$ </span>curl -X POST -H <span class="s2">&quot;Content-Type: application/json&quot;</span> localhost:8000 -d <span class="s1">&#39;&quot;It was the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief&quot;&#39;</span>
+<span class="go">c&#39;était le meilleur des temps, c&#39;était le pire des temps .</span>
+</pre></div>
+</div>
+</section>
+<section id="getting-the-status-of-the-application">
+<span id="serve-getting-status-kubernetes"></span><h2>Getting the status of the application<a class="headerlink" href="#getting-the-status-of-the-application" title="Permalink to this headline">#</a></h2>
+<p>As the <code class="docutils literal notranslate"><span class="pre">RayService</span></code> is running, the <code class="docutils literal notranslate"><span class="pre">KubeRay</span></code> controller continually monitors it and writes relevant status updates to the CR.
+You can view the status of the application using <code class="docutils literal notranslate"><span class="pre">kubectl</span> <span class="pre">describe</span></code>.
+This includes the status of the cluster, events such as health check failures or restarts, and the application-level statuses reported by <a class="reference internal" href="../monitoring.html#serve-in-production-inspecting"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">serve</span> <span class="pre">status</span></code></span></a>.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>kubectl get rayservices
+<span class="go">NAME                AGE</span>
+<span class="go">rayservice-sample   7s</span>
+
+<span class="gp">$ </span>kubectl describe rayservice rayservice-sample
+<span class="go">...</span>
+<span class="go">Status:</span>
+<span class="go">  Active Service Status:</span>
+<span class="go">    Application Statuses:</span>
+<span class="go">      text_ml_app:</span>
+<span class="go">        Health Last Update Time:  2023-09-07T01:21:30Z</span>
+<span class="go">        Last Update Time:         2023-09-07T01:21:30Z</span>
+<span class="go">        Serve Deployment Statuses:</span>
+<span class="go">          text_ml_app_Summarizer:</span>
+<span class="go">            Health Last Update Time:  2023-09-07T01:21:30Z</span>
+<span class="go">            Last Update Time:         2023-09-07T01:21:30Z</span>
+<span class="go">            Status:                   HEALTHY</span>
+<span class="go">          text_ml_app_Translator:</span>
+<span class="go">            Health Last Update Time:  2023-09-07T01:21:30Z</span>
+<span class="go">            Last Update Time:         2023-09-07T01:21:30Z</span>
+<span class="go">            Status:                   HEALTHY</span>
+<span class="go">        Status:                       RUNNING</span>
+<span class="go">    Dashboard Status:</span>
+<span class="go">      Health Last Update Time:  2023-09-07T01:21:30Z</span>
+<span class="go">      Is Healthy:               true</span>
+<span class="go">      Last Update Time:         2023-09-07T01:21:30Z</span>
+<span class="go">    Ray Cluster Name:           rayservice-sample-raycluster-kkd2p</span>
+<span class="go">    Ray Cluster Status:</span>
+<span class="go">      Head:</span>
+<span class="go">  Observed Generation:  1</span>
+<span class="go">  Pending Service Status:</span>
+<span class="go">    Dashboard Status:</span>
+<span class="go">    Ray Cluster Status:</span>
+<span class="go">      Head:</span>
+<span class="go">  Service Status:  Running</span>
+<span class="go">Events:</span>
+<span class="go">  Type    Reason   Age                      From                   Message</span>
+<span class="go">  ----    ------   ----                     ----                   -------</span>
+<span class="go">  Normal  Running  2m15s (x29791 over 16h)  rayservice-controller  The Serve applicaton is now running and healthy.</span>
+</pre></div>
+</div>
+</section>
+<section id="updating-the-application">
+<h2>Updating the application<a class="headerlink" href="#updating-the-application" title="Permalink to this headline">#</a></h2>
+<p>To update the <code class="docutils literal notranslate"><span class="pre">RayService</span></code>, modify the manifest and apply it use <code class="docutils literal notranslate"><span class="pre">kubectl</span> <span class="pre">apply</span></code>.
+There are two types of updates that can occur:</p>
+<ul class="simple">
+<li><p><em>Application-level updates</em>: when only the Serve config options are changed, the update is applied <em>in-place</em> on the same Ray cluster. This enables <a class="reference internal" href="../advanced-guides/inplace-updates.html#serve-in-production-lightweight-update"><span class="std std-ref">lightweight updates</span></a> such as scaling a deployment up or down or modifying autoscaling parameters.</p></li>
+<li><p><em>Cluster-level updates</em>: when the <code class="docutils literal notranslate"><span class="pre">RayCluster</span></code> config options are changed, such as updating the container image for the cluster, it may result in a cluster-level update. In this case, a new cluster is started, and the application is deployed to it. Once the new cluster is ready, the Kubernetes service is updated to point to the new cluster and the previous cluster is terminated. There should not be any downtime for the application, but note that this requires the Kubernetes cluster to be large enough to schedule both Ray clusters.</p></li>
+</ul>
+<section id="example-serve-config-update">
+<h3>Example: Serve config update<a class="headerlink" href="#example-serve-config-update" title="Permalink to this headline">#</a></h3>
+<p>In the Text ML example above, change the language of the Translator in the Serve config to German:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Translator</span><span class="w"></span>
+<span class="w">    </span><span class="nt">num_replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
+<span class="w">    </span><span class="nt">user_config</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">language</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">german</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Now to update the application we apply the modified manifest:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>kubectl apply -f ray-service.text-ml.yaml
+
+<span class="gp">$ </span>kubectl describe rayservice rayservice-sample
+<span class="go">...</span>
+<span class="go">  Serve Deployment Statuses:</span>
+<span class="go">    text_ml_app_Translator:</span>
+<span class="go">      Health Last Update Time:  2023-09-07T18:21:36Z</span>
+<span class="go">      Last Update Time:         2023-09-07T18:21:36Z</span>
+<span class="go">      Status:                   UPDATING</span>
+<span class="go">...</span>
+</pre></div>
+</div>
+<p>Query the application to see a different translation in German:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>curl -X POST -H <span class="s2">&quot;Content-Type: application/json&quot;</span> localhost:8000 -d <span class="s1">&#39;&quot;It was the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief&quot;&#39;</span>
+<span class="go">Es war die beste Zeit, es war die schlimmste Zeit .</span>
+</pre></div>
+</div>
+</section>
+<section id="updating-the-raycluster-config">
+<h3>Updating the RayCluster config<a class="headerlink" href="#updating-the-raycluster-config" title="Permalink to this headline">#</a></h3>
+<p>The process of updating the RayCluster config is the same as updating the Serve config.
+For example, we can update the number of worker nodes to 2 in the manifest:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">workerGroupSpecs:</span>
+<span class="gp">  # </span>the number of pods <span class="k">in</span> the worker group.
+<span class="go">  - replicas: 2</span>
+</pre></div>
+</div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>kubectl apply -f ray-service.text-ml.yaml
+
+<span class="gp">$ </span>kubectl describe rayservice rayservice-sample
+<span class="go">...</span>
+<span class="go">  pendingServiceStatus:</span>
+<span class="go">    appStatus: {}</span>
+<span class="go">    dashboardStatus:</span>
+<span class="go">      healthLastUpdateTime: &quot;2022-07-18T21:54:53Z&quot;</span>
+<span class="go">      lastUpdateTime: &quot;2022-07-18T21:54:54Z&quot;</span>
+<span class="go">    rayClusterName: rayservice-sample-raycluster-bshfr</span>
+<span class="go">    rayClusterStatus: {}</span>
+<span class="go">...</span>
+</pre></div>
+</div>
+<p>In the status, you can see that the <code class="docutils literal notranslate"><span class="pre">RayService</span></code> is preparing a pending cluster.
+After the pending cluster is healthy, it becomes the active cluster and the previous cluster is terminated.</p>
+</section>
+</section>
+<section id="autoscaling">
+<h2>Autoscaling<a class="headerlink" href="#autoscaling" title="Permalink to this headline">#</a></h2>
+<p>You can configure autoscaling for your Serve application by setting the autoscaling field in the Serve config. Learn more about the configuration options in the <a class="reference internal" href="../autoscaling-guide.html#serve-autoscaling"><span class="std std-ref">Serve Autoscaling Guide</span></a>.</p>
+<p>To enable autoscaling in a KubeRay Cluster, you need to set <code class="docutils literal notranslate"><span class="pre">enableInTreeAutoscaling</span></code> to True. Additionally, there are other options available to configure the autoscaling behavior. For further details, please refer to the documentation <a class="reference internal" href="../autoscaling-guide.html#serve-autoscaling"><span class="std std-ref">here</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In most use cases, it is recommended to enable Kubernetes autoscaling to fully utilize the resources in your cluster. If you are using GKE, you can utilize the AutoPilot Kubernetes cluster. For instructions, see <a class="reference external" href="https://cloud.google.com/kubernetes-engine/docs/how-to/creating-an-autopilot-cluster">Create an Autopilot Cluster</a>. For EKS, you can enable Kubernetes cluster autoscaling by utilizing the Cluster Autoscaler. For detailed information, see <a class="reference external" href="https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/cloudprovider/aws/README.md">Cluster Autoscaler on AWS</a>. To understand the relationship between Kubernetes autoscaling and Ray autoscaling, see <a class="reference internal" href="../../cluster/kubernetes/user-guides/k8s-autoscaler.html#kuberay-autoscaler-with-ray-autoscaler"><span class="std std-ref">Ray Autoscaler with Kubernetes Cluster Autoscaler</span></a>.</p>
+</div>
+</section>
+<section id="load-balancer">
+<h2>Load balancer<a class="headerlink" href="#load-balancer" title="Permalink to this headline">#</a></h2>
+<p>Set up ingress to expose your Serve application with a load balancer. See <a class="reference external" href="https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-service-alb-ingress.yaml">this configuration</a></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Ray Serve runs HTTP proxy on every node, allowing you to use <code class="docutils literal notranslate"><span class="pre">/-/routes</span></code> as the endpoint for node health checks.</p></li>
+<li><p>Ray Serve uses port 8000 as the default HTTP proxy traffic port. You can change the port by setting <code class="docutils literal notranslate"><span class="pre">http_options</span></code> in the Serve config. Learn more details <a class="reference internal" href="../multi-app.html#serve-multi-application"><span class="std std-ref">here</span></a>.</p></li>
+</ul>
+</div>
+</section>
+<section id="monitoring">
+<h2>Monitoring<a class="headerlink" href="#monitoring" title="Permalink to this headline">#</a></h2>
+<p>Monitor your Serve application using the Ray Dashboard.</p>
+<ul class="simple">
+<li><p>Learn more about how to configure and manage Dashboard <a class="reference internal" href="../../cluster/configure-manage-dashboard.html#observability-configure-manage-dashboard"><span class="std std-ref">here</span></a>.</p></li>
+<li><p>Learn about the Ray Serve Dashboard <a class="reference internal" href="../monitoring.html#serve-monitoring"><span class="std std-ref">here</span></a>.</p></li>
+<li><p>Learn how to set up <a class="reference internal" href="../../cluster/metrics.html#prometheus-setup"><span class="std std-ref">Prometheus</span></a> and <a class="reference internal" href="../../cluster/metrics.html#grafana"><span class="std std-ref">Grafana</span></a> for Dashboard.</p></li>
+<li><p>Learn about the <a class="reference internal" href="../monitoring.html#serve-logging"><span class="std std-ref">Ray Serve logs</span></a> and how to <a class="reference internal" href="../../cluster/kubernetes/user-guides/logging.html#kuberay-logging"><span class="std std-ref">persistent logs</span></a> on Kubernetes.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>To troubleshoot application deployment failures in Serve, you can check the Kuberay operator logs by running <code class="docutils literal notranslate"><span class="pre">kubectl</span> <span class="pre">logs</span> <span class="pre">-f</span> <span class="pre">&lt;kuberay-operator-pod-name&gt;</span></code> (e.g., <code class="docutils literal notranslate"><span class="pre">kubectl</span> <span class="pre">logs</span> <span class="pre">-f</span> <span class="pre">kuberay-operator-7447d85d58-lv7pf</span></code>). The Kuberay operator logs contain information about the Serve application deployment event and Serve application health checks.</p></li>
+<li><p>You can also check the controller log and deployment log, which are located under <code class="docutils literal notranslate"><span class="pre">/tmp/ray/session_latest/logs/serve/</span></code> in both the head node pod and worker node pod. These logs contain information about specific deployment failure reasons and autoscaling events.</p></li>
+</ul>
+</div>
+</section>
+<section id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Permalink to this headline">#</a></h2>
+<p>See <a class="reference internal" href="fault-tolerance.html#serve-e2e-ft"><span class="std std-ref">Add End-to-End Fault Tolerance</span></a> to learn more about Serve’s failure conditions and how to guard against them.</p>
+</section>
+</section>
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="config.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Serve Config Files (<code class="docutils literal notranslate"><span class="pre">serve</span> <span class="pre">build</span></code>)</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="docker.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Custom Docker Images</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><!-- Override the footer area for the sphinx-book-theme to include the CSAT widget -->
+<div id="csat">
+  <div id="csat-feedback-received" class="csat-hidden">
+    <span>谢谢你的反馈！</span>
+  </div>
+  <div id="csat-inputs">
+    <span>是否能帮助到你？</span>
+    <div id="csat-yes" class="csat-button">
+      <svg id="csat-yes-icon" class="csat-hidden csat-icon" width="18" height="13" viewBox="0 0 18 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 10.172L16.1922 0.979004L17.6072 2.393L7.00023 13L0.63623 6.636L2.05023 5.222L7.00023 10.172Z" fill="black"/>
+      </svg>
+      <span>是<span>
+    </div>
+    <div id="csat-no" class="csat-button">
+      <svg id="csat-no-icon" class="csat-hidden csat-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.00023 5.58599L11.9502 0.635986L13.3642 2.04999L8.41423 6.99999L13.3642 11.95L11.9502 13.364L7.00023 8.41399L2.05023 13.364L0.63623 11.95L5.58623 6.99999L0.63623 2.04999L2.05023 0.635986L7.00023 5.58599Z" fill="black"/>
+      </svg>
+      <span>否<span>
+    </div>
+  </div>
+  <div id="csat-textarea-group" class="csat-hidden">
+    <span id="csat-feedback-label">反馈</span>
+    <textarea id="csat-textarea"></textarea>
+    <div id="csat-submit">提交</div>
+  </div>
+</div><p>
+  
+    By The Ray Team<br/>
+  
+      &copy; Copyright 2024, The Ray Team.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

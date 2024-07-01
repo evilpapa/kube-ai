@@ -62,7 +62,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=83e35b93" />
     <link rel="stylesheet" type="text/css" href="../_static/material.css?v=79c92029" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/css/rtd_sphinx_search.min.css?v=fb480935" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/rtd_sphinx_search.min.css" />
     <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
     <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=15a8f09d" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
@@ -71,7 +71,7 @@
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/js/rtd_search_config.js"></script>
-    <script src="../_static/js/rtd_sphinx_search.min.js?v=60fbc683"></script>
+    <script src="../_static/js/rtd_sphinx_search.min.js"></script>
     <script src="../_static/design-tabs.js?v=36754332"></script>
     <link rel="icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -540,7 +540,7 @@
 <section id="intel-openvino-imagenet-example">
 <h2 id="intel-openvino-imagenet-example">Intel OpenVINO ImageNet Example<a class="headerlink" href="#intel-openvino-imagenet-example" title="Permalink to this heading">¶</a></h2>
 <p>An advanced machine learning deployment for image classification is provided that highlights the power of Intel OpenVINO optimised models used in conjunction with Seldon. An ImageNet ensemble is created with two model architectures, ResNet and DenseNet. The results of the two predictions are combined and the output is transformed into a human readable format. On the input request stream the raw input is compressed JPEG which is then decompressed and converted to a TFTensor proto payload.  The pipeline of the Seldon deployment is illustrated below.</p>
-<a class="reference external image-reference" href="./pipeline1.png"><img alt="openvino pipeline" src="../_images/pipeline1.png"/></a>
+<a class="reference external image-reference" href="./pipeline1.png"><img alt="openvino pipeline" src="../_images/pipeline11.png"/></a>
 <p>The inference graph shows the ability to combine multiple transformation steps and model serving toolkits together in a single Seldon Deployment. See the <a class="reference external" href="https://github.com/SeldonIO/seldon-core/blob/master/examples/models/openvino_imagenet_ensemble/openvino_imagenet_ensemble.ipynb">OpenVINO Jupyter Notebook</a> for further details.</p>
 </section>
 <section id="aws-sagemaker-integration">
